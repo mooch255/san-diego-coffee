@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Diego Coffee Beans - Community Coffee Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero .tagline {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 1rem;
+        }
+
+        .hero .community-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #6F4E37;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .search-section h2 {
+            color: #6F4E37;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-preview {
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .search-preview input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            transition: border-color 0.3s;
+        }
+
+        .search-preview input:focus {
+            outline: none;
+            border-color: #6F4E37;
+        }
+
+        .map-cta {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: #6F4E37;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(111, 78, 55, 0.3);
+        }
+
+        .map-cta:hover {
+            background: #5a3d2b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(111, 78, 55, 0.4);
+        }
+
+        /* Featured Section */
+        .featured-section {
+            margin-bottom: 3rem;
+        }
+
+        .featured-section h2 {
+            color: #6F4E37;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .featured-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .featured-card-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
+            color: white;
+        }
+
+        .featured-card-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-card-type {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .featured-card-body {
+            padding: 1.5rem;
+        }
+
+        .featured-card-body p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .featured-badge.cafe {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        /* Community Section */
+        .community-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .community-section h2 {
+            color: #6F4E37;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .community-section p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .community-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #FF4500;
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #cc3700;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #6F4E37;
+            border: 2px solid #6F4E37;
+        }
+
+        .btn-secondary:hover {
+            background: #6F4E37;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #8B6F47;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero .tagline {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .search-section,
+            .community-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .community-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>☕ San Diego Coffee Beans</h1>
+        <p class="tagline">Your Community-Driven Guide to Specialty Coffee</p>
+        <div class="community-badge">
+            🌟 Built by and for r/SanDiegoCoffeeBeans
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Stats Section -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon">📍</div>
+                <div class="stat-number">132</div>
+                <div class="stat-label">Total Locations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌱</div>
+                <div class="stat-number">97</div>
+                <div class="stat-label">Unique Roasters</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">☕</div>
+                <div class="stat-number">7</div>
+                <div class="stat-label">Unique Multi-Roaster Cafes</div>
+            </div>
+        </div>
+
+        <!-- Search Preview Section -->
+        <div class="search-section">
+            <h2>🔍 Find Your Next Coffee Spot</h2>
+            <div class="search-preview">
+                <input type="text" id="homeSearchInput" placeholder="Try searching for Bird Rock, North Park, or La Jolla...">
+            </div>
+            <p style="color: #666; margin-bottom: 1.5rem;">Search 132 specialty coffee locations across San Diego County</p>
+            <a href="map.html" class="map-cta">🗺️ Explore the Full Map</a>
+        </div>
+
+        <!-- Featured Coffee Shops -->
+        <div class="featured-section">
+            <h2>✨ Featured Locations</h2>
+            <div class="featured-grid">
+                <div class="featured-card">
+                    <div class="featured-card-header">
+                        <h3>Bird Rock Coffee Roasters</h3>
+                        <div class="featured-card-type">📍 Roaster</div>
+                    </div>
+                    <div class="featured-card-body">
+                        <p><strong>📍</strong> La Jolla & Multiple Locations</p>
+                        <p><strong>⭐</strong> 4.6 rating</p>
+                        <span class="featured-badge">Community Favorite</span>
+                    </div>
+                </div>
+
+                <div class="featured-card">
+                    <div class="featured-card-header">
+                        <h3>James Coffee Co.</h3>
+                        <div class="featured-card-type">📍 Roaster</div>
+                    </div>
+                    <div class="featured-card-body">
+                        <p><strong>📍</strong> Multiple Locations</p>
+                        <p><strong>⭐</strong> 4.6 rating</p>
+                        <span class="featured-badge">Local Gem</span>
+                    </div>
+                </div>
+
+                <div class="featured-card">
+                    <div class="featured-card-header">
+                        <h3>Dark Horse Coffee Roasters</h3>
+                        <div class="featured-card-type">📍 Roaster</div>
+                    </div>
+                    <div class="featured-card-body">
+                        <p><strong>📍</strong> Multiple Locations</p>
+                        <p><strong>⭐</strong> 4.6 rating</p>
+                        <span class="featured-badge">Top Rated</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Section -->
+        <div class="community-section">
+            <h2>🤝 Join Our Community</h2>
+            <p>This map is created and maintained by the San Diego coffee community. Help us keep it updated and discover new specialty coffee spots together!</p>
+            <div class="community-buttons">
+                <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" class="btn btn-primary">
+                    💬 Join r/SanDiegoCoffeeBeans
+                </a>
+                <a href="submit.html" class="btn btn-secondary">
+                    ➕ Add a Coffee Shop
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            Made with ☕ by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+            132 locations and counting | Last updated February 2026
+        </p>
+    </footer>
+
+    <script>
+        // Search functionality on homepage
+        const searchInput = document.getElementById('homeSearchInput');
+        
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    // Redirect to map with search query
+                    window.location.href = 'map.html?search=' + encodeURIComponent(query);
+                } else {
+                    window.location.href = 'map.html';
+                }
+            }
+        });
+
+        // Optional: Add search button functionality if user clicks the big button
+        document.querySelector('.map-cta').addEventListener('click', function(e) {
+            const query = searchInput.value.trim();
+            if (query) {
+                e.preventDefault();
+                window.location.href = 'map.html?search=' + encodeURIComponent(query);
+            }
+        });
+    </script>
+</body>
+</html>

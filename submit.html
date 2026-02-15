@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Coffee Shop - San Diego Coffee Beans</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .nav-links {
+            margin-top: 1rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .intro-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .intro-card h2 {
+            color: #6F4E37;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .intro-card p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro-card ul {
+            text-align: left;
+            max-width: 600px;
+            margin: 1.5rem auto;
+            color: #555;
+        }
+
+        .intro-card li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .intro-card strong {
+            color: #6F4E37;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 1000px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 1200px;
+            border: none;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #8B6F47;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            header p {
+                font-size: 0.95rem;
+            }
+
+            .nav-links a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            .intro-card {
+                padding: 1.5rem;
+            }
+
+            iframe {
+                height: 1400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>☕ Add a Coffee Shop</h1>
+        <p>Help grow San Diego's specialty coffee community!</p>
+        <div class="nav-links">
+            <a href="index.html">🏠 Home</a>
+            <a href="map.html">🗺️ View Map</a>
+            <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">💬 Subreddit</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Introduction Card -->
+        <div class="intro-card">
+            <h2>📝 Submit a Location</h2>
+            <p>Know a great coffee roaster or multi-roaster cafe that's not on our map? Let us know!</p>
+            
+            <ul>
+                <li><strong>✅ We're looking for:</strong> Specialty coffee roasters and multi-roaster cafes in San Diego County</li>
+                <li><strong>⏱️ Takes 2 minutes:</strong> Just fill out the basic info below</li>
+                <li><strong>🔍 We'll review:</strong> Submissions are reviewed by our community before being added</li>
+                <li><strong>🙏 Thank you:</strong> You're helping build the best coffee resource for San Diego!</li>
+            </ul>
+        </div>
+
+        <!-- Embedded Google Form -->
+        <div class="form-container">
+            <iframe 
+                src="https://docs.google.com/forms/d/e/1FAIpQLSdn_zKzt_nsMhIaTuoVVpHnHCyCWHf63HW0SgO2OO-bP7mp3g/viewform?embedded=true"
+                frameborder="0"
+                marginheight="0"
+                marginwidth="0">
+                Loading form...
+            </iframe>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            Made with ☕ by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community
+        </p>
+    </footer>
+</body>
+</html>

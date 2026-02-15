@@ -453,14 +453,178 @@
     </footer>
 
     <script>
-        // Search functionality on homepage
+        // Coffee locations data (subset for autocomplete)
+        const COFFEE_LOCATIONS = [
+            { name: "Revolution Roasters", city: "Oceanside", type: "roaster" },
+            { name: "Steady State Roasting", city: "Carlsbad", type: "roaster" },
+            { name: "Bird Rock Coffee Roasters", city: "La Jolla", type: "roaster" },
+            { name: "James Coffee Co.", city: "Multiple Locations", type: "roaster" },
+            { name: "Dark Horse Coffee Roasters", city: "Multiple Locations", type: "roaster" },
+            { name: "Cafe Moto", city: "Ocean Beach", type: "roaster" },
+            { name: "Communal Coffee", city: "North Park", type: "roaster" },
+            { name: "Better Buzz Coffee", city: "Multiple Locations", type: "roaster" },
+            { name: "Holsem Coffee", city: "North Park", type: "roaster" },
+            { name: "Lofty Coffee", city: "Multiple Locations", type: "roaster" },
+            { name: "Zumbar Coffee", city: "Encinitas", type: "roaster" },
+            { name: "Influx Cafe", city: "Encinitas", type: "roaster" },
+            { name: "Copa Vida", city: "Multiple Locations", type: "roaster" },
+            { name: "Caffe Calabria", city: "North Park", type: "roaster" },
+            { name: "Portside Coffee & Goods", city: "Ocean Beach", type: "roaster" },
+            { name: "Achilles Coffee Roasters", city: "North Park", type: "roaster" },
+            { name: "Ryan Bros. Coffee", city: "La Jolla", type: "roaster" },
+            { name: "Ironsmith Coffee Roasters", city: "Carlsbad", type: "roaster" },
+            { name: "Young Hickory", city: "Ocean Beach", type: "roaster" },
+            { name: "Modern Times Beer - Coffee", city: "Multiple Locations", type: "roaster" }
+        ];
+
         const searchInput = document.getElementById('homeSearchInput');
+        let autocompleteList = null;
+        let selectedIndex = -1;
+
+        // Create autocomplete dropdown
+        function createAutocompleteDropdown() {
+            const container = searchInput.parentElement;
+            autocompleteList = document.createElement('div');
+            autocompleteList.className = 'autocomplete-list';
+            autocompleteList.style.cssText = `
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                border: 1px solid #ddd;
+                border-top: none;
+                border-radius: 0 0 8px 8px;
+                max-height: 300px;
+                overflow-y: auto;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: none;
+            `;
+            container.appendChild(autocompleteList);
+        }
+
+        // Filter and display suggestions
+        function showSuggestions(query) {
+            if (!query) {
+                autocompleteList.style.display = 'none';
+                return;
+            }
+
+            const filtered = COFFEE_LOCATIONS.filter(loc => 
+                loc.name.toLowerCase().includes(query.toLowerCase()) ||
+                loc.city.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 8); // Limit to 8 results
+
+            if (filtered.length === 0) {
+                autocompleteList.style.display = 'none';
+                return;
+            }
+
+            autocompleteList.innerHTML = filtered.map((loc, index) => `
+                <div class="autocomplete-item" data-index="${index}" data-name="${loc.name}">
+                    <strong>${highlightMatch(loc.name, query)}</strong>
+                    <span style="color: #666; font-size: 0.9rem; margin-left: 8px;">${loc.city}</span>
+                    <span style="background: ${loc.type === 'roaster' ? '#e8f5e9' : '#e3f2fd'}; 
+                                 color: ${loc.type === 'roaster' ? '#2e7d32' : '#1565c0'}; 
+                                 padding: 2px 8px; 
+                                 border-radius: 12px; 
+                                 font-size: 0.75rem; 
+                                 margin-left: 8px;">
+                        ${loc.type === 'roaster' ? '📍 Roaster' : '☕ Cafe'}
+                    </span>
+                </div>
+            `).join('');
+
+            const items = autocompleteList.querySelectorAll('.autocomplete-item');
+            items.forEach(item => {
+                item.addEventListener('click', function() {
+                    const name = this.getAttribute('data-name');
+                    window.location.href = 'map.html?search=' + encodeURIComponent(name);
+                });
+
+                item.addEventListener('mouseenter', function() {
+                    items.forEach(i => i.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedIndex = parseInt(this.getAttribute('data-index'));
+                });
+            });
+
+            autocompleteList.style.display = 'block';
+            selectedIndex = -1;
+        }
+
+        // Highlight matching text
+        function highlightMatch(text, query) {
+            const index = text.toLowerCase().indexOf(query.toLowerCase());
+            if (index === -1) return text;
+            return text.substring(0, index) + 
+                   '<span style="background: #fff3cd;">' + 
+                   text.substring(index, index + query.length) + 
+                   '</span>' + 
+                   text.substring(index + query.length);
+        }
+
+        // Initialize
+        createAutocompleteDropdown();
+
+        // Event listeners
+        searchInput.addEventListener('input', function() {
+            showSuggestions(this.value.trim());
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            const items = autocompleteList.querySelectorAll('.autocomplete-item');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                updateSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+                updateSelection(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedIndex >= 0 && items[selectedIndex]) {
+                    items[selectedIndex].click();
+                } else {
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        window.location.href = 'map.html?search=' + encodeURIComponent(query);
+                    } else {
+                        window.location.href = 'map.html';
+                    }
+                }
+            } else if (e.key === 'Escape') {
+                autocompleteList.style.display = 'none';
+                selectedIndex = -1;
+            }
+        });
+
+        function updateSelection(items) {
+            items.forEach((item, index) => {
+                if (index === selectedIndex) {
+                    item.classList.add('selected');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !autocompleteList.contains(e.target)) {
+                autocompleteList.style.display = 'none';
+                selectedIndex = -1;
+            }
+        });
         
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const query = searchInput.value.trim();
                 if (query) {
-                    // Redirect to map with search query
                     window.location.href = 'map.html?search=' + encodeURIComponent(query);
                 } else {
                     window.location.href = 'map.html';
@@ -468,7 +632,7 @@
             }
         });
 
-        // Optional: Add search button functionality if user clicks the big button
+        // Map button functionality
         document.querySelector('.map-cta').addEventListener('click', function(e) {
             const query = searchInput.value.trim();
             if (query) {
@@ -477,5 +641,29 @@
             }
         });
     </script>
+    
+    <style>
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+        
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background: #f8f8f8;
+        }
+        
+        .search-preview {
+            position: relative;
+        }
+    </style>
 </body>
 </html>

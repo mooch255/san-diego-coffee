@@ -122,16 +122,8 @@
         </p>
     </footer>
 
-    <!-- Load locations data -->
-    <script src="locations.js"></script>
-    
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initMap" async defer></script>
-    
-    <!-- Map functionality -->
-    <script src="map.js"></script>
-</body>
-</html>
+    <!-- Embedded locations data -->
+    <script>
 const COFFEE_LOCATIONS = [
   {
     "id": "loc_001",
@@ -10482,3 +10474,11 @@ const COFFEE_LOCATIONS = [
     }
   }
 ];
+    </script>
+
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initMap" async defer></script>
+
+    <!-- Map functionality would go in separate map.js file or inline here -->
+</body>
+</html>

@@ -10,18 +10,16 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --cream: #FAF7F2;
-            --warm-white: #FFFFFF;
-            --espresso: #2C2420;
-            --rich-brown: #6B4E3D;
+            --espresso: #1a1512;
+            --coffee-brown: #6B4E3D;
+            --cream: #F8F5F0;
+            --white: #FFFFFF;
             --latte: #C4A77D;
-            --shadow-soft: 0 2px 20px rgba(44, 36, 32, 0.08);
-            --shadow-medium: 0 4px 30px rgba(44, 36, 32, 0.12);
-            --shadow-strong: 0 8px 40px rgba(44, 36, 32, 0.16);
+            --accent-red: #D64040;
         }
 
         /* Reset and Base Styles */
@@ -32,62 +30,66 @@
         }
 
         body {
-            font-family: 'DM Sans', -apple-system, sans-serif;
+            font-family: 'Libre Franklin', -apple-system, sans-serif;
             color: var(--espresso);
-            background-color: var(--cream);
+            background-color: var(--white);
             overflow-x: hidden;
         }
 
-        /* Header */
+        /* Eater-Style Header */
         header {
-            background: linear-gradient(135deg, var(--rich-brown) 0%, #8B6F5B 100%);
-            color: var(--warm-white);
-            padding: 1.5rem 2rem;
-            box-shadow: var(--shadow-medium);
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 80% 50%, rgba(196, 167, 125, 0.1) 0%, transparent 50%);
-            pointer-events: none;
+            background: var(--espresso);
+            color: var(--white);
+            padding: 1.25rem 0;
+            border-bottom: 3px solid var(--accent-red);
         }
 
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         h1 {
-            font-family: 'Crimson Pro', serif;
-            font-size: 2rem;
-            margin-bottom: 0.25rem;
-            font-weight: 400;
-            letter-spacing: -0.01em;
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
         }
 
         .subtitle {
-            font-size: 0.95rem;
-            opacity: 0.9;
+            font-size: 0.85rem;
+            color: var(--latte);
+            margin-top: 0.15rem;
             font-weight: 400;
         }
 
-        /* Controls Bar */
+        .home-btn {
+            background: var(--accent-red);
+            color: var(--white);
+            padding: 0.6rem 1.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .home-btn:hover {
+            background: #c23535;
+        }
+
+        /* Controls Bar - Compact */
         .controls-bar {
-            background: var(--warm-white);
-            padding: 1.5rem 2rem;
-            box-shadow: var(--shadow-soft);
+            background: var(--white);
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid #E0DBD3;
             display: flex;
             flex-wrap: wrap;
-            gap: 1.25rem;
+            gap: 1rem;
             align-items: center;
             max-width: 1400px;
             margin: 0 auto;
@@ -101,21 +103,19 @@
 
         #searchInput {
             width: 100%;
-            padding: 1rem 1.5rem;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            background: var(--cream);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: 'DM Sans', sans-serif;
+            padding: 0.85rem 1.25rem;
+            border: 2px solid var(--espresso);
+            border-radius: 0;
+            font-size: 1rem;
+            background: var(--white);
+            transition: all 0.2s;
+            font-family: 'Libre Franklin', sans-serif;
         }
 
         #searchInput:focus {
             outline: none;
-            border-color: var(--latte);
-            background: var(--warm-white);
-            box-shadow: 0 4px 20px rgba(107, 78, 61, 0.1);
-            transform: translateY(-1px);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 3px rgba(214, 64, 64, 0.1);
         }
 
         /* Autocomplete Dropdown */
@@ -124,14 +124,12 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: var(--warm-white);
-            border: 1px solid rgba(107, 78, 61, 0.15);
+            background: var(--white);
+            border: 2px solid var(--espresso);
             border-top: none;
-            border-radius: 0 0 12px 12px;
             max-height: 350px;
             overflow-y: auto;
             z-index: 1000;
-            box-shadow: var(--shadow-medium);
             display: none;
         }
 
@@ -140,10 +138,10 @@
         }
 
         .autocomplete-item {
-            padding: 1rem 1.25rem;
+            padding: 0.85rem 1.25rem;
             cursor: pointer;
-            border-bottom: 1px solid rgba(107, 78, 61, 0.05);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 1px solid #E0DBD3;
+            transition: background 0.15s;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -156,7 +154,6 @@
         .autocomplete-item:hover,
         .autocomplete-item.active {
             background: var(--cream);
-            transform: translateX(4px);
         }
             transition: background 0.2s;
         }
@@ -229,49 +226,43 @@
         }
 
         button {
-            padding: 0.85rem 1.75rem;
-            background: var(--rich-brown);
-            color: var(--warm-white);
-            border: none;
-            border-radius: 10px;
+            padding: 0.7rem 1.25rem;
+            background: var(--espresso);
+            color: var(--white);
+            border: 2px solid var(--espresso);
+            border-radius: 0;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
             white-space: nowrap;
-            font-family: 'DM Sans', sans-serif;
-            box-shadow: var(--shadow-soft);
+            font-family: 'Libre Franklin', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
         }
 
         button:hover {
-            background: var(--espresso);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        button:active {
-            transform: translateY(0);
+            background: var(--accent-red);
+            border-color: var(--accent-red);
         }
 
         .toggle-filters-btn {
-            background: var(--latte);
+            background: var(--white);
             color: var(--espresso);
         }
 
         .toggle-filters-btn:hover {
-            background: var(--rich-brown);
-            color: var(--warm-white);
+            background: var(--cream);
         }
 
         #clearBtn {
-            background: var(--cream) !important;
-            color: var(--rich-brown) !important;
-            border: 2px solid rgba(107, 78, 61, 0.2) !important;
+            background: var(--white) !important;
+            color: var(--espresso) !important;
+            border-color: var(--espresso) !important;
         }
 
         #clearBtn:hover {
-            background: rgba(107, 78, 61, 0.1) !important;
-            border-color: var(--latte) !important;
+            background: var(--cream) !important;
         }
 
         /* Filters Panel */
@@ -359,20 +350,21 @@
         }
 
         .roaster-badge, .cafe-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            padding: 4px 10px;
+            font-size: 0.75rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .roaster-badge {
-            background: rgba(107, 78, 61, 0.1);
-            color: var(--rich-brown);
+            background: var(--espresso);
+            color: var(--white);
         }
 
         .cafe-badge {
-            background: rgba(196, 167, 125, 0.2);
-            color: #8B6F5B;
+            background: var(--accent-red);
+            color: var(--white);
         }
 
         /* Map Container */
@@ -419,21 +411,22 @@
         /* Footer */
         footer {
             background: var(--espresso);
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: rgba(255,255,255,0.8);
+            border-top: 3px solid var(--accent-red);
         }
 
         footer a {
             color: var(--latte);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
         }
 
         footer a:hover {
-            color: var(--warm-white);
+            color: var(--white);
+            text-decoration: underline;
         }
 
         #visibleCount {
@@ -535,15 +528,11 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1>☕ San Diego Coffee Beans</h1>
-                    <p class="subtitle">Specialty Coffee Roasters & Multi-Roaster Cafes</p>
-                </div>
-                <a href="index.html" style="color: var(--warm-white); text-decoration: none; padding: 0.75rem 1.75rem; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 10px; font-weight: 600; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.2); font-family: 'DM Sans', sans-serif;" onmouseover="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'; this.style.transform='translateY(0)'">
-                    🏠 Home
-                </a>
+            <div>
+                <h1>☕ San Diego Coffee Guide</h1>
+                <p class="subtitle">Interactive Map of Specialty Coffee Locations</p>
             </div>
+            <a href="index.html" class="home-btn">🏠 Home</a>
         </div>
     </header>
 
@@ -12719,23 +12708,83 @@ function performSearch() {
         return;
     }
     
-    const visibleMarkers = markers.filter(marker => {
-        const location = marker.locationData;
-        const name = location.basicInfo.name.toLowerCase();
-        const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
-        return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
-    });
+    // Define San Diego neighborhoods and cities with their approximate coordinates
+    const neighborhoods = {
+        'oceanside': { lat: 33.1959, lng: -117.3795, zoom: 13 },
+        'carlsbad': { lat: 33.1581, lng: -117.3506, zoom: 13 },
+        'encinitas': { lat: 33.0370, lng: -117.2920, zoom: 13 },
+        'solana beach': { lat: 32.9911, lng: -117.2709, zoom: 14 },
+        'del mar': { lat: 32.9595, lng: -117.2653, zoom: 14 },
+        'la jolla': { lat: 32.8328, lng: -117.2713, zoom: 13 },
+        'pacific beach': { lat: 32.7967, lng: -117.2326, zoom: 14 },
+        'mission beach': { lat: 32.7714, lng: -117.2530, zoom: 14 },
+        'ocean beach': { lat: 32.7475, lng: -117.2501, zoom: 14 },
+        'point loma': { lat: 32.7157, lng: -117.2197, zoom: 13 },
+        'north park': { lat: 32.7416, lng: -117.1297, zoom: 14 },
+        'south park': { lat: 32.7279, lng: -117.1273, zoom: 14 },
+        'normal heights': { lat: 32.7576, lng: -117.1320, zoom: 14 },
+        'hillcrest': { lat: 32.7489, lng: -117.1659, zoom: 14 },
+        'downtown': { lat: 32.7157, lng: -117.1611, zoom: 13 },
+        'little italy': { lat: 32.7201, lng: -117.1695, zoom: 14 },
+        'east village': { lat: 32.7082, lng: -117.1498, zoom: 14 },
+        'barrio logan': { lat: 32.7004, lng: -117.1420, zoom: 14 },
+        'golden hill': { lat: 32.7177, lng: -117.1328, zoom: 14 },
+        'bankers hill': { lat: 32.7274, lng: -117.1695, zoom: 14 },
+        'vista': { lat: 33.2000, lng: -117.2425, zoom: 13 },
+        'san marcos': { lat: 33.1434, lng: -117.1662, zoom: 13 },
+        'escondido': { lat: 33.1192, lng: -117.0864, zoom: 13 },
+        'poway': { lat: 32.9628, lng: -117.0359, zoom: 13 },
+        'santee': { lat: 32.8384, lng: -116.9739, zoom: 13 },
+        'el cajon': { lat: 32.7948, lng: -116.9625, zoom: 13 },
+        'la mesa': { lat: 32.7678, lng: -117.0231, zoom: 13 },
+        'chula vista': { lat: 32.6401, lng: -117.0842, zoom: 12 },
+        'national city': { lat: 32.6781, lng: -117.0992, zoom: 13 }
+    };
     
-    markerCluster.clearMarkers();
-    markerCluster.addMarkers(visibleMarkers);
-    updateVisibleCount(visibleMarkers.length);
+    // Check if query matches a neighborhood/city
+    const neighborhood = neighborhoods[query];
     
-    if (visibleMarkers.length === 0) {
-        infoWindow.setContent(`<div class="info-window"><h3>No Results</h3><p>No locations found matching "${query}"</p></div>`);
-        infoWindow.setPosition(map.getCenter());
-        infoWindow.open(map);
+    if (neighborhood) {
+        // It's a neighborhood search - zoom to the area and show all locations
+        const visibleMarkers = markers.filter(marker => {
+            const location = marker.locationData;
+            const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
+            return address.includes(query) && shouldShowMarker(marker);
+        });
+        
+        markerCluster.clearMarkers();
+        markerCluster.addMarkers(visibleMarkers);
+        updateVisibleCount(visibleMarkers.length);
+        
+        // Zoom to the neighborhood area
+        map.setCenter({ lat: neighborhood.lat, lng: neighborhood.lng });
+        map.setZoom(neighborhood.zoom);
+        
+        if (visibleMarkers.length === 0) {
+            infoWindow.setContent(`<div class="info-window"><h3>No Results in ${query.charAt(0).toUpperCase() + query.slice(1)}</h3><p>No coffee locations found in this area</p></div>`);
+            infoWindow.setPosition(map.getCenter());
+            infoWindow.open(map);
+        }
     } else {
-        fitMapToBounds();
+        // Regular search - filter by name or address
+        const visibleMarkers = markers.filter(marker => {
+            const location = marker.locationData;
+            const name = location.basicInfo.name.toLowerCase();
+            const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
+            return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
+        });
+        
+        markerCluster.clearMarkers();
+        markerCluster.addMarkers(visibleMarkers);
+        updateVisibleCount(visibleMarkers.length);
+        
+        if (visibleMarkers.length === 0) {
+            infoWindow.setContent(`<div class="info-window"><h3>No Results</h3><p>No locations found matching "${query}"</p></div>`);
+            infoWindow.setPosition(map.getCenter());
+            infoWindow.open(map);
+        } else {
+            fitMapToBounds();
+        }
     }
 }
 

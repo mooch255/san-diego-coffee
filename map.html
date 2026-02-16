@@ -4,9 +4,446 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Diego Coffee Beans - Specialty Coffee Map</title>
-    <link rel="stylesheet" href="styles.css">
+    
     <!-- Marker Clusterer -->
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+    
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Controls Bar */
+        .controls-bar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 500px;
+            position: relative;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            transition: border-color 0.3s;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: #6F4E37;
+        }
+
+        /* Autocomplete Dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #6F4E37;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .autocomplete-dropdown.show {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background: #f5f5f5;
+        }
+
+        .autocomplete-name {
+            font-weight: 600;
+            color: #333;
+            display: block;
+        }
+
+        .autocomplete-address {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.2rem;
+        }
+
+        .autocomplete-type {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.3rem;
+        }
+
+        .autocomplete-type.roaster {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .autocomplete-type.cafe {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .autocomplete-new {
+            border-left: 4px solid #2e7d32;
+            background: #f1f8f4;
+        }
+
+        #searchBtn, #clearBtn {
+            padding: 0.6rem 1.2rem;
+            background: #6F4E37;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        #searchBtn:hover, #clearBtn:hover {
+            background: #5a3d2b;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .toggle-filters-btn {
+            padding: 0.6rem 1.2rem;
+            background: #1565c0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        .toggle-filters-btn:hover {
+            background: #0d47a1;
+        }
+
+        /* Filters Panel */
+        .filters-panel {
+            background: #f8f8f8;
+            border-bottom: 2px solid #ddd;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .filters-panel.expanded {
+            max-height: 180px;
+            padding: 1rem 2rem;
+            overflow-y: auto;
+        }
+
+        .filters-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .filters-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .filters-section h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6F4E37;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+            font-size: 0.9rem;
+        }
+
+        .filter-label input[type="checkbox"],
+        .filter-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .filter-count {
+            color: #999;
+            font-size: 0.85rem;
+            margin-left: 0.25rem;
+            font-weight: 400;
+        }
+
+        .location-btn {
+            padding: 0.6rem 1.2rem;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .location-btn:hover {
+            background: #1b5e20;
+        }
+
+        .location-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .roaster-badge, .cafe-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .roaster-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .cafe-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        /* Map Container */
+        #map {
+            width: 100%;
+            height: calc(100vh - 220px);
+            min-height: 400px;
+        }
+
+        /* Loading Indicator */
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+
+        #loading.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 1rem;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #6F4E37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        footer a {
+            color: #6F4E37;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        #visibleCount {
+            font-weight: 600;
+            color: #6F4E37;
+        }
+
+        /* Info Window Styling */
+        .info-window {
+            padding: 1rem;
+            min-width: 250px;
+        }
+
+        .info-window h3 {
+            color: #6F4E37;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .info-window-section {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .info-window-label {
+            font-weight: 600;
+            color: #555;
+            margin-right: 0.3rem;
+        }
+
+        .info-window a {
+            color: #1565c0;
+            text-decoration: none;
+        }
+
+        .info-window a:hover {
+            text-decoration: underline;
+        }
+
+        .directions-btn {
+            display: inline-block;
+            margin-top: 0.8rem;
+            padding: 0.7rem 1.2rem;
+            background: #6F4E37;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .directions-btn:hover {
+            background: #5a3d2b;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .controls-bar {
+                padding: 1rem;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            #map {
+                height: calc(100vh - 280px);
+            }
+            
+            footer {
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -20,20 +457,20 @@
     <!-- Search and Filter Bar -->
     <div class="controls-bar">
         <div class="search-container">
-            <div style="flex: 1; position: relative;">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="Search by name or neighborhood..."
-                    autocomplete="off"
-                >
-                <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
-            </div>
-            <button id="searchBtn">🔍 Search</button>
-            <button id="clearBtn" style="background: #999;">Clear</button>
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search our 148 coffee locations by name or neighborhood..."
+                autocomplete="off"
+            >
+            <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
         </div>
         
-        <button id="toggleFilters" class="toggle-filters-btn">⚙️ Filters & Options</button>
+        <div class="button-group">
+            <button id="searchBtn">🔍 Search</button>
+            <button id="clearBtn" style="background: #999;">Clear</button>
+            <button id="toggleFilters" class="toggle-filters-btn">⚙️ Filters</button>
+        </div>
     </div>
     
     <!-- Expandable Filters Panel -->
@@ -42,11 +479,11 @@
             <h3>Type</h3>
             <label class="filter-label">
                 <input type="checkbox" id="filterRoasters" checked>
-                <span class="roaster-badge">📍 Roasters (125)</span>
+                <span class="roaster-badge">📍 Roasters (138)</span>
             </label>
             <label class="filter-label">
                 <input type="checkbox" id="filterCafes" checked>
-                <span class="cafe-badge">☕ Multi-Roaster Cafes (7)</span>
+                <span class="cafe-badge">☕ Multi-Roaster Cafes (10)</span>
             </label>
         </div>
         
@@ -54,7 +491,7 @@
             <h3>Rating</h3>
             <label class="filter-label">
                 <input type="radio" name="ratingFilter" value="all" checked>
-                <span>All Ratings <span class="filter-count" id="count-all-rating">(132)</span></span>
+                <span>All Ratings <span class="filter-count" id="count-all-rating">(148)</span></span>
             </label>
             <label class="filter-label">
                 <input type="radio" name="ratingFilter" value="4plus">
@@ -70,7 +507,7 @@
             <h3>Region</h3>
             <label class="filter-label">
                 <input type="checkbox" class="regionFilter" value="all" checked>
-                <span>All Regions <span class="filter-count">(132)</span></span>
+                <span>All Regions <span class="filter-count">(148)</span></span>
             </label>
             <label class="filter-label">
                 <input type="checkbox" class="regionFilter" value="central">
@@ -117,13 +554,16 @@
     <!-- Stats Footer -->
     <footer>
         <p>
-            Showing <span id="visibleCount">132</span> of 132 locations | 
+            Showing <span id="visibleCount">148</span> of 148 locations | 
             Community-driven map for <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
         </p>
     </footer>
 
-    <!-- Embedded locations data -->
+    <!-- Embedded locations data and JavaScript -->
     <script>
+// San Diego Coffee Locations Data
+// Auto-generated from enriched data
+
 const COFFEE_LOCATIONS = [
   {
     "id": "loc_001",
@@ -286,6 +726,85 @@ const COFFEE_LOCATIONS = [
   {
     "id": "loc_003",
     "basicInfo": {
+      "name": "Revolution Roasters",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 33.1606696,
+          "lng": -117.3478621
+        },
+        "street": "1836 S Coast Hwy",
+        "fullAddress": "1836 S Coast Hwy, Oceanside, CA 92054, USA"
+      },
+      "contact": {
+        "phone": "(760) 529-9736",
+        "website": "http://www.revoroasters.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=9377876199536006272&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roasts in Oceanside, CA. Has shops in Oceanside and Carlsbad",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404460",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:37:37.131096"
+    },
+    "googleData": {
+      "placeId": "ChIJky3t8f1x3IARgBTvpLfoJII",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:37:37.130986"
+    },
+    "googleRating": {
+      "rating": 4.5,
+      "reviewCount": 702
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 6:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Tuesday: 6:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Wednesday: 6:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Thursday: 6:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Friday: 6:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Saturday: 6:00\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Sunday: 6:00\u202fAM\u2009\u2013\u20096:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJky3t8f1x3IARgBTvpLfoJII/photos/AcnlKN1BXt9JbJj23I_4RPkJJgQpkc3eIqdE4nRBrhzU6990qthqtLUsbME98XH1L_rSWiTXhM6Gh7Er5Wb2hF4BeHTXNxqhwkctlYEytvxwXR-6_VJcbvftK18AN6BHt3BdSoFmMODrCS7t2H9Fv9uckjHdOjZuIOh0ZKa5qsHe2r7q-djC3jcA9Y4ZZtbP0Q771IhLRuOwB5kn2osd_YZJb8IY4q-HyxXj2fptWRzPvzGNtSjwoIXrjPan4qAbFrmwxxr_-_oyEwTTdR7DDuI7p6x7vaA_R1_7kPuB_ZMB0HU8rQ",
+        "widthPx": 2048,
+        "heightPx": 1365
+      },
+      {
+        "name": "places/ChIJky3t8f1x3IARgBTvpLfoJII/photos/AcnlKN3189kWBGRfQhKpiLDYhhdtXZIolojQyV2FFSyRy4d-tERUhe5B3bxetbzaWnU0ZelwMIoQxomNoCBLFdUbEZZ4HdP8oiC2TFrMbaX4p1GucsNQls8aHHfMzk0wGy0EkiuGh90G72X5fUjN7swdM_hWgaf-lSUA99KbSdYNbIfeBys_xLGVA6QmxRElU1qzyY7SWdkzfDMkfTI-Fm8hpeJ8_EcuENM7ek0_mAeCVrKyf1uTeEHOggkMzKvBDEbWrnESB1XhUg0-xGVwRc_H1LCQw4FfZXohdzVbLGTn2cj-mUdwBEXN0twDS1EGGADGMEqoh3sfl68RvRE_dipjbe_Jt3hziRBE3KnKyQ_fzLa_Xgp-JplZ_jtFEWy-Qnno6AQqQxbEiNoJfuiuYtrtXzUnUiwA5y1KuvGGuY83U3v8B-s",
+        "widthPx": 2778,
+        "heightPx": 3526
+      },
+      {
+        "name": "places/ChIJky3t8f1x3IARgBTvpLfoJII/photos/AcnlKN2-ZpSZjV2om9_llkGTibhEkFJ1nPEm73wB-lwcsuNy-UTfwHmaVdifuBFV1lZILp6eWyro_8uWK6P9HlXD3UYEndKUyiSi9ctX2flZVwGSUzR8JsGcD4ns0f_gJg1wY8H2fKj1vd_vciR6bFNnBZcE3egqm_FXXM6pOmqLO5cOMAsanDM8IvIWUlQi-ueJBRR1CjCQdhuRA7g4cHmGiq5gJOLztpx_nVrhDBMk7HBgn6zO0aC7C8iXc_ktpqVNrLoWW_hlEY8Bp0N1cLcX26AAsyLNisdapIp9BBiya2Env965WfuFaZxtkOEC84ruSKGx_WplM3nkiMe45fqh4xW9Rfklw2LPXHnrExyojqA-7QIVtvA-K0055VycjOn1h85ZucfHYuAkFWxNBgAJaFRTTgHn0PTTjokM_Vu3J0pWtRTP",
+        "widthPx": 3000,
+        "heightPx": 4000
+      },
+      {
+        "name": "places/ChIJky3t8f1x3IARgBTvpLfoJII/photos/AcnlKN1nfz0b_5BF7KqsTl_jkWf0IuoHXiT9aCjNnC3AeYs_cTOgmwMLydhPKJS1RTXbr0IJFUuHRGgDttzmsn7Waz555l5C2K7LDcSPi9iNL8oNX9kyM1hQ261qfziRiSyFfER8bOQebCgfPcQj0IzHf1rhC3tbFh7tdEvLxmI_tYQm22oDvtVhJCpzuZlJ_rqrQ1HIJcNJ2WYoV3hvJnLzhj5eZBADI1FEWIigNtpdI0jUoGVPh7Lx8T0Hp_raxTPxTtsE6Aey_PNrtGFJTMgtyFhzSZEo7TBAD5onyRmLUZZ8vsBWTk9bF6Rg0algd0G5__aojlejJ3VnP-EzH_DU_iaPwsSOqCcIwAv8gSkzCUfdRxCZ6dkwozyrDfiKsKnl1PsU2UlwtvOfxSY-8xMS1Nx8pqas13riiCXOblbp8V_ycR4",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJky3t8f1x3IARgBTvpLfoJII/photos/AcnlKN0BfMMLZWWqMMdGJ_gCpoEfF886U-0SAe5TDaTRBviOBY8eqjsVJJtFCUOVqK-YKaejNz8pIssOqWxO4-R_Rf_xM-2w8mnM3P41MAiloLVnni7TWX204-rh6MPhrfj0JS-7CBRI7UrwabTR5HRZshyRnvYd_M_Xtd4VUdfvfQ6ZB6VW2mxdjzSWVEI94AqA9D2dWXMElGwfrNdwMA8r_bfCgv6w_l_j4bwleZq_87To0byK7omjyZ3zKepOMv-zCZfquvsrPeoZSUNvLfFXi76kQKJg1Wq8pleB2OTlpoxiFKDRwc7F_RKBh6oiUDQ1bI4nIzWrxbXocqCd58do8l7e3BDt8zyhDTvZrB3pbkPruSsDhGOVuMi0orgPnzxEkqyKy86sqSiBvWOcNfQGMPqfDkI30utbCzLUg_VWAahENoIo",
+        "widthPx": 3024,
+        "heightPx": 4032
+      }
+    ]
+  },
+  {
+    "id": "loc_004",
+    "basicInfo": {
       "name": "Baba Coffee - Coffee Carlsbad",
       "type": "roaster",
       "address": {
@@ -363,7 +882,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_004",
+    "id": "loc_005",
     "basicInfo": {
       "name": "Interim Coffee",
       "type": "roaster",
@@ -442,7 +961,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_005",
+    "id": "loc_006",
     "basicInfo": {
       "name": "Necessity Coffee",
       "type": "roaster",
@@ -521,7 +1040,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_006",
+    "id": "loc_007",
     "basicInfo": {
       "name": "Lofty Coffee Co.",
       "type": "roaster",
@@ -600,7 +1119,86 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_007",
+    "id": "loc_008",
+    "basicInfo": {
+      "name": "Lofty Coffee Co.",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 33.0497867,
+          "lng": -117.2945767
+        },
+        "street": "97 N Coast Hwy 101",
+        "fullAddress": "97 N Coast Hwy 101, Encinitas, CA 92024, USA"
+      },
+      "contact": {
+        "phone": "(760) 230-6747",
+        "website": "https://loftycoffee.com/pages/roasting-works",
+        "googleMapsUrl": "https://maps.google.com/?cid=13118323980994896254&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Production Roaster (Encinitas) with shops in Encinitas, Carlsbad, Solana Beach, and Little Italy",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404540",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:37:44.559441"
+    },
+    "googleData": {
+      "placeId": "ChIJFUxyJ10M3IARfmGwJyimDbY",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:37:44.559344"
+    },
+    "googleRating": {
+      "rating": 4.5,
+      "reviewCount": 350
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Tuesday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Wednesday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Thursday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Friday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Saturday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Sunday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJFUxyJ10M3IARfmGwJyimDbY/photos/AcnlKN2Y6zTQUfwx3BuLEQpOaJXard0Ac_AnLt-0hkYr5b_hK2Is_lmKHF-3ZWjDZl5LUdfgTCrMsTaPW8D1aZuhXdeQMPb9zisMRJbm0DXQSnbUotCTZFrXJLv5FrTxQQ0DveduoBfuy6ldFTQzDQNqMgp97Z3knuOvvuPf2JmxJo4Z1ZUAPejXCCo96y6--XkaWvY5oolfODEyiOod_FEjVlzNqVpRzdpY9-2IJurCmCmgz_kKUoXE88iI9NF4N1Ruv7yAShjNBwdotJIHyuvlgEIXBoGGfGjmUYqD5Ak44UEuiQ",
+        "widthPx": 1024,
+        "heightPx": 768
+      },
+      {
+        "name": "places/ChIJFUxyJ10M3IARfmGwJyimDbY/photos/AcnlKN3lsyLVn22A5JFa_J4IQFjXB3G2PnbzZYpmSw_mbWnlyrxyOhkwLnrMQyyMnIYgnVfqOXFZx6UaLTjUG2-c7ug7KByPWSOgbBDDVRQOR1WVThHkPqhNKK8z-0Gg5XIovWqHBGPmBeNzp8CPUSx4b8abVwdRXyWqRd99Mz5Fb23TKKYeQbdWZeIUyOa1OyBCuWWfidz4Li527c6bL3vUjV5mX2csfCwBgfCDn9gvMOgX_gNA2rSzvKBvCVGZxwbSIUZulqxEdLRsW7QzcPRhdQcO-ciRSZjHa6TNd_0E8rahgg",
+        "widthPx": 4800,
+        "heightPx": 3200
+      },
+      {
+        "name": "places/ChIJFUxyJ10M3IARfmGwJyimDbY/photos/AcnlKN0pmi--LP80N6sFH524vXgLmYQ1Jg5esjhkeuN9p_0-5BnCt5XDzHukHqiA5oLbfQABu_tDq9XZfGKc6x3qqMuqp9L1lZJu_tE1vcwSQYeFGKxWsn-jx4_6p8CmRANriknlT13d6VesFVoJYnYZKqIo1k1ZXumpSNdfGx8ApPFcjdSFlZPJKDPytg0ceCg6p5pl7FqIi_1BFomQcXAvC5cfttvxRKH_I94ow0Gs7H30uLLNlE4gObWwmoUCEbz0rhbtMqfHNoQY-4BeDaSQ5CsDDH7JFgwQkZ_Ke1dIODxxxw",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJFUxyJ10M3IARfmGwJyimDbY/photos/AcnlKN1_W9J4qrTbcVKtrK_NhlJiHjpovjZ_NGRa5qU2mfUIKNQqV9PmqLGfkfGh1a7o-irNEHEiySElXVBjJrcoZXTC98GegDbPyQDKXd7aUgQ_JGO48c3tmvFVTB5s9W7-qVq_HwR6FBj6e3hyY24DoUGpFwhDavYzjeB1t2XGP173bes7-17JfrgDM71bxKjbh4oVLSCm29re4ulPtT2b091ZhRpL_dWWt99GXidNc8fsJ3RqvP9imCeZKFk1Dh4sZf9Iw4om-uMtYw2n4mipyZ12rdO9OhuAld4mlwi3KzHziL34aO98lqvQ2dVRNaBL35HdGdYhlgKjNFtvfAyJGHjqcUuegdIm3vBICidglKvkiSDvcU95RvkHL2VuuMRhI2qtFVsHpgwdnDYcce-dgFuzqa78A-USp825LGYkEybj5A",
+        "widthPx": 4032,
+        "heightPx": 2268
+      },
+      {
+        "name": "places/ChIJFUxyJ10M3IARfmGwJyimDbY/photos/AcnlKN1JKZ24wwvRh3x41-cQ_Jh34BumB0F7Xhx4ZVKr4d-WVoyj9icK4bpk0Cz_eCyqnogOUcqZrdNU1zN8oMduWPRKQdx19fjjmbRXCn4pnL9-hCfEuKjL1j1QtT8mkzGZ_2ORDLAHsiRT6RG58WocbMokowCTpeHDj4JdDrLqhdsWigdb2PfBi-hNABPNA7aCQwyU-wV3YK_qfGcTexYeM8zAIKjLqAJQ1f_6k-hFsDtsOs1N_mDnttiW4dHtNbCHwOBcJEX-gkn2vLpN5sR7gAfV4R1kOVB3TytYCOf2Q-hERg",
+        "widthPx": 3024,
+        "heightPx": 4032
+      }
+    ]
+  },
+  {
+    "id": "loc_009",
     "basicInfo": {
       "name": "Lofty Coffee Co.",
       "type": "roaster",
@@ -681,7 +1279,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_008",
+    "id": "loc_010",
     "basicInfo": {
       "name": "Lofty Coffee Co.",
       "type": "roaster",
@@ -760,7 +1358,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_009",
+    "id": "loc_011",
     "basicInfo": {
       "name": "Lofty Coffee Co.",
       "type": "roaster",
@@ -839,7 +1437,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_010",
+    "id": "loc_012",
     "basicInfo": {
       "name": "Lofty Coffee Co.",
       "type": "roaster",
@@ -920,7 +1518,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_011",
+    "id": "loc_013",
     "basicInfo": {
       "name": "Bump Coffee",
       "type": "roaster",
@@ -999,7 +1597,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_012",
+    "id": "loc_014",
     "basicInfo": {
       "name": "Bump Coffee",
       "type": "roaster",
@@ -1078,7 +1676,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_013",
+    "id": "loc_015",
     "basicInfo": {
       "name": "Ironsmith Coffee Roasters",
       "type": "roaster",
@@ -1157,7 +1755,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_014",
+    "id": "loc_016",
     "basicInfo": {
       "name": "Mostra Coffee",
       "type": "roaster",
@@ -1238,7 +1836,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_015",
+    "id": "loc_017",
     "basicInfo": {
       "name": "Mostra Coffee",
       "type": "roaster",
@@ -1319,7 +1917,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_016",
+    "id": "loc_018",
     "basicInfo": {
       "name": "Mostra Coffee",
       "type": "roaster",
@@ -1400,7 +1998,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_017",
+    "id": "loc_019",
     "basicInfo": {
       "name": "Mostra Coffee",
       "type": "roaster",
@@ -1481,7 +2079,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_018",
+    "id": "loc_020",
     "basicInfo": {
       "name": "Petco Park",
       "type": "roaster",
@@ -1550,7 +2148,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_019",
+    "id": "loc_021",
     "basicInfo": {
       "name": "Mostra Coffee",
       "type": "roaster",
@@ -1631,7 +2229,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_020",
+    "id": "loc_022",
     "basicInfo": {
       "name": "Manzanita Roasting Company and Coffee House",
       "type": "roaster",
@@ -1710,7 +2308,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_021",
+    "id": "loc_023",
     "basicInfo": {
       "name": "Manzanita Roasting Company and Coffee House",
       "type": "roaster",
@@ -1789,7 +2387,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_022",
+    "id": "loc_024",
     "basicInfo": {
       "name": "Jaunt Coffee Roasters",
       "type": "roaster",
@@ -1870,7 +2468,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_023",
+    "id": "loc_025",
     "basicInfo": {
       "name": "Daymar Artisan Coffee Roasters",
       "type": "roaster",
@@ -1951,7 +2549,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_024",
+    "id": "loc_026",
     "basicInfo": {
       "name": "La Costa Coffee Roasting",
       "type": "roaster",
@@ -2030,7 +2628,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_025",
+    "id": "loc_027",
     "basicInfo": {
       "name": "Origen Coffee Roasters",
       "type": "roaster",
@@ -2109,7 +2707,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_026",
+    "id": "loc_028",
     "basicInfo": {
       "name": "Coffee Cycle Roasting",
       "type": "roaster",
@@ -2190,7 +2788,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_027",
+    "id": "loc_029",
     "basicInfo": {
       "name": "Coffee Cycle Roasting",
       "type": "roaster",
@@ -2271,7 +2869,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_028",
+    "id": "loc_030",
     "basicInfo": {
       "name": "Zumbar Coffee & Tea",
       "type": "roaster",
@@ -2352,7 +2950,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_029",
+    "id": "loc_031",
     "basicInfo": {
       "name": "Global Coffee Trading",
       "type": "roaster",
@@ -2418,7 +3016,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_030",
+    "id": "loc_032",
     "basicInfo": {
       "name": "Bird Rock Coffee Roasters - La Jolla",
       "type": "roaster",
@@ -2499,7 +3097,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_031",
+    "id": "loc_033",
     "basicInfo": {
       "name": "Bird Rock Coffee Roasters",
       "type": "roaster",
@@ -2580,7 +3178,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_032",
+    "id": "loc_034",
     "basicInfo": {
       "name": "Bird Rock Coffee Roasters",
       "type": "roaster",
@@ -2661,7 +3259,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_033",
+    "id": "loc_035",
     "basicInfo": {
       "name": "Bird Rock Coffee Roasters",
       "type": "roaster",
@@ -2742,7 +3340,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_034",
+    "id": "loc_036",
     "basicInfo": {
       "name": "Bird Rock Coffee Roasters",
       "type": "roaster",
@@ -2823,7 +3421,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_035",
+    "id": "loc_037",
     "basicInfo": {
       "name": "Bird Rock Coffee Roasters",
       "type": "roaster",
@@ -2902,7 +3500,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_036",
+    "id": "loc_038",
     "basicInfo": {
       "name": "Bird Rock Coffee Roasters",
       "type": "roaster",
@@ -2981,7 +3579,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_037",
+    "id": "loc_039",
+    "basicInfo": {
+      "name": "Bird Rock Coffee Roasters",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.8790308,
+          "lng": -117.2325748
+        },
+        "street": "9500 Gilman Dr",
+        "fullAddress": "9500 Gilman Dr, La Jolla, CA 92093, USA",
+        "city": "La",
+        "zip": "Jolla"
+      },
+      "contact": {
+        "phone": "(619) 272-0203",
+        "website": "https://birdrockcoffee.com/cafes/ucsd/",
+        "googleMapsUrl": "https://maps.google.com/?cid=14436247728852708308&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (San Diego) with large production facility on Morena Blvd and locations in La Jolla, Carlsbad, Encinitas, Little Italy, and Downtown San Diego",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404777",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:38:44.857117"
+    },
+    "googleData": {
+      "placeId": "ChIJ9dveDOIH3IAR1CvOp9LaV8g",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:38:44.857070"
+    },
+    "googleRating": {
+      "rating": 4.5,
+      "reviewCount": 39
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Tuesday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Wednesday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Thursday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Friday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Saturday: Closed",
+        "Sunday: Closed"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJ9dveDOIH3IAR1CvOp9LaV8g/photos/AcnlKN3xKCTj1atp_nlpZqg_YU6Fu0CZIWmllB1WN8G7UyjtS0_dcczXSx_aJyat9lH_2yoS0iZHIqgYmrZaOFluUeXiEAlWaidIOdSRk33tqraysQCkN1i9eL0XG6MIgjnIRLyYhPD3F7WoOYlkxV1OkozYp86-2wwYXjoBGRQ7yzqy8NlR93UAQ27VYpKVmSZBjllrN4ipajYfovdFVLjzNAtQpmgeUdMKi8nFn8veq2nWdw6j1T33ZKKFOQxJKmth1jHXwO9RCODZSGj2_KH24QMLMIiOjlS8cZvT9I-kCGSUSMrxLgTw-OKQU_RN3oy0ESUosVKSVEYdMiasEOn5EeKTmOZelb7U3vPrhylgGmZaX93aFO-7Qr7ZfjSOVZvxVUxZ_yN2vnF6xSz5zT1-IhbCh7A-5u2doTNegkz0gnRFYu7qFoIGNIgDCXzk8tte",
+        "widthPx": 1080,
+        "heightPx": 1440
+      },
+      {
+        "name": "places/ChIJ9dveDOIH3IAR1CvOp9LaV8g/photos/AcnlKN32rvJzvViYfjfgSv7inGEAgXVID_0MRkcpvD0cJr23jytGm1og1sm_ugpTzV-zR4hYUiG1LI8E0hg6BzppZFII2Rd9btTlsY7xrgYaXSYjD_Jew-iUNpuBG6TSAwkZE8RtndInXUaJx4AktmYuUhWTSBfDSoqD6t6Ks_LwntQkF5azYHgGWcVupcrcaBHTUb7Jz09VmGnFtp5xq4Vm-3HLTN2NUaWX-aBqVGALMnhjvuREVUKT13xMW4fH0OFL-ynTq4QyjXyRkIsnahGZtDxs7Q7VFk_xPem1QM-FU2Olcowi8wExvfv-KMgEGDkQdFsGVB_b1NWZc9VOupqtRjH6jYHw7WtB-DKnawXZPFtmyrLYkQYYyXpHNoUAUvk_M8iNN3o_RmMytvsH3v3A630L8ypG55y8_D3ResjB4z-vig",
+        "widthPx": 1082,
+        "heightPx": 1443
+      },
+      {
+        "name": "places/ChIJ9dveDOIH3IAR1CvOp9LaV8g/photos/AcnlKN2qEZvK35r7Yjrsun8eQb44JZmqZ-eEwVuHfNR3YrO42LwRBwaj-5XmBbeDKrnkuWxeY-xGDYymiJXsBVeVP420GFruEbivrssIyT2Hj1PnIkBCarnuXO-yROPXiodMpPAjI6QlC7cRKMqleoTMb_Rx1iNkXh75gcbgcq-1OQuXe6SV_1ILEZqUV1XrllTazG0wRoRC666gYb0lH42y9B63Sj9byTDYUAcP6dD6_nV_OCNP4Jud1MXswknwFP0KxkPSWnXKI3a88OyGynvxL-32RsH2yVj_H0QQML_df7pQiJqTOExn6l1rzW_fxf2Qj9O6Ee0uv8G2v9_-ZMgnbV8EEgMx7HAw5koyT47npVhV7SKWazpgZuDlpXLBOGwn2VolGNvQnWnXb_mSuySDFTWIoc_-aHpRqpQFDIQoYsSDflZj",
+        "widthPx": 4032,
+        "heightPx": 1816
+      },
+      {
+        "name": "places/ChIJ9dveDOIH3IAR1CvOp9LaV8g/photos/AcnlKN3EGFaE6MIlULK_9e83BWX-iMyyESH4EwsWR72qitt4Nk3-e0_Nv-Fn5vlMum7fXFE0NVuWBXoZvf7xIYcv_96LExcakiXWti03AQKvnGE1KDrqp3g4qCfeJ9NBHg7BcFjjd11mcmnqM295emDsXgTkW1T51ifUK8IFy1ecxGGvvtlDUBoNNHVcult2HUlhX-IceibsVxpsEmmM2xJA82YrumkEZKQjvMVmamNcFfDnPlwtr1dkOSaRSDG41a-OQGOK7pDxKzjYI_vfUjo_9LtIzj3L4g6q2dypxkSbHnqvCoqq47QPViL5InoFlc7UAWgUlSEqNz93M5vHS0b5H1SLhYplW3PTd37wnb4F8VaKhDN8zSIceYKnbgQ6OHtS_oGLDvC8xqNAif_hPGayVJA6gsBfSIJ1uwl0Uj6DmWNEUA",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJ9dveDOIH3IAR1CvOp9LaV8g/photos/AcnlKN2qOrAC7wQuJF2S0emh-WbNTK0S0HxxxyraYe9EEabMPi_0DfESy5YFcTHAz7cn2j7YBWCvr4vZ_SL3KiGnwuo_qgd-2Mqd7IijoLVvnAG8rihGKj5kzSm5WV4fHHSl9HPxXbBOKCafWGyqWwg-55JBYY267WcIsYT3GC6XVoPTpRexk5R68wJy8MVIYBOMpXlrYhbjHsG6cpl_XAqFyL8PRXvROur9KnUe_ZC67kIIiBv0_mV-7M5roJlkUd-bvb2wBpr8hkBnfOY8tvGLZ8-ya8hOeklOdxoKhotWAUBqr9ZlI17bSFoiIrdBHi2fmXkLxSXLbSOEWn6L5teQqazLtC5c_VGByr1Igxmm419Tx6PQpxGvh93ajgEi4rUHX8_4VDom0vSheuLpFNAyYDu8TdSSnwtNXWa3TjGtMLbVxK67I6VSRIwbGeNXQA",
+        "widthPx": 4032,
+        "heightPx": 3024
+      }
+    ]
+  },
+  {
+    "id": "loc_040",
     "basicInfo": {
       "name": "Torque Coffee",
       "type": "roaster",
@@ -3062,7 +3741,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_038",
+    "id": "loc_041",
     "basicInfo": {
       "name": "Frequent Coffee",
       "type": "roaster",
@@ -3085,7 +3764,7 @@ const COFFEE_LOCATIONS = [
     }
   },
   {
-    "id": "loc_039",
+    "id": "loc_042",
     "basicInfo": {
       "name": "Snakebite Coffee",
       "type": "roaster",
@@ -3127,7 +3806,7 @@ const COFFEE_LOCATIONS = [
     }
   },
   {
-    "id": "loc_040",
+    "id": "loc_043",
     "basicInfo": {
       "name": "Acento Coffee Roasters",
       "type": "roaster",
@@ -3208,7 +3887,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_041",
+    "id": "loc_044",
     "basicInfo": {
       "name": "Better Buzz Coffee Hillcrest",
       "type": "roaster",
@@ -3289,7 +3968,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_042",
+    "id": "loc_045",
     "basicInfo": {
       "name": "Coffee Hub and Cafe (Now Juno's)",
       "type": "roaster",
@@ -3370,7 +4049,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_043",
+    "id": "loc_046",
     "basicInfo": {
       "name": "Cafe Moto",
       "type": "roaster",
@@ -3451,7 +4130,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_044",
+    "id": "loc_047",
     "basicInfo": {
       "name": "Talitha Coffee Roasters (Roastery Only)",
       "type": "roaster",
@@ -3532,7 +4211,250 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_045",
+    "id": "loc_048",
+    "basicInfo": {
+      "name": "Talitha Coffee Roasters",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.7315886,
+          "lng": -117.1610298
+        },
+        "street": "1622 National Ave",
+        "fullAddress": "1622 National Ave, San Diego, CA 92113, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 550-1830",
+        "website": "https://talitha.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=4303062385582981103&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (Barrio Logan) with shops in Bankers Hill, Morena, and Liberty Station",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404852",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:38:57.662118"
+    },
+    "googleData": {
+      "placeId": "ChIJTVFJ0WlT2YAR778E63CMtzs",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:38:57.662054"
+    },
+    "googleRating": {
+      "rating": 4.7,
+      "reviewCount": 367
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Tuesday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Wednesday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Thursday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Friday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Saturday: Closed",
+        "Sunday: Closed"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN14RMFrZLiIkmex2NSIs6Llg27RKVZFmY7GD6DAttW3UurGClAQW6FOnUHySBkatqiqU926QPjI87Fc0wKneunOPzzgyyNGnyvkbstue02VLBGw6pm_9xQBXNU0HmxlIHpUF0Xbt2Rz9N86VIKlqjm37jWjNN5wH7jGd5Ewb8NHPx7GW7XeOG0mDsgLOMMZ1m5XHTPJ0IEhfk3Em1ZKeXX_qFPhSY1VQDMZNtdZNWEZjoQEww0WbhJu4xMETYVs-_KQKmv44D70NLoTGKQYRf_M9wvVjdTMAW3pL0JxtdYqvw",
+        "widthPx": 1079,
+        "heightPx": 1510
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN2zicagtuoqAg_6EbIgPzeYtdcxNgkG7Ia5gJjYhwGiXCqAZNWkkuv_vh3xqkHF0p_n0JV4yOGL-ywqqiDi6okoVjUZk0IrcM1nGNhdEg_e9TTvrDvQNwXXPyjuZSU8P8tU8AVcGzHg9je0CE8k1tKmO82wIVAbpaq7VPzoimpBJ2k-CAYC2jv3zI4vDBf0i_E7Jt8rkMIkCESjthQomkz9CM3Y-azL4tLC3g6vBTUCIk06ZeINE20LvCdr3SqO-JDxrbpb-2FXKWjWVb-RqWV6M3pGBP-slTq5eQYeThV9HM7VMm8vxDZ_7f0vGUAmcSjLpioyKRWU9VDI-u5hRG3q0HJtJXNQr6ioddnj0wc_bVbIZC6EipGZ5Kw7Z2X9ZysMqC0I0UIGIRKGuAUu_Y4laX42mrs0hmXwWSmxHx6I58o",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN2RBs4VMEEanl31jrJZxt-MDY3EdZGbVb5Wf_sqIGLRSTM3t9VbWt4KfoTCvIrqkMkOReNmGjSdhBaKzfCCZA2-QEnHe_8BApB37xcFC3fCyHejhasSX4iGYUCvy3qPET_yfvtk-vU3LRmr_WVhpUuZsoEagDwD6nORwjYuc2AZ7ULhnCkBPCZhV0hsNfQ277SScNntGoOrBYO4M20UGOdkngS79bAtnYJGcTYJS_TbcN2hU5zjea-bO7RtmEsF09S8RA8SrHG-SiS7brtIKFNj2jY-mCIntd1VaqI9p9fxuc9WO8L5y7-OPdV05twO6rSoUCdf1EImSXu-iuJvrVpXqsCIeEwDOMp2IJPQ8ktECQL1qKGrnm1tkdQgE7rxrEA1r7d2ihvqPy-vtiBAKt5q52JBTOgDKV3iv_cmUkRckkk",
+        "widthPx": 598,
+        "heightPx": 598
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN1ZpkaezR8ZW1Z5XAvOcvNK9EjZVgaiuoqHaAJzGYmxTsnLxaUiIIOJRBHfITYZ_BJA8PuVwQ7sMP_hIyFYBW4ihr2P_Axj6u8VqjyX1i7VETKjPtIrU_IsYlg-yaUl1h29zV7d9uWVeCOJBnnJn9m9w7vfJO0UmOByI90GYiI01jjFGy-mgQrbMlaMIsiaXa5zW7AHxSlHMc5hFLZCozI7mRhvvUYQlStNty-ct1I-oswDMld_tY02QFlp9UBqXR0wT_MjioMwReYTrXC6lrNDQJl2I5Hs5H1VrD8WI1_BCCA-tjs2_SF6-ih-VSwMmejQwAyyogk0NYpm_ceDuwaU1FKuZ11F1c0Y_rOwW8a6xCr3Kb3mbrmvJy89aF_t67vwCxLavKzUxHB4VfWVooJ8P6ij_k8gqG5KexCucB8iwPM",
+        "widthPx": 599,
+        "heightPx": 599
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN3IwyVipeFCKoZLzKX7xcbuWWqT4RqgLC8GIN-Jl09IQJrG7cAvYUGH89YOCwVMfPOrkeTmQrNfR6CBroMfHu0FnoYA8SFrl0NrYHeXXSCbIWXmkky_2e77j8JmmXNS_dGyglStWAWYyODkFroczmlOrWLd9d5QPfzH9nXwFHF6DKeFcplHc0F2v04STyoZe8FhQiA6SNkHnDzvWQxAVmAx0ELbryYJRULzYXyqg7klT8fljeqnJCR84FPWGeXuH_hNU3WTbGth-HTYSKD4X7LaFKCrNHOD2tkrG1Bk99I81uUrz2gYW6_DFs20H6BY0FRu8w9HVrll65Y3hGBuZ9CIvqm3RvL-YYwxdsez69x61_8o8LcNIVThh5DCkTM2nsbPFR43wV0nT1mfh71FRsFieRIYJXoYmaxDIQFiBalAIPNj",
+        "widthPx": 3888,
+        "heightPx": 2870
+      }
+    ]
+  },
+  {
+    "id": "loc_049",
+    "basicInfo": {
+      "name": "Talitha Coffee Roasters",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.7401278,
+          "lng": -117.2111972
+        },
+        "street": "1622 National Ave",
+        "fullAddress": "1622 National Ave, San Diego, CA 92113, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 550-1830",
+        "website": "https://talitha.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=4303062385582981103&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (Barrio Logan) with shops in Bankers Hill, Morena, and Liberty Station",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404866",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:38:59.085853"
+    },
+    "googleData": {
+      "placeId": "ChIJTVFJ0WlT2YAR778E63CMtzs",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:38:59.085735"
+    },
+    "googleRating": {
+      "rating": 4.7,
+      "reviewCount": 367
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Tuesday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Wednesday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Thursday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Friday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Saturday: Closed",
+        "Sunday: Closed"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN2Fx0eGflqaxXdPfB84Wycz5JwCBWHsPLCiMdVZckBX_birygWrAy_SMsIx2a2JcVPaXFzo17HXQTj64qygbsHd6bJq6SvkENTrPhaGd6XAfEaK2U9mOgDEflxCUZ_YF7OnO8404JehhTQ0dZazBKpzL-UuXp_Ek4nH4FdGbIY7RXE7TiEM8zvSIwDyrCjKQ8klEEC_U5xNaa7IB0Ljj95sF4bcYcD-Iy9qpYfOJITbmplgh2fOSdAACh9do1S_xiynTdIg31MzyJ4OrUhxx8C08EP3_URjgWxafnRlqtPXHg",
+        "widthPx": 1079,
+        "heightPx": 1510
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN17VMgCm2l0Ttt3SiId_1Ra9_I4s6Jwz0csg9SQ3SVgYGDyKgzjj_CDqFxn6CYRZHDI6E-_6_CnpOfT0sfvNh2PJ7dXb2bkhyZZRCS6MA6-Lrnv-4FbJXG57kmSrzR_7LMHzuEJRsmP2Jk6i5OLYNA-xiMl4gt-pxHytO8_OwS00RtIeWRP-cCAc4VMTVEVdsZFbL-r1RHJzdZCxNkYpH6iEpqif22pTUIgGD0fdT3odTOhBoSf3syd9vcruOacxXJCKpGiHlkIVyKZ9iqzZPEWBBEgwSvna4Rfj8-8SabGt_bWdlqZNs0baKoCPFPdB4NUObIh5q2cL-uzySFvu1tHc7n1s8gzAV1om-0W7UeiNxx_wdsVJGC932gNkz11H6VoI9xscXt5IxSM--pY1uA5qk1ZlJ2xMpgi3ehoG5mBdWo",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN149KYilccEqB1vvVyU56xvjCBfPDU0jrt1rTyZGMcBihFzT-uAO-eGEbGWDFT-2YsrgrXIR8eVbabnmZlLokwuBT-Mn_GM-aXYpCcK_t2TStmQVf43zKBLpvWe9VTHOcj8mx6JrTfcjO2PTF3Lh63gZP8kVosTtJ70xl-Ut3X3I5BRqYZq_dQafireyiEX1fYfT5nbxowHpSNJXXQcdmuK69Q4MHM11FdQSylwbtJeN7te6gNSmjhewh9b2OYvQydqZrjlcXAK7qNxAXlGEjdqE4wP0-CTgI7hAhvES01MbGHI5Icz27ow7CjAPC6c7sFvn5KGu0CLlPiojXoiBeoAiHfDIVqsTzA5hvg9uIMXPYLcVAp2U36i1UBA8pLdMeaeGtKzdj1ZqD0Dl7xSjs9dGkDSGA9yOCqfVfuU61OpK0c",
+        "widthPx": 598,
+        "heightPx": 598
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN0PthkZpzi0tJBFkevIbuKvNeX-_F_METE0u5gJ14U_fuK0TUNNSI4SbavSdBteKXqTAFGmVhguJOu-3noo_3yL6PdK2eD0wsJ2_hOISi88qUWS-pJmSdmK0gdVpEjLdtQiFA3QQLPuP1dnxvLlp24ep089jUYBBHkKrW1b6P824uTW77kWgHgugRE7wbzCLO6mCqd8Lonvii-tMNlGCSoQyX6oTGFBP2Xlw5iFjshbolkbphXotFCE3DHoLNAKI8lTqRc9M4FosrQIcQbh8DGtPOCHtlvtoTCLD1rCNSaKV5C_43JXuRtLtATMNy4xIH139tQKKeHWUmKgJnO7bSdEodprpNCRw2wpw2THYteLRQnhEQfDcb_NNhAGptsngLmE80XJBtBHTmGXUOHtOJCdtjIVho85W1qp4VkufGyW_WY",
+        "widthPx": 599,
+        "heightPx": 599
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN3j3BdXkKhLsnTWCKoFl9j2l3sKHyZ1iUp-hT0D8Yt_ZNWC-rEPFpNQcnJlagay47AiD0dmbCYugOhYhcLPPPTk8zo8ovprWoUJuwkxQWKtbwaf-8ps0jVZmZIDgNbKG5j5xJAKu2eEjoLBOoj8hkKw5usTSukdHvOpcATroctYmtXe6GIe_x3i8VJYgXlx5YFYWhaCO4Sa7C86bSPF6Rzawz99DeFGQlcu82UtH8hjTvvJG_NnyJ_A4YFwcs-H8aiJu-sd44oqgIzeLuC1na-OnmPb_s5vHqRJP5FYHyVz-RrCRlLWpDPuyZPhvypTDz14omnd-qukO97n-ssCAUF1oJE0b-s0Uqzc3W58A6qXuLD0Oh2dEERIr6lQsH_VcF52rt4h-GSaA9CnMskQ38D8LaRY5bQQ7axuGL0xJwUPXoBX",
+        "widthPx": 3888,
+        "heightPx": 2870
+      }
+    ]
+  },
+  {
+    "id": "loc_050",
+    "basicInfo": {
+      "name": "Talitha Coffee Roasters",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.8150662,
+          "lng": -117.2191271
+        },
+        "street": "1622 National Ave",
+        "fullAddress": "1622 National Ave, San Diego, CA 92113, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 550-1830",
+        "website": "https://talitha.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=4303062385582981103&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (Barrio Logan) with shops in Bankers Hill, Morena, and Liberty Station",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404873",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:39:00.330710"
+    },
+    "googleData": {
+      "placeId": "ChIJTVFJ0WlT2YAR778E63CMtzs",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:39:00.330645"
+    },
+    "googleRating": {
+      "rating": 4.7,
+      "reviewCount": 367
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Tuesday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Wednesday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Thursday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Friday: 9:00\u202fAM\u2009\u2013\u20093:00\u202fPM",
+        "Saturday: Closed",
+        "Sunday: Closed"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN0M2zwc-oFpnkHw0qnGDM-SzhaYSvtKmb0OdXKSXvFBe4BZ9vXaCVCIFyIN2ix97UctzzyC2v2BLED1qgWe7n4ZzQbQE_t5NeFLeWoX3XJLcTksHvOnil6OWABbnGNZHduYjYNjQWpNFV3DZievMeTS6O4yuL6up7Cw901UOswqTmBtGFw5rQEB7ha0nzY5U1JbkKMwhkgYlprUzj_VaX3GLVWkNQ99viS5Vg3jBjbM2wgAxUjs_yrPybq5gmOEH-JYSfe8SvyZ68KAKLOM10Eb8sEhyIIQSwB3CE-gSEz8jQ",
+        "widthPx": 1079,
+        "heightPx": 1510
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN1zXrjXHfsjDUS5eyYPuCQR2csgG7fE0S-AMRCy4WeWpYXKwaiMq1nfFQjCBFuXpENsWveTjOn0fA-FQ9wJ2x5Cc2UBRwDhMU2tqpugrwNPrh4W_IyKVms5O2sjyhNpvFR9lsebFevwaHFyO8Ffuf7nNuJxYAhKwmjXtdwkD4iavcH3zt3Um8fDt4njdgaOgdhwAoC7AvAaws_MjGNLeh_0W3xJ_77dXCzDIs6LOtUv8zm5WkSGLiSsLo45Zuu-YtINlhKySi4bFMEimsBpntYKkDG7ut7KJKDHeTSIrrcH7_yPSbzxoqEG_4qOun4vekJDMwQ2NQWjBiIVaDk4T7JT7D5c2ez7aMUxmj7LqZTEgetzTrAS-FC6XmWTmFT8Hgx9DCT-epuGgyMH1ew-mn4wGLgCmFfmzXr0meCPnXgY3ME",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN0Cc_qUvEnwc49euBwQ763ZJ2DQig_LmcNmok9dm_7sFx0K_QqrURGnRAxDxg3zm9p-YrxcjjV7xdAtrQx6ketWrZUTy8f11RSToLqPcf4vVm-1CzKz6ycXFvDl-Idtp3y6E7Uw93hS_mxhJ4wyfvB6Q5uIkz7Ypd2XX1jy7UleICwzlvqNTimktW3ariQInEVge2tHgJnnBF-PRHnCEXXDTyzhNrQM2hJIAja3rXD8rXPVQ8iDL-vaKyuoScJxV4kut40rFOotNAH8q4lArg7v4gl67qPaQyc-u8uiJbH8j1J0QGdlao_TcYKkQm6uFrvhqP9aPXSDAY_pjXQMQOgfipZwlo2vubd1jFLPgUQfX14GoTFhHc5fBs-P9KkYbK6kJEEkP5Re2cekYlRx3kvr-raVGFSLFXzqSqhcQFh98i0",
+        "widthPx": 598,
+        "heightPx": 598
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN3NYi8kHU_fkkOCfpby-wn-xagpUva0jGbT5xWp60OBGjqHHOLXwOP0cbrtdt4PftSyCk5ViuUUzpmfuaKfmvHIeEzVZ1YWtfgtsrhpf5ZNb8X29nTv3h7gTaOogpCPThM6M8kgzAftI--VnG5SJJZVm1kpe1_vkxsdPQwolhSbEzeswQsrc2gJ7hS0JgjhXBrF95HyPaSjjvsZ_ireiC2998PEjDNTrsHZqhOy1x-SISbh5NOYAdXw_E9_tGQ7ae0PTvAfsAmnXTanSON8f8-y7YK25GCrD6Hc4A43tiXRhI4B_wg2RSHqVmEh0EBLLoXIJwgX5szwjR62NMXJvIO7-KUSAcIiyz70czExMPFPDpomsGy_b75tFyOgCnC_KIjCTwT0he9wvV-OI69T12c3mvFnTfaVaRJFRabda9alPkI",
+        "widthPx": 599,
+        "heightPx": 599
+      },
+      {
+        "name": "places/ChIJTVFJ0WlT2YAR778E63CMtzs/photos/AcnlKN1lvft9LRt2HJ8nZjPePg2NgCfhtS7-OI8eGRhsl2JZd_KkEV_fefudBnHrdfXNLuLBGnrtHwutcZ4bfMW339ILQ3UlS-ZHoxK72zZfAGjTiecyk_w82doK5GiEGen_EfK4NG-we-KdPDoXIXDGun6CbabyDuyxqDMWGJKzfGksLBhSOrlgx1DJa1xwXttYyqNVzp0Dy7-WiwQrYrybmCp3R8Zdlqct5uEp9ErtnKzPm_BzeNSRt-1-b7sxyoyeoYiYAqkw013EJr0ePZlbWMo-wTfoydYNpwJuj9QXQosQQMt5C9M8Qb3KCS00r0H9AY0kQzmT68knD-9gQSwZZvpTrepfV97jaTEq0Y_m_vdGozYEz1RNPsJfrAij0jaVHi9eXleCjULSbSOQxjVr0KqxHAqDbeUyNqV7N03u5_Dy-ktg",
+        "widthPx": 3888,
+        "heightPx": 2870
+      }
+    ]
+  },
+  {
+    "id": "loc_051",
     "basicInfo": {
       "name": "Ryan Bros Coffee",
       "type": "roaster",
@@ -3613,7 +4535,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_046",
+    "id": "loc_052",
     "basicInfo": {
       "name": "Ryan Bros Coffee City Heights",
       "type": "roaster",
@@ -3694,7 +4616,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_047",
+    "id": "loc_053",
+    "basicInfo": {
+      "name": "Ryan Bros. Coffee",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.7169158,
+          "lng": -117.1722281
+        },
+        "street": "1894 Main St",
+        "fullAddress": "1894 Main St, San Diego, CA 92113, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 546-6315",
+        "website": "https://ryanbroscoffee.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=12006265431408660558&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (Barrio Logan) with in house roasting at their shop in Barrio Logan with other locations in City Heights and San Marcos. They have an extensive selection of nitro cold brew on tap.",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404898",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:39:04.783980"
+    },
+    "googleData": {
+      "placeId": "ChIJsyFkA2tT2YARTlAqRszSnqY",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:39:04.783917"
+    },
+    "googleRating": {
+      "rating": 4.6,
+      "reviewCount": 850
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 6:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Tuesday: 6:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Wednesday: 6:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Thursday: 6:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Friday: 6:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Saturday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Sunday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJsyFkA2tT2YARTlAqRszSnqY/photos/AcnlKN3MI9X59l-pK-0CKf3DQJTkutY5JY8qNhspEUyuGUSabHdvU1ZBK-7Vr4eq7WSQUVx_tH45nOElOiRwYZW2piVky925C_PK97M2C4F8rEkd3WUfoKjlrvIlLfAIbesp5KePhve18Ec8iI5SoNaYlgjTsjOtn7Jr-122Va2kXRjOi9pyI_JRo7wD4f1hpZYjfngK__OL1vXF0jjZyHjYBs4-1CFOdk6_oCv9bDiM_RxNghlcJoW1Tmlu4cjFipdYvDaWJq4Sawt3TAXWmTf-VJ8wR90Lm9Ci--Aqk7uiKgGOOA",
+        "widthPx": 800,
+        "heightPx": 800
+      },
+      {
+        "name": "places/ChIJsyFkA2tT2YARTlAqRszSnqY/photos/AcnlKN3EUugM-zLRRpBJ6waP640t4BeUjDGvEW7HcMh3KKgEiRdtYzTPZVSV1Fayv8vL0WBAyzhn1FyXIhNKW0ALbxeUKsLbEXb5Q_4cDUz8azAY0bSzpI_Hwi1IRN1l3c8z0BrmIVvpTuQ6_No0cF8AklrZtGdRJzDBWRsWwJkf4BAkxJ0_p7hxKXH3Mvfl_QxIr_Lh80hN5sBB2llFNNjrXVAX2mBg8yQkRBzAnPybzGFAbhqE-4LAQjzec52zhZW3xWp4WpaMELK5-jarQ24gODDs4E61t34yVhJ-OHBmlOTBuQ",
+        "widthPx": 3318,
+        "heightPx": 2212
+      },
+      {
+        "name": "places/ChIJsyFkA2tT2YARTlAqRszSnqY/photos/AcnlKN04Hml83QoNHo_awzzAoSjDqyL1XuUG4xCKw_4lqidN9u4Fxz51hvF7W9jI26Yu_MQ4UsknWjSDj3onZIMwzAa9BBBMHT6RenpmgkuWLeGxtRQbkqJiW_xB7ehk0w8SCwybF17qstDSDmxQtLavopoFrw-GwPrh6ZYEGKIoKfDtKf8ntHpHOD2nXjqYhvmI2gtPetC4iEkxFpBgLl6e9vU0uyqrhXPzCriDqjGHvG7LiHjZR6W5Y_BOwpTQRsbbUPr4spLDwgDKMyuMk2vNN_OHaFPQhMV7GpuM8QooSgx-Q7nJqNExBU8SsslCcTgjnSQnz3eyKHU_vlPicxAtqke1DtIqbzKuPE4MolfVy1mUYwlboMfVH7pRtJy659zckZPgUzkRyUXk_br80nwS6AL19lBn-f1HI2_ABdBof02_Xn6L625NrumOcLODAg",
+        "widthPx": 4800,
+        "heightPx": 3600
+      },
+      {
+        "name": "places/ChIJsyFkA2tT2YARTlAqRszSnqY/photos/AcnlKN2pn8NaxXILgMJ3wjsOLfx1qRTOL6PphXDJ4QrOkaPVLBn-YPhkRL71qV7gBoC17t_QQOuY58EcbtjfiwxWAQsHJsfb0qU1s3Zsu3IvhS4J1VTuT5mebQYGQ2GK2BFuDF7Hcw_psIQR33UbmKxgd_hhdMQswSR658jni6QaA-83noVspbvmEIdnBOqdf_Ay4WGTe-MxaNPTC7SelUxn0A3ebohOkWA4ibTF2S6reV3SkAwV9GNCHhNL6XyucfZkhBPwKks-UNolku6G61vtPI5iN2Qdz0nAmtQRcSRZF30uLY07xrg7MTXU7XUtKo0FTWQHRzaA9AeqvTwu9P4ShDM5Fit7mU-FAogQfajnHuu0l1XWL3lJghcePJni8N77cB4Z8G8ZrfhAVQyTJHp886crrBYHg4O8wwjrnJ5xJ4B2fxOk3TcJ6ME9RqR8em2P",
+        "widthPx": 4800,
+        "heightPx": 3600
+      },
+      {
+        "name": "places/ChIJsyFkA2tT2YARTlAqRszSnqY/photos/AcnlKN2Xwa1Qkbg1XtTJhXZRKtCAQ1rzuj4fnplBPgPWvzTIAaIpiiJ-EH0_x9ZCs4IKZBxJDj0d5iwtvXmQvwQ_9d9ycwI1aUsxYHCf_YgLrZqcpnT_oKhyrH6QQ9xmJ8HhwX2KNWK5n-af9b-oa1OatXDjnmI1kFRe2Y3IVoW1sqL8YHR7Yy3i_MUAXvm5bOrOSKP_jK0D65cyjXvGA0DwGYEZU4hy9hW4xIwIaPlJA3R3g6ZAil9x_KnBCwQeKM2W1nWA5OfMarKNpOuQAgZekqgAlrivZGUDamIH1EP1Ds0AEdWFw47C_0l9NCqfaFZsDGVv4ZmXPmC6mZhZe8On11dWYrrQtR_foHVfNitka2k9kR6g3n-EcyAi9ibfEX5SJQYJrSKfOe5J4BCte0d2pz_0UP89GiEoJ47WClcrUrg9Eak7iSdlVRb09D7eLg",
+        "widthPx": 3024,
+        "heightPx": 4032
+      }
+    ]
+  },
+  {
+    "id": "loc_054",
     "basicInfo": {
       "name": "Ryan Bros Coffee of San Marcos",
       "type": "roaster",
@@ -3775,7 +4778,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_048",
+    "id": "loc_055",
     "basicInfo": {
       "name": "Provecho! Coffee Co.",
       "type": "roaster",
@@ -3856,7 +4859,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_049",
+    "id": "loc_056",
     "basicInfo": {
       "name": "Heave Ho Coffee Co roaster",
       "type": "roaster",
@@ -3937,7 +4940,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_050",
+    "id": "loc_057",
     "basicInfo": {
       "name": "Heave Ho Coffee Co",
       "type": "roaster",
@@ -4016,7 +5019,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_051",
+    "id": "loc_058",
     "basicInfo": {
       "name": "Visitor Coffee Roaster",
       "type": "roaster",
@@ -4097,7 +5100,30 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_052",
+    "id": "loc_059",
+    "basicInfo": {
+      "name": "MindWater Coffee Company",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.7226671,
+          "lng": -117.1577708
+        }
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (San Marcos) with online sales, micro roaster.\u00a0https://mindwatercoffee.com/",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "needs_manual_review",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.404956",
+      "needsEnrichment": true
+    }
+  },
+  {
+    "id": "loc_060",
     "basicInfo": {
       "name": "Dreamwave Coffee",
       "type": "roaster",
@@ -4176,7 +5202,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_053",
+    "id": "loc_061",
     "basicInfo": {
       "name": "Goldchild Coffee Roasters",
       "type": "roaster",
@@ -4257,7 +5283,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_054",
+    "id": "loc_062",
     "basicInfo": {
       "name": "COMPA COFFEE ROASTERS",
       "type": "roaster",
@@ -4338,7 +5364,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_055",
+    "id": "loc_063",
     "basicInfo": {
       "name": "Ultreya Coffee and Tea",
       "type": "roaster",
@@ -4419,7 +5445,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_056",
+    "id": "loc_064",
     "basicInfo": {
       "name": "Ultreya Coffee and Tea",
       "type": "roaster",
@@ -4500,7 +5526,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_057",
+    "id": "loc_065",
     "basicInfo": {
       "name": "Trident Coffee Imperial Beach",
       "type": "roaster",
@@ -4581,7 +5607,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_058",
+    "id": "loc_066",
     "basicInfo": {
       "name": "Trident Coffee Coronado",
       "type": "roaster",
@@ -4660,7 +5686,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_059",
+    "id": "loc_067",
     "basicInfo": {
       "name": "Trident Coffee Pacific Beach",
       "type": "roaster",
@@ -4741,7 +5767,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_060",
+    "id": "loc_068",
     "basicInfo": {
       "name": "James Coffee Co.",
       "type": "roaster",
@@ -4822,7 +5848,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_061",
+    "id": "loc_069",
     "basicInfo": {
       "name": "James Coffee Co.",
       "type": "roaster",
@@ -4903,7 +5929,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_062",
+    "id": "loc_070",
     "basicInfo": {
       "name": "James Coffee Co.",
       "type": "roaster",
@@ -4984,7 +6010,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_063",
+    "id": "loc_071",
     "basicInfo": {
       "name": "James Coffee Co.",
       "type": "roaster",
@@ -5063,7 +6089,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_064",
+    "id": "loc_072",
     "basicInfo": {
       "name": "Achilles Coffee Roasters",
       "type": "roaster",
@@ -5144,7 +6170,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_065",
+    "id": "loc_073",
     "basicInfo": {
       "name": "Achilles Coffee Solana Beach",
       "type": "roaster",
@@ -5225,7 +6251,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_066",
+    "id": "loc_074",
     "basicInfo": {
       "name": "Achilles Coffee Roasters Gaslamp",
       "type": "roaster",
@@ -5306,7 +6332,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_067",
+    "id": "loc_075",
     "basicInfo": {
       "name": "Achilles Coffee Roasters @ Park 12",
       "type": "roaster",
@@ -5387,7 +6413,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_068",
+    "id": "loc_076",
     "basicInfo": {
       "name": "Achilles Coffee Roasters @ The Rey",
       "type": "roaster",
@@ -5468,7 +6494,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_069",
+    "id": "loc_077",
     "basicInfo": {
       "name": "Modern Times Beer",
       "type": "roaster",
@@ -5537,7 +6563,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_070",
+    "id": "loc_078",
     "basicInfo": {
       "name": "Dark Horse Coffee Roasters",
       "type": "roaster",
@@ -5618,7 +6644,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_071",
+    "id": "loc_079",
+    "basicInfo": {
+      "name": "Dark Horse Coffee Roasters",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.7635591,
+          "lng": -117.1221068
+        },
+        "street": "3330 Adams Ave",
+        "fullAddress": "3330 Adams Ave, San Diego, CA 92116, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 344-6962",
+        "website": "http://www.darkhorsecoffeeroasters.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=10500721708110290480&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405108",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:39:51.130286"
+    },
+    "googleData": {
+      "placeId": "ChIJT8bl4lRU2YARMJ4lIcIOupE",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:39:51.130219"
+    },
+    "googleRating": {
+      "rating": 4.6,
+      "reviewCount": 661
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Tuesday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Wednesday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Thursday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Friday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Saturday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Sunday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN3xnzy-GuCT_l9girXL1AjbWHks6Q3QW-YKI9rwrhKAZs-3StEAKnvvrz4kzvMi7--5Dy5yYtw1mjQyCbTDYdelggR_8wmsszKJ6vmzE-8aCQ82QL-9A5NDVtv0D6sDtkEBYlue2SjyBTOB6d2Ju6qWc44a-Bct5jqC4zTk6YQxL5hOFeZYP-O84hM0ptgYYxxwlww0tYYsytXUYjkPtu50FfEAtmmkU8IFe81butK4TrzROtbCsRM_rB6ULtXlqcszWI15B8BURtbX41bUkzX0qVeTEo6W_8XFfSKBmMIzobKUPUFrUgryKMqmaqOiLhyVf6V98WhbLMmtaLHGMpTZlRi242CGyt6v4umsZ4kVpfX-oILZS0UDu2sd_O3OMBKSewv4SVqXkAKI6TT2XicekgFk6RETyPhoRCmy2EXFMg",
+        "widthPx": 4032,
+        "heightPx": 3024
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN36B3AKngA7hUWHPcoeggC9-zFzOlC4pnkFAYX6yUI57rS7nJwbaoQixnMPpEXAvu1evC5ahd-d2OP34_hMgmgqMjyEE4nLZkujyMKzKg8rmQfj5DEJxibisjQkoUOzlT3PYxEXHifx8bpsbvre78B7AE2E3-IRWiexDAutvlZPap4_L8D1X197GpyjZWD3wHF-zZ-HgAFN9Hh0uo-yY_nGdtLIyFKPH6sXQYVJHjEs2fhKkUP0IWdD7YubSuvf6wXgxKTgMpYSXT3D2-gvxM72vzMmgb0oE-XZw2uB4OZyAQ",
+        "widthPx": 900,
+        "heightPx": 804
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN1e5J987extT92dl7wADCA3AOUE1XwGZJ61tJCgJR4qLtEGuNPf8DftWBLQ4n83eVA1Z_s2jbtTxuGMYWvEICHl6T7extSjm3e9VTct8KzF7q1fEX79vaoBhNFXrt8-uvav-DGesLRai7N6v-PQbZSumZecDQe_236yjx081AucDCWdp4bfM4IjmAnG12PU8pVDKjbRy6FZIkc1gpIFOah0y_eCSqNLt8-RpY8x2TKnqvBeK_9zFnZ8d2gd8bbV_RzCMszLJ-0dw6cj3XU837iAR9f65TuZ1grdKp2fgfcBBU0BNhSvC5mLAjL0VjhuWpK8sYIDKkTQLIMXXgloXI4UYvSYkxfNcXvy-M17LJArqbehIIfvDKIoJ9XbwrvwGv13_obQQQ-x6KPHcwqurnxzcIVZ3vhqpATf4h8fjePANz8",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN3HQJ9Gugko0vYHjJTkDlaIJ0HE5XLYkCIMxPzBrrIq3ql6-4XGtaqmdVQ2InKYQAumJYVQtm9lBIag_TyR8UOpiCA9jRGT6_LlS7LQsrvh79uMS_r4f4WGfuEUDK94letELHxkBuQ6WVRYg8bO345LKPReiI9Z4weS7X3d-li2bYYB4PQhaXVnWzaMx6KzmWCIKhvY2OE9eMaljQTpLFStPqs8m3_5WWq-DfxUTHJVTVL7FagX0o_zYb1GtUUoX2GvpqpruiB6-HmcuLgOyfNjakj7f8kbqGWTH0DZ72_wxTIM_KcsJFFLyz6gD6BXWDzuXneKwg-FTKtLHYrHkCd8b8Rj_Jlkle3V0Z0wrJTXiIO0nZHl664s2dA_eEswGJxdf-sA4ANKSSM19i-vLz2YJ12bSMgETzP_MbG_1Hhv20Nh",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN2r4AGPdzijzbi77Dz_TAiB7N818m9a8iAP0a_drCbkWa6b8qdsmknYM8jq4o0Hj0u3NJQRA56m3yo-NeP8kKIIc8tdnpEm8fGId6GYLfcDpfzxaLDGohYAJ6ztttEdSzWIGeapx5M223n6HxmjJ2hbRerKW_wNOhQ_A47CsiLk3uw2tbmMlTutkL9yGoNP9pppAkImE5UGgnY-PtOJxv1izE2Sx4gfyvpGddmcnfKFVNS3oZCWVykoafiRokzGhLr2EFO30kjupQhGr-RNEkZbohq0d3X3XzAtahXIZ3FnIFZSRl6yqLmxK8Yc3xBUoEnizRmMcR1tI6lJoincYgOut8Ba2aLYlg4zl1H8u9YgdNPjv4uO41KmYftz69XHoejkIk-ukC0gop38ywGxFmtukWt-f-c2kaQ54D4BVKNer49gmrRvkJxrLMby4MzN",
+        "widthPx": 3000,
+        "heightPx": 4000
+      }
+    ]
+  },
+  {
+    "id": "loc_080",
     "basicInfo": {
       "name": "Dark Horse Coffee Roasters",
       "type": "roaster",
@@ -5699,7 +6806,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_072",
+    "id": "loc_081",
     "basicInfo": {
       "name": "Dark Horse Coffee Roasters",
       "type": "roaster",
@@ -5780,7 +6887,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_073",
+    "id": "loc_082",
     "basicInfo": {
       "name": "Dark Horse Coffee Roasters.",
       "type": "roaster",
@@ -5861,7 +6968,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_074",
+    "id": "loc_083",
+    "basicInfo": {
+      "name": "Dark Horse Coffee Roasters",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.7635591,
+          "lng": -117.1221068
+        },
+        "street": "3330 Adams Ave",
+        "fullAddress": "3330 Adams Ave, San Diego, CA 92116, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 344-6962",
+        "website": "http://www.darkhorsecoffeeroasters.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=10500721708110290480&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405141",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:39:57.199330"
+    },
+    "googleData": {
+      "placeId": "ChIJT8bl4lRU2YARMJ4lIcIOupE",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:39:57.199247"
+    },
+    "googleRating": {
+      "rating": 4.6,
+      "reviewCount": 661
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Tuesday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Wednesday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Thursday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Friday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Saturday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Sunday: 6:30\u202fAM\u2009\u2013\u20094:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN3EwKyf7arUJ4h0128rRgJAoE5T3-vy4W97SppcBTYEUztkPsv_Tptprs3-VhzYmRPz7yG40-7tzLKHZOxByiTK4rupz7esrvkTirmUr6gaAirxBIuBAeKwcoKJr7yXld3cL3ThKetHFRemmJubs1vdz4LkugJwRbm5NdZ2VXKwlm6eK8n2tTlDNAhPwDuv8GI7z0gaHRfoUXyResXkP1Q_lK_dE8D5ckI7aVkXQQbzKXKBlQ9KU3yAlMx_Mwrtx4VHTPsbsg_5Xk0Jld5aeTi9njFo2NckdqeYJW7N6vANFTJCxk_zfpyvXzxXIsAMCq3K8wLx-ZI1lBGwxrsN1zzXzviToGjJayUL9RPq5MCBSZC1vZFBsWOy6PB1SLfynbWNZku-uwyQWiTfD34PN4eST4oCtvJaL7IftZvioE8WZg",
+        "widthPx": 4032,
+        "heightPx": 3024
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN3VjNXqR_tVJFu3gKBo3x_bvcv68sOnU7yKZ946SOZR2Hgi1NHWRqj1KlLDoZYY1BaHGlYaCWKPlwZYKoHz8TLGwUNTfJj-ZiW9epMt-6B1qSWzxOG3jzsYI7Y2RWNlBbNSHIStBtEVatCWnTp7ZBkZ40SjeaFtfoMBRK3f_D2sy6H-dMBHV2aGjKOonaiYcDxLAkJzRFmTWAn0O1f8X2KT0tqbyMqxQgI96MyR6pGDHCHztGYtumimE7nqBV_vmj1iiqrujYP7BSMrctOC2fKAhwi3vFdBLiAN6MDPu8kMAg",
+        "widthPx": 900,
+        "heightPx": 804
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN2IJhBSVKifpjqJeglVpWEp4_thK_kAZbE7fX3N6SBcQXcY4pzhPheQUwCifha9ItYSoEDhAmlO9b0hRUCa5ZgwviS-j4V--TkGPIuTkmLvgXsWJlWbZJvi96oaDLVDhHD5CHYPWCBe-_4VEHgq5Nw72lXBnGmn4MjUwYSo3mkUE329M6S_i-wNOdOMA1u4iyRc7W2bjjiQ7-26HDOaAgIY00TBwKuR8Onhgyd7sAgTuPu9K-fbmVhbedop4IQ-YDtTijID456sRY0qoDzG3jF493jLhV7rdU_rTJxvQ84YX3T4rm5CNEaDNh-rmpnZ03k1CQ6ByEeYQiFutMEuUpnDgPpSO96cfeJCMNf8pj0GF9F-uCnkydCNURSCuaPEjWSnFApue7RwbdduaWfQW2yOgFNWuCO1csDTjPdlUBb0fjo",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN0ZuHJo5F4dd01R-o5yahbNdmsAu7Hdl56BYDwKRXVxvE3W3unv275ZRFABxLCGyMLe4h6Bf-m_QMivYEwBvKo7OKi9jzxVGbWLHBe7jt77QfAd_KM14S4V20tjIQQsIOOYG87SD-g6q8z07XRhEcAU2aYvB1DwGWjNe9o0Ss1AK1Nt8waFoaEunFSvlY8O5AjeHcdKa6TaDff57Bzq8695eGVw_Pr9azLLa7KWOnOccXeyNEe3w-prTPPA86OEzWKxZJZY2ZCIGJFTO7Fa5_NcurSztTYq7Uw5tzhQpjuvb3Xq-Dcp3R7FjYBUwYdWLOMltLUkt2ixV5XDo0w5Xi9oW1H5CJlzDxEXScXoKlDoh7MY-Z7fWgHBnbcZCDxnQ68BPqLBnAghOruUf6fv1jSvCraDWWtP2FltooG_SStAOYZ9",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJT8bl4lRU2YARMJ4lIcIOupE/photos/AcnlKN1f5sp3Nb8Tn3jG-C1sJgjyTASZwGK4S7zK0ruy8XUWkNE3bSLWtBA3nso029YqhCrGAYhwHVbNi0Or_Z3fe5fi8o6Ru1Uh7271vhStOFqQ7c1W7OQ0hlOW-ztqt9ldSU9BAB8zWdbZbEhT4YAHh3Uyk73la689tf1lw3bB8MTB7jN6hgtVA2AxPfLkGRy5dgtBfOyxYhWia9jf2-byvAmj9rZ-P-uuRej45xEtFkaFiNG2FomEdjcNJC32wMn3DmoPC1HncIYr4SdqcDET6amc82wbdcLXsrtRAaT3paguTqmQcJZSmDRP8ob8o1nyuq5t_pAsKV9zn_Yx-KcdvSW4iMsT1ZF964xtYlS7JAmFpQRXsAfyWy7ufe4Ck1W5z-Iht_PqHjnOzb1qSUa3hg8513C4lxW10at9i0w-SsP1j5-8BYQGpsrkKaWlayCd",
+        "widthPx": 3000,
+        "heightPx": 4000
+      }
+    ]
+  },
+  {
+    "id": "loc_084",
     "basicInfo": {
       "name": "Dark Horse Coffee Roasters",
       "type": "roaster",
@@ -5942,7 +7130,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_075",
+    "id": "loc_085",
     "basicInfo": {
       "name": "Dark Horse Coffee Roasters",
       "type": "roaster",
@@ -6023,7 +7211,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_076",
+    "id": "loc_086",
     "basicInfo": {
       "name": "Coffee & Tea Collective",
       "type": "roaster",
@@ -6104,7 +7292,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_077",
+    "id": "loc_087",
     "basicInfo": {
       "name": "Little While",
       "type": "roaster",
@@ -6185,7 +7373,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_078",
+    "id": "loc_088",
     "basicInfo": {
       "name": "Seven Seas Roasting Co. South Park",
       "type": "roaster",
@@ -6266,7 +7454,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_079",
+    "id": "loc_089",
     "basicInfo": {
       "name": "Seven Seas Roasting Co. Solana Beach",
       "type": "roaster",
@@ -6347,7 +7535,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_080",
+    "id": "loc_090",
     "basicInfo": {
       "name": "Genteel Coffee Roasters",
       "type": "roaster",
@@ -6428,7 +7616,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_081",
+    "id": "loc_091",
     "basicInfo": {
       "name": "Parabola Coffee Roasting Co.",
       "type": "roaster",
@@ -6509,7 +7697,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_082",
+    "id": "loc_092",
     "basicInfo": {
       "name": "Holsem Coffee",
       "type": "roaster",
@@ -6590,7 +7778,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_083",
+    "id": "loc_093",
     "basicInfo": {
       "name": "Elixir Espresso & Wine Bar",
       "type": "roaster",
@@ -6671,7 +7859,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_084",
+    "id": "loc_094",
     "basicInfo": {
       "name": "Elixir Espresso Bar",
       "type": "roaster",
@@ -6752,7 +7940,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_085",
+    "id": "loc_095",
     "basicInfo": {
       "name": "Parakeet Cafe - La Jolla",
       "type": "roaster",
@@ -6833,7 +8021,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_086",
+    "id": "loc_096",
+    "basicInfo": {
+      "name": "Parakeet Cafe",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.8497205,
+          "lng": -117.2732774
+        },
+        "street": "927 Silverado St",
+        "fullAddress": "927 Silverado St, La Jolla, CA 92037, USA",
+        "city": "La",
+        "zip": "Jolla"
+      },
+      "contact": {
+        "phone": "(858) 412-0227",
+        "website": "https://www.parakeetcafe.com/location/la-jolla/",
+        "googleMapsUrl": "https://maps.google.com/?cid=8574794300480736501&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (San Diego) with locations in La Jolla, UTC, Coronado, Little Italy, Del Mar, and Carlsbad",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405239",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:40:27.239355"
+    },
+    "googleData": {
+      "placeId": "ChIJt8neTPsD3IAR9cwyLvzJ_3Y",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:40:27.239270"
+    },
+    "googleRating": {
+      "rating": 4.4,
+      "reviewCount": 585
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Tuesday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Wednesday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Thursday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Friday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Saturday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Sunday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJt8neTPsD3IAR9cwyLvzJ_3Y/photos/AcnlKN2PKkZHvdqGRoXn6Bq_EBCKsJzV9RRWfehj4_YpiQu7vEnthzj6pxn8K_T79Rk4ZaSDVVp0dx3TQyLUbIiH189M9CvKBxGBSSM-92AReFOaK3U23wLdYkDKaF8YZx-w4QC-uzavSwWCZjzWHd1R_n_0HqQK9S2vyD1wyPuBlo8yAxmxx25BWa-jXHqVz3TqQ7Zu4m7tuh-f0J_-HFdtlvYJ2TsR-n2pWXEko3GeNVKw6iZ5-6vATSZVIz6J5yEutCI-XQa-oUcB5HdRy5MRdLybWlPSGHXfBvR5r_7KZ9TnTw",
+        "widthPx": 750,
+        "heightPx": 501
+      },
+      {
+        "name": "places/ChIJt8neTPsD3IAR9cwyLvzJ_3Y/photos/AcnlKN10WcYS_wEIyTIredmu5UxlWRPqTPN6iQ3Ezox7Z1XiSdApIEx2khchjE_DvYGXyY4CjsqDGqNTIqTZccsDtQ_SYQgxKJJHDGDAXB7ZengA1HfwSUtVtBFdOGdj68Rx_U1v1NO_RSd-DnWKqSAYCQAcIwOffRJKb7LPPdepx40imEkChgid_H4ej6PRVow6VBYbaKmy9bfuAwwe9u7BYDxaHT3qIDSjbB0ssg56qm60Lpe-35JFeM-TljAFOWPJiIJw3_9YObAlr3D5zyztuHR59gy0FOeMjDPzuHmQVOVUUv4KI8zkTOYuiTzvCVltzNWyFvtZQgbHPdPiU9Zh7q5bGh-KZyaL-DdezKf9YC708ul0lKQDrb8yZiIz61HjTqE4YHtFCUI77C22LTai6vPcXFAfqDftrnNtOouWZSg",
+        "widthPx": 4032,
+        "heightPx": 3024
+      },
+      {
+        "name": "places/ChIJt8neTPsD3IAR9cwyLvzJ_3Y/photos/AcnlKN2lO6KP-XJXdJGWHEUSdF4YBoCNbDNog7MHG2UKFBp_wiyenLGeSKyALGO_651eI1SXNmI-l8BiPZtB7SU5pEIgL2dzCdZzLJRt-TKOCOsAHThyyz9KsAI9sAGlZENTeyhMwxgQ-UmphWhZCIyUCf2IWW9niXrBi9TwZz0sIILvcZVe2C4BFqOtlQhmmQ1Rq6veMEYqKWHu6_hTuhNTYTCwX1hlSq_XkzhVbdKVwqHZxu5GnEadnyZrb-kd_HMdu6SxquqMKgn041oBa2gO5uzkpf7DEw09BxWHxL7Vk94BhPsn9Jmi6ThyBd_GBkEy6MtVO4F9zI0w-GLtfsDNzRyHFGJmBRlfMUpkZER4Byn7R82zUr3YNeEOYoqMHQSth9Vq_be1Z3y9gWoJ77SYXNs55AyVzXRiWbRVm96zJMnmj7eiT0dg5Tq1103ZNLeM",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJt8neTPsD3IAR9cwyLvzJ_3Y/photos/AcnlKN3HMWI1KQA2w-2Vb0ZBgqpHs3sfVRxiOToM2TDXwtui24B9XvaHsQC7KT3OkqpasVFDG0f9xHDSHdRAIq6rbpMWjVQYK9wNSAFaBUsmx5ZE6S3ssCqMfzKT2qyVfAtjix8iuRq97DIkNzEX6o97d1kQ4MWfEnhPfQpQyAK3X7lExvrx3R7VNyLdGMIavOLlo2W1zMxJek0byT471rqp4erH2xM72IZWdDoGwm0inBKuxF78L4PH5jXoZ5rtKrP1TaNQbj2f2A1j0TpFKaiKjhB4nRAZlcnZvhIHZYh1VjAFp-pe2Qkx1DV8hX-bIPo4xJzbwtrbEZt2aHcjl2GD-AUtTiInz8hqhYrfLWWHa5AYMcEFaxyQjgTQKstO2afcF2-3rsoSee-wn4O-9BwFhck2Qy6JkljsH7oOzaHOFcCh-yk",
+        "widthPx": 4800,
+        "heightPx": 3600
+      },
+      {
+        "name": "places/ChIJt8neTPsD3IAR9cwyLvzJ_3Y/photos/AcnlKN20HELiLYlPL6NWMgMphKUmqBW9BtXrH_2StKzoJh52BPE3ZgRLDIAarFrv0hZPl62l2JCuHEjkKNUJz7J0pBHGqixOrvLiGtAwdK-gzdz6Qw7k6i-YtuFuNDTJjAps88W-XBg9vGf-g-N01x6dVzHuoPfv5zh_5OD-ISEH6cfEguo12WJOIannE2hQHR-YhFjwQ1RF0_tzZLMVTjOUcZdUxgdhW04XfjrarOaUSP-SDAM7TRickaqYHyYwQmaNO0MUXeN2jcBfQEVIPnHSr3-VURkCRU9_Dz-C9GT00Fa7LLDgUJ4JVvwaV1F_DiBkhh_-vfzE2X42LXZsPMQvNCqIOzr6KpF4ilc8cR_ptUP8eMHOjb1mKcLtixWgWxLYz81POpWfY3NxCGoBrk4r-GDhjtqa_ZuPZNFKCQGuT8fEZvor",
+        "widthPx": 1179,
+        "heightPx": 885
+      }
+    ]
+  },
+  {
+    "id": "loc_097",
     "basicInfo": {
       "name": "Parakeet Cafe - Del Mar",
       "type": "roaster",
@@ -6914,7 +8183,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_087",
+    "id": "loc_098",
     "basicInfo": {
       "name": "Parakeet Cafe - Carlsbad",
       "type": "roaster",
@@ -6993,7 +8262,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_088",
+    "id": "loc_099",
     "basicInfo": {
       "name": "Parakeet Cafe",
       "type": "roaster",
@@ -7074,7 +8343,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_089",
+    "id": "loc_100",
+    "basicInfo": {
+      "name": "Parakeet Cafe - Del Mar",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.9520487,
+          "lng": -117.2349965
+        },
+        "street": "3745 Paseo Pl",
+        "fullAddress": "3745 Paseo Pl, San Diego, CA 92130, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(858) 346-7690",
+        "website": "https://www.parakeetcafe.com/location/del-mar/",
+        "googleMapsUrl": "https://maps.google.com/?cid=7638961813196695625&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (San Diego) with locations in La Jolla, UTC, Coronado, Little Italy, Del Mar, and Carlsbad",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405267",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:40:37.661296"
+    },
+    "googleData": {
+      "placeId": "ChIJKVjLgWgJ3IARSehc0EsLA2o",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:40:37.661230"
+    },
+    "googleRating": {
+      "rating": 4.3,
+      "reviewCount": 394
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Tuesday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Wednesday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Thursday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Friday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Saturday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM",
+        "Sunday: 7:00\u202fAM\u2009\u2013\u20097:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJKVjLgWgJ3IARSehc0EsLA2o/photos/AcnlKN1niVSDPHbu2fjIctc9Mzvj-bX_1I6F4O5rHmJtZO8sg2uCVvvjdKQtORBYgTMN3n9gntwTr29Kuy281Y4IoN3is83G_qXKU3_Yb2ComRcf1fFRqMyg_-1zGvdGLT3wgfkPEinrzJS7t6VHSmWBHSEnqncrIrbjdqsWr5FW8rgFAJ557sAhAy5WxMyD-PvBbgJ1l8zD6gIy1TuWKPkeepgcbDO9eqyH5BnWY-Y-93EnmW2ufdByAFspy1xu37RlIuyAl7ukaOVmFWqOmA_DALq8hlJQO1gUcjOsd5DhbNrsn0Po1M5SxVaB_e3Ct4XFbOn31D9sM5OuQPci88XDqVd9wqorV8nz4kXqRRil7HtL3i-IiwEXh4QqS0mX9KMQKxUac0NbYVQkkVrYzyAprLJbDoVYd6-I0O2OpHyp4wR3MA4",
+        "widthPx": 1000,
+        "heightPx": 750
+      },
+      {
+        "name": "places/ChIJKVjLgWgJ3IARSehc0EsLA2o/photos/AcnlKN0azf0OO_xTcHoR7WCfCASBfska3zzPLSqHk0MLpf4AyT1GL2_-lZ_6ccfBvQD7K-yIOED6NUpHug18XtIG1BUd1Zw3T2HSNUm_vV1K-al2EYA1iJ_4loA9pc0fMJovXxu4A7Fo7t9MidR5z6_NDa7InndEg62RLgNSgI8wD0JwMRMcUHCD0crp74kVigeqfydiZ25x6ihUK60TPZ3stHVaC8nDq6D5EFlzmPE1vgDm6GZ3GgJfzj7x7MELATwmhpMdleZ2Y9l8YwYcdlvPdmSZY9xj8ykYoX3kXt7VaX924R8nBF6_2mpDFkFHwtYoZiq_zNQiLZ3P9W9sSykRtBNUZ0UbOoJrFs4SNtjl6hKXSeUdX16SV6pTmOP7BhncN_N8MD78FWVUW6xyqLjdkckwxt0ZYiE9XCkSnS7W7bJRxvU",
+        "widthPx": 4800,
+        "heightPx": 3200
+      },
+      {
+        "name": "places/ChIJKVjLgWgJ3IARSehc0EsLA2o/photos/AcnlKN0gxUaeR0rdZTUQQ64Wlfc7AnTyXbzMMYuRhN05chwn0qCF1VxVLDFYs1GSRpa_KveSTGDmElmN7qf56qW4eFsOhLdGRA_8uiS97pWXdrlvelh3T29mCe51XiLawt5FURqpljLW0kcRoS3345-B9E5XmBN6M0ZGl-vO9K7vchebX5bUdYpXWdmNnTw3abObX_D2doP3q_1c5OhDugah4GD5gFk1t9e1o0c1IGeh9oj8rczKvvi5-hT3mUu0XlpZE42Tfocklka9Ju0XBQE52pkNQ-eInK-UhTI9IAz2MiZ9QX_ZO_ak57i0yBK4pZtqlxyuqqTyqhcuz9AKmY7JRGgZaF5M6qejKhp92eWRfV-o9B4et0k_3qLbCAlMrFflBLbhpH8ELllRJAwc8SNPndwYCaI4pBcv5TffQ54YQQZ6GpG5YC6piCvc9h4KVQ",
+        "widthPx": 3600,
+        "heightPx": 4800
+      },
+      {
+        "name": "places/ChIJKVjLgWgJ3IARSehc0EsLA2o/photos/AcnlKN3oxt4cx9MV7yUQf73FWOZllPZow2m6v__9-Ft9qh3hshxEaaORy7LYREWLPreNJMA_2d5N7n9cnBMOxlYCunsKHP-MA75EfoQiRWHf9id-GgKsgO1ooD6X-4RQDrtI7pxOcpT5Ify0RHL8KjvfY_BOAnuyK_x7Y2OLLKx-m0WnQq11C3O50hGo1ylhtNUocNZG1ns1IHQPbGw2u0HLIUWjBioL2Oe7ITdPAU1-G4EgEHSog1dMdVgj5Wjzv76Pycxigszcaf2SeHsAKJ4h2SdGYPgzO2fQXC_7ZhkpJtsGd1ZUH1iY8x38iOkCUoQvyGjLlVRmt7OY_Vih70d9V0PvyHOyBwwJ6MBq5wYlEAASbtVXBjG0R_CZoK-fSEQtNYdlF5gmmV_SH-PSQxEKx60nI5apuvPIcC8acB3dqBFNIDfGtdD3LO7AlcVj0geR",
+        "widthPx": 1440,
+        "heightPx": 1920
+      },
+      {
+        "name": "places/ChIJKVjLgWgJ3IARSehc0EsLA2o/photos/AcnlKN2JBZxV2yoZpgWhRvbxVwQkU2K1rEAxd4EGfoj99hqeH-6SwF-wMIP9AphLdoCQkmFWwKgBEKAzsPu9p48Vx0yqDNIIAxIkhF7EVzGxD-XpkaLSa5XA6ytvqgg2XpVSM0lIeKMnrlCIsCYN0V8A06aA8bNGNdGYvBZp9PO73CfD2U9fwslmwdpi-OZ5segjZNrHcLJjThpI-BVxBp7yYejboPF2GH6wD9kynUAH7FZFhP2q0oOfZyA87cqoVKtrB6eVtH-26elWqAM_SiDiwwlgrgPZ0Anblm2jz1_-oI0jAa9hPBbyvkM7wXxmvfm3rIQrjiM8OMDojKonJypmnY4fj33tGxkB8Qj6IfSI8pYD_UwRKeLKz6JIVWmPzq8gYCUsfPh9JCAjnTq15m_Ks1Pnf-rT8DNtuHamFSTERerLaw",
+        "widthPx": 3072,
+        "heightPx": 4080
+      }
+    ]
+  },
+  {
+    "id": "loc_101",
     "basicInfo": {
       "name": "The Flower Pot Cafe and Bakery",
       "type": "roaster",
@@ -7155,7 +8505,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_090",
+    "id": "loc_102",
     "basicInfo": {
       "name": "Inflection Point Coffee",
       "type": "roaster",
@@ -7226,7 +8576,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_091",
+    "id": "loc_103",
     "basicInfo": {
       "name": "Fuzz Coffee and Records",
       "type": "roaster",
@@ -7307,7 +8657,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_092",
+    "id": "loc_104",
     "basicInfo": {
       "name": "Caff\u00e8 Calabria",
       "type": "roaster",
@@ -7388,7 +8738,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_093",
+    "id": "loc_105",
     "basicInfo": {
       "name": "Lestat's Hillcrest",
       "type": "roaster",
@@ -7469,7 +8819,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_094",
+    "id": "loc_106",
     "basicInfo": {
       "name": "Lestat's on Park",
       "type": "roaster",
@@ -7550,7 +8900,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_095",
+    "id": "loc_107",
     "basicInfo": {
       "name": "Lestat's",
       "type": "roaster",
@@ -7631,7 +8981,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_096",
+    "id": "loc_108",
     "basicInfo": {
       "name": "Pannikin Coffee & Tea",
       "type": "roaster",
@@ -7710,7 +9060,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_097",
+    "id": "loc_109",
     "basicInfo": {
       "name": "Pannikin Fly-by - Pannikin Coffee & Tea",
       "type": "roaster",
@@ -7789,7 +9139,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_098",
+    "id": "loc_110",
     "basicInfo": {
       "name": "Pannikin Coffee & Tea",
       "type": "roaster",
@@ -7868,7 +9218,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_099",
+    "id": "loc_111",
     "basicInfo": {
       "name": "The King's Craft Coffee Co.",
       "type": "roaster",
@@ -7949,7 +9299,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_100",
+    "id": "loc_112",
     "basicInfo": {
       "name": "Mixed Grounds Coffee",
       "type": "roaster",
@@ -8030,7 +9380,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_101",
+    "id": "loc_113",
     "basicInfo": {
       "name": "Brew Coffee Spot",
       "type": "roaster",
@@ -8111,7 +9461,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_102",
+    "id": "loc_114",
     "basicInfo": {
       "name": "The Simple Coffee House",
       "type": "roaster",
@@ -8192,7 +9542,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_103",
+    "id": "loc_115",
     "basicInfo": {
       "name": "Crossings Coffee Roasters",
       "type": "roaster",
@@ -8256,7 +9606,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_104",
+    "id": "loc_116",
     "basicInfo": {
       "name": "Dark Horse Coffee Roasters",
       "type": "roaster",
@@ -8327,7 +9677,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_105",
+    "id": "loc_117",
     "basicInfo": {
       "name": "Cafeina Cafe",
       "type": "roaster",
@@ -8408,7 +9758,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_106",
+    "id": "loc_118",
     "basicInfo": {
       "name": "Yipao Coffee",
       "type": "roaster",
@@ -8489,7 +9839,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_107",
+    "id": "loc_119",
+    "basicInfo": {
+      "name": "Yipao Coffee",
+      "type": "roaster",
+      "address": {
+        "coordinates": {
+          "lat": 32.7612464,
+          "lng": -117.1460859
+        },
+        "street": "4480 Haines St",
+        "fullAddress": "4480 Haines St, San Diego, CA 92109, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "",
+        "website": "https://yipao-coffee.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=15185539212521076009&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Roaster (Pacific Beach) that roasts in house in Pacific Beach with another location in University Heights. Owners are originally from Colombia. Coffee is sourced from Forest coffee which works hand in hand with Colombian co-ops and farmers to produce competition grade coffee. The owner has a high attention to detail and periodically offers SCA training.",
+      "iconStyle": "#icon-1899-0F9D58"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405431",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:41:17.188769"
+    },
+    "googleData": {
+      "placeId": "ChIJV_3144oB3IARKXUVFXXfvdI",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:41:17.188663"
+    },
+    "googleRating": {
+      "rating": 4.8,
+      "reviewCount": 143
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 7:00\u202fAM\u2009\u2013\u20092:00\u202fPM",
+        "Tuesday: 7:00\u202fAM\u2009\u2013\u20092:00\u202fPM",
+        "Wednesday: 7:00\u202fAM\u2009\u2013\u20092:00\u202fPM",
+        "Thursday: 7:00\u202fAM\u2009\u2013\u20092:00\u202fPM",
+        "Friday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Saturday: 7:00\u202fAM\u2009\u2013\u20094:00\u202fPM",
+        "Sunday: 8:00\u202fAM\u2009\u2013\u20094:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJV_3144oB3IARKXUVFXXfvdI/photos/AcnlKN2POe8Dzv9qPIKNG4JoIZDcm_4efOTXUlQD4Uy6uueIFL1gxM-7myoDNX-B_3LDwnaL76d0cTa6eHSMA5vQ7TQuf_n1z3778daweEpc4jX2rDoRB1oHKWqI7eOSKl3dkkm6SJ896goqsJ2fM5DUN-WbkYMVTymHp4C6bFBpyaAF6vDN7OIVU8DQ6CLJDy2M61YTbmlJHqYx5Y5OhxGTqSprC0p1i9EhgnUSvgZGSHWX5cg-HxPEPQ0Pm2KOVEKI8Q9i0dO7HiLnn8O4ySHoLdl1o7apCQl64veo-S5r0is_ZyNziaSIvb4MWPTv-xhddJDH5DzKjHq3FXx0T-5k5u60Peh5iaf4ksqGkYxbKxrhcd3HWp0HhhAKDiQsnZwIyGbGpdODkb9mQJIEyuJUNz33ZwALG1vFaMRICjGTV_hhUw",
+        "widthPx": 4032,
+        "heightPx": 3024
+      },
+      {
+        "name": "places/ChIJV_3144oB3IARKXUVFXXfvdI/photos/AcnlKN39JZ2ApT12ksNA46Oo8QHbhCRG-7rsPdAzPCeWpQQXOjEsfX7bA0ZHDxFFWDlFtgTedrx15Znf8OjI1JbL8S61_iV3eO0LSOuzEkeOOCBH7GBfDLsdojy9LIN-Tda3ohsN8q_uX8z6Iz1lsf7QEQNjZOUo3lgAvCpmHVpGvg-O6A0NP8uGVHpP6pl1MmrezoWvwwiT8RmIux5TJPqz0o7AsU7YU7iLoLr1IqB9o6fPr-PbHUQpA1asIFgYMU5JuU85R5RAcd8NRWH6scuUkIO9XHT0ZaWHGtW3L-a8pIeZK-cICvc6ItCH9_3arshV_vY-0s-v6DbG-v-nqHj990yWvvt_3XNuXi231vvAntHz60qErBF_3XirlEG1h1em2c8bRUSW7ohBW7bgmerQYDF_XSG1sguaCxnFT4fh7MxrpMNT44RFMAAe--olQQ",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJV_3144oB3IARKXUVFXXfvdI/photos/AcnlKN1gIz8GJpJ61TRzLdrl0HVhiNGlSiii85NdMpfoiCvR5qV_W7nokD77FFfDaS2ikkgCgpVf_rgzrAAZHqNGV-TzJDM5OXlo0JXes1bDo_fn5TmNoiSnVtDQr3dUqmmM8bk2QzTJ16FmenF2UmqwaW13G7aT_foIb3cs0i-TCLmgBqS6D80TG4RpdfjVrOg6YZ_LrgmSMqLDYqdNldhd6SMjTXdklrcdLqbqZDxfxGDQufzc2JnfGuKBr3ogsz-qslvzJyhTRqCpV4hTjNMSyEcyZMiNqcLxz9tDSYTHBac2BloZvOtIU2_v7jxDr9XOJLwV622hvZ9QIzPFcu17zW5wwn2LHnhXcfw2mZW6Qx_lBnZm460PyKMwCkNDvlfwOW9sBr_l16xo2zG1i57_7Ih8is_gOluy24LBf4oLnQ85oao",
+        "widthPx": 4800,
+        "heightPx": 3600
+      },
+      {
+        "name": "places/ChIJV_3144oB3IARKXUVFXXfvdI/photos/AcnlKN1rHo_0usiEMGhIAuZ9g597QFvCPtxdX_rnMJEP83MUsokElJaWQDE8uQ9yvxrwu3vBc6FPuaF62Vfc8D9hvCLuBDIXjc1EAtjCcuyD36dpkMJla6KAFSeMzRKuOaWDD8W6_MUs8iYpmF9LA84TgC8hrC1rC0mOkpAHhug5RHHzPHwaN_OQGg6D5ZDPLYygTjW8G_wBNTDckSbzsrSAi16_yGp7Xl_HSTBM1QBnPivGrqL-T1QIAUF1JK-QET-tVRSO3nf-Q6MWRKA15ZOuz1kAwzsVpdonv-vlJex01LneTKGmTiyUna9rORIjTvNahcTAfVg6XGCAJ0u2VsDNDhFyi_j31KegG8Woq7c9htF5igLo_qOjKAFP70NoLw_ImycnHHbV2SEndcrYTdFA2CSP0Kp-t-LRzuv2Jowv8_lYBEp4aLD5_m5kH_NvFYyy",
+        "widthPx": 3000,
+        "heightPx": 4000
+      },
+      {
+        "name": "places/ChIJV_3144oB3IARKXUVFXXfvdI/photos/AcnlKN0CIAx8DlfenvJcS35-er-VSHYPqmctSoksXp71Kv-N9m2XyRoWgHuTAO1ndu9Kb7IGO6GAj5xQDndNDOoQChLLG5cY1NihdKfvNKlgz8FrxpSw5_0KCnS_grxZeYS6vuynSAvR__4pJCzvtqocLegol728-WD6HohPwBsBvF9q-hGWicSEUV6bwyBjklONTL8hxKUf3xCF6i4o7xyh8nzA-1iI2F25OjArdKjM_Zw18xeVkSnPFEvyYR32Z4uKkIhpL_sZSRBvJLpMzdbo3bswt2_MJB0FHoTtVerJu4YePlvJ-gINkbP37fUFNCHg32eiGBt9lEzt0zDDevs6lyj6bU3F-xgtSWkqPQuPLB4akz02w1PAiXRhS_f5pCsZEm51vAWwSVhK6iDwUlBQP6DDfjhRvVBmNrl8h0bVTNGJ2kOxrS9W1Ufo-73nSw",
+        "widthPx": 4032,
+        "heightPx": 3024
+      }
+    ]
+  },
+  {
+    "id": "loc_120",
     "basicInfo": {
       "name": "Excelsa Coffee, inc.",
       "type": "roaster",
@@ -8531,7 +9962,7 @@ const COFFEE_LOCATIONS = [
     }
   },
   {
-    "id": "loc_108",
+    "id": "loc_121",
     "basicInfo": {
       "name": "Inspired Coffee Roasters - North Park",
       "type": "roaster",
@@ -8612,7 +10043,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_109",
+    "id": "loc_122",
     "basicInfo": {
       "name": "Heartwork Coffee",
       "type": "roaster",
@@ -8693,7 +10124,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_110",
+    "id": "loc_123",
     "basicInfo": {
       "name": "Local Krave Midway / Point Loma",
       "type": "roaster",
@@ -8774,7 +10205,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_111",
+    "id": "loc_124",
     "basicInfo": {
       "name": "Local Krave PB/Bay Ho",
       "type": "roaster",
@@ -8855,7 +10286,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_112",
+    "id": "loc_125",
     "basicInfo": {
       "name": "Scrimshaw Coffee",
       "type": "roaster",
@@ -8936,7 +10367,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_113",
+    "id": "loc_126",
     "basicInfo": {
       "name": "Safari Coffee Roasters",
       "type": "roaster",
@@ -9015,7 +10446,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_114",
+    "id": "loc_127",
     "basicInfo": {
       "name": "Idego Coffee",
       "type": "roaster",
@@ -9094,7 +10525,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_115",
+    "id": "loc_128",
     "basicInfo": {
       "name": "Shepherds Coffee Company",
       "type": "roaster",
@@ -9175,7 +10606,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_116",
+    "id": "loc_129",
     "basicInfo": {
       "name": "The King's Craft Coffee Co.",
       "type": "roaster",
@@ -9254,7 +10685,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_117",
+    "id": "loc_130",
     "basicInfo": {
       "name": "OB Beans Coffee Roasters",
       "type": "roaster",
@@ -9335,7 +10766,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_118",
+    "id": "loc_131",
     "basicInfo": {
       "name": "Vigilante Coffee",
       "type": "roaster",
@@ -9414,7 +10845,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_119",
+    "id": "loc_132",
     "basicInfo": {
       "name": "Cosmic Bloom Coffee",
       "type": "roaster",
@@ -9493,7 +10924,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_120",
+    "id": "loc_133",
     "basicInfo": {
       "name": "Libra Coffee Roasters",
       "type": "roaster",
@@ -9572,7 +11003,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_121",
+    "id": "loc_134",
     "basicInfo": {
       "name": "Sands Coffee Roaster",
       "type": "roaster",
@@ -9651,7 +11082,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_122",
+    "id": "loc_135",
     "basicInfo": {
       "name": "Flor and Seed Coffee Roasters",
       "type": "roaster",
@@ -9732,7 +11163,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_123",
+    "id": "loc_136",
     "basicInfo": {
       "name": "James Coffee Cafe and Bakery",
       "type": "roaster",
@@ -9811,7 +11242,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_124",
+    "id": "loc_137",
     "basicInfo": {
       "name": "Mnemonic Coffee",
       "type": "cafe",
@@ -9892,7 +11323,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_125",
+    "id": "loc_138",
     "basicInfo": {
       "name": "Rikka Fika",
       "type": "cafe",
@@ -9973,7 +11404,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_126",
+    "id": "loc_139",
     "basicInfo": {
       "name": "Communal Coffee",
       "type": "cafe",
@@ -10054,7 +11485,169 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_127",
+    "id": "loc_140",
+    "basicInfo": {
+      "name": "Communal Coffee",
+      "type": "cafe",
+      "address": {
+        "coordinates": {
+          "lat": 32.7336714,
+          "lng": -117.1624586
+        },
+        "street": "2335 University Ave",
+        "fullAddress": "2335 University Ave, San Diego, CA 92104, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 363-7737",
+        "website": "http://www.communalcoffee.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=6273151057583503971&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Specialty coffee shop with locations in South Park, North Park, Oceanside, and Bankers Hill",
+      "iconStyle": "#icon-1899-0288D1"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405648",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:42:00.144492"
+    },
+    "googleData": {
+      "placeId": "ChIJJ3YYMu5U2YARY3qheaa1Dlc",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:42:00.144437"
+    },
+    "googleRating": {
+      "rating": 4.5,
+      "reviewCount": 1335
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Tuesday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Wednesday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Thursday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Friday: 6:30\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Saturday: 6:30\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Sunday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN29ABcttYAMNT3KehMbZ1x1etZ84iEbrG-PNnY1QJfr-wYGpQshUo8pqfXTj6TYQQsCBFxtO6moU6RCogIbk1gu5ImlotuPtHIvva6FK4jWRY5CHB-WRC3QgwG6jHJ8m21qv3MB4Sx8BVdisl9XGMgWHdA198ZGF9nhDsKTBRRqoJXWA2Uspc1dPp3-v6NoptNZ7p4GA8hgTKbDfAPPlGQ8SJMZW1SKcb1361YOEMHcpqs8_00-VMWVRcEKcqYhlRD-LB32TBOrFhYABZpQQzbecnii1yDJcLDYuWfi31pzJpfzQkzp_cr_1sU-TdmJfsWmTe1VevseBhkq9D2NUKn8R_zooGZNQQJo0SBGAHBGSik0vu2jLjKYMsEjWcfpg_yEDRf8trROFNbIIgSlGiZBHjfgV5Ze3QzrxkxCXPGL9QQG",
+        "widthPx": 3507,
+        "heightPx": 2630
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN0KE_gjg7VI7JJiodl_VA_8eNM3S3lurK66XQSPEcm044jyv9S6RD_AC_XAlVjGreTsevGUfkWSHpRMG30do0YAi3itLsMVq51AqPugDhVPWMl1-njRPmU77NPz-bI1n-N2BuNf69FQEal2nDFgd9L5kdE27SwQgY1GpX1AXpDPBrEQ8D4tQF8zitqIUkTOs-0RxWjDbmIE133cDqwtfGNSiv880-rSLyCzQbdsjGLqe8ypx7s6sj-COg3zLsD2Jkn0m4Yv13xNIr543Xy7i0RTWvcNhG89lk1sJyEPkEApHN_m-8vWwPZVX1z8GnnboCK60V4mTWK72g_mpcJweHHP3bJ5GP3Knr1yJtY_wT7_2iTukx8GEqupH0VtqRK2wQRNeLz_TJZoj69PzkyPenY4YgZhe9flkLRLCaeuaPzSJsQKjI6wDQijcg70XA",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN0ZYSccknvsEx6ajvZCsIrkPq6SQyc_O3c_4g9Du3OMeQ146pljqtmjKMx7Ufe2mh3wxcCEngBy7gWRuCXseGAqKSM3DCavC8pBaAYitrz49LVup51tbprTWh6OWZoFBbRn3Eyv90t7CRZg67YhXrbHW9dM0ZM8Z6IzUDl7yoJF0B7KiJp83QnqHaHi82gDaPVJf1jXRH9IeXZqU9ujx8zjNghqQsjK7Sc1WJX8o6hIP2N7nZxiCQBeh_uEoa16YUMmrM0PFRdYPc1Kpt6HZHnk4w0MI5HZi5j_FApKJPyCDT-_QxVit2ykCU-Ns07cW9sYvlFXenm_CIznwU7jHwO3GsXoSGNNsHCjTltZg4BembkjoBKMhN3F7PfobYqmouH3IqF2toJzDAyGc7uI7dA8iLVAx0RxEtMNy94A7V3zoQ",
+        "widthPx": 2048,
+        "heightPx": 1536
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN2hjOx8syQwu00aG1HkwWqVBMrUWdZ5rZFjEr6LFBTiwfdoRZW0kjhvhPKQaB3qvam-6cO2JjqwOyxqzlB1wXIx4lwi7QiOwS-q53yqn3W8UVaemZ6X_pc8qUNluzqaY6j3YUh_u2dBzHiXOwRj4x6_14zubHQGSCw_tEYMapZ-h5Xkt6xv7U5pNRcGE3ek0fKTcLQsMo7X1xDoUtUsDRWDMC35rkNrdOTXNWQucx6GhVqGOwsXdNnsPetRCAmgUcM2wL3Y6KOI3pLuVGugp9pfWVA-NAmELY32XyGVnYLekYZDUmwJJ9xipFZkut2WNjWJT4td28EHc9adu9cvIRgIlj5Q98T24TzAikV37-_eTR-egAa3AOb0_1dWUqqDo2mVPma8jVYgNKl-eYi6vKJG0XW7TsSUbPfnBQLctawYHzo8tDdjuGNVYQO8qg",
+        "widthPx": 4000,
+        "heightPx": 3000
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN0XfE8rETQSWLr_JJaFa9KJEw6Jpijf5bhd01iz_fWKa3Xn_mSB_6-cFofhcfcbpm_kG-zQnrGZHmB19oef_ziVpeFJBvJjhU8tNRRF2Q_535UWmhksdTHcm7Eice_M5ueQ_8lUBoLAQA9MI6ZCEgOlgNuI2lH7xtTMBAhVG9CXiLBG88vrP-ZouYLL6KIt2CbUkAqRn4eS7jxL9UhzSnAuiCb9pPy-fbRzr41r4W3DyOTanNpPmoRlVEf_e_fjQ5zYdW-Vjyu6fVFsfqE1Mrpd98GUUgF45TY5kqD60Y0HPgJ4YFNLz0EqEIlF1juJWIq1f0BAxM8Iz0YLYispXrCvvW7681n-3-U_rCj5ieWE8xXo5FU8GBASNjSvYd9USfKWDkWCG6606HvdoL_rB1LMyTJa53AmYxaZOncMAWbB6ZA",
+        "widthPx": 3024,
+        "heightPx": 4032
+      }
+    ]
+  },
+  {
+    "id": "loc_141",
+    "basicInfo": {
+      "name": "Communal Coffee",
+      "type": "cafe",
+      "address": {
+        "coordinates": {
+          "lat": 32.7289888,
+          "lng": -117.1294578
+        },
+        "street": "2335 University Ave",
+        "fullAddress": "2335 University Ave, San Diego, CA 92104, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 363-7737",
+        "website": "http://www.communalcoffee.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=6273151057583503971&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Specialty coffee shop with locations in South Park, North Park, Oceanside, and Bankers Hill",
+      "iconStyle": "#icon-1899-0288D1"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405655",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:42:01.675700"
+    },
+    "googleData": {
+      "placeId": "ChIJJ3YYMu5U2YARY3qheaa1Dlc",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:42:01.675650"
+    },
+    "googleRating": {
+      "rating": 4.5,
+      "reviewCount": 1335
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Tuesday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Wednesday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Thursday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Friday: 6:30\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Saturday: 6:30\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Sunday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN0wUVjzN0UFQb0LJzdaG5m3b9Oa1yfXQ2_Ju0pMwxwlISS6zM7xoziWN4vHMtRL0j6xSNerPGPA2FZgLklSNoVdF4Fq5Alox3ipLQY1o0y2uYIzkZEQt4kb8T9vjAyekEY5nb0g7VZ76CKQwauQOF_IEQlDuy2n3E_sETiVGSn0ogcjnS8cMpp2PlRaY-Us-hjGONEHKAZ-1VZUyfHB6tEzFPQTtxCRHL3NUHO2s9WnXZ2H8Tx9Sj5PlUFYSf4QKzYez168RvYlRrOJ458EFF6VsdpvKLxPL8vBEorhRvhVyraHtBalsdBy3nUNWe2zSyhRQ3w2qqpibhn1foApKlOYqOCR0bKR0Ir6-e0c1QVUrxMf7wdsO-oUZEvmD8oL_LBt4BdYcmYJGj9Y3omG4CJJeVe1aapj_UUPdyiiavDVKF2s",
+        "widthPx": 3507,
+        "heightPx": 2630
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN2gUwlylEupr4C_NWyhV4TvpysqH_r0IDIUl31pMVW5-Jw58ixRYMGjtiDB0w15L67xBoX-Xv13jKtqAkxtHjvBJuxVFo7wP613Onbl4pgo4ysCJEtdbBTBinAJ74H7S4_E6WgUHjMm-QC6UIDUaLR2XdAKI4xUvsVQG45L2AZFfXkDU18BJYN0PWjEMW6kyCCFCQYMDdA43_Lq6c2XX5V2yhcIFOfGD9vOx1-1ks-2Uf7j_dXuNgS5P586xYwFKGgwAA_dTWMh8M6Ox2XR8HcO-EMlI_ocI4xy2c6OGg1BlKbkO_2AxPNZY_Me22jmq0_wQSFbVtBnDSmQSUhwiSH1u5PKCO4cEeBazRpJXYRM7_pD62su9Xp9Wkvl1AdfP9eRulfeeWW-xKTR2e5xDBZ2LeOXci-pEZIjoFu11R9tU0vKC8YsKsd3kdUeWg",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN3-pvCye8keGDgEf9evJx6voFW0vXi32Ec-VNKImttqEqoeypPbZf7sMXVVyfcXHh-6dZ3EH90kJYGkP-9P7o9FaxL79Xgy-E55JmRLemcfmy6ul6DbkFIgTQmdmOrVG-W-6_Jua4jg2WKz3s9E32e4OcbTqgG5Yl224ZzGEmBNfl6IuSLdbZJuF8cuThdQixoUMeWErEy5sxXc9pw6qtiwVqcclqgFhQ-e7sk61uG-7bAVlVFl1dnjeO1n5FTmgHRiP_5xBkhnQiMU0fd2d2XyhjIYCcT0E7YrcijFeF7h_qW7bmeG8QwryrGvzxEi9XTLYCZTaiRLohfcV49HqK9OWXhv4Y1bg0dX9QBOj36YzSKgiJAFavX1wFVwNvB7noHPoT6Q13fVJRK8vI9TV7s7ly6ZvC_s9DCmeyKKl4su7g",
+        "widthPx": 2048,
+        "heightPx": 1536
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN3VuytrR_e2vGplfM0p-isTITcE6OibbD23ZTNttToQ5emQ2Mj8W-YT0ugDkSCaARpBhCA1AJlySCjgzrxT_r_jjdLwDr3IWzH48qBuY8xR3j77w5HJyydyl8igc6QoVQc9Ub39KAaQSAh6xZxTpTEvz6ojx_p8t8eqSMCTAnD7lHH8rAzNhm3lbtsMxqpKro2BJjxU3DaFh30RlD0MsM6ZbGyK9s6F_BXh9jMKrLiekNrn_pRLqpNRsH90i1LdA0KpERIaxZxXyqWeSGD1Y2Jctoy_blEOJdsnw9ewhumkUe1K6x4ROBLcKNfq7pJOW4q0iRWrnf9Otjx0Q9bNH72NCaw4XcP7j0Vn4FDEtW6K05YFkG705ceFRsrgQvZpPI23nppgohMCqByY2fPRGgRCmyGyzS3eSRFcgRuUmn3yTqlUbMuKWyskBDg7pA",
+        "widthPx": 4000,
+        "heightPx": 3000
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN1VrfVw0onw6W5e6m41VOf1OBTUZ8wf3vNPsSP4V2IXYCjKUy02GyRWb8hagNo5z36lEEsvH6U878JXxcs5P9Susu7MgkPHkCSZw0dp_W55ft10LPurwb-H6DqEI6vRORLmR3rjzN_au8mhZYCZ7K22Pq9QRp-mGYzjJi6YSSaGhpxGdUZeN0VtM2QGj_CXVoHbOz3s6vFMbtcMEJQMfeahgYa2YPHtr5hpxTczbN-LhFJodxAEpcGUcYGF729PGk2hH2Wfz6-B_1NzVu2E9-e9VtwOpTV7EvkwPQIJmkXXYhGeL_P85drnRXdEri_c3t83cit2kUCrN6kdpQvGd4V0TK3AnK3rHLWPS_lefOiMbMciX8vVgaQSIBYAsETi4nmwNUIzcXRKrvViJ5X9ta_D2K4faOXDxYwsFmG0W7iPW_o",
+        "widthPx": 3024,
+        "heightPx": 4032
+      }
+    ]
+  },
+  {
+    "id": "loc_142",
     "basicInfo": {
       "name": "Communal",
       "type": "cafe",
@@ -10133,7 +11726,88 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_128",
+    "id": "loc_143",
+    "basicInfo": {
+      "name": "Communal Coffee",
+      "type": "cafe",
+      "address": {
+        "coordinates": {
+          "lat": 32.7481203,
+          "lng": -117.1392974
+        },
+        "street": "2335 University Ave",
+        "fullAddress": "2335 University Ave, San Diego, CA 92104, USA",
+        "city": "San",
+        "zip": "Diego"
+      },
+      "contact": {
+        "phone": "(619) 363-7737",
+        "website": "http://www.communalcoffee.com/",
+        "googleMapsUrl": "https://maps.google.com/?cid=6273151057583503971&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+    },
+    "legacyData": {
+      "originalDescription": "Specialty coffee shop with locations in South Park, North Park, Oceanside, and Bankers Hill",
+      "iconStyle": "#icon-1899-0288D1"
+    },
+    "metadata": {
+      "status": "enriched",
+      "importedFrom": "google_my_maps",
+      "importDate": "2026-02-11T04:11:11.405669",
+      "needsEnrichment": false,
+      "lastEnriched": "2026-02-11T20:42:04.543320"
+    },
+    "googleData": {
+      "placeId": "ChIJJ3YYMu5U2YARY3qheaa1Dlc",
+      "hasGoogleListing": true,
+      "lastSynced": "2026-02-11T20:42:04.543274"
+    },
+    "googleRating": {
+      "rating": 4.5,
+      "reviewCount": 1335
+    },
+    "hours": {
+      "weekdayDescriptions": [
+        "Monday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Tuesday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Wednesday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Thursday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM",
+        "Friday: 6:30\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Saturday: 6:30\u202fAM\u2009\u2013\u20096:00\u202fPM",
+        "Sunday: 6:30\u202fAM\u2009\u2013\u20095:00\u202fPM"
+      ],
+      "openNow": false
+    },
+    "googlePhotos": [
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN2_7O4HPdfXs7zDNOmUEUZN9Gli7o7czfep9Mwk3tZhPOhyeMFGV-7LdfslWRi-jfo1qgBD7tS7ZqpVD0fzf-EsRdAMX7k9LJCL9raoZAHLThi69AqX-GIj4DOG6RgWUKHQJ-0J2pDtX9DS6nfDoTy1UYudmO5ZLrAIE-chPUucBBCVIfNQcCdW4H8kS-d0qyu35MDYioy7E90dO3EZwKkWcAfg6vz0ksj7AQuxlQGhSQ_da5Rm34qPhSx818exAtSDm1h-lIQzaqMkynnCVns-yYSVZSHwI7acltjVnrmBVvxCcDpk6MGLcytgdeqHM1vsGxrNANRHcIdYjuTnsxZ1c3QztsIDHbg3kD2pO_evXvmhfddMuUCUM1TtGTkY5EbGsExIzivtPGUoOUH5BrDDgSUTnpXsrtvxC_GKXzjxrnHx",
+        "widthPx": 3507,
+        "heightPx": 2630
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN3yu_7XrezM7d6tJWeo3sIz1fns2aiTXDXE4S1CykpBUBjWefjLCu1PFZ3cWcJ1VOWDcbuLlb5bEnK7AtvA-vn-lB-tNwo-5ALP7RA3L5QpwDHvzF9uLktH9vhKuO-We1mYLxbSsdFUNuD3vXRhkkvL9IGLWbsf7wGhYvwVJoEX-ePPjrwc3LRmG0aVV6yi7fVMVJcCHFJT6wonhxTG278fE4V08MhHMELRXwDcE-TqoI2ks_5xPWbNS4fBjuYSxRMTLQblwv77Dq9KOoDOMSAsbu7pobpoy7-YzHhuP1v8NG96R6SXU1BqmdG4V5AlphSPFxeTab_LYQ1Y_sMnS2CEV9Qt2d2ms8DZmpEX0DE0vW-7CPEQ6nHyb9_sfzvaWMcNW7AsW4OuZAQ505X6Yp67Ndqd0b1A3yt-fjPjPbatjHKk9q-jkRdcI3o_ww",
+        "widthPx": 3024,
+        "heightPx": 4032
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN3O1OBpSeGsBZfpisDyhimRqfmVX9s-6_6lEgVkaSj0VdY9u7MjKzLqEoyKJGENGK27-rL4DoNtSWPcrd7PfXKH9YkBoCGpWLHWmLXq3M-lnsFwhSHhOYi8jJTnjhZR-jSo9265D-d_f0TYl97duX4iqKoN-1_0uGjKi_Bw6wrEq3gyyfYIZO8TNwajEm7D_3sEVe1uyt_pBT3vzQOiszAKKw7gJAFqBbtxKgj1oMouzMRAxACLZG7PU4AxHWNd05Sfya4YlDId8F6yz_ytt8wWbrESeQGDzPCC9KWyEKEbM4MEADunEKSANHBx_kgMOT_vnPTOXXnmDqPqqLjgM2Syp6cx_6J9ybR8HDFURRT40leJuyhLzuKQl6FH9eo1UbJOagQhmtB5kg3yNGf523dCd8fVpQsu0mwJg1XFya5xYw",
+        "widthPx": 2048,
+        "heightPx": 1536
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN0VupbD-eyDXBBESHGcEGf0zkr30_0zcqviqE-biozJULei7aNTD3eRuvw2SUB83LO0D98ZW5rgEoukhGhwjUAYeqkNJxnK6MwPOzMMplnzXjjjRXudo1AwJtIuhy1tmKjar1ME3pq-8q3JauW_16bln6MRzJrkD98gTw3KmZYNCgrld1Xfoh5-7VF1fTT07LYssuua4ITPJ8RVXExEFVTTOE_imUMoIVQl0PHvrVt2ihL2II3NwqaVAqrc_Ve6w2O6lzY653oNo0aSAkcOp6YTsd0DxlRihbLSWrQcr7t7E80yCo13trHtRkl4N5nF0oXZ61I1QmGVlDgS1rFfr8d3ckI148Vc2SqURtBAs1h3YdQAZgXzi63VCVlN0n445i-7Y3cLXrc1WYmgMVbxxf0tQ4dViJ_CPjJafpMk2bT8nVUEZ7k2JiMOyffdyw",
+        "widthPx": 4000,
+        "heightPx": 3000
+      },
+      {
+        "name": "places/ChIJJ3YYMu5U2YARY3qheaa1Dlc/photos/AcnlKN0SYnLOTLtqiQnvFPq7JZrp76lxgWdnN08-Gr28ZIqniK3v5K6zJ7md0ws3U5LAQbryCqsPGkDZ-zCM4Ql4HqNAfEMk0-2Y2w8hYko-nMls38gAAvAV_-PGF6Rr4450cK385NIzVaUdUhZJDsZhUl323-5HHGyJroesJOYXnqpKcP0xW3D6EAtsW2jmXciBjkglaM5lgzNs4Ou8adgpbucPFStgkdqxEpe76yFFUA5iSSAJYZr4ajKQZIV2bto3UxCDuKvP5w1A3sOmaSp5XuxJhGyXsYH9JSaj6MeW5esK0wGMrGXkMiA70AFypWuegWWfY45EshF5tbyV_AiR58d392OjLCwa7INyNgnR5hS8vVXbmAZQIuQH1ZKYnfufWra94BNsqYFfcYwY6jzcKv9uuzXYND0Iva727zT2ZjoBVRo",
+        "widthPx": 3024,
+        "heightPx": 4032
+      }
+    ]
+  },
+  {
+    "id": "loc_144",
     "basicInfo": {
       "name": "Moniker Coffee Co.",
       "type": "cafe",
@@ -10214,7 +11888,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_129",
+    "id": "loc_145",
     "basicInfo": {
       "name": "The Template",
       "type": "cafe",
@@ -10295,7 +11969,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_130",
+    "id": "loc_146",
     "basicInfo": {
       "name": "Bay Park Coffee",
       "type": "cafe",
@@ -10376,7 +12050,7 @@ const COFFEE_LOCATIONS = [
     ]
   },
   {
-    "id": "loc_131",
+    "id": "loc_147",
     "basicInfo": {
       "name": "Frequent Coffee",
       "type": "roaster",
@@ -10425,7 +12099,7 @@ const COFFEE_LOCATIONS = [
     }
   },
   {
-    "id": "loc_132",
+    "id": "loc_148",
     "basicInfo": {
       "name": "MindWater Coffee Company",
       "type": "roaster",
@@ -10474,11 +12148,468 @@ const COFFEE_LOCATIONS = [
     }
   }
 ];
+
+// Map JavaScript - Embedded
+let map, markers = [], markerCluster, infoWindow, allLocations = [], userLocationMarker = null;
+let autocompleteIndex = -1;
+
+function getRegion(location) {
+    const address = location.basicInfo.address.fullAddress || '';
+    const zip = location.basicInfo.address.zip || '';
+    
+    if (address.match(/Oceanside|Carlsbad|Encinitas|Solana Beach|Del Mar|Cardiff/i)) return 'north-coastal';
+    if (address.match(/San Marcos|Vista|Escondido|Poway|Rancho Bernardo/i) || ['92127', '92128', '92129', '92131'].includes(zip)) return 'north-inland';
+    if (address.match(/Downtown|Little Italy|North Park|South Park|Hillcrest|East Village/i) || ['92101', '92103', '92104', '92105', '92116', '92102'].includes(zip)) return 'central';
+    if (address.match(/La Jolla|Pacific Beach|Ocean Beach|Mission Beach|Point Loma/i) || ['92107', '92109', '92110'].includes(zip)) return 'coastal';
+    if (address.match(/La Mesa|El Cajon|Santee/i) || ['92115', '92119', '92120'].includes(zip)) return 'east';
+    if (address.match(/Chula Vista|Imperial Beach|Coronado/i)) return 'south';
+    if (address.includes('San Diego')) {
+        if (['92106', '92108', '92111', '92117', '92123'].includes(zip)) return 'coastal';
+        if (['92113', '92114'].includes(zip)) return 'south';
+        return 'central';
+    }
+    return 'north-coastal';
+}
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: { lat: 32.9, lng: -117.2 },
+        mapTypeControl: true,
+        streetViewControl: false,
+        fullscreenControl: true,
+        zoomControl: true,
+    });
+    
+    infoWindow = new google.maps.InfoWindow();
+    loadLocations();
+    setupEventListeners();
+    document.getElementById('loading').classList.add('hidden');
+    updateAllFilterCounts();
+}
+
+function loadLocations() {
+    allLocations = COFFEE_LOCATIONS;
+    allLocations.forEach(location => {
+        location.region = getRegion(location);
+        createMarker(location);
+    });
+    
+    // Custom renderer for color-coded clusters
+    const renderer = {
+        render: ({ count, position, markers }) => {
+            // Count types in this cluster
+            let roasterCount = 0;
+            markers.forEach(m => {
+                if (m.locationType === 'roaster') roasterCount++;
+            });
+            
+            // Determine color based on majority
+            const color = roasterCount > markers.length / 2 ? '#0F9D58' : '#0288D1';
+            
+            return new google.maps.Marker({
+                position,
+                icon: {
+                    url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60">
+                            <circle cx="30" cy="30" r="28" fill="${color}" opacity="0.3"/>
+                            <circle cx="30" cy="30" r="20" fill="${color}" opacity="0.6"/>
+                            <circle cx="30" cy="30" r="15" fill="white" stroke="${color}" stroke-width="2"/>
+                            <text x="30" y="36" text-anchor="middle" fill="${color}" font-size="14" font-weight="bold" font-family="Arial">${count}</text>
+                        </svg>
+                    `)}`,
+                    scaledSize: new google.maps.Size(60, 60),
+                },
+                zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+            });
+        }
+    };
+    
+    markerCluster = new markerClusterer.MarkerClusterer({ 
+        map,
+        markers: markers,
+        algorithmOptions: { maxZoom: 14 },
+        renderer: renderer
+    });
+    
+    fitMapToBounds();
+}
+
+function createMarker(location) {
+    const markerColor = location.basicInfo.type === 'roaster' ? 
+        'http://maps.google.com/mapfiles/ms/icons/green-dot.png' :
+        'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+    
+    const marker = new google.maps.Marker({
+        position: {
+            lat: location.basicInfo.address.coordinates.lat,
+            lng: location.basicInfo.address.coordinates.lng
+        },
+        map: null,
+        title: location.basicInfo.name,
+        icon: markerColor,
+        locationType: location.basicInfo.type,
+        locationData: location,
+        region: location.region
+    });
+    
+    marker.addListener('click', () => showInfoWindow(marker, location));
+    markers.push(marker);
+}
+
+function showInfoWindow(marker, location) {
+    infoWindow.setContent(createInfoWindowContent(location));
+    infoWindow.open(map, marker);
+}
+
+function createInfoWindowContent(location) {
+    const info = location.basicInfo;
+    const hours = location.hours || {};
+    const contact = info.contact || {};
+    const todayHours = hours.weekdayDescriptions ? hours.weekdayDescriptions[new Date().getDay()] : '';
+    const isOnline = location.customFlags?.onlineOnly || false;
+    const hasUserLocation = userLocationMarker !== null;
+    const typeLabel = info.type === 'roaster' ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
+    
+    let html = `<div class="info-window"><h3>${info.name}</h3>`;
+    html += `<div class="info-window-section"><span class="info-window-label">${typeLabel}</span></div>`;
+    
+    if (info.address.fullAddress) {
+        html += `<div class="info-window-section"><span class="info-window-label">📍</span>${isOnline ? '<strong>Online Only</strong><br>' : ''}${info.address.street || info.address.fullAddress}</div>`;
+    }
+    
+    if (todayHours) {
+        html += `<div class="info-window-section"><span class="info-window-label">🕐</span>${todayHours.replace(/\w+:\s*/, '')}</div>`;
+    }
+    
+    if (contact.website) {
+        html += `<div class="info-window-section"><span class="info-window-label">🌐</span><a href="${contact.website}" target="_blank">Visit Website</a></div>`;
+    }
+    
+    html += `<div style="margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem;">`;
+    html += `<a href="location.html?id=${location.id}" class="directions-btn" style="width: 100%; text-align: center; background: #6F4E37;">📋 View Full Details</a>`;
+    html += `<div style="display: flex; gap: 0.6rem;">`;
+    
+    if (hasUserLocation && !isOnline) {
+        const lat = info.address.coordinates.lat;
+        const lng = info.address.coordinates.lng;
+        const userPos = userLocationMarker.getPosition();
+        const directionsUrl = `https://www.google.com/maps/dir/${userPos.lat()},${userPos.lng()}/${lat},${lng}`;
+        html += `<a href="${directionsUrl}" target="_blank" class="directions-btn" style="flex: 1; text-align: center; background: #2e7d32; color: white !important;">🧭 Directions</a>`;
+    }
+    
+    if (contact.googleMapsUrl) {
+        html += `<a href="${contact.googleMapsUrl}" target="_blank" class="directions-btn" style="${hasUserLocation && !isOnline ? 'flex: 1;' : 'width: 100%;'} text-align: center; background: #1976d2; color: white !important;">🗺️ Google Maps</a>`;
+    }
+    
+    html += `</div></div></div>`;
+    return html;
+}
+
+function setupAutocomplete() {
+    const searchInput = document.getElementById('searchInput');
+    const dropdown = document.getElementById('autocompleteDropdown');
+    let searchTimeout;
+    
+    console.log('🔧 Setting up autocomplete (existing locations only)...');
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        
+        clearTimeout(searchTimeout);
+        
+        if (query.length < 2) {
+            dropdown.classList.remove('show');
+            return;
+        }
+        
+        console.log('🔍 Searching for:', query);
+        
+        // Debounce
+        searchTimeout = setTimeout(() => {
+            performSearch(query);
+        }, 300);
+    });
+    
+    function performSearch(query) {
+        // Search our existing locations
+        const matches = allLocations.filter(loc => {
+            const name = loc.basicInfo.name.toLowerCase();
+            const address = loc.basicInfo.address.fullAddress?.toLowerCase() || '';
+            return name.includes(query.toLowerCase()) || address.includes(query.toLowerCase());
+        }).slice(0, 8); // Show up to 8 results
+        
+        console.log('📍 Found', matches.length, 'matches');
+        
+        if (matches.length === 0) {
+            dropdown.classList.remove('show');
+            return;
+        }
+        
+        let html = '';
+        
+        matches.forEach((loc) => {
+            const typeClass = loc.basicInfo.type === 'roaster' ? 'roaster' : 'cafe';
+            const typeLabel = loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe';
+            html += `
+                <div class="autocomplete-item" data-type="existing" data-id="${loc.id}" style="cursor: pointer;">
+                    <span class="autocomplete-name">${loc.basicInfo.name}</span>
+                    <span class="autocomplete-address">${loc.basicInfo.address.street || loc.basicInfo.address.fullAddress}</span>
+                    <span class="autocomplete-type ${typeClass}">${typeLabel}</span>
+                </div>`;
+        });
+        
+        dropdown.innerHTML = html;
+        dropdown.classList.add('show');
+        console.log('✅ Dropdown shown with', matches.length, 'results');
+        
+        // Add click handlers
+        dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = item.getAttribute('data-id');
+                console.log('📍 Selecting location:', id);
+                selectLocation(id);
+            });
+        });
+    }
+    
+    // Keyboard navigation - Enter key
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const firstItem = dropdown.querySelector('.autocomplete-item');
+            if (firstItem) {
+                const id = firstItem.getAttribute('data-id');
+                selectLocation(id);
+            }
+        } else if (e.key === 'Escape') {
+            dropdown.classList.remove('show');
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+}
+
+function selectLocation(locationId) {
+    const location = allLocations.find(loc => loc.id === locationId);
+    if (!location) return;
+    
+    document.getElementById('autocompleteDropdown').classList.remove('show');
+    document.getElementById('searchInput').value = location.basicInfo.name;
+    
+    const marker = markers.find(m => m.locationData.id === locationId);
+    if (marker) {
+        map.setCenter(marker.getPosition());
+        map.setZoom(15);
+        showInfoWindow(marker, location);
+    }
+}
+
+function updateAllFilterCounts() {
+    const ratings = {all: 0, '4plus': 0, '5': 0};
+    const regions = {'central': 0, 'north-coastal': 0, 'coastal': 0, 'north-inland': 0, 'east': 0, 'south': 0};
+    
+    markers.forEach(marker => {
+        const rating = marker.locationData.googleRating?.rating || 0;
+        ratings.all++;
+        if (rating >= 4) ratings['4plus']++;
+        if (rating >= 5) ratings['5']++;
+        if (regions[marker.region] !== undefined) regions[marker.region]++;
+    });
+    
+    if (document.getElementById('count-all-rating')) document.getElementById('count-all-rating').textContent = `(${ratings.all})`;
+    if (document.getElementById('count-4plus')) document.getElementById('count-4plus').textContent = `(${ratings['4plus']})`;
+    if (document.getElementById('count-5stars')) document.getElementById('count-5stars').textContent = `(${ratings['5']})`;
+    
+    for (const [region, count] of Object.entries(regions)) {
+        const el = document.getElementById(`count-${region}`);
+        if (el) el.textContent = `(${count})`;
+    }
+}
+
+function fitMapToBounds() {
+    const bounds = new google.maps.LatLngBounds();
+    let hasVisibleMarkers = false;
+    
+    markers.forEach(marker => {
+        if (marker.getMap() !== null) {
+            bounds.extend(marker.getPosition());
+            hasVisibleMarkers = true;
+        }
+    });
+    
+    if (hasVisibleMarkers) {
+        map.fitBounds(bounds);
+        const listener = google.maps.event.addListener(map, 'idle', () => {
+            if (map.getZoom() > 15) map.setZoom(15);
+            google.maps.event.removeListener(listener);
+        });
+    }
+}
+
+function setupEventListeners() {
+    setupAutocomplete();
+    
+    document.getElementById('searchBtn').addEventListener('click', performSearch);
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && autocompleteIndex === -1) performSearch();
+    });
+    document.getElementById('clearBtn').addEventListener('click', () => {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('autocompleteDropdown').classList.remove('show');
+        applyFilters();
+    });
+    document.getElementById('filterRoasters').addEventListener('change', applyFilters);
+    document.getElementById('filterCafes').addEventListener('change', applyFilters);
+    
+    document.querySelectorAll('input[name="ratingFilter"]').forEach(radio => {
+        radio.addEventListener('change', applyFilters);
+    });
+    
+    document.querySelectorAll('.regionFilter').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            if (checkbox.value === 'all' && checkbox.checked) {
+                document.querySelectorAll('.regionFilter').forEach(cb => {
+                    if (cb.value !== 'all') cb.checked = false;
+                });
+            } else if (checkbox.value !== 'all') {
+                document.querySelector('.regionFilter[value="all"]').checked = false;
+            }
+            applyFilters();
+        });
+    });
+    
+    document.getElementById('toggleFilters').addEventListener('click', () => {
+        document.getElementById('filtersPanel').classList.toggle('expanded');
+    });
+    
+    document.getElementById('showMyLocation').addEventListener('click', showUserLocation);
+}
+
+function showUserLocation() {
+    const btn = document.getElementById('showMyLocation');
+    btn.disabled = true;
+    btn.textContent = '📍 Finding location...';
+    
+    if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
+                if (userLocationMarker) userLocationMarker.setMap(null);
+                
+                userLocationMarker = new google.maps.Marker({
+                    position: userPos,
+                    map: map,
+                    title: 'Your Location',
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10,
+                        fillColor: '#4285F4',
+                        fillOpacity: 1,
+                        strokeColor: '#ffffff',
+                        strokeWeight: 2
+                    },
+                    zIndex: 1000
+                });
+                
+                map.setCenter(userPos);
+                map.setZoom(12);
+                btn.disabled = false;
+                btn.textContent = '📍 Location Shown';
+                infoWindow.setContent(`<div class="info-window"><h3>📍 Your Location</h3><p>Click any coffee shop to get directions from here!</p></div>`);
+                infoWindow.open(map, userLocationMarker);
+            },
+            () => {
+                alert('Could not get your location. Please enable location services.');
+                btn.disabled = false;
+                btn.textContent = '📍 Show My Location';
+            }
+        );
+    }
+}
+
+function performSearch() {
+    const query = document.getElementById('searchInput').value.toLowerCase().trim();
+    document.getElementById('autocompleteDropdown').classList.remove('show');
+    
+    if (!query) {
+        applyFilters();
+        return;
+    }
+    
+    const visibleMarkers = markers.filter(marker => {
+        const location = marker.locationData;
+        const name = location.basicInfo.name.toLowerCase();
+        const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
+        return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
+    });
+    
+    markerCluster.clearMarkers();
+    markerCluster.addMarkers(visibleMarkers);
+    updateVisibleCount(visibleMarkers.length);
+    
+    if (visibleMarkers.length === 0) {
+        infoWindow.setContent(`<div class="info-window"><h3>No Results</h3><p>No locations found matching "${query}"</p></div>`);
+        infoWindow.setPosition(map.getCenter());
+        infoWindow.open(map);
+    } else {
+        fitMapToBounds();
+    }
+}
+
+function applyFilters() {
+    if (document.getElementById('searchInput').value.trim()) {
+        performSearch();
+        return;
+    }
+    
+    const visibleMarkers = markers.filter(marker => shouldShowMarker(marker));
+    markerCluster.clearMarkers();
+    markerCluster.addMarkers(visibleMarkers);
+    updateVisibleCount(visibleMarkers.length);
+    fitMapToBounds();
+}
+
+function shouldShowMarker(marker) {
+    const location = marker.locationData;
+    
+    if (marker.locationType === 'roaster' && !document.getElementById('filterRoasters').checked) return false;
+    if (marker.locationType === 'cafe' && !document.getElementById('filterCafes').checked) return false;
+    
+    const ratingFilter = document.querySelector('input[name="ratingFilter"]:checked').value;
+    const rating = location.googleRating?.rating || 0;
+    
+    if (ratingFilter === '4plus' && rating < 4) return false;
+    if (ratingFilter === '5' && rating < 5) return false;
+    
+    const allRegionsChecked = document.querySelector('.regionFilter[value="all"]').checked;
+    
+    if (!allRegionsChecked) {
+        const checkedRegions = Array.from(document.querySelectorAll('.regionFilter:checked'))
+            .map(cb => cb.value)
+            .filter(val => val !== 'all');
+        
+        if (checkedRegions.length > 0 && !checkedRegions.includes(marker.region)) return false;
+    }
+    
+    return true;
+}
+
+function updateVisibleCount(count) {
+    document.getElementById('visibleCount').textContent = count;
+}
+
+window.gm_authFailure = function() {
+    document.getElementById('loading').innerHTML = '<div style="color: red; padding: 2rem;"><h3>⚠️ Map Loading Error</h3></div>';
+};
     </script>
-
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initMap" async defer></script>
-
-    <!-- Map functionality would go in separate map.js file or inline here -->
+    
+    <!-- Google Maps API with Places library -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>

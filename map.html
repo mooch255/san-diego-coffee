@@ -449,8 +449,15 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <h1>☕ San Diego Coffee Beans</h1>
-            <p class="subtitle">Specialty Coffee Roasters & Multi-Roaster Cafes</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>☕ San Diego Coffee Beans</h1>
+                    <p class="subtitle">Specialty Coffee Roasters & Multi-Roaster Cafes</p>
+                </div>
+                <a href="index.html" style="color: white; text-decoration: none; padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.2); border-radius: 8px; font-weight: 600; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    🏠 Home
+                </a>
+            </div>
         </div>
     </header>
 
@@ -12186,6 +12193,26 @@ function initMap() {
     setupEventListeners();
     document.getElementById('loading').classList.add('hidden');
     updateAllFilterCounts();
+    
+    // Handle URL parameters for filtering and searching
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+    const filterParam = urlParams.get('filter');
+    
+    // Apply filter from URL
+    if (filterParam === 'roasters') {
+        document.getElementById('filterCafes').checked = false;
+        applyFilters();
+    } else if (filterParam === 'cafes') {
+        document.getElementById('filterRoasters').checked = false;
+        applyFilters();
+    }
+    
+    // Apply search from URL
+    if (searchQuery) {
+        document.getElementById('searchInput').value = searchQuery;
+        performSearch();
+    }
 }
 
 function loadLocations() {

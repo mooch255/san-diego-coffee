@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Diego Coffee Beans - Community Coffee Map</title>
+    <title>San Diego Coffee Beans - Specialty Coffee Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --cream: #FAF7F2;
+            --warm-white: #FFFFFF;
+            --espresso: #2C2420;
+            --rich-brown: #6B4E3D;
+            --latte: #C4A77D;
+            --shadow-soft: 0 2px 20px rgba(44, 36, 32, 0.08);
+            --shadow-medium: 0 4px 30px rgba(44, 36, 32, 0.12);
+            --shadow-strong: 0 8px 40px rgba(44, 36, 32, 0.16);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,183 +26,333 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
-            color: #333;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            color: var(--espresso);
+            background: var(--cream);
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Smooth page load animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
-            color: white;
-            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--rich-brown) 0%, #8B6F5B 100%);
+            color: var(--warm-white);
+            padding: 5rem 2rem 6rem;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(196, 167, 125, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(196, 167, 125, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.2s both;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
         }
 
         .hero .tagline {
-            font-size: 1.3rem;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
             opacity: 0.95;
             margin-bottom: 1rem;
+            font-weight: 400;
         }
 
-        .hero .community-badge {
+        .community-badge {
             display: inline-block;
-            background: rgba(255,255,255,0.2);
-            padding: 0.5rem 1.2rem;
-            border-radius: 25px;
-            font-size: 1rem;
-            margin-top: 0.5rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .community-badge:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
         }
 
         /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: 4rem 2rem;
         }
 
         /* Stats Section */
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease-out 0.4s both;
         }
 
         .stat-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
+            background: var(--warm-white);
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--latte) 0%, var(--rich-brown) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-strong);
         }
 
-        .stat-number {
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: #6F4E37;
-            margin-bottom: 0.5rem;
+        .stat-card:hover::before {
+            opacity: 0.03;
         }
 
-        .stat-label {
-            font-size: 1.1rem;
-            color: #666;
-            font-weight: 500;
+        .stat-card > * {
+            position: relative;
+            z-index: 1;
         }
 
         .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 3rem;
+            margin-bottom: 1.25rem;
+            filter: grayscale(20%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1);
+        }
+
+        .stat-number {
+            font-family: 'Crimson Pro', serif;
+            font-size: 4rem;
+            font-weight: 300;
+            color: var(--rich-brown);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #5A4A42;
+            font-weight: 500;
+            letter-spacing: 0.02em;
         }
 
         /* Search Section */
         .search-section {
-            background: white;
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 3rem;
+            background: var(--warm-white);
+            padding: 3.5rem 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 4rem;
             text-align: center;
+            animation: fadeInUp 1s ease-out 0.6s both;
         }
 
         .search-section h2 {
-            color: #6F4E37;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
+            font-family: 'Crimson Pro', serif;
+            color: var(--rich-brown);
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
         }
 
         .search-preview {
             max-width: 600px;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 2rem;
             position: relative;
         }
 
         .search-preview input {
             width: 100%;
-            padding: 1rem 1.5rem;
+            padding: 1.25rem 1.75rem;
             font-size: 1.1rem;
-            border: 2px solid #ddd;
-            border-radius: 50px;
-            transition: border-color 0.3s;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            background: var(--cream);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'DM Sans', sans-serif;
         }
 
         .search-preview input:focus {
             outline: none;
-            border-color: #6F4E37;
+            border-color: var(--latte);
+            background: var(--warm-white);
+            box-shadow: 0 4px 20px rgba(107, 78, 61, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--warm-white);
+            border: 1px solid rgba(107, 78, 61, 0.1);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: var(--shadow-medium);
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(107, 78, 61, 0.05);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background: var(--cream);
+            transform: translateX(4px);
         }
 
         .map-cta {
             display: inline-block;
-            padding: 1rem 3rem;
-            background: #6F4E37;
-            color: white;
+            padding: 1.25rem 3rem;
+            background: var(--rich-brown);
+            color: var(--warm-white);
             text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
+            border-radius: 12px;
+            font-size: 1.15rem;
             font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(111, 78, 55, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-soft);
         }
 
         .map-cta:hover {
-            background: #5a3d2b;
+            background: var(--espresso);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(111, 78, 55, 0.4);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .map-cta:active {
+            transform: translateY(0);
         }
 
         /* Featured Section */
         .featured-section {
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease-out 0.8s both;
         }
 
         .featured-section h2 {
-            color: #6F4E37;
-            font-size: 2rem;
-            margin-bottom: 2rem;
+            font-family: 'Crimson Pro', serif;
+            color: var(--rich-brown);
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin-bottom: 2.5rem;
             text-align: center;
+            letter-spacing: -0.01em;
         }
 
         .featured-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
 
         .featured-card {
-            background: white;
-            border-radius: 12px;
+            background: var(--warm-white);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .featured-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-strong);
         }
 
         .featured-card-header {
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
-            color: white;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--rich-brown) 0%, #8B6F5B 100%);
+            color: var(--warm-white);
+            transition: all 0.3s;
+        }
+
+        .featured-card:hover .featured-card-header {
+            background: linear-gradient(135deg, var(--espresso) 0%, var(--rich-brown) 100%);
         }
 
         .featured-card-header h3 {
-            font-size: 1.3rem;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
             margin-bottom: 0.5rem;
         }
 
@@ -198,52 +362,53 @@
         }
 
         .featured-card-body {
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         .featured-card-body p {
-            color: #666;
-            margin-bottom: 0.5rem;
+            color: #5A4A42;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
         }
 
         .featured-badge {
             display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: #e8f5e9;
-            color: #2e7d32;
-            border-radius: 15px;
+            padding: 0.5rem 1rem;
+            background: rgba(107, 78, 61, 0.08);
+            color: var(--rich-brown);
+            border-radius: 8px;
             font-size: 0.85rem;
             font-weight: 600;
-            margin-top: 0.5rem;
-        }
-
-        .featured-badge.cafe {
-            background: #e3f2fd;
-            color: #1565c0;
+            margin-top: 0.75rem;
         }
 
         /* Community Section */
         .community-section {
-            background: white;
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: var(--warm-white);
+            padding: 3.5rem 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
             text-align: center;
+            animation: fadeInUp 1s ease-out 1s both;
         }
 
         .community-section h2 {
-            color: #6F4E37;
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-family: 'Crimson Pro', serif;
+            color: var(--rich-brown);
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.01em;
         }
 
         .community-section p {
             font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 2rem;
+            color: #5A4A42;
+            margin-bottom: 2.5rem;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            line-height: 1.7;
         }
 
         .community-buttons {
@@ -254,83 +419,88 @@
         }
 
         .btn {
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
+            padding: 1.25rem 2.5rem;
+            border-radius: 12px;
             text-decoration: none;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-block;
         }
 
         .btn-primary {
             background: #FF4500;
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
+            color: var(--warm-white);
+            box-shadow: var(--shadow-soft);
         }
 
         .btn-primary:hover {
-            background: #cc3700;
+            background: #E03E00;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
-            background: white;
-            color: #6F4E37;
-            border: 2px solid #6F4E37;
+            background: var(--cream);
+            color: var(--rich-brown);
+            border: 2px solid var(--latte);
         }
 
         .btn-secondary:hover {
-            background: #6F4E37;
-            color: white;
+            background: var(--latte);
+            color: var(--warm-white);
             transform: translateY(-2px);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
         }
 
         /* Footer */
         footer {
-            background: #333;
-            color: white;
+            background: var(--espresso);
+            color: rgba(255,255,255,0.8);
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
         }
 
         footer a {
-            color: #8B6F47;
+            color: var(--latte);
             text-decoration: none;
+            transition: color 0.3s;
         }
 
         footer a:hover {
-            text-decoration: underline;
+            color: var(--warm-white);
+        }
+
+        footer p {
+            margin-bottom: 0.75rem;
         }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .hero .tagline {
-                font-size: 1rem;
+            .hero {
+                padding: 3rem 1.5rem 4rem;
             }
 
             .container {
-                padding: 2rem 1rem;
+                padding: 2rem 1.5rem;
             }
 
             .stats {
                 grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .stat-number {
-                font-size: 2.5rem;
+                gap: 1.5rem;
             }
 
             .search-section,
             .community-section {
-                padding: 2rem 1.5rem;
+                padding: 2.5rem 1.5rem;
             }
 
             .community-buttons {
@@ -341,16 +511,22 @@
             .btn {
                 width: 100%;
             }
+
+            .stat-number {
+                font-size: 3rem;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Hero Section -->
     <div class="hero">
-        <h1>☕ San Diego Coffee Beans</h1>
-        <p class="tagline">Your Community-Driven Guide to Specialty Coffee</p>
-        <div class="community-badge">
-            🌟 Built by and for r/SanDiegoCoffeeBeans
+        <div class="hero-content">
+            <h1>San Diego Coffee Beans</h1>
+            <p class="tagline">Your Curated Atlas of Specialty Coffee</p>
+            <div class="community-badge">
+                🌟 Built by r/SanDiegoCoffeeBeans
+            </div>
         </div>
     </div>
 
@@ -358,36 +534,35 @@
     <div class="container">
         <!-- Stats Section -->
         <div class="stats">
-            <a href="map.html" class="stat-card" style="text-decoration: none; color: inherit;">
+            <a href="map.html" class="stat-card">
                 <div class="stat-icon">📍</div>
-                <div class="stat-number">132</div>
+                <div class="stat-number" data-target="132">0</div>
                 <div class="stat-label">Total Locations</div>
             </a>
-            <a href="map.html?filter=roasters" class="stat-card" style="text-decoration: none; color: inherit;">
+            <a href="map.html?filter=roasters" class="stat-card">
                 <div class="stat-icon">🌱</div>
-                <div class="stat-number">97</div>
+                <div class="stat-number" data-target="97">0</div>
                 <div class="stat-label">Unique Roasters</div>
             </a>
-            <a href="map.html?filter=cafes" class="stat-card" style="text-decoration: none; color: inherit;">
+            <a href="map.html?filter=cafes" class="stat-card">
                 <div class="stat-icon">☕</div>
-                <div class="stat-number">7</div>
-                <div class="stat-label">Unique Multi-Roaster Cafes</div>
+                <div class="stat-number" data-target="7">0</div>
+                <div class="stat-label">Multi-Roaster Cafes</div>
             </a>
         </div>
 
         <!-- Search Preview Section -->
         <div class="search-section">
-            <h2>🔍 Find Your Next Coffee Spot</h2>
+            <h2>Find Your Next Coffee Spot</h2>
             <div class="search-preview">
-                <input type="text" id="homeSearchInput" placeholder="Try searching for Bird Rock, North Park, or La Jolla...">
+                <input type="text" id="homeSearchInput" placeholder="Search 132 specialty coffee locations...">
             </div>
-            <p style="color: #666; margin-bottom: 1.5rem;">Search 132 specialty coffee locations across San Diego County</p>
-            <a href="map.html" class="map-cta">🗺️ Explore the Full Map</a>
+            <a href="map.html" class="map-cta">🗺️ Explore the Atlas</a>
         </div>
 
         <!-- Featured Coffee Shops -->
         <div class="featured-section">
-            <h2>✨ Featured Locations</h2>
+            <h2>Featured Locations</h2>
             <div class="featured-grid">
                 <div class="featured-card">
                     <div class="featured-card-header">
@@ -429,8 +604,8 @@
 
         <!-- Community Section -->
         <div class="community-section">
-            <h2>🤝 Join Our Community</h2>
-            <p>This map is created and maintained by the San Diego coffee community. Help us keep it updated and discover new specialty coffee spots together!</p>
+            <h2>Join Our Community</h2>
+            <p>This atlas is created and maintained by the San Diego coffee community. Help us keep it updated and discover new specialty coffee spots together.</p>
             <div class="community-buttons">
                 <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" class="btn btn-primary">
                     💬 Join r/SanDiegoCoffeeBeans
@@ -444,10 +619,8 @@
 
     <!-- Footer -->
     <footer>
-        <p>
-            Made with ☕ by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community
-        </p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.8;">
+        <p>Made with ☕ by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.7;">
             132 locations and counting | Last updated February 2026
         </p>
     </footer>
@@ -477,6 +650,31 @@
             { name: "Modern Times Beer - Coffee", city: "Multiple Locations", type: "roaster" }
         ];
 
+        // Animated counter for stats
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        }
+
+        // Trigger counters on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.stat-number').forEach(animateCounter);
+            }, 400);
+        });
+
         const searchInput = document.getElementById('homeSearchInput');
         let autocompleteList = null;
         let selectedIndex = -1;
@@ -486,21 +684,6 @@
             const container = searchInput.parentElement;
             autocompleteList = document.createElement('div');
             autocompleteList.className = 'autocomplete-list';
-            autocompleteList.style.cssText = `
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                border: 1px solid #ddd;
-                border-top: none;
-                border-radius: 0 0 8px 8px;
-                max-height: 300px;
-                overflow-y: auto;
-                z-index: 1000;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                display: none;
-            `;
             container.appendChild(autocompleteList);
         }
 
@@ -514,7 +697,7 @@
             const filtered = COFFEE_LOCATIONS.filter(loc => 
                 loc.name.toLowerCase().includes(query.toLowerCase()) ||
                 loc.city.toLowerCase().includes(query.toLowerCase())
-            ).slice(0, 8); // Limit to 8 results
+            ).slice(0, 6);
 
             if (filtered.length === 0) {
                 autocompleteList.style.display = 'none';
@@ -524,13 +707,13 @@
             autocompleteList.innerHTML = filtered.map((loc, index) => `
                 <div class="autocomplete-item" data-index="${index}" data-name="${loc.name}">
                     <strong>${highlightMatch(loc.name, query)}</strong>
-                    <span style="color: #666; font-size: 0.9rem; margin-left: 8px;">${loc.city}</span>
-                    <span style="background: ${loc.type === 'roaster' ? '#e8f5e9' : '#e3f2fd'}; 
-                                 color: ${loc.type === 'roaster' ? '#2e7d32' : '#1565c0'}; 
-                                 padding: 2px 8px; 
-                                 border-radius: 12px; 
+                    <span style="color: #5A4A42; font-size: 0.9rem;">${loc.city}</span>
+                    <span style="background: ${loc.type === 'roaster' ? 'rgba(107, 78, 61, 0.1)' : 'rgba(196, 167, 125, 0.1)'}; 
+                                 color: var(--rich-brown); 
+                                 padding: 4px 10px; 
+                                 border-radius: 6px; 
                                  font-size: 0.75rem; 
-                                 margin-left: 8px;">
+                                 margin-left: auto;">
                         ${loc.type === 'roaster' ? '📍 Roaster' : '☕ Cafe'}
                     </span>
                 </div>
@@ -554,21 +737,18 @@
             selectedIndex = -1;
         }
 
-        // Highlight matching text
         function highlightMatch(text, query) {
             const index = text.toLowerCase().indexOf(query.toLowerCase());
             if (index === -1) return text;
             return text.substring(0, index) + 
-                   '<span style="background: #fff3cd;">' + 
+                   '<span style="background: rgba(196, 167, 125, 0.3); border-radius: 3px; padding: 0 2px;">' + 
                    text.substring(index, index + query.length) + 
                    '</span>' + 
                    text.substring(index + query.length);
         }
 
-        // Initialize
         createAutocompleteDropdown();
 
-        // Event listeners
         searchInput.addEventListener('input', function() {
             showSuggestions(this.value.trim());
         });
@@ -613,57 +793,12 @@
             });
         }
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             if (!searchInput.contains(e.target) && !autocompleteList.contains(e.target)) {
                 autocompleteList.style.display = 'none';
                 selectedIndex = -1;
             }
         });
-        
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const query = searchInput.value.trim();
-                if (query) {
-                    window.location.href = 'map.html?search=' + encodeURIComponent(query);
-                } else {
-                    window.location.href = 'map.html';
-                }
-            }
-        });
-
-        // Map button functionality
-        document.querySelector('.map-cta').addEventListener('click', function(e) {
-            const query = searchInput.value.trim();
-            if (query) {
-                e.preventDefault();
-                window.location.href = 'map.html?search=' + encodeURIComponent(query);
-            }
-        });
     </script>
-    
-    <style>
-        .autocomplete-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-        }
-        
-        .autocomplete-item:last-child {
-            border-bottom: none;
-        }
-        
-        .autocomplete-item:hover,
-        .autocomplete-item.selected {
-            background: #f8f8f8;
-        }
-        
-        .search-preview {
-            position: relative;
-        }
-    </style>
 </body>
 </html>

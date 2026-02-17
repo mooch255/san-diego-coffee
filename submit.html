@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit a Coffee Shop - San Diego Coffee Beans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,28 +13,27 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
-            color: #333;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #2c1810;
+            background: #f8f6f4;
         }
 
-        /* Header */
         header {
-            background: linear-gradient(135deg, #6F4E37 0%, #8B6F47 100%);
+            background: #2c1810;
             color: white;
             padding: 2rem;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         header h1 {
+            font-family: 'Crimson Pro', Georgia, serif;
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
         }
 
         header p {
-            font-size: 1.1rem;
             opacity: 0.9;
+            font-size: 1.1rem;
         }
 
         .nav-links {
@@ -41,21 +41,18 @@
         }
 
         .nav-links a {
-            color: white;
+            color: #d4c4bc;
             text-decoration: none;
             margin: 0 1rem;
-            font-weight: 500;
-            transition: opacity 0.3s;
+            transition: color 0.3s;
         }
 
         .nav-links a:hover {
-            opacity: 0.8;
-            text-decoration: underline;
+            color: white;
         }
 
-        /* Container */
         .container {
-            max-width: 900px;
+            max-width: 700px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
@@ -63,57 +60,200 @@
         .intro-card {
             background: white;
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
-            text-align: center;
         }
 
         .intro-card h2 {
-            color: #6F4E37;
-            font-size: 1.8rem;
+            font-family: 'Crimson Pro', Georgia, serif;
+            color: #2c1810;
             margin-bottom: 1rem;
         }
 
         .intro-card p {
-            color: #666;
-            font-size: 1.1rem;
+            color: #5c4a42;
             line-height: 1.6;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .intro-card ul {
-            text-align: left;
-            max-width: 600px;
-            margin: 1.5rem auto;
-            color: #555;
+            color: #5c4a42;
+            padding-left: 1.5rem;
+            line-height: 1.8;
         }
 
-        .intro-card li {
-            margin-bottom: 0.8rem;
+        .form-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-section {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section h2 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 1.8rem;
+            color: #2c1810;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-description {
+            color: #5c4a42;
+            margin-bottom: 1.5rem;
             line-height: 1.6;
         }
 
-        .intro-card strong {
-            color: #6F4E37;
+        .form-group {
+            margin-bottom: 1.8rem;
         }
 
-        /* Form Container */
-        .form-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-            min-height: 1000px;
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #2c1810;
+            margin-bottom: 0.5rem;
         }
 
-        iframe {
+        .required::after {
+            content: ' *';
+            color: #c44536;
+        }
+
+        .field-description {
+            font-size: 0.9rem;
+            color: #7a6a62;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        select,
+        textarea {
             width: 100%;
-            height: 1200px;
-            border: none;
+            padding: 0.75rem;
+            border: 1px solid #d4c4bc;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        /* Footer */
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #8b6f47;
+            box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-label:hover {
+            background-color: #f8f6f4;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #8b6f47;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #755d3a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(139, 111, 71, 0.2);
+        }
+
+        .btn-primary:disabled {
+            background: #d4c4bc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-secondary {
+            background: #f8f6f4;
+            color: #2c1810;
+            border: 1px solid #d4c4bc;
+        }
+
+        .btn-secondary:hover {
+            background: #eae6e3;
+        }
+
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
         footer {
             background: #333;
             color: white;
@@ -123,7 +263,7 @@
         }
 
         footer a {
-            color: #8B6F47;
+            color: #8b6f47;
             text-decoration: none;
         }
 
@@ -136,69 +276,306 @@
                 font-size: 1.8rem;
             }
 
-            header p {
-                font-size: 0.95rem;
-            }
-
-            .nav-links a {
-                display: block;
-                margin: 0.5rem 0;
-            }
-
-            .intro-card {
+            .form-container {
                 padding: 1.5rem;
             }
 
-            iframe {
-                height: 1400px;
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
-        <h1>☕ Add a Coffee Shop</h1>
-        <p>Help grow San Diego's specialty coffee community!</p>
+        <h1>☕ Submit a Coffee Spot</h1>
+        <p>Help grow the San Diego specialty coffee community</p>
         <div class="nav-links">
             <a href="index.html">🏠 Home</a>
             <a href="map.html">🗺️ View Map</a>
-            <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">💬 Subreddit</a>
         </div>
     </header>
 
-    <!-- Main Container -->
     <div class="container">
-        <!-- Introduction Card -->
         <div class="intro-card">
-            <h2>📝 Submit a Location</h2>
-            <p>Know a great coffee roaster or multi-roaster cafe that's not on our map? Let us know!</p>
-            
+            <h2>📍 Submit a Location</h2>
+            <p><strong>This form is for submitting roasters, multi-roaster cafes, or corrections to the San Diego Specialty Coffee Map and Directory.</strong></p>
+            <p>The goal is to maintain a <strong>curated map with notes on each spot</strong> to help navigate the specialty coffee scene across San Diego County.</p>
             <ul>
-                <li><strong>✅ We're looking for:</strong> Specialty coffee roasters and multi-roaster cafes in San Diego County</li>
-                <li><strong>⏱️ Takes 2 minutes:</strong> Just fill out the basic info below</li>
-                <li><strong>🔍 We'll review:</strong> Submissions are reviewed by our community before being added</li>
-                <li><strong>🙏 Thank you:</strong> You're helping build the best coffee resource for San Diego!</li>
+                <li>✅ Locally roasted San Diego beans</li>
+                <li>☕ Skilled, knowledgeable baristas</li>
+                <li>🎯 Focus on quality and technique</li>
             </ul>
+            <p><em>Submissions are reviewed before being added. Not all entries will be accepted.</em></p>
         </div>
 
-        <!-- Embedded Google Form -->
         <div class="form-container">
-            <iframe 
-                src="https://docs.google.com/forms/d/e/1FAIpQLSdn_zKzt_nsMhIaTuoVVpHnHCyCWHf63HW0SgO2OO-bP7mp3g/viewform?embedded=true"
-                frameborder="0"
-                marginheight="0"
-                marginwidth="0">
-                Loading form...
-            </iframe>
+            <div id="alertContainer"></div>
+
+            <form id="submissionForm" netlify netlify-honeypot="bot-field" name="coffee-submissions">
+                <input type="hidden" name="form-name" value="coffee-submissions">
+                <input type="hidden" name="bot-field">
+                
+                <!-- Section 1: Initial Selection -->
+                <div id="section1" class="form-section">
+                    <h2>What would you like to submit?</h2>
+                    
+                    <div class="form-group">
+                        <label class="required">Email</label>
+                        <input type="email" name="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Submission Type</label>
+                        <select name="submissionType" id="submissionType" required>
+                            <option value="">Choose</option>
+                            <option value="roaster">Roaster</option>
+                            <option value="multi-roaster-cafe">Multi-Roaster Cafe</option>
+                            <option value="correction">Correction / Update</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="goToSection2()">Next</button>
+                </div>
+
+                <!-- Sections 2-6 will be shown/hidden based on selection -->
+                <!-- For brevity, I'll create a simplified version that works -->
+                
+                <!-- Hidden sections that appear based on type selection -->
+                <div id="dynamicSections" class="hidden">
+                    <!-- Content will be dynamically inserted here -->
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <p>
-            Made with ☕ by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community
-        </p>
+        <p>Made with ☕ by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community</p>
     </footer>
+
+    <script>
+        let currentSection = 1;
+        let formData = {};
+
+        function goToSection2() {
+            const email = document.getElementById('email').value;
+            const submissionType = document.getElementById('submissionType').value;
+            
+            if (!email || !submissionType) {
+                showAlert('Please fill in all required fields', 'error');
+                return;
+            }
+
+            formData.email = email;
+            formData.submissionType = submissionType;
+
+            document.getElementById('section1').classList.add('hidden');
+            
+            // Load the appropriate section based on type
+            if (submissionType === 'roaster') {
+                loadRoasterSection();
+            } else if (submissionType === 'multi-roaster-cafe') {
+                loadCafeSection();
+            } else if (submissionType === 'correction') {
+                loadCorrectionSection();
+            }
+
+            document.getElementById('dynamicSections').classList.remove('hidden');
+        }
+
+        function loadRoasterSection() {
+            document.getElementById('dynamicSections').innerHTML = `
+                <div class="form-section">
+                    <h2>Roaster Submission</h2>
+                    <p class="form-description">This form is for submitting <strong>San Diego coffee roasters.</strong></p>
+
+                    <div class="form-group">
+                        <label class="required">Business Name</label>
+                        <input type="text" name="businessName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Neighborhood</label>
+                        <p class="field-description">For roasters with multiple locations, prioritize: 1) Main roasting facility, 2) Flagship café, 3) Main office</p>
+                        <input type="text" name="neighborhood" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Google Maps Link</label>
+                        <input type="url" name="googleMapsLink" required placeholder="https://maps.google.com/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Website / Instagram</label>
+                        <input type="url" name="website" required placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Why does this belong on a specialty coffee map?</label>
+                        <p class="field-description">Be specific - what makes them notable?</p>
+                        <textarea name="whySpecialty" required rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional Information</label>
+                        <p class="field-description">Parking tips, best drinks, anything else worth knowing</p>
+                        <textarea name="additionalInfo" rows="3"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadCafeSection() {
+            document.getElementById('dynamicSections').innerHTML = `
+                <div class="form-section">
+                    <h2>Multi-Roaster Cafe Submission</h2>
+                    <p class="form-description">This form is for submitting <strong>San Diego Multi-Roaster cafes.</strong></p>
+
+                    <div class="form-group">
+                        <label class="required">Business Name</label>
+                        <input type="text" name="businessName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Neighborhood</label>
+                        <p class="field-description">For cafés with multiple locations, list the original or flagship location</p>
+                        <input type="text" name="neighborhood" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Google Maps Link</label>
+                        <input type="url" name="googleMapsLink" required placeholder="https://maps.google.com/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Website / Instagram</label>
+                        <input type="url" name="website" required placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Which roasters do they serve?</label>
+                        <p class="field-description">List all roasters you're aware of, separated by commas</p>
+                        <textarea name="roastersServed" required rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Why does this belong on a specialty coffee map?</label>
+                        <p class="field-description">Be specific - what makes their coffee program stand out?</p>
+                        <textarea name="whySpecialty" required rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Additional Information</label>
+                        <p class="field-description">Parking tips, best times to visit, standout menu items</p>
+                        <textarea name="additionalInfo" rows="3"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadCorrectionSection() {
+            document.getElementById('dynamicSections').innerHTML = `
+                <div class="form-section">
+                    <h2>Correction or Information Update</h2>
+
+                    <div class="form-group">
+                        <label class="required">Business Name</label>
+                        <input type="text" name="businessName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Type of Correction</label>
+                        <select name="correctionType" required>
+                            <option value="">Choose</option>
+                            <option value="closure">Closure</option>
+                            <option value="acquisition">Acquisition / Change of Ownership</option>
+                            <option value="moved">Moved Location</option>
+                            <option value="general">Wrong Info / General Update</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="required">Please provide details</label>
+                        <textarea name="correctionDetails" required rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Source / Proof (if applicable)</label>
+                        <p class="field-description">Link to article, Instagram post, or announcement</p>
+                        <textarea name="sourceProof" rows="2"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function goBack() {
+            document.getElementById('dynamicSections').classList.add('hidden');
+            document.getElementById('dynamicSections').innerHTML = '';
+            document.getElementById('section1').classList.remove('hidden');
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Handle form submission
+        document.getElementById('submissionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formElement = e.target;
+            const formData = new FormData(formElement);
+
+            try {
+                // Submit to Netlify Forms
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(formData).toString()
+                });
+
+                if (response.ok) {
+                    showAlert("Thanks for helping keep the San Diego Coffee Map accurate! We'll review your submission shortly.", 'success');
+                    
+                    // Reset form after 2 seconds
+                    setTimeout(() => {
+                        formElement.reset();
+                        goBack();
+                    }, 2000);
+                } else {
+                    showAlert('There was an error submitting your form. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showAlert('There was an error submitting your form. Please try again.', 'error');
+            }
+        });
+    </script>
 </body>
 </html>

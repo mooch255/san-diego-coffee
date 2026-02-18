@@ -537,10 +537,14 @@
             const formData = new FormData(e.target);
 
             try {
-                const response = await fetch('/', {
+                // Build a plain object from form data
+                const data = {};
+                formData.forEach((value, key) => { data[key] = value; });
+
+                const response = await fetch('/.netlify/functions/submit-to-sheets', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams(formData).toString(),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
                 });
 
                 if (response.ok) {

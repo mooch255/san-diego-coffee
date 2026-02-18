@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Diego Coffee Guide - 132 Specialty Coffee Locations</title>
+    <title>San Diego Coffee Guide - 148 Specialty Coffee Locations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --espresso: #1a1512;
+            --espresso: #3D2817;
             --coffee-brown: #6B4E3D;
             --cream: #F8F5F0;
             --white: #FFFFFF;
             --latte: #C4A77D;
-            --accent-red: #D64040;
+            --accent-red: #B85C38;
+            --warm-brown: #5C4033;
+            --light-tan: #E8DED2;
         }
 
         * {
@@ -27,15 +29,34 @@
             font-family: 'Libre Franklin', -apple-system, sans-serif;
             color: var(--espresso);
             background: var(--white);
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        /* Compact Editorial Header - Eater Style */
+        /* Enhanced Editorial Header with coffee-inspired border */
         .header {
-            background: var(--espresso);
+            background: linear-gradient(135deg, var(--coffee-brown) 0%, var(--warm-brown) 100%);
             color: var(--white);
-            padding: 1.5rem 0;
-            border-bottom: 3px solid var(--accent-red);
+            padding: 2rem 0;
+            border-bottom: 4px solid var(--accent-red);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--latte) 0px,
+                var(--latte) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            opacity: 0.3;
         }
 
         .header-content {
@@ -48,33 +69,37 @@
         }
 
         .logo {
-            font-family: 'Lora', serif;
-            font-size: 1.75rem;
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.25rem;
             font-weight: 600;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
         .tagline {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--latte);
-            margin-top: 0.25rem;
+            margin-top: 0.35rem;
             font-weight: 400;
+            letter-spacing: 0.02em;
         }
 
         .community-link {
             background: var(--accent-red);
             color: var(--white);
-            padding: 0.6rem 1.25rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 4px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .community-link:hover {
             background: #c23535;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         /* Container */
@@ -84,109 +109,81 @@
             padding: 0 2rem;
         }
 
-        /* Intro Section */
+        /* Hero Intro Section with coffee bean pattern */
         .intro {
-            background: var(--cream);
-            padding: 2.5rem 0;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%);
+            padding: 3.5rem 0;
             border-bottom: 1px solid #E0DBD3;
+            position: relative;
+        }
+
+        .intro::after {
+            content: '☕';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.03;
+            right: 5%;
+            bottom: -20%;
+            pointer-events: none;
+            transform: rotate(-15deg);
         }
 
         .intro h1 {
-            font-family: 'Lora', serif;
-            font-size: 2.25rem;
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.75rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             color: var(--espresso);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
         }
 
         .intro p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #5A4A42;
             max-width: 700px;
-            line-height: 1.7;
+            line-height: 1.8;
+            font-weight: 400;
         }
 
-        /* Compact Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin: 3rem 0;
-        }
-
-        .stat-card {
-            background: var(--white);
-            padding: 1.75rem 1.5rem;
-            border: 1px solid #E0DBD3;
-            border-radius: 2px;
-            text-align: center;
-            transition: all 0.2s;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .stat-card:hover {
-            border-color: var(--coffee-brown);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .stat-number {
-            font-family: 'Lora', serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--accent-red);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.95rem;
-            color: var(--espresso);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Search Section */
+        /* Search Section - Elevated above stats */
         .search-section {
-            background: var(--cream);
-            padding: 3rem 0;
-            margin: 3rem 0;
-            border-top: 1px solid #E0DBD3;
-            border-bottom: 1px solid #E0DBD3;
+            background: var(--white);
+            padding: 3.5rem 0;
+            border-bottom: 2px solid var(--light-tan);
         }
 
         .search-section h2 {
             font-family: 'Lora', serif;
-            font-size: 1.75rem;
+            font-size: 2rem;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             text-align: center;
+            color: var(--espresso);
         }
 
         .search-wrapper {
-            max-width: 650px;
-            margin: 0 auto;
+            max-width: 700px;
+            margin: 0 auto 2rem;
             position: relative;
         }
 
         .search-wrapper input {
             width: 100%;
-            padding: 1rem 1.5rem;
-            font-size: 1.05rem;
-            border: 2px solid var(--espresso);
+            padding: 1.25rem 1.75rem;
+            font-size: 1.1rem;
+            border: 3px solid var(--coffee-brown);
             background: var(--white);
             font-family: 'Libre Franklin', sans-serif;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            border-radius: 2px;
         }
 
         .search-wrapper input:focus {
             outline: none;
             border-color: var(--accent-red);
-            box-shadow: 0 0 0 3px rgba(214, 64, 64, 0.1);
+            box-shadow: 0 0 0 4px rgba(184, 92, 56, 0.15);
+            transform: translateY(-2px);
         }
 
         .autocomplete-dropdown {
@@ -195,12 +192,13 @@
             left: 0;
             right: 0;
             background: var(--white);
-            border: 2px solid var(--espresso);
+            border: 3px solid var(--coffee-brown);
             border-top: none;
-            max-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
             z-index: 1000;
             display: none;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
 
         .autocomplete-dropdown.show {
@@ -208,17 +206,10 @@
         }
 
         .autocomplete-item {
-            padding: 0.9rem 1.5rem;
+            padding: 1rem 1.75rem;
             cursor: pointer;
-            border-bottom: 1px solid #E0DBD3;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.15s;
-        }
-
-        .autocomplete-item:last-child {
-            border-bottom: none;
+            transition: all 0.2s;
+            border-bottom: 1px solid #F0EBE5;
         }
 
         .autocomplete-item:hover,
@@ -227,62 +218,138 @@
         }
 
         .autocomplete-name {
+            display: block;
             font-weight: 600;
             color: var(--espresso);
+            margin-bottom: 0.25rem;
         }
 
         .autocomplete-meta {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.85rem;
-            color: #5A4A42;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #7a6a62;
         }
 
         .type-badge {
-            background: var(--espresso);
-            color: var(--white);
-            padding: 3px 8px;
-            font-size: 0.75rem;
+            background: var(--latte);
+            color: var(--espresso);
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .cta-button {
-            display: inline-block;
-            background: var(--espresso);
-            color: var(--white);
             padding: 1rem 2.5rem;
-            font-size: 1.05rem;
-            font-weight: 600;
+            background: var(--coffee-brown);
+            color: var(--white);
             text-decoration: none;
-            margin-top: 2rem;
-            transition: all 0.2s;
-            border: 2px solid var(--espresso);
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .cta-button:hover {
+            background: var(--espresso);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .cta-button.secondary {
             background: var(--accent-red);
-            border-color: var(--accent-red);
         }
 
-        .search-section .cta-container {
+        .cta-button.secondary:hover {
+            background: #c23535;
+        }
+
+        /* Enhanced Stats Cards */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border: 2px solid var(--light-tan);
+            border-radius: 4px;
             text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Featured Section */
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-red);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            border-color: var(--coffee-brown);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .stat-number {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: var(--accent-red);
+            margin-bottom: 0.75rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--espresso);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Featured Section - Enhanced */
         .featured {
-            margin: 3rem 0 4rem;
+            background: var(--cream);
+            padding: 4rem 0;
+            margin: 3rem 0 0;
+            border-top: 2px solid var(--light-tan);
         }
 
         .featured h2 {
             font-family: 'Lora', serif;
-            font-size: 1.75rem;
+            font-size: 2rem;
             font-weight: 600;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid var(--espresso);
+            margin-bottom: 2.5rem;
+            text-align: center;
+            color: var(--espresso);
         }
 
         .featured-grid {
@@ -292,40 +359,43 @@
         }
 
         .featured-card {
-            border: 1px solid #E0DBD3;
             background: var(--white);
-            transition: all 0.2s;
+            border: 2px solid var(--light-tan);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .featured-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: var(--coffee-brown);
         }
 
         .featured-img {
-            background: var(--espresso);
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: linear-gradient(135deg, var(--coffee-brown), var(--warm-brown));
+            padding: 3rem;
+            text-align: center;
             font-size: 3rem;
             border-bottom: 3px solid var(--accent-red);
         }
 
         .featured-content {
-            padding: 1.5rem;
+            padding: 1.75rem;
         }
 
         .featured-content h3 {
             font-family: 'Lora', serif;
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
+            color: var(--espresso);
         }
 
         .featured-meta {
-            font-size: 0.9rem;
-            color: #5A4A42;
+            color: #7a6a62;
+            font-size: 0.95rem;
             margin-bottom: 0.5rem;
         }
 
@@ -333,101 +403,101 @@
             display: inline-block;
             background: var(--accent-red);
             color: var(--white);
-            padding: 4px 10px;
-            font-size: 0.75rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
             margin-top: 0.75rem;
         }
 
-        /* Footer */
+        /* Enhanced Footer */
         footer {
             background: var(--espresso);
-            color: rgba(255,255,255,0.8);
-            padding: 2.5rem 0;
+            color: var(--latte);
             text-align: center;
-            margin-top: 4rem;
+            padding: 2.5rem 2rem;
+            margin-top: 0;
+            border-top: 4px solid var(--accent-red);
         }
 
         footer a {
-            color: var(--latte);
+            color: var(--accent-red);
             text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
         }
 
         footer a:hover {
-            color: var(--white);
+            color: #c23535;
             text-decoration: underline;
         }
 
-        /* Mobile */
+        /* Responsive Design */
         @media (max-width: 768px) {
+            .logo {
+                font-size: 1.75rem;
+            }
+
+            .intro h1 {
+                font-size: 2rem;
+            }
+
+            .intro p {
+                font-size: 1.05rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+
             .header-content {
                 flex-direction: column;
                 gap: 1rem;
                 text-align: center;
             }
 
-            .intro h1 {
-                font-size: 1.75rem;
+            .cta-container {
+                flex-direction: column;
             }
 
-            .stats {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .stat-card {
-                padding: 1.25rem 1rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
+            .cta-button {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
+    <div class="header">
         <div class="header-content">
             <div>
-                <div class="logo">☕ San Diego Coffee Guide</div>
+                <div class="logo">San Diego Coffee Beans</div>
                 <div class="tagline">Specialty Roasters & Multi-Roaster Cafes</div>
             </div>
             <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" class="community-link">
-                Join the Community
+                r/SanDiegoCoffeeBeans
             </a>
         </div>
-    </header>
+    </div>
 
     <!-- Intro -->
     <section class="intro">
         <div class="container">
             <h1>The Complete Guide to San Diego's Specialty Coffee Scene</h1>
-            <p>Discover 132 carefully curated coffee roasters and multi-roaster cafes across San Diego County. Community-driven, regularly updated, and built for coffee enthusiasts.</p>
+            <p>Discover high quality coffee roasters and multi-roaster cafes across San Diego County. Community-driven, regularly updated, and built for the true coffee enthusiast.</p>
         </div>
     </section>
 
-    <!-- Stats -->
-    <div class="container">
-        <div class="stats">
-            <a href="map.html" class="stat-card">
-                <div class="stat-number" data-target="132">0</div>
-                <div class="stat-label">Total Locations</div>
-            </a>
-            <a href="map.html?filter=roasters" class="stat-card">
-                <div class="stat-number" data-target="97">0</div>
-                <div class="stat-label">Roasters</div>
-            </a>
-            <a href="map.html?filter=cafes" class="stat-card">
-                <div class="stat-number" data-target="7">0</div>
-                <div class="stat-label">Multi-Roaster Cafes</div>
-            </a>
-        </div>
-    </div>
-
-    <!-- Search -->
+    <!-- Search Section - Now ABOVE stats -->
     <section class="search-section">
         <div class="container">
             <h2>Search Coffee Locations</h2>
@@ -437,16 +507,35 @@
             </div>
             <div class="cta-container">
                 <a href="map.html" class="cta-button">→ View Full Interactive Map</a>
+                <a href="submit.html" class="cta-button secondary">+ Submit a New Spot</a>
             </div>
         </div>
     </section>
+
+    <!-- Stats - Now BELOW search -->
+    <div class="container">
+        <div class="stats">
+            <a href="map.html" class="stat-card">
+                <div class="stat-number" data-target="148">0</div>
+                <div class="stat-label">Total Locations</div>
+            </a>
+            <a href="map.html?filter=roasters" class="stat-card">
+                <div class="stat-number" data-target="97">0</div>
+                <div class="stat-label">Roasters</div>
+            </a>
+            <a href="map.html?filter=cafes" class="stat-card">
+                <div class="stat-number" data-target="51">0</div>
+                <div class="stat-label">Multi-Roaster Cafes</div>
+            </a>
+        </div>
+    </div>
 
     <!-- Featured -->
     <section class="featured">
         <div class="container">
             <h2>Featured Locations</h2>
             <div class="featured-grid">
-                <div class="featured-card">
+                <div class="featured-card" onclick="window.location.href='map.html?search=Bird%20Rock'">
                     <div class="featured-img">☕</div>
                     <div class="featured-content">
                         <h3>Bird Rock Coffee Roasters</h3>
@@ -455,7 +544,7 @@
                         <span class="featured-badge">Community Favorite</span>
                     </div>
                 </div>
-                <div class="featured-card">
+                <div class="featured-card" onclick="window.location.href='map.html?search=James%20Coffee'">
                     <div class="featured-img">☕</div>
                     <div class="featured-content">
                         <h3>James Coffee Co.</h3>
@@ -464,7 +553,7 @@
                         <span class="featured-badge">Local Favorite</span>
                     </div>
                 </div>
-                <div class="featured-card">
+                <div class="featured-card" onclick="window.location.href='map.html?search=Dark%20Horse'">
                     <div class="featured-img">☕</div>
                     <div class="featured-content">
                         <h3>Dark Horse Coffee Roasters</h3>
@@ -479,85 +568,16 @@
 
     <!-- Footer -->
     <footer>
-        <p>Built by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community</p>
+        <p>
+            148 locations and counting | <a href="submit.html">Submit a Location</a>
+        </p>
         <p style="margin-top: 0.75rem; font-size: 0.9rem; opacity: 0.7;">
-            132 locations and counting | <a href="submit.html">Submit a Location</a>
+            Community-driven guide for <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
         </p>
     </footer>
 
+    <script src="locations.js"></script>
     <script>
-        // Complete location data extracted from map
-        const COFFEE_LOCATIONS = [
-  {name:"Achilles Coffee Roasters",city:"North Park",type:"roaster"},
-  {name:"Alchemist Coffee",city:"Oceanside",type:"roaster"},
-  {name:"Balboa Coffee Roasters",city:"San Diego",type:"roaster"},
-  {name:"Bee Better Coffee",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee",city:"Multiple Locations",type:"roaster"},
-  {name:"Better Buzz Coffee - Downtown San Diego",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee - Fashion Valley",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee - Hillcrest",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee - La Jolla Shores",city:"La Jolla",type:"roaster"},
-  {name:"Better Buzz Coffee - Mission Beach Boardwalk",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee - Mission Valley",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee - Pacific Beach",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee - Pacific Beach - Garnet",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee - Point Loma",city:"San Diego",type:"roaster"},
-  {name:"Better Buzz Coffee Roasters",city:"San Diego",type:"roaster"},
-  {name:"Bird Rock Coffee Roasters",city:"La Jolla",type:"roaster"},
-  {name:"Bird Rock Coffee Roasters - Little Italy",city:"San Diego",type:"roaster"},
-  {name:"Bird Rock Coffee Roasters - Morena",city:"San Diego",type:"roaster"},
-  {name:"Bird Rock Coffee Roasters - South Park",city:"San Diego",type:"roaster"},
-  {name:"Brew Coffee Spot",city:"Vista",type:"roaster"},
-  {name:"Cafe Bassam",city:"San Diego",type:"cafe"},
-  {name:"Cafe Calabria",city:"North Park",type:"roaster"},
-  {name:"Cafe Moto",city:"Ocean Beach",type:"roaster"},
-  {name:"Cafe Virtuoso",city:"San Diego",type:"roaster"},
-  {name:"Cafe Virtuoso - Hillcrest",city:"San Diego",type:"roaster"},
-  {name:"Cafe Virtuoso - Linda Vista",city:"San Diego",type:"roaster"},
-  {name:"Cafe Virtuoso - Normal Heights",city:"San Diego",type:"roaster"},
-  {name:"Caffe Calabria",city:"North Park",type:"roaster"},
-  {name:"Communal Coffee",city:"North Park",type:"roaster"},
-  {name:"Communal Coffee - South Park",city:"San Diego",type:"roaster"},
-  {name:"Copa Vida",city:"Multiple Locations",type:"roaster"},
-  {name:"Copa Vida - Pasadena",city:"Pasadena",type:"roaster"},
-  {name:"Dark Horse Coffee Roasters",city:"Multiple Locations",type:"roaster"},
-  {name:"Dark Horse Coffee Roasters - Bankers Hill",city:"San Diego",type:"roaster"},
-  {name:"Dark Horse Coffee Roasters - Golden Hill",city:"San Diego",type:"roaster"},
-  {name:"Dark Horse Coffee Roasters - North Park",city:"San Diego",type:"roaster"},
-  {name:"Dark Horse Coffee Roasters - South Park",city:"San Diego",type:"roaster"},
-  {name:"Everbrew",city:"Encinitas",type:"roaster"},
-  {name:"Holsem Coffee",city:"North Park",type:"roaster"},
-  {name:"Influx Cafe",city:"Encinitas",type:"roaster"},
-  {name:"Ironsmith Coffee Roasters",city:"Carlsbad",type:"roaster"},
-  {name:"James Coffee Co.",city:"Multiple Locations",type:"roaster"},
-  {name:"James Coffee Co. - Barrio Logan",city:"San Diego",type:"roaster"},
-  {name:"James Coffee Co. - Little Italy",city:"San Diego",type:"roaster"},
-  {name:"James Coffee Co. - North Park",city:"San Diego",type:"roaster"},
-  {name:"Javatime Cafe",city:"Santee",type:"cafe"},
-  {name:"Lestats Coffee House",city:"Normal Heights",type:"cafe"},
-  {name:"Lofty Coffee",city:"Multiple Locations",type:"roaster"},
-  {name:"Lofty Coffee - Encinitas",city:"Encinitas",type:"roaster"},
-  {name:"Lofty Coffee - Solana Beach",city:"Solana Beach",type:"roaster"},
-  {name:"Modern Times",city:"Point Loma",type:"roaster"},
-  {name:"Mostra Coffee",city:"San Diego",type:"roaster"},
-  {name:"Necessity Coffee",city:"Encinitas",type:"roaster"},
-  {name:"Nimble Bar",city:"North Park",type:"cafe"},
-  {name:"OB Coffee Roasting",city:"Ocean Beach",type:"roaster"},
-  {name:"OB Surf Lodge",city:"Ocean Beach",type:"cafe"},
-  {name:"Pannikin Coffee & Tea",city:"Multiple Locations",type:"roaster"},
-  {name:"Portside Coffee & Goods",city:"Ocean Beach",type:"roaster"},
-  {name:"Revolution Roasters",city:"Oceanside",type:"roaster"},
-  {name:"Ryan Bros. Coffee",city:"La Jolla",type:"roaster"},
-  {name:"Sleeping Tiger Coffees",city:"Del Mar",type:"roaster"},
-  {name:"Steady State Roasting",city:"Carlsbad",type:"roaster"},
-  {name:"Subterranean Coffee",city:"North Park",type:"roaster"},
-  {name:"The WestBean Coffee Roasters",city:"San Diego",type:"roaster"},
-  {name:"Two Birds One Stone",city:"San Diego",type:"cafe"},
-  {name:"Wormwood Coffee",city:"Normal Heights",type:"roaster"},
-  {name:"Young Hickory",city:"Ocean Beach",type:"roaster"},
-  {name:"Zumbar Coffee",city:"Encinitas",type:"roaster"}
-];
-
         // Counter animation
         function animateCounter(element) {
             const target = parseInt(element.getAttribute('data-target'));
@@ -587,6 +607,9 @@
         const dropdown = document.getElementById('autocompleteDropdown');
         let selectedIndex = -1;
 
+        // Load locations from locations.js if available
+        const COFFEE_LOCATIONS = window.COFFEE_LOCATIONS || [];
+
         function showSuggestions(query) {
             if (!query || query.length < 2) {
                 dropdown.classList.remove('show');
@@ -594,8 +617,8 @@
             }
 
             const filtered = COFFEE_LOCATIONS.filter(loc => 
-                loc.name.toLowerCase().includes(query.toLowerCase()) ||
-                loc.city.toLowerCase().includes(query.toLowerCase())
+                (loc.basicInfo?.name || loc.name || '').toLowerCase().includes(query.toLowerCase()) ||
+                (loc.basicInfo?.address?.neighborhood || loc.city || '').toLowerCase().includes(query.toLowerCase())
             ).slice(0, 8);
 
             if (filtered.length === 0) {
@@ -603,15 +626,20 @@
                 return;
             }
 
-            dropdown.innerHTML = filtered.map((loc, index) => `
-                <div class="autocomplete-item" data-index="${index}" data-name="${loc.name}">
-                    <span class="autocomplete-name">${highlightMatch(loc.name, query)}</span>
+            dropdown.innerHTML = filtered.map((loc, index) => {
+                const name = loc.basicInfo?.name || loc.name;
+                const neighborhood = loc.basicInfo?.address?.neighborhood || loc.city;
+                const type = loc.basicInfo?.type || loc.type;
+                return `
+                <div class="autocomplete-item" data-index="${index}" data-name="${name}">
+                    <span class="autocomplete-name">${highlightMatch(name, query)}</span>
                     <div class="autocomplete-meta">
-                        <span>${loc.city}</span>
-                        <span class="type-badge">${loc.type === 'roaster' ? 'Roaster' : 'Cafe'}</span>
+                        <span>${neighborhood}</span>
+                        <span class="type-badge">${type === 'roaster' ? 'Roaster' : 'Cafe'}</span>
                     </div>
                 </div>
-            `).join('');
+            `;
+            }).join('');
 
             const items = dropdown.querySelectorAll('.autocomplete-item');
             items.forEach(item => {

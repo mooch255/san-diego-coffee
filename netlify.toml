@@ -1,0 +1,10 @@
+[build]
+  functions = "netlify/functions"
+
+[[plugins]]
+
+# Wire the Netlify form submission event to our Google Sheets function
+[[notifications]]
+  event = "submission_created"
+  url = "/.netlify/functions/submit-to-sheets"
+  form = "coffee-submissions"

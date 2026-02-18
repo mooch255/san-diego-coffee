@@ -162,31 +162,6 @@
             min-height: 100px;
         }
 
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .checkbox-label:hover {
-            background-color: #f8f6f4;
-        }
-
-        .checkbox-label input[type="checkbox"] {
-            width: auto;
-            margin-right: 0.5rem;
-            cursor: pointer;
-        }
-
         .button-group {
             display: flex;
             gap: 1rem;
@@ -291,6 +266,33 @@
     </style>
 </head>
 <body>
+
+    <!--
+        NETLIFY STATIC FORM DETECTION
+        This hidden form exists ONLY so Netlify registers all field names at build time.
+        The actual visible form uses JavaScript to inject fields dynamically,
+        which Netlify would otherwise not detect.
+        DO NOT REMOVE THIS BLOCK.
+    -->
+    <form name="coffee-submissions" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="coffee-submissions">
+        <input type="hidden" name="bot-field">
+        <input type="hidden" name="submissionType">
+        <!-- Roaster fields -->
+        <input type="text" name="businessName">
+        <input type="text" name="neighborhood">
+        <input type="url" name="googleMapsLink">
+        <input type="url" name="website">
+        <textarea name="whySpecialty"></textarea>
+        <textarea name="additionalInfo"></textarea>
+        <!-- Cafe-only fields -->
+        <textarea name="roastersServed"></textarea>
+        <!-- Correction-only fields -->
+        <select name="correctionType"></select>
+        <textarea name="correctionDetails"></textarea>
+        <textarea name="sourceProof"></textarea>
+    </form>
+
     <header>
         <h1>☕ Submit a Coffee Spot</h1>
         <p>Help grow the San Diego specialty coffee community</p>
@@ -316,19 +318,14 @@
         <div class="form-container">
             <div id="alertContainer"></div>
 
-             <!-- Netlify Forms -->
-   <form id="submissionForm" data-netlify="true" netlify-honeypot="bot-field" name="coffee-submissions">
+            <!-- The real, visible form -->
+            <form id="submissionForm" name="coffee-submissions" data-netlify="true" netlify-honeypot="bot-field">
                 <input type="hidden" name="form-name" value="coffee-submissions">
-                <input type="hidden" name="bot-field">
-                
-                <!-- Section 1: Initial Selection -->
+                <input type="hidden" name="bot-field" class="hidden">
+
+                <!-- Section 1: Submission type selection -->
                 <div id="section1" class="form-section">
                     <h2>What would you like to submit?</h2>
-                    
-                    <div class="form-group">
-                        <label class="required">Email</label>
-                        <input type="email" name="email" id="email" required>
-                    </div>
 
                     <div class="form-group">
                         <label class="required">Submission Type</label>
@@ -343,12 +340,9 @@
                     <button type="button" class="btn btn-primary" onclick="goToSection2()">Next</button>
                 </div>
 
-                <!-- Sections 2-6 will be shown/hidden based on selection -->
-                <!-- For brevity, I'll create a simplified version that works -->
-                
-                <!-- Hidden sections that appear based on type selection -->
+                <!-- Section 2: Dynamically injected based on type -->
                 <div id="dynamicSections" class="hidden">
-                    <!-- Content will be dynamically inserted here -->
+                    <!-- Content injected by JavaScript -->
                 </div>
             </form>
         </div>
@@ -359,24 +353,16 @@
     </footer>
 
     <script>
-        let currentSection = 1;
-        let formData = {};
-
         function goToSection2() {
-            const email = document.getElementById('email').value;
             const submissionType = document.getElementById('submissionType').value;
-            
-            if (!email || !submissionType) {
-                showAlert('Please fill in all required fields', 'error');
+
+            if (!submissionType) {
+                showAlert('Please select a submission type', 'error');
                 return;
             }
 
-            formData.email = email;
-            formData.submissionType = submissionType;
-
             document.getElementById('section1').classList.add('hidden');
-            
-            // Load the appropriate section based on type
+
             if (submissionType === 'roaster') {
                 loadRoasterSection();
             } else if (submissionType === 'multi-roaster-cafe') {
@@ -429,7 +415,7 @@
 
                     <div class="button-group">
                         <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit Roaster</button>
                     </div>
                 </div>
             `;
@@ -439,7 +425,7 @@
             document.getElementById('dynamicSections').innerHTML = `
                 <div class="form-section">
                     <h2>Multi-Roaster Cafe Submission</h2>
-                    <p class="form-description">This form is for submitting <strong>San Diego Multi-Roaster cafes.</strong></p>
+                    <p class="form-description">This form is for submitting <strong>San Diego multi-roaster cafes.</strong></p>
 
                     <div class="form-group">
                         <label class="required">Business Name</label>
@@ -482,7 +468,7 @@
 
                     <div class="button-group">
                         <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit Cafe</button>
                     </div>
                 </div>
             `;
@@ -522,7 +508,7 @@
 
                     <div class="button-group">
                         <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit Correction</button>
                     </div>
                 </div>
             `;
@@ -536,45 +522,41 @@
 
         function showAlert(message, type) {
             const alertContainer = document.getElementById('alertContainer');
-            alertContainer.innerHTML = `
-                <div class="alert alert-${type}">
-                    ${message}
-                </div>
-            `;
-            setTimeout(() => {
-                alertContainer.innerHTML = '';
-            }, 5000);
+            alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => { alertContainer.innerHTML = ''; }, 5000);
         }
 
-        // Handle form submission
-        document.getElementById('submissionForm').addEventListener('submit', async function(e) {
+        // Form submission handler
+        document.getElementById('submissionForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
-            const formElement = e.target;
-            const formData = new FormData(formElement);
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const formData = new FormData(e.target);
 
             try {
-                // Submit to Netlify Forms
                 const response = await fetch('/', {
                     method: 'POST',
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(formData).toString()
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(formData).toString(),
                 });
 
                 if (response.ok) {
                     showAlert("Thanks for helping keep the San Diego Coffee Map accurate! We'll review your submission shortly.", 'success');
-                    
-                    // Reset form after 2 seconds
                     setTimeout(() => {
-                        formElement.reset();
+                        e.target.reset();
                         goBack();
-                    }, 2000);
+                    }, 2500);
                 } else {
-                    showAlert('There was an error submitting your form. Please try again.', 'error');
+                    throw new Error('Non-OK response');
                 }
-            } catch (error) {
-                console.error('Submission error:', error);
+            } catch (err) {
+                console.error('Submission error:', err);
                 showAlert('There was an error submitting your form. Please try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
             }
         });
     </script>

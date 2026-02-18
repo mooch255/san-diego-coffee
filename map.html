@@ -14,12 +14,13 @@
     
     <style>
         :root {
-            --espresso: #1a1512;
+            --espresso: #3D2817;
             --coffee-brown: #6B4E3D;
             --cream: #F8F5F0;
             --white: #FFFFFF;
             --latte: #C4A77D;
-            --accent-red: #D64040;
+            --accent-red: #B85C38;
+            --warm-brown: #5C4033;
         }
 
         /* Reset and Base Styles */
@@ -38,7 +39,7 @@
 
         /* Eater-Style Header */
         header {
-            background: var(--espresso);
+            background: var(--coffee-brown);
             color: var(--white);
             padding: 1.25rem 0;
             border-bottom: 3px solid var(--accent-red);
@@ -67,19 +68,35 @@
             font-weight: 400;
         }
 
-        .home-btn {
+        .header-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .header-btn {
             background: var(--accent-red);
             color: var(--white);
-            padding: 0.6rem 1.5rem;
+            padding: 0.6rem 1.25rem;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.2s;
             border: none;
+            border-radius: 2px;
+            white-space: nowrap;
         }
 
-        .home-btn:hover {
+        .header-btn:hover {
             background: #c23535;
+            transform: translateY(-1px);
+        }
+
+        .header-btn.secondary {
+            background: var(--warm-brown);
+        }
+
+        .header-btn.secondary:hover {
+            background: var(--espresso);
         }
 
         /* Controls Bar - Compact */
@@ -104,7 +121,7 @@
         #searchInput {
             width: 100%;
             padding: 0.85rem 1.25rem;
-            border: 2px solid var(--espresso);
+            border: 2px solid var(--coffee-brown);
             border-radius: 0;
             font-size: 1rem;
             background: var(--white);
@@ -115,7 +132,7 @@
         #searchInput:focus {
             outline: none;
             border-color: var(--accent-red);
-            box-shadow: 0 0 0 3px rgba(214, 64, 64, 0.1);
+            box-shadow: 0 0 0 3px rgba(184, 92, 56, 0.1);
         }
 
         /* Autocomplete Dropdown */
@@ -125,7 +142,7 @@
             left: 0;
             right: 0;
             background: var(--white);
-            border: 2px solid var(--espresso);
+            border: 2px solid var(--coffee-brown);
             border-top: none;
             max-height: 350px;
             overflow-y: auto;
@@ -227,9 +244,9 @@
 
         button {
             padding: 0.7rem 1.25rem;
-            background: var(--espresso);
+            background: var(--coffee-brown);
             color: var(--white);
-            border: 2px solid var(--espresso);
+            border: 2px solid var(--coffee-brown);
             border-radius: 0;
             cursor: pointer;
             font-size: 0.9rem;
@@ -248,7 +265,7 @@
 
         .toggle-filters-btn {
             background: var(--white);
-            color: var(--espresso);
+            color: var(--coffee-brown);
         }
 
         .toggle-filters-btn:hover {
@@ -257,8 +274,8 @@
 
         #clearBtn {
             background: var(--white) !important;
-            color: var(--espresso) !important;
-            border-color: var(--espresso) !important;
+            color: var(--coffee-brown) !important;
+            border-color: var(--coffee-brown) !important;
         }
 
         #clearBtn:hover {
@@ -358,7 +375,7 @@
         }
 
         .roaster-badge {
-            background: var(--espresso);
+            background: var(--coffee-brown);
             color: var(--white);
         }
 
@@ -410,11 +427,11 @@
 
         /* Footer */
         footer {
-            background: var(--espresso);
+            background: var(--coffee-brown);
             padding: 1.5rem;
             text-align: center;
             font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.9);
             border-top: 3px solid var(--accent-red);
         }
 
@@ -532,7 +549,10 @@
                 <h1>☕ San Diego Coffee Guide</h1>
                 <p class="subtitle">Interactive Map of Specialty Coffee Locations</p>
             </div>
-            <a href="index.html" class="home-btn">🏠 Home</a>
+            <div class="header-buttons">
+                <a href="index.html" class="header-btn secondary">🏠 Home</a>
+                <a href="submit.html" class="header-btn">📍 Submit Location</a>
+            </div>
         </div>
     </header>
 
@@ -12717,8 +12737,10 @@ function performSearch() {
         'del mar': { lat: 32.9595, lng: -117.2653, zoom: 14 },
         'la jolla': { lat: 32.8328, lng: -117.2713, zoom: 13 },
         'pacific beach': { lat: 32.7967, lng: -117.2326, zoom: 14 },
+        'pb': { lat: 32.7967, lng: -117.2326, zoom: 14 },
         'mission beach': { lat: 32.7714, lng: -117.2530, zoom: 14 },
         'ocean beach': { lat: 32.7475, lng: -117.2501, zoom: 14 },
+        'ob': { lat: 32.7475, lng: -117.2501, zoom: 14 },
         'point loma': { lat: 32.7157, lng: -117.2197, zoom: 13 },
         'north park': { lat: 32.7416, lng: -117.1297, zoom: 14 },
         'south park': { lat: 32.7279, lng: -117.1273, zoom: 14 },
@@ -12745,26 +12767,24 @@ function performSearch() {
     const neighborhood = neighborhoods[query];
     
     if (neighborhood) {
-        // It's a neighborhood search - zoom to the area and show all locations
-        const visibleMarkers = markers.filter(marker => {
-            const location = marker.locationData;
-            const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
-            return address.includes(query) && shouldShowMarker(marker);
-        });
+        // It's a neighborhood search - zoom to area and keep all markers visible
+        // Don't filter, just pan and zoom to show that neighborhood
+        const visibleMarkers = markers.filter(marker => shouldShowMarker(marker));
         
         markerCluster.clearMarkers();
         markerCluster.addMarkers(visibleMarkers);
         updateVisibleCount(visibleMarkers.length);
         
-        // Zoom to the neighborhood area
+        // Zoom to the neighborhood area - this is the key difference
         map.setCenter({ lat: neighborhood.lat, lng: neighborhood.lng });
         map.setZoom(neighborhood.zoom);
         
-        if (visibleMarkers.length === 0) {
-            infoWindow.setContent(`<div class="info-window"><h3>No Results in ${query.charAt(0).toUpperCase() + query.slice(1)}</h3><p>No coffee locations found in this area</p></div>`);
+        // Show info message about neighborhood
+        setTimeout(() => {
+            infoWindow.setContent(`<div class="info-window"><h3>Viewing: ${query.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h3><p>Zoomed to show coffee locations in this area</p></div>`);
             infoWindow.setPosition(map.getCenter());
             infoWindow.open(map);
-        }
+        }, 500);
     } else {
         // Regular search - filter by name or address
         const visibleMarkers = markers.filter(marker => {
@@ -12779,13 +12799,163 @@ function performSearch() {
         updateVisibleCount(visibleMarkers.length);
         
         if (visibleMarkers.length === 0) {
-            infoWindow.setContent(`<div class="info-window"><h3>No Results</h3><p>No locations found matching "${query}"</p></div>`);
-            infoWindow.setPosition(map.getCenter());
-            infoWindow.open(map);
+            // No results in our database - search Google Places
+            searchGooglePlaces(query);
         } else {
             fitMapToBounds();
         }
     }
+}
+
+// Global variable to track Google Places markers
+let googlePlacesMarker = null;
+
+function searchGooglePlaces(query) {
+    const service = new google.maps.places.PlacesService(map);
+    
+    // Search for coffee shops in San Diego area with the query
+    const request = {
+        query: query + ' coffee San Diego',
+        fields: ['name', 'geometry', 'formatted_address', 'place_id', 'rating', 'user_ratings_total', 'formatted_phone_number', 'website', 'opening_hours', 'photos', 'types'],
+        locationBias: {
+            center: { lat: 32.7157, lng: -117.1611 },
+            radius: 50000 // 50km radius around San Diego
+        }
+    };
+    
+    service.textSearch(request, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && results.length > 0) {
+            const place = results[0];
+            
+            // Check if this place is a coffee-related business
+            const isCoffee = place.types?.some(type => 
+                type.includes('cafe') || 
+                type.includes('coffee') || 
+                type.includes('restaurant') ||
+                type.includes('food')
+            );
+            
+            if (isCoffee || true) { // Allow all results for now
+                displayGooglePlace(place, query);
+            } else {
+                showNoResults(query);
+            }
+        } else {
+            showNoResults(query);
+        }
+    });
+}
+
+function displayGooglePlace(place, originalQuery) {
+    // Remove any existing Google Places marker
+    if (googlePlacesMarker) {
+        googlePlacesMarker.setMap(null);
+    }
+    
+    // Create a yellow marker for the Google Places result
+    googlePlacesMarker = new google.maps.Marker({
+        position: place.geometry.location,
+        map: map,
+        icon: {
+            url: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+        },
+        title: place.name,
+        zIndex: 1000
+    });
+    
+    // Center map on the result
+    map.setCenter(place.geometry.location);
+    map.setZoom(16);
+    
+    // Get detailed place information
+    const service = new google.maps.places.PlacesService(map);
+    service.getDetails({
+        placeId: place.place_id,
+        fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'rating', 'user_ratings_total', 'opening_hours', 'photos', 'url']
+    }, (placeDetails, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            showGooglePlaceInfo(placeDetails, googlePlacesMarker);
+        }
+    });
+    
+    // Add click listener
+    googlePlacesMarker.addListener('click', () => {
+        service.getDetails({
+            placeId: place.place_id,
+            fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'rating', 'user_ratings_total', 'opening_hours', 'photos', 'url']
+        }, (placeDetails, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                showGooglePlaceInfo(placeDetails, googlePlacesMarker);
+            }
+        });
+    });
+}
+
+function showGooglePlaceInfo(place, marker) {
+    let hoursHtml = '';
+    if (place.opening_hours?.weekday_text) {
+        hoursHtml = '<div style="margin-top: 1rem;"><strong>Hours:</strong><br>';
+        hoursHtml += place.opening_hours.weekday_text.slice(0, 3).join('<br>');
+        hoursHtml += '<br><em>+ more...</em></div>';
+    }
+    
+    const photoHtml = place.photos && place.photos.length > 0 
+        ? `<img src="${place.photos[0].getUrl({maxWidth: 300, maxHeight: 200})}" style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 1rem; border-radius: 4px;">` 
+        : '';
+    
+    const content = `
+        <div class="info-window" style="max-width: 350px;">
+            <div style="background: #FFF4E0; padding: 0.75rem; margin: -0.5rem -0.5rem 1rem -0.5rem; border-radius: 4px 4px 0 0; border-left: 4px solid #F4A300;">
+                <strong style="color: #6B4E3D;">⚠️ Not Yet in Our Guide</strong>
+                <div style="font-size: 0.85rem; color: #5C4033; margin-top: 0.25rem;">This location was found on Google Maps</div>
+            </div>
+            
+            <h3 style="margin-bottom: 0.5rem; color: #6B4E3D;">${place.name}</h3>
+            
+            ${place.rating ? `<div style="margin-bottom: 0.75rem;">⭐ ${place.rating} (${place.user_ratings_total || 0} reviews)</div>` : ''}
+            
+            <div style="margin-bottom: 0.5rem;">📍 ${place.formatted_address}</div>
+            
+            ${place.formatted_phone_number ? `<div style="margin-bottom: 0.5rem;">📞 ${place.formatted_phone_number}</div>` : ''}
+            
+            ${place.website ? `<div style="margin-bottom: 0.5rem;">🌐 <a href="${place.website}" target="_blank">Website</a></div>` : ''}
+            
+            ${hoursHtml}
+            ${photoHtml}
+            
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E0DBD3;">
+                <a href="submit.html?name=${encodeURIComponent(place.name)}&address=${encodeURIComponent(place.formatted_address)}&phone=${encodeURIComponent(place.formatted_phone_number || '')}&website=${encodeURIComponent(place.website || '')}&rating=${place.rating || ''}" 
+                   style="display: block; background: #B85C38; color: white; padding: 0.75rem 1.5rem; text-align: center; text-decoration: none; font-weight: 600; border-radius: 4px; transition: background 0.2s;">
+                    ➕ Add This Spot to Our Guide
+                </a>
+                
+                ${place.url ? `<a href="${place.url}" target="_blank" 
+                   style="display: block; margin-top: 0.75rem; background: white; color: #6B4E3D; padding: 0.75rem 1.5rem; text-align: center; text-decoration: none; font-weight: 600; border: 2px solid #6B4E3D; border-radius: 4px; transition: background 0.2s;">
+                    View on Google Maps
+                </a>` : ''}
+            </div>
+        </div>
+    `;
+    
+    infoWindow.setContent(content);
+    infoWindow.open(map, marker);
+}
+
+function showNoResults(query) {
+    infoWindow.setContent(`
+        <div class="info-window">
+            <h3>No Results Found</h3>
+            <p>No coffee locations found matching "${query}"</p>
+            <div style="margin-top: 1rem;">
+                <a href="submit.html?name=${encodeURIComponent(query)}" 
+                   style="display: inline-block; background: #B85C38; color: white; padding: 0.75rem 1.5rem; text-decoration: none; font-weight: 600; border-radius: 4px;">
+                    ➕ Submit This Location
+                </a>
+            </div>
+        </div>
+    `);
+    infoWindow.setPosition(map.getCenter());
+    infoWindow.open(map);
 }
 
 function applyFilters() {

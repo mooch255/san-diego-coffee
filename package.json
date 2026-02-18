@@ -1,0 +1,24 @@
+{
+  "name": "github",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mooch255/san-diego-coffee.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/mooch255/san-diego-coffee/issues"
+  },
+  "homepage": "https://github.com/mooch255/san-diego-coffee#readme",
+  "dependencies": {
+    "googleapis": "^171.4.0"
+  }
+}

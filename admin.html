@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — San Diego Coffee Beans</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400&family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --espresso:      #3D2817;
+            --coffee:        #6B4E3D;
+            --latte:         #C4A77D;
+            --cream:         #F8F5F0;
+            --white:         #FFFFFF;
+            --accent-red:    #B85C38;
+            --light-tan:     #E8DED2;
+            --roaster-color: #1a6b3c;
+            --cafe-color:    #1a4a6b;
+            --success:       #2e7d32;
+            --error:         #c62828;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Libre Franklin', sans-serif;
+            background: #f0ebe4;
+            color: var(--espresso);
+            min-height: 100vh;
+        }
+
+        /* ── Header ─────────────────────────────────────────────────── */
+        .header {
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.022) 39px, rgba(255,255,255,0.022) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            border-top: 3px solid var(--accent-red);
+            border-bottom: 3px solid var(--accent-red);
+            position: relative; overflow: hidden;
+        }
+        .header::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.42) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.42) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .header-content {
+            max-width: 1100px; margin: 0 auto;
+            padding: 1.5rem 2rem 1.25rem;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            position: relative; z-index: 1;
+        }
+        .header-eyebrow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.5rem; }
+        .eyebrow-line { height: 1px; width: 48px; background: rgba(196,167,125,0.45); }
+        .eyebrow-text { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(196,167,125,0.65); }
+        .header-dots { display: flex; align-items: center; gap: 0.32rem; margin-bottom: 0.5rem; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-red); }
+        .dot.sm { width: 4px; height: 4px; background: rgba(196,167,125,0.55); }
+        .site-logo { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: #EDE0CC; line-height: 1; }
+        .site-logo em { font-style: italic; color: #C9A97E; }
+        .site-logo strong { font-weight: 800; color: #EDE0CC; }
+        .admin-badge { margin-top: 0.5rem; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(196,167,125,0.5); }
+        .header-nav { margin-top: 0.9rem; display: flex; gap: 0.5rem; }
+        .nav-btn { font-family: 'Libre Franklin', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; padding: 0.38rem 0.9rem; border: 1px solid rgba(196,167,125,0.3); color: rgba(196,167,125,0.75); background: transparent; transition: all 0.2s; }
+        .nav-btn:hover { border-color: var(--latte); color: var(--latte); }
+
+        /* ── Layout: Map left, form right ───────────────────────────── */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 1fr 480px;
+            height: calc(100vh - 140px);
+            min-height: 600px;
+        }
+
+        /* ── Map Panel ───────────────────────────────────────────────── */
+        .map-panel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #adminMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Search bar floating over map */
+        .map-search-bar {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 2rem);
+            max-width: 480px;
+            z-index: 10;
+        }
+
+        .map-search-inner {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid var(--light-tan);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            transition: border-color 0.2s;
+        }
+
+        .map-search-inner:focus-within {
+            border-color: var(--coffee);
+        }
+
+        .map-search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.92rem;
+            color: var(--espresso);
+            outline: none;
+        }
+
+        .map-search-input::placeholder { color: #aaa; }
+
+        .map-search-icon {
+            padding: 0 1rem;
+            color: var(--coffee);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .map-search-clear {
+            padding: 0 0.85rem;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            line-height: 1;
+            background: none;
+            border: none;
+            display: none;
+            transition: color 0.15s;
+        }
+
+        .map-search-clear:hover { color: var(--error); }
+        .map-search-clear.visible { display: block; }
+
+        /* Dropdown */
+        .map-search-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0; right: 0;
+            background: white;
+            border: 1.5px solid var(--light-tan);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            max-height: 360px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .map-search-dropdown.open { display: block; }
+
+        .dd-section-header {
+            padding: 0.5rem 1rem 0.35rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--latte);
+            background: var(--cream);
+            border-bottom: 1px solid var(--light-tan);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dd-item {
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--cream);
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dd-item:last-child { border-bottom: none; }
+        .dd-item:hover { background: var(--cream); }
+
+        .dd-item-badge {
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.18rem 0.5rem;
+            color: white;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+
+        .badge-edit    { background: var(--roaster-color); }
+        .badge-cafe    { background: var(--cafe-color); }
+        .badge-new     { background: #7b4a00; }
+
+        .dd-item-text { flex: 1; min-width: 0; }
+        .dd-item-name { font-weight: 600; font-size: 0.88rem; color: var(--espresso); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dd-item-meta { font-size: 0.73rem; color: var(--coffee); margin-top: 0.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .dd-empty { padding: 1rem; text-align: center; font-size: 0.82rem; color: #aaa; font-style: italic; }
+
+        /* ── Map hint overlay ─────────────────────────────────────────── */
+        .map-hint {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(61, 40, 23, 0.82);
+            color: rgba(196,167,125,0.9);
+            font-size: 0.75rem;
+            padding: 0.55rem 1.1rem;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 5;
+            letter-spacing: 0.03em;
+        }
+
+        /* ── Right Form Panel ─────────────────────────────────────────── */
+        .form-panel-wrap {
+            background: #f0ebe4;
+            overflow-y: auto;
+            border-left: 2px solid var(--light-tan);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Empty state */
+        .form-empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--coffee);
+        }
+
+        .form-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+        .form-empty-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--espresso); margin-bottom: 0.5rem; }
+        .form-empty-desc { font-size: 0.82rem; line-height: 1.7; color: #8a7060; max-width: 260px; }
+
+        /* Selected location header in right panel */
+        .form-location-header {
+            padding: 1.25rem 1.5rem;
+            background: var(--espresso);
+            color: white;
+            display: none;
+        }
+
+        .form-location-header.visible { display: block; }
+
+        .form-loc-action {
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--latte);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-loc-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-loc-meta {
+            font-size: 0.75rem;
+            color: rgba(196,167,125,0.65);
+        }
+
+        .form-loc-change {
+            display: inline-block;
+            margin-top: 0.65rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: rgba(196,167,125,0.6);
+            cursor: pointer;
+            border: 1px solid rgba(196,167,125,0.25);
+            padding: 0.25rem 0.6rem;
+            transition: all 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .form-loc-change:hover { color: var(--latte); border-color: rgba(196,167,125,0.55); }
+
+        /* ── Type picker inside form panel ───────────────────────────── */
+        .type-section {
+            display: none;
+            padding: 1.25rem 1.5rem;
+            background: white;
+            border-bottom: 1.5px solid var(--light-tan);
+        }
+        .type-section.visible { display: block; }
+
+        .section-label {
+            font-size: 0.62rem; font-weight: 800; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--latte);
+            margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.6rem;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--light-tan); }
+
+        .type-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .type-card {
+            border: 2px solid var(--light-tan); padding: 0.85rem 1rem;
+            cursor: pointer; transition: all 0.2s; position: relative; background: var(--cream);
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .type-card:hover { border-color: var(--coffee); }
+        .type-card.sel-roaster { border-color: var(--roaster-color); background: #f0faf4; }
+        .type-card.sel-cafe    { border-color: var(--cafe-color);    background: #f0f6fa; }
+        .type-card-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .type-card-label { font-size: 0.8rem; font-weight: 700; }
+        .type-card.sel-roaster .type-card-label { color: var(--roaster-color); }
+        .type-card.sel-cafe    .type-card-label { color: var(--cafe-color); }
+        .type-card-sub { font-size: 0.68rem; color: var(--coffee); margin-top: 0.1rem; }
+        .type-card-check {
+            margin-left: auto; width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid var(--light-tan); display: flex; align-items: center;
+            justify-content: center; font-size: 0.58rem; color: white; flex-shrink: 0; transition: all 0.2s;
+        }
+        .type-card.sel-roaster .type-card-check { background: var(--roaster-color); border-color: var(--roaster-color); }
+        .type-card.sel-cafe    .type-card-check { background: var(--cafe-color);    border-color: var(--cafe-color); }
+
+        /* ── Detail form panels ─────────────────────────────────────── */
+        .detail-banner {
+            padding: 0.55rem 1.5rem; font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase; color: white; display: none;
+        }
+        .detail-banner.roaster { background: var(--roaster-color); }
+        .detail-banner.cafe    { background: var(--cafe-color); }
+        .detail-banner.visible { display: block; }
+
+        .form-panel { display: none; flex-direction: column; }
+        .form-panel.visible { display: flex; }
+
+        .form-section {
+            background: var(--white); border-bottom: 1.5px solid var(--light-tan);
+            padding: 1.25rem 1.5rem;
+        }
+        .panel-roaster .form-section { border-left: 3px solid var(--roaster-color); }
+        .panel-cafe    .form-section { border-left: 3px solid var(--cafe-color); }
+
+        /* ── Fields ──────────────────────────────────────────────────── */
+        .field-group { margin-bottom: 1.1rem; }
+        .field-group:last-child { margin-bottom: 0; }
+        .field-label { display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--espresso); margin-bottom: 0.35rem; }
+        .field-hint { font-size: 0.68rem; color: #8a7060; margin-bottom: 0.35rem; font-style: italic; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+        input[type="text"], select, textarea {
+            width: 100%; padding: 0.55rem 0.75rem;
+            border: 1.5px solid var(--light-tan); background: var(--cream);
+            font-family: 'Libre Franklin', sans-serif; font-size: 0.86rem;
+            color: var(--espresso); transition: border-color 0.2s;
+            appearance: none; -webkit-appearance: none;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--coffee); background: var(--white); }
+        .panel-roaster input:focus, .panel-roaster select:focus, .panel-roaster textarea:focus { border-color: var(--roaster-color); }
+        .panel-cafe    input:focus, .panel-cafe    select:focus, .panel-cafe    textarea:focus { border-color: var(--cafe-color); }
+
+        .select-wrap { position: relative; }
+        .select-wrap::after { content: '▾'; position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--coffee); pointer-events: none; font-size: 0.75rem; }
+        .select-wrap select { padding-right: 1.75rem; cursor: pointer; }
+        textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+
+        /* ── Checkboxes ──────────────────────────────────────────────── */
+        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+        .checkbox-item {
+            display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
+            padding: 0.45rem 0.6rem; border: 1.5px solid var(--light-tan);
+            background: var(--cream); transition: all 0.15s; font-size: 0.78rem; color: var(--coffee); user-select: none;
+        }
+        .checkbox-item:hover { border-color: var(--coffee); }
+        .checkbox-item input[type="checkbox"] { display: none; }
+        .checkbox-box { width: 14px; height: 14px; border: 2px solid var(--light-tan); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 0.6rem; color: white; }
+        .checkbox-item.checked .checkbox-box { background: var(--coffee); border-color: var(--coffee); }
+        .panel-roaster .checkbox-item.checked .checkbox-box { background: var(--roaster-color); border-color: var(--roaster-color); }
+        .panel-cafe    .checkbox-item.checked .checkbox-box { background: var(--cafe-color);    border-color: var(--cafe-color); }
+        .checkbox-item.checked { border-color: var(--coffee); background: white; }
+        .panel-roaster .checkbox-item.checked { border-color: var(--roaster-color); }
+        .panel-cafe    .checkbox-item.checked { border-color: var(--cafe-color); }
+
+        /* ── Submit ──────────────────────────────────────────────────── */
+        .submit-section {
+            display: none;
+            padding: 1.25rem 1.5rem;
+            background: var(--white);
+            border-bottom: 1.5px solid var(--light-tan);
+        }
+        .submit-section.visible { display: block; }
+
+        .btn-submit { width: 100%; padding: 0.85rem 2rem; font-family: 'Libre Franklin', sans-serif; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.2s; color: white; }
+        .btn-submit.roaster { background: var(--roaster-color); }
+        .btn-submit.roaster:hover { background: #155c32; }
+        .btn-submit.cafe { background: var(--cafe-color); }
+        .btn-submit.cafe:hover { background: #153d5c; }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .alert { padding: 0.85rem 1rem; margin-top: 0.75rem; font-size: 0.83rem; font-weight: 600; display: none; }
+        .alert.visible { display: block; }
+        .alert.success { background: #e8f5e9; color: var(--success); border-left: 3px solid var(--success); }
+        .alert.error   { background: #ffebee; color: var(--error);   border-left: 3px solid var(--error); }
+
+        /* ── Footer ─────────────────────────────────────────────────── */
+        footer { background: var(--espresso); color: rgba(196,167,125,0.65); text-align: center; padding: 0.85rem 2rem; border-top: 2px solid var(--accent-red); font-size: 0.78rem; }
+        footer a { color: var(--latte); text-decoration: none; font-weight: 600; }
+        footer a:hover { color: #EDE0CC; }
+        .footer-sep { opacity: 0.4; margin: 0 0.4rem; }
+
+        @media (max-width: 900px) {
+            .admin-layout { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; height: auto; }
+            .form-panel-wrap { min-height: 50vh; }
+        }
+
+        @media (max-width: 640px) {
+            .type-cards, .field-row, .checkbox-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-content">
+            <div class="header-eyebrow">
+                <span class="eyebrow-line"></span>
+                <span class="eyebrow-text">Roasters · Cafes · Community</span>
+                <span class="eyebrow-line"></span>
+            </div>
+            <div class="header-dots">
+                <span class="dot sm"></span><span class="dot"></span><span class="dot sm"></span>
+            </div>
+            <div class="site-logo"><em>San Diego</em> <strong>Coffee Beans</strong></div>
+            <div class="admin-badge">⚙ Admin Panel</div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-btn">🏠 Home</a>
+                <a href="map.html" class="nav-btn">🗺 Map</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Split layout: Map left, Form right -->
+    <div class="admin-layout">
+
+        <!-- LEFT: Map with floating search bar -->
+        <div class="map-panel">
+            <div id="adminMap"></div>
+
+            <!-- Floating search bar -->
+            <div class="map-search-bar">
+                <div class="map-search-inner">
+                    <span class="map-search-icon">🔍</span>
+                    <input
+                        type="text"
+                        class="map-search-input"
+                        id="adminSearchInput"
+                        placeholder="Search your locations or any SD coffee spot…"
+                        autocomplete="off"
+                    >
+                    <button class="map-search-clear" id="adminSearchClear" title="Clear">✕</button>
+                </div>
+                <div class="map-search-dropdown" id="adminDropdown"></div>
+            </div>
+
+            <div class="map-hint" id="mapHint">Search above — or click a pin to edit</div>
+        </div>
+
+        <!-- RIGHT: Form panel -->
+        <div class="form-panel-wrap" id="formPanelWrap">
+
+            <!-- Empty state -->
+            <div class="form-empty-state" id="emptyState">
+                <div class="form-empty-icon">📍</div>
+                <div class="form-empty-title">Select a location</div>
+                <div class="form-empty-desc">Search above to find an existing location to edit, or search for any San Diego coffee shop to add it to the guide.</div>
+            </div>
+
+            <!-- Location header -->
+            <div class="form-location-header" id="locationHeader">
+                <div class="form-loc-action" id="locAction">EDIT LOCATION</div>
+                <div class="form-loc-name" id="locName"></div>
+                <div class="form-loc-meta" id="locMeta"></div>
+                <span class="form-loc-change" onclick="resetToSearch()">← Change Location</span>
+            </div>
+
+            <!-- Type picker -->
+            <div class="type-section" id="typeSection">
+                <div class="section-label">Location Type</div>
+                <div class="type-cards">
+                    <div class="type-card" id="typeRoaster" onclick="selectType('roaster')">
+                        <span class="type-card-icon">☕</span>
+                        <div>
+                            <div class="type-card-label">Roaster</div>
+                            <div class="type-card-sub">Roasts their own beans</div>
+                        </div>
+                        <span class="type-card-check">✓</span>
+                    </div>
+                    <div class="type-card" id="typeCafe" onclick="selectType('cafe')">
+                        <span class="type-card-icon">🏪</span>
+                        <div>
+                            <div class="type-card-label">Multi-Roaster Cafe</div>
+                            <div class="type-card-sub">Serves multiple roasters</div>
+                        </div>
+                        <span class="type-card-check">✓</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roaster detail banner + form -->
+            <div class="detail-banner roaster" id="bannerRoaster">☕ Roaster — Coffee Details</div>
+            <div class="form-panel panel-roaster" id="panelRoaster">
+                <div class="form-section">
+                    <div class="section-label">Basic Info</div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label class="field-label">Location ID</label>
+                            <div class="field-hint">Must match id in locations.js</div>
+                            <input type="text" id="r-id" placeholder="e.g. loc_023" style="font-family:monospace;">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Year Established</label>
+                            <input type="text" id="r-yearEstablished" placeholder="e.g. 2012">
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group" style="margin-bottom:0;">
+                            <label class="field-label">Location Name</label>
+                            <input type="text" id="r-locationName" placeholder="e.g. Bird Rock Coffee Roasters">
+                        </div>
+                        <div class="field-group" style="margin-bottom:0;">
+                            <label class="field-label">Neighborhood</label>
+                            <input type="text" id="r-neighborhood" placeholder="e.g. Little Italy">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Roast Profile</div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label class="field-label">Roast Scale</label>
+                            <div class="select-wrap">
+                                <select id="r-roastScale">
+                                    <option value="">— Select —</option>
+                                    <option>Production</option>
+                                    <option>Micro-Batch</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Roast Style</label>
+                            <div class="select-wrap">
+                                <select id="r-roastStyle">
+                                    <option value="">— Select —</option>
+                                    <option>Light Roast</option>
+                                    <option>Medium Roast</option>
+                                    <option>Dark Roast</option>
+                                    <option>Full Range</option>
+                                    <option>Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Visitor Experience</div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label class="field-label">Experience Type</label>
+                            <div class="select-wrap">
+                                <select id="r-visitorExperience">
+                                    <option value="">— Select —</option>
+                                    <option value="Full Cafe (Open daily with seating)">Full Cafe — Open daily with seating</option>
+                                    <option value="Tasting Room (Limited hours / manufacturing)">Tasting Room — Limited hours</option>
+                                    <option value="Production Only (No public access)">Production Only — No public access</option>
+                                    <option value="Public Cuppings / Events Only">Public Cuppings / Events Only</option>
+                                    <option>Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Multiple Locations?</label>
+                            <div class="select-wrap">
+                                <select id="r-multipleLocations">
+                                    <option value="">— Select —</option>
+                                    <option>Yes</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Features &amp; Amenities</div>
+                    <div class="field-hint" style="margin-bottom:0.75rem;">Select all that apply</div>
+                    <div class="checkbox-grid" id="r-amenities">
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Certified Organic"><span class="checkbox-box">✓</span>Certified Organic</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Wholesale Only (No direct-to-consumer sales)"><span class="checkbox-box">✓</span>Wholesale Only</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Online-only (no physical storefront)"><span class="checkbox-box">✓</span>Online-only</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Offers Food / Pastries"><span class="checkbox-box">✓</span>Offers Food / Pastries</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Good for Working (Wifi)"><span class="checkbox-box">✓</span>Good for Working (WiFi)</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Sells Beans Online"><span class="checkbox-box">✓</span>Sells Beans Online</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">About This Location <span style="font-size:0.75rem;font-weight:400;color:#999;">(shown on location page)</span></div>
+                    <div class="field-group">
+                        <textarea id="r-description" placeholder="Write a short description of this roaster — what makes them unique, their story, vibe, etc." rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Admin Notes</div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <textarea id="r-notes" placeholder="Internal notes for your reference…"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cafe detail banner + form -->
+            <div class="detail-banner cafe" id="bannerCafe">🏪 Multi-Roaster Cafe — Coffee Details</div>
+            <div class="form-panel panel-cafe" id="panelCafe">
+                <div class="form-section">
+                    <div class="section-label">Basic Info</div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label class="field-label">Location ID</label>
+                            <div class="field-hint">Must match id in locations.js</div>
+                            <input type="text" id="c-id" placeholder="e.g. loc_023" style="font-family:monospace;">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Year Established</label>
+                            <input type="text" id="c-yearEstablished" placeholder="e.g. 2018">
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group" style="margin-bottom:0;">
+                            <label class="field-label">Location Name</label>
+                            <input type="text" id="c-locationName" placeholder="e.g. Mnemonic Coffee">
+                        </div>
+                        <div class="field-group" style="margin-bottom:0;">
+                            <label class="field-label">Neighborhood</label>
+                            <input type="text" id="c-neighborhood" placeholder="e.g. North Park">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Service Info</div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label class="field-label">Specialty-Level Barista Service?</label>
+                            <div class="select-wrap">
+                                <select id="c-specialtyBarista">
+                                    <option value="">— Select —</option>
+                                    <option>Yes</option>
+                                    <option>Somewhat</option>
+                                    <option>No</option>
+                                    <option>Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label">Multiple Locations?</label>
+                            <div class="select-wrap">
+                                <select id="c-multipleLocations">
+                                    <option value="">— Select —</option>
+                                    <option>Yes</option>
+                                    <option>No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <label class="field-label">Roasters Served</label>
+                        <textarea id="c-roastersServed" placeholder="e.g. Bird Rock Coffee Roasters, James Coffee Co., Onyx Coffee Lab…" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Brewing Options</div>
+                    <div class="field-hint" style="margin-bottom:0.75rem;">Select all that apply</div>
+                    <div class="checkbox-grid" id="c-brewing">
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Manual Pour Over"><span class="checkbox-box">✓</span>Manual Pour Over</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Batch Brew Single Origins"><span class="checkbox-box">✓</span>Batch Brew Single Origins</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Espresso: Single Origin Option"><span class="checkbox-box">✓</span>Espresso: Single Origin Option</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Features &amp; Amenities</div>
+                    <div class="field-hint" style="margin-bottom:0.75rem;">Select all that apply</div>
+                    <div class="checkbox-grid" id="c-amenities">
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Offers Food / Pastries"><span class="checkbox-box">✓</span>Offers Food / Pastries</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Good for Working (Wifi)"><span class="checkbox-box">✓</span>Good for Working (WiFi)</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Community Events"><span class="checkbox-box">✓</span>Community Events</label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">About This Location <span style="font-size:0.75rem;font-weight:400;color:#999;">(shown on location page)</span></div>
+                    <div class="field-group">
+                        <textarea id="c-description" placeholder="Write a short description of this cafe — what makes them unique, their roaster selection, vibe, etc." rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">Admin Notes</div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <textarea id="c-notes" placeholder="Internal notes for your reference…"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="submit-section" id="submitSection">
+                <button class="btn-submit roaster" id="submitBtn" onclick="handleSubmit()">
+                    Save to Google Sheets
+                </button>
+                <div class="alert" id="alertBox"></div>
+            </div>
+
+        </div><!-- /form-panel-wrap -->
+    </div><!-- /admin-layout -->
+
+    <footer>
+        <a href="index.html">San Diego Coffee Beans</a>
+        <span class="footer-sep">·</span>
+        <span>Admin Panel — Keep this URL private</span>
+    </footer>
+
+    <!-- locations.js must load first -->
+    <script src="locations.js"></script>
+
+    <script>
+        // ── State ──────────────────────────────────────────────────────
+        let currentMode      = null;   // 'edit' | 'add'
+        let currentType      = null;
+        let selectedLocation = null;
+        let autocompleteService = null;
+        let placesService       = null;
+        let adminMap            = null;
+        let markers             = [];
+        let infoWindow          = null;
+
+        const ALL_LOCATIONS = window.COFFEE_LOCATIONS || [];
+
+        // ── Map Styles (matching the main map) ────────────────────────
+        const mapStyles = [
+            { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
+            { featureType: "transit", elementType: "labels", stylers: [{ visibility: "off" }] },
+            { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#F5F0E8" }] },
+            { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#E8DCC8" }] },
+            { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#F5EFE3" }] },
+            { featureType: "water", elementType: "geometry", stylers: [{ color: "#B8D4E8" }] },
+            { featureType: "landscape.natural", elementType: "geometry", stylers: [{ color: "#EBE7DB" }] },
+            { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#D4E4CD" }] }
+        ];
+
+        // ── Init Map ───────────────────────────────────────────────────
+        function initAdminMap() {
+            adminMap = new google.maps.Map(document.getElementById('adminMap'), {
+                zoom: 11,
+                center: { lat: 32.78, lng: -117.13 },
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: false,
+                zoomControl: true,
+                styles: mapStyles
+            });
+
+            infoWindow = new google.maps.InfoWindow();
+
+            // Init Places autocomplete service using a dummy map div
+            autocompleteService = new google.maps.places.AutocompleteService();
+            placesService       = new google.maps.places.PlacesService(adminMap);
+
+            // Place all existing location markers
+            ALL_LOCATIONS.forEach(loc => {
+                if (!loc.basicInfo?.address?.coordinates) return;
+                const isRoaster = loc.basicInfo.type === 'roaster';
+                const marker = new google.maps.Marker({
+                    position: {
+                        lat: loc.basicInfo.address.coordinates.lat,
+                        lng: loc.basicInfo.address.coordinates.lng
+                    },
+                    map: adminMap,
+                    title: loc.basicInfo.name,
+                    icon: {
+                        url: isRoaster
+                            ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                            : 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                        scaledSize: new google.maps.Size(22, 22)
+                    }
+                });
+
+                marker.locData = loc;
+
+                marker.addListener('click', () => {
+                    selectExistingLocation(loc);
+                    const pinInfo = `
+                        <div style="font-family:'Libre Franklin',sans-serif; padding:0.25rem; max-width:200px;">
+                            <div style="font-weight:700; font-size:0.9rem; color:#3D2817; margin-bottom:0.2rem;">${loc.basicInfo.name}</div>
+                            <div style="font-size:0.72rem; color:#6B4E3D;">${isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe'}</div>
+                            <div style="font-size:0.72rem; color:#B85C38; margin-top:0.4rem; font-weight:600;">Loaded for editing →</div>
+                        </div>
+                    `;
+                    infoWindow.setContent(pinInfo);
+                    infoWindow.open(adminMap, marker);
+                });
+
+                markers.push(marker);
+            });
+
+            // Wire up search input
+            const searchInput = document.getElementById('adminSearchInput');
+            const clearBtn    = document.getElementById('adminSearchClear');
+            let searchTimeout;
+
+            searchInput.addEventListener('input', function() {
+                const q = this.value.trim();
+                clearBtn.classList.toggle('visible', q.length > 0);
+                clearTimeout(searchTimeout);
+                if (q.length < 2) { closeDropdown(); return; }
+                searchTimeout = setTimeout(() => doSearch(q), 200);
+            });
+
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearBtn.classList.remove('visible');
+                closeDropdown();
+            });
+
+            // Close dropdown on outside click
+            document.addEventListener('click', e => {
+                if (!e.target.closest('.map-search-bar')) closeDropdown();
+            });
+        }
+
+        // ── Unified Search ─────────────────────────────────────────────
+        function doSearch(query) {
+            const q = query.toLowerCase();
+
+            // 1. Search existing locations
+            const existingMatches = ALL_LOCATIONS.filter(loc => {
+                const name = (loc.basicInfo?.name || '').toLowerCase();
+                const hood = (loc.basicInfo?.address?.neighborhood || loc.basicInfo?.address?.city || '').toLowerCase();
+                return name.includes(q) || hood.includes(q);
+            }).slice(0, 6);
+
+            // 2. Simultaneously fetch Google Places suggestions
+            autocompleteService.getPlacePredictions({
+                input: query + ' coffee San Diego',
+                types: ['establishment'],
+                componentRestrictions: { country: 'us' },
+                location: new google.maps.LatLng(32.7157, -117.1611),
+                radius: 60000,
+            }, (predictions, status) => {
+                renderDropdown(existingMatches, predictions || []);
+            });
+        }
+
+        function renderDropdown(existing, predictions) {
+            const dd = document.getElementById('adminDropdown');
+            let html = '';
+
+            if (existing.length > 0) {
+                html += `<div class="dd-section-header">✏️ Your Locations — click to edit</div>`;
+                html += existing.map(loc => {
+                    const hood = loc.basicInfo?.address?.neighborhood || loc.basicInfo?.address?.city || '';
+                    const type = loc.basicInfo?.type || 'roaster';
+                    return `<div class="dd-item" onclick="selectExistingFromDropdown('${loc.id}')">
+                        <span class="dd-item-badge ${type === 'cafe' ? 'badge-cafe' : 'badge-edit'}">${type === 'cafe' ? 'Cafe' : 'Roaster'}</span>
+                        <div class="dd-item-text">
+                            <div class="dd-item-name">${loc.basicInfo?.name || ''}</div>
+                            <div class="dd-item-meta">${hood}${hood ? ' · ' : ''}Edit existing</div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            // Filter out predictions that already match an existing location
+            const existingNames = new Set(existing.map(l => (l.basicInfo?.name || '').toLowerCase()));
+            const newPredictions = predictions
+                .filter(p => !existingNames.has((p.structured_formatting?.main_text || '').toLowerCase()))
+                .slice(0, 5);
+
+            if (newPredictions.length > 0) {
+                html += `<div class="dd-section-header">📍 Add New Location</div>`;
+                html += newPredictions.map(p =>
+                    `<div class="dd-item" onclick="selectNewPlace('${p.place_id}')">
+                        <span class="dd-item-badge badge-new">New</span>
+                        <div class="dd-item-text">
+                            <div class="dd-item-name">${p.structured_formatting?.main_text || p.description}</div>
+                            <div class="dd-item-meta">${p.structured_formatting?.secondary_text || ''}</div>
+                        </div>
+                    </div>`
+                ).join('');
+            }
+
+            if (!html) {
+                html = '<div class="dd-empty">No results found — try different keywords</div>';
+            }
+
+            dd.innerHTML = html;
+            dd.classList.add('open');
+        }
+
+        function closeDropdown() {
+            document.getElementById('adminDropdown').classList.remove('open');
+        }
+
+        // ── Select Existing from dropdown ─────────────────────────────
+        function selectExistingFromDropdown(locId) {
+            const loc = ALL_LOCATIONS.find(l => l.id === locId);
+            if (!loc) return;
+            closeDropdown();
+            document.getElementById('adminSearchInput').value = loc.basicInfo?.name || '';
+            document.getElementById('adminSearchClear').classList.add('visible');
+            selectExistingLocation(loc);
+
+            // Pan map to marker
+            const m = markers.find(mk => mk.locData?.id === locId);
+            if (m) {
+                adminMap.panTo(m.getPosition());
+                adminMap.setZoom(14);
+                infoWindow.close();
+            }
+        }
+
+        function selectExistingLocation(loc) {
+            selectedLocation = loc;
+            currentMode = 'edit';
+
+            const type = loc.basicInfo?.type || 'roaster';
+            const hood = loc.basicInfo?.address?.neighborhood || loc.basicInfo?.address?.city || '';
+
+            showLocationHeader('EDITING EXISTING LOCATION', loc.basicInfo?.name || '', `${hood ? hood + ' · ' : ''}${loc.id}`);
+            prefillFields(loc.id, loc.basicInfo?.name || '', hood, loc.coffeeDetails || null, type);
+            showTypeSection(type);
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('mapHint').style.display = 'none';
+
+            // Scroll form panel to top
+            document.getElementById('formPanelWrap').scrollTop = 0;
+        }
+
+        // ── Select New Place from Google Places ───────────────────────
+        function selectNewPlace(placeId) {
+            closeDropdown();
+            placesService.getDetails({
+                placeId,
+                fields: ['name', 'formatted_address', 'geometry', 'place_id']
+            }, (place, status) => {
+                if (status !== google.maps.places.PlacesServiceStatus.OK) return;
+
+                selectedLocation = {
+                    isNew: true,
+                    placeId: place.place_id,
+                    name: place.name,
+                    address: place.formatted_address,
+                };
+
+                currentMode = 'add';
+
+                document.getElementById('adminSearchInput').value = place.name;
+                document.getElementById('adminSearchClear').classList.add('visible');
+
+                const nextNum     = ALL_LOCATIONS.length + 1;
+                const suggestedId = 'loc_' + String(nextNum).padStart(3, '0');
+                const hood        = extractNeighborhood(place.formatted_address);
+
+                showLocationHeader('ADDING NEW LOCATION', place.name, place.formatted_address);
+                prefillFields(suggestedId, place.name, hood);
+                showTypeSection(null);
+
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('mapHint').style.display = 'none';
+
+                // Drop a temporary marker on the map
+                if (place.geometry?.location) {
+                    adminMap.panTo(place.geometry.location);
+                    adminMap.setZoom(15);
+
+                    const tempMarker = new google.maps.Marker({
+                        position: place.geometry.location,
+                        map: adminMap,
+                        title: place.name,
+                        icon: {
+                            url: 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png',
+                            scaledSize: new google.maps.Size(26, 26)
+                        },
+                        animation: google.maps.Animation.DROP
+                    });
+
+                    const info = `<div style="font-family:'Libre Franklin',sans-serif; padding:0.25rem; max-width:200px;">
+                        <div style="font-weight:700; font-size:0.9rem; color:#3D2817;">${place.name}</div>
+                        <div style="font-size:0.72rem; color:#7b4a00; margin-top:0.3rem; font-weight:600;">📍 New location — fill in form →</div>
+                    </div>`;
+                    infoWindow.setContent(info);
+                    infoWindow.open(adminMap, tempMarker);
+
+                    // Remove temp marker if user selects another location
+                    tempMarker._isTemp = true;
+                    markers.push(tempMarker);
+                }
+
+                // Scroll form panel to top
+                document.getElementById('formPanelWrap').scrollTop = 0;
+            });
+        }
+
+        function extractNeighborhood(address) {
+            const parts = address.split(',');
+            return parts.length >= 2 ? parts[1].trim() : '';
+        }
+
+        // ── Show location header ───────────────────────────────────────
+        function showLocationHeader(action, name, meta) {
+            document.getElementById('locAction').textContent = action;
+            document.getElementById('locName').textContent   = name;
+            document.getElementById('locMeta').textContent   = meta;
+            document.getElementById('locationHeader').classList.add('visible');
+        }
+
+        // ── Prefill both panels ───────────────────────────────────────
+        function prefillFields(id, name, neighborhood, coffeeDetails, locType) {
+            ['r', 'c'].forEach(prefix => {
+                document.getElementById(`${prefix}-id`).value           = id;
+                document.getElementById(`${prefix}-locationName`).value = name;
+                document.getElementById(`${prefix}-neighborhood`).value = neighborhood;
+            });
+
+            if (!coffeeDetails) return;
+            const d = coffeeDetails;
+
+            if (locType === 'roaster') {
+                setVal('r-yearEstablished', d.yearEstablished);
+                setVal('r-roastScale',      d.roastScale);
+                setVal('r-roastStyle',      d.roastStyle);
+                setVal('r-visitorExperience', d.visitorExperience);
+                setVal('r-multipleLocations', d.multipleLocations);
+                setVal('r-notes',           d.notes);
+                setVal('r-description',     d.description);
+                if (d.amenities && d.amenities.length) {
+                    setCheckboxes('r-amenities', d.amenities);
+                }
+            } else if (locType === 'cafe') {
+                setVal('c-yearEstablished',  d.yearEstablished);
+                setVal('c-multipleLocations', d.multipleLocations);
+                setVal('c-specialtyBarista', d.specialtyBarista);
+                setVal('c-roastersServed',   Array.isArray(d.roastersServed) ? d.roastersServed.join(', ') : d.roastersServed);
+                setVal('c-notes',            d.notes);
+                setVal('c-description',      d.description);
+                if (d.brewingOptions && d.brewingOptions.length) {
+                    setCheckboxes('c-brewing', d.brewingOptions);
+                }
+                if (d.amenities && d.amenities.length) {
+                    setCheckboxes('c-amenities', d.amenities);
+                }
+            }
+        }
+
+        function setVal(id, val) {
+            const el = document.getElementById(id);
+            if (el && val !== undefined && val !== null) el.value = val;
+        }
+
+        function setCheckboxes(groupId, values) {
+            const group = document.getElementById(groupId);
+            if (!group) return;
+            group.querySelectorAll('.checkbox-item').forEach(item => {
+                const val = item.querySelector('input')?.value || '';
+                if (values.includes(val)) {
+                    item.classList.add('checked');
+                } else {
+                    item.classList.remove('checked');
+                }
+            });
+        }
+
+        // ── Type section ───────────────────────────────────────────────
+        function showTypeSection(existingType) {
+            document.getElementById('typeSection').classList.add('visible');
+
+            if (existingType) {
+                selectType(existingType);
+            } else {
+                document.getElementById('typeRoaster').className = 'type-card';
+                document.getElementById('typeCafe').className    = 'type-card';
+                hideDetailPanels();
+                document.getElementById('submitSection').classList.remove('visible');
+            }
+        }
+
+        function selectType(type) {
+            currentType = type;
+
+            document.getElementById('typeRoaster').className = 'type-card' + (type === 'roaster' ? ' sel-roaster' : '');
+            document.getElementById('typeCafe').className    = 'type-card' + (type === 'cafe'    ? ' sel-cafe'    : '');
+
+            document.getElementById('bannerRoaster').className = 'detail-banner roaster' + (type === 'roaster' ? ' visible' : '');
+            document.getElementById('panelRoaster').className  = 'form-panel panel-roaster' + (type === 'roaster' ? ' visible' : '');
+            document.getElementById('bannerCafe').className    = 'detail-banner cafe'    + (type === 'cafe'    ? ' visible' : '');
+            document.getElementById('panelCafe').className     = 'form-panel panel-cafe'  + (type === 'cafe'    ? ' visible' : '');
+
+            const btn  = document.getElementById('submitBtn');
+            btn.className = `btn-submit ${type}`;
+            const verb = currentMode === 'add' ? 'Add' : 'Update';
+            btn.textContent = `${verb} ${type === 'roaster' ? 'Roaster' : 'Cafe'} in Google Sheets`;
+            document.getElementById('submitSection').classList.add('visible');
+        }
+
+        function hideDetailPanels() {
+            ['bannerRoaster','panelRoaster','bannerCafe','panelCafe'].forEach(id => {
+                const el = document.getElementById(id);
+                el.className = el.className.replace(' visible', '');
+            });
+        }
+
+        // ── Reset to search ────────────────────────────────────────────
+        function resetToSearch() {
+            selectedLocation = null;
+            currentMode = null;
+            currentType = null;
+
+            document.getElementById('adminSearchInput').value = '';
+            document.getElementById('adminSearchClear').classList.remove('visible');
+            document.getElementById('locationHeader').classList.remove('visible');
+            document.getElementById('typeSection').classList.remove('visible');
+            document.getElementById('submitSection').classList.remove('visible');
+            document.getElementById('emptyState').style.display = '';
+            document.getElementById('mapHint').style.display = '';
+            hideDetailPanels();
+
+            // Remove any temp markers
+            markers = markers.filter(m => {
+                if (m._isTemp) { m.setMap(null); return false; }
+                return true;
+            });
+
+            infoWindow.close();
+            document.getElementById('adminSearchInput').focus();
+        }
+
+        // ── Checkboxes ─────────────────────────────────────────────────
+        function toggleCheck(label) {
+            const cb = label.querySelector('input[type="checkbox"]');
+            setTimeout(() => label.classList.toggle('checked', cb.checked), 0);
+        }
+
+        function getChecked(containerId) {
+            return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`))
+                .map(cb => cb.value).join(', ');
+        }
+
+        // ── Submit ─────────────────────────────────────────────────────
+        async function handleSubmit() {
+            if (!selectedLocation) { showAlert('Please select a location first.', 'error'); return; }
+            if (!currentType)      { showAlert('Please select a location type.', 'error');  return; }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving…';
+
+            const timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+            const prefix    = currentType === 'roaster' ? 'r' : 'c';
+            const id        = document.getElementById(`${prefix}-id`).value.trim();
+
+            if (!id) {
+                showAlert('Please enter a Location ID.', 'error');
+                btn.disabled = false;
+                btn.textContent = currentMode === 'add' ? 'Add to Google Sheets' : 'Update in Google Sheets';
+                return;
+            }
+
+            let payload;
+
+            if (currentType === 'roaster') {
+                payload = {
+                    sheet: 'Roasters', locationType: 'roaster', timestamp, id,
+                    locationName:      document.getElementById('r-locationName').value.trim(),
+                    neighborhood:      document.getElementById('r-neighborhood').value.trim(),
+                    yearEstablished:   document.getElementById('r-yearEstablished').value.trim(),
+                    roastScale:        document.getElementById('r-roastScale').value,
+                    roastStyle:        document.getElementById('r-roastStyle').value,
+                    visitorExperience: document.getElementById('r-visitorExperience').value,
+                    multipleLocations: document.getElementById('r-multipleLocations').value,
+                    amenities:         getChecked('r-amenities'),
+                    notes:             document.getElementById('r-notes').value.trim(),
+                    description:       document.getElementById('r-description').value.trim(),
+                };
+            } else {
+                payload = {
+                    sheet: 'Cafes', locationType: 'cafe', timestamp, id,
+                    locationName:      document.getElementById('c-locationName').value.trim(),
+                    neighborhood:      document.getElementById('c-neighborhood').value.trim(),
+                    yearEstablished:   document.getElementById('c-yearEstablished').value.trim(),
+                    multipleLocations: document.getElementById('c-multipleLocations').value,
+                    specialtyBarista:  document.getElementById('c-specialtyBarista').value,
+                    roastersServed:    document.getElementById('c-roastersServed').value.trim(),
+                    brewingOptions:    getChecked('c-brewing'),
+                    amenities:         getChecked('c-amenities'),
+                    notes:             document.getElementById('c-notes').value.trim(),
+                    description:       document.getElementById('c-description').value.trim(),
+                };
+            }
+
+            try {
+                const res = await fetch('/.netlify/functions/admin-to-sheets', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    const action = data.action === 'updated' ? 'Updated' : 'Added';
+                    showAlert(`✓ ${action} "${payload.locationName}" in the ${currentType === 'roaster' ? 'Roasters' : 'Cafes'} sheet!`, 'success');
+                    btn.textContent = `✓ ${action}!`;
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.textContent = `${currentMode === 'add' ? 'Add' : 'Update'} ${currentType === 'roaster' ? 'Roaster' : 'Cafe'} in Google Sheets`;
+                    }, 3000);
+                } else {
+                    throw new Error(await res.text());
+                }
+            } catch (err) {
+                console.error(err);
+                showAlert('Error saving to Google Sheets — check the console for details.', 'error');
+                btn.disabled = false;
+                btn.textContent = `${currentMode === 'add' ? 'Add' : 'Update'} ${currentType === 'roaster' ? 'Roaster' : 'Cafe'} in Google Sheets`;
+            }
+        }
+
+        function showAlert(msg, type) {
+            const box = document.getElementById('alertBox');
+            box.textContent = msg;
+            box.className = `alert visible ${type}`;
+        }
+    </script>
+
+    <!-- Google Maps + Places -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initAdminMap" async defer></script>
+
+</body>
+</html>

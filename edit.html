@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggest an Edit — San Diego Specialty Coffee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --espresso:      #2C1A0E;
+            --coffee-brown:  #6B4E3D;
+            --warm-brown:    #8B6355;
+            --accent:        #B85C38;
+            --cream:         #F5F0E8;
+            --light-tan:     #E8DDD0;
+            --white:         #FDFAF6;
+            --text-muted:    #9A8478;
+            --success:       #4A7C59;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Libre Franklin', sans-serif;
+            background: var(--cream);
+            color: var(--espresso);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--espresso);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-logo {
+            font-family: 'Lora', serif;
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .header-logo em { font-style: italic; color: #C4A882; }
+
+        .header-back {
+            font-size: 0.8rem;
+            color: #C4A882;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: color 0.2s;
+        }
+        .header-back:hover { color: var(--cream); }
+
+        /* ── Page layout ── */
+        .page-wrap {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .location-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+        }
+
+        .page-title {
+            font-family: 'Lora', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--espresso);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ── Form card ── */
+        .form-card {
+            background: var(--white);
+            border: 1px solid var(--light-tan);
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--coffee-brown);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-tan);
+        }
+
+        .field-group {
+            margin-bottom: 1.1rem;
+        }
+
+        .field-group:last-child { margin-bottom: 0; }
+
+        .field-label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--coffee-brown);
+            margin-bottom: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .current-val {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            font-style: italic;
+        }
+
+        .current-val span {
+            color: var(--coffee-brown);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .field-group select,
+        .field-group textarea,
+        .field-group input[type="text"] {
+            width: 100%;
+            padding: 0.6rem 0.85rem;
+            border: 2px solid var(--light-tan);
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.88rem;
+            color: var(--espresso);
+            background: var(--white);
+            outline: none;
+            transition: border-color 0.2s;
+            appearance: none;
+        }
+
+        .field-group select:focus,
+        .field-group textarea:focus,
+        .field-group input[type="text"]:focus {
+            border-color: var(--coffee-brown);
+        }
+
+        .field-group textarea { resize: vertical; min-height: 80px; }
+
+        .select-wrap { position: relative; }
+        .select-wrap::after {
+            content: '▾';
+            position: absolute;
+            right: 0.85rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--coffee-brown);
+            pointer-events: none;
+            font-size: 0.85rem;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* ── Checkboxes ── */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.55rem 0.75rem;
+            border: 2px solid var(--light-tan);
+            background: var(--white);
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: var(--espresso);
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .checkbox-item:hover { border-color: var(--coffee-brown); }
+        .checkbox-item.checked {
+            border-color: var(--coffee-brown);
+            background: #F0EAE0;
+        }
+
+        .checkbox-item input[type="checkbox"] { display: none; }
+
+        .checkbox-box {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--light-tan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: transparent;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+
+        .checkbox-item.checked .checkbox-box {
+            background: var(--coffee-brown);
+            border-color: var(--coffee-brown);
+            color: white;
+        }
+
+        /* ── Submit ── */
+        .submit-section {
+            margin-top: 1.5rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover { background: #A04E2E; }
+        .btn-submit:disabled { background: #C4A882; cursor: not-allowed; }
+
+        /* ── Thank you state ── */
+        .thank-you {
+            display: none;
+            text-align: center;
+            padding: 3rem 1.5rem;
+            background: var(--white);
+            border: 1px solid var(--light-tan);
+        }
+
+        .thank-you-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .thank-you h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.4rem;
+            color: var(--espresso);
+            margin-bottom: 0.5rem;
+        }
+
+        .thank-you p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .thank-you a {
+            display: inline-block;
+            padding: 0.65rem 1.5rem;
+            background: var(--espresso);
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+        .thank-you a:hover { background: var(--coffee-brown); }
+
+        /* ── Error ── */
+        .error-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .error-state h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: var(--espresso);
+            margin-bottom: 0.5rem;
+        }
+
+        .error-state p { font-size: 0.88rem; color: var(--text-muted); }
+
+        .alert {
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .alert.error { background: #FFF0EE; border-left: 3px solid #C0392B; color: #8B1A1A; display: block; }
+
+        /* ── Note box ── */
+        .note-box {
+            background: #FDF8F0;
+            border-left: 3px solid var(--light-tan);
+            padding: 0.75rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 520px) {
+            .field-row { grid-template-columns: 1fr; }
+            .checkbox-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="header-logo"><em>San Diego</em> Specialty Coffee</a>
+    <a href="javascript:history.back()" class="header-back">← Back</a>
+</header>
+
+<div class="page-wrap">
+
+    <!-- Error state (no id param) -->
+    <div id="errorState" class="error-state" style="display:none;">
+        <h2>No location specified.</h2>
+        <p>Head back to the map to find a location to edit.</p>
+    </div>
+
+    <!-- Main form -->
+    <div id="mainContent" style="display:none;">
+
+        <div class="page-header">
+            <div class="location-eyebrow" id="locationType"></div>
+            <h1 class="page-title" id="locationName">Loading…</h1>
+            <p class="page-subtitle">Suggest updates to the coffee details below. All submissions are reviewed before going live.</p>
+        </div>
+
+        <div class="note-box">
+            ℹ️ Fields marked as <strong>Unknown</strong> haven't been filled in yet — your input helps build the guide for everyone.
+        </div>
+
+        <!-- Form content injected here -->
+        <div id="formContent"></div>
+
+        <div class="submit-section">
+            <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">Submit Suggested Edit</button>
+            <div class="alert" id="alertBox"></div>
+        </div>
+
+    </div>
+
+    <!-- Thank you state -->
+    <div class="thank-you" id="thankYou">
+        <div class="thank-you-icon">☕</div>
+        <h2>Thanks for contributing!</h2>
+        <p>Your suggested edit for <strong id="thankYouName"></strong> has been submitted and will be reviewed before going live. The community appreciates it.</p>
+        <a id="backLink" href="map.html">← Back to Map</a>
+    </div>
+
+</div>
+
+<script src="locations.js"></script>
+<script>
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_r5rgwohLWHtizzAEhad9NNGG0pbnEiF23fg1-jxs7VgYbb2DfTyQQ--S7in8wZgD/exec';
+
+    // ── Get location from URL ──────────────────────────────────────────
+    const params     = new URLSearchParams(window.location.search);
+    const locationId = params.get('id');
+    const returnUrl  = params.get('return') || 'location.html?id=' + locationId;
+
+    if (!locationId) {
+        document.getElementById('errorState').style.display = 'block';
+    } else {
+        const location = (window.COFFEE_LOCATIONS || []).find(l => l.id === locationId);
+        if (!location) {
+            document.getElementById('errorState').style.display = 'block';
+        } else {
+            init(location);
+        }
+    }
+
+    function init(loc) {
+        const info      = loc.basicInfo;
+        const custom    = loc.coffeeDetails || {};
+        const isRoaster = info.type === 'roaster';
+
+        document.getElementById('locationName').textContent = info.name;
+        document.getElementById('locationType').textContent = isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
+        document.getElementById('thankYouName').textContent = info.name;
+        document.getElementById('backLink').href = returnUrl;
+        document.title = 'Suggest an Edit — ' + info.name;
+        document.getElementById('mainContent').style.display = 'block';
+
+        document.getElementById('formContent').innerHTML = isRoaster
+            ? buildRoasterForm(custom)
+            : buildCafeForm(custom);
+
+        // Wire checkboxes AFTER form is in the DOM
+        const currentAmenities = custom.amenities || [];
+        document.querySelectorAll('.checkbox-item').forEach(item => {
+            const val = item.querySelector('input').value;
+            if (currentAmenities.includes(val)) {
+                item.classList.add('checked');
+                item.querySelector('input').checked = true;
+            }
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                toggleCheck(item);
+            });
+        });
+    }
+
+    // ── Form builders ─────────────────────────────────────────────────
+    function cur(val, fallback) {
+        if (!val || (Array.isArray(val) && !val.length)) return fallback || 'Unknown';
+        return Array.isArray(val) ? val.join(', ') : val;
+    }
+
+    function buildRoasterForm(c) {
+        return `
+        <div class="form-card">
+            <div class="section-label">Roaster Details</div>
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">Roast Scale</label>
+                    <div class="current-val">Currently: <span>${cur(c.roastScale)}</span></div>
+                    <div class="select-wrap">
+                        <select id="f-roastScale">
+                            <option value="">— No change —</option>
+                            <option ${c.roastScale==='Production'?'selected':''}>Production</option>
+                            <option ${c.roastScale==='Micro-Batch'?'selected':''}>Micro-Batch</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Roast Style</label>
+                    <div class="current-val">Currently: <span>${cur(c.roastStyle)}</span></div>
+                    <div class="select-wrap">
+                        <select id="f-roastStyle">
+                            <option value="">— No change —</option>
+                            <option ${c.roastStyle==='Light Roast'?'selected':''}>Light Roast</option>
+                            <option ${c.roastStyle==='Medium Roast'?'selected':''}>Medium Roast</option>
+                            <option ${c.roastStyle==='Dark Roast'?'selected':''}>Dark Roast</option>
+                            <option ${c.roastStyle==='Full Range'?'selected':''}>Full Range</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">Visitor Experience</label>
+                    <div class="current-val">Currently: <span>${cur(c.visitorExperience)}</span></div>
+                    <div class="select-wrap">
+                        <select id="f-visitorExperience">
+                            <option value="">— No change —</option>
+                            <option value="Full Cafe (Open daily with seating)" ${c.visitorExperience==='Full Cafe (Open daily with seating)'?'selected':''}>Full Cafe — Open daily with seating</option>
+                            <option value="Tasting Room (Limited hours / manufacturing)" ${c.visitorExperience==='Tasting Room (Limited hours / manufacturing)'?'selected':''}>Tasting Room — Limited hours</option>
+                            <option value="Production Only (No public access)" ${c.visitorExperience==='Production Only (No public access)'?'selected':''}>Production Only — No public access</option>
+                            <option value="Public Cuppings / Events Only" ${c.visitorExperience==='Public Cuppings / Events Only'?'selected':''}>Public Cuppings / Events Only</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Multiple Locations?</label>
+                    <div class="current-val">Currently: <span>${cur(c.multipleLocations)}</span></div>
+                    <div class="select-wrap">
+                        <select id="f-multipleLocations">
+                            <option value="">— No change —</option>
+                            <option ${c.multipleLocations==='Yes'?'selected':''}>Yes</option>
+                            <option ${c.multipleLocations==='No'?'selected':''}>No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="section-label">Features &amp; Amenities</div>
+            <div class="current-val" style="margin-bottom:0.75rem;">Currently: <span>${cur(c.amenities)}</span></div>
+            <div class="checkbox-grid" id="amenitiesGrid">
+                <label class="checkbox-item"><input type="checkbox" value="Certified Organic"><span class="checkbox-box">✓</span>Certified Organic</label>
+                <label class="checkbox-item"><input type="checkbox" value="Wholesale Only (No direct-to-consumer sales)"><span class="checkbox-box">✓</span>Wholesale Only</label>
+                <label class="checkbox-item"><input type="checkbox" value="Online-only (no physical storefront)"><span class="checkbox-box">✓</span>Online-only</label>
+                <label class="checkbox-item"><input type="checkbox" value="Offers Food / Pastries"><span class="checkbox-box">✓</span>Offers Food / Pastries</label>
+                <label class="checkbox-item"><input type="checkbox" value="Good for Working (Wifi)"><span class="checkbox-box">✓</span>Good for Working (WiFi)</label>
+                <label class="checkbox-item"><input type="checkbox" value="Sells Beans Online"><span class="checkbox-box">✓</span>Sells Beans Online</label>
+                <label class="checkbox-item"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
+                <label class="checkbox-item"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
+                <label class="checkbox-item"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="section-label">About This Location</div>
+            <div class="current-val" style="margin-bottom:0.5rem;">Currently: <span>${c.description ? '"' + c.description + '"' : 'Unknown'}</span></div>
+            <div class="field-group">
+                <textarea id="f-description" placeholder="Write a short description — what makes them unique, their story, vibe, etc." rows="4">${c.description || ''}</textarea>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="section-label">Additional Notes</div>
+            <div class="field-group" style="margin-bottom:0;">
+                <textarea id="f-userNotes" placeholder="Anything else you'd like us to know about this location — corrections, context, recent changes, etc." rows="3"></textarea>
+            </div>
+        </div>`;
+    }
+
+    function buildCafeForm(c) {
+        return `
+        <div class="form-card">
+            <div class="section-label">Cafe Details</div>
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">Specialty-Level Barista?</label>
+                    <div class="current-val">Currently: <span>${cur(c.specialtyBarista)}</span></div>
+                    <div class="select-wrap">
+                        <select id="f-specialtyBarista">
+                            <option value="">— No change —</option>
+                            <option ${c.specialtyBarista==='Yes'?'selected':''}>Yes</option>
+                            <option ${c.specialtyBarista==='Somewhat'?'selected':''}>Somewhat</option>
+                            <option ${c.specialtyBarista==='No'?'selected':''}>No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Multiple Locations?</label>
+                    <div class="current-val">Currently: <span>${cur(c.multipleLocations)}</span></div>
+                    <div class="select-wrap">
+                        <select id="f-multipleLocations">
+                            <option value="">— No change —</option>
+                            <option ${c.multipleLocations==='Yes'?'selected':''}>Yes</option>
+                            <option ${c.multipleLocations==='No'?'selected':''}>No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field-group">
+                <label class="field-label">Roasters Served</label>
+                <div class="current-val">Currently: <span>${cur(c.roastersServed)}</span></div>
+                <textarea id="f-roastersServed" placeholder="e.g. Bird Rock Coffee Roasters, James Coffee Co., Onyx Coffee Lab…" rows="2">${c.roastersServed ? c.roastersServed.join(', ') : ''}</textarea>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="section-label">Features &amp; Amenities</div>
+            <div class="current-val" style="margin-bottom:0.75rem;">Currently: <span>${cur(c.amenities)}</span></div>
+            <div class="checkbox-grid" id="amenitiesGrid">
+                <label class="checkbox-item"><input type="checkbox" value="Offers Food / Pastries"><span class="checkbox-box">✓</span>Offers Food / Pastries</label>
+                <label class="checkbox-item"><input type="checkbox" value="Good for Working (Wifi)"><span class="checkbox-box">✓</span>Good for Working (WiFi)</label>
+                <label class="checkbox-item"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
+                <label class="checkbox-item"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
+                <label class="checkbox-item"><input type="checkbox" value="Community Events"><span class="checkbox-box">✓</span>Community Events</label>
+                <label class="checkbox-item"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="section-label">About This Location</div>
+            <div class="current-val" style="margin-bottom:0.5rem;">Currently: <span>${c.description ? '"' + c.description + '"' : 'Unknown'}</span></div>
+            <div class="field-group">
+                <textarea id="f-description" placeholder="Write a short description — what makes them unique, their roaster selection, vibe, etc." rows="4">${c.description || ''}</textarea>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="section-label">Additional Notes</div>
+            <div class="field-group" style="margin-bottom:0;">
+                <textarea id="f-userNotes" placeholder="Anything else you'd like us to know about this location — corrections, context, recent changes, etc." rows="3"></textarea>
+            </div>
+        </div>`;
+    }
+
+    // ── Checkbox toggle ────────────────────────────────────────────────
+    function toggleCheck(el) {
+        el.classList.toggle('checked');
+        el.querySelector('input').checked = el.classList.contains('checked');
+    }
+
+    function getCheckedAmenities() {
+        return Array.from(document.querySelectorAll('.checkbox-item.checked'))
+            .map(el => el.querySelector('input').value);
+    }
+
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+    }
+
+    // ── Submit ─────────────────────────────────────────────────────────
+    async function handleSubmit() {
+        const loc       = (window.COFFEE_LOCATIONS || []).find(l => l.id === locationId);
+        const info      = loc.basicInfo;
+        const isRoaster = info.type === 'roaster';
+        const btn       = document.getElementById('submitBtn');
+
+        btn.disabled    = true;
+        btn.textContent = 'Submitting…';
+
+        const payload = {
+            sheet:         'Edits',
+            timestamp:     new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+            id:            locationId,
+            locationName:  info.name,
+            locationType:  info.type,
+            amenities:     getCheckedAmenities().join(', '),
+            description:   getVal('f-description'),
+            userNotes:     getVal('f-userNotes'),
+        };
+
+        if (isRoaster) {
+            payload.roastScale        = getVal('f-roastScale');
+            payload.roastStyle        = getVal('f-roastStyle');
+            payload.visitorExperience = getVal('f-visitorExperience');
+            payload.multipleLocations = getVal('f-multipleLocations');
+        } else {
+            payload.specialtyBarista  = getVal('f-specialtyBarista');
+            payload.multipleLocations = getVal('f-multipleLocations');
+            payload.roastersServed    = getVal('f-roastersServed');
+        }
+
+        try {
+            const res  = await fetch('/.netlify/functions/admin-to-sheets', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(payload),
+            });
+
+            const result = await res.json();
+            if (result.success) {
+                document.getElementById('mainContent').style.display   = 'none';
+                document.getElementById('thankYou').style.display      = 'block';
+            } else {
+                throw new Error(result.error || 'Submission failed');
+            }
+        } catch (err) {
+            const alert  = document.getElementById('alertBox');
+            alert.className = 'alert error';
+            alert.textContent = 'Something went wrong — please try again or submit via the form page.';
+            btn.disabled    = false;
+            btn.textContent = 'Submit Suggested Edit';
+        }
+    }
+</script>
+</body>
+</html>

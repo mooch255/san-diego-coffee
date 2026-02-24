@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit a Coffee Shop - San Diego Coffee Beans</title>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <title>Submit a Coffee Shop - San Diego Specialty Coffee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&family=Libre+Franklin:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -18,37 +18,121 @@
             background: #f8f6f4;
         }
 
+        /* ── CSS variables ───────────────────────────────────────────── */
+        :root {
+            --espresso: #3D2817;
+            --coffee-brown: #6B4E3D;
+            --cream: #F8F5F0;
+            --white: #FFFFFF;
+            --latte: #C4A77D;
+            --accent-red: #B85C38;
+            --warm-brown: #5C4033;
+            --light-tan: #E8DED2;
+        }
+
+        /* ── Banner-Inspired Header ─────────────────────────────────── */
         header {
-            background: #2c1810;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.016) 39px, rgba(255,255,255,0.016) 40px
+                ),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
             color: white;
-            padding: 2rem;
+            padding: 1.5rem 2rem 1.25rem;
+            border-top: 3px solid var(--accent-red);
+            border-bottom: 3px solid var(--accent-red);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .header-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-brand-eyebrow {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.6);
+            margin-bottom: 0.35rem;
+            font-family: 'Libre Franklin', sans-serif;
         }
 
         header h1 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 400;
+            line-height: 1;
+            color: #EDE0CC;
+            letter-spacing: -0.01em;
+            margin-bottom: 0;
+        }
+
+        header h1 em {
+            font-style: italic;
+            color: #C9A97E;
+            font-weight: 400;
+        }
+
+        header h1 strong {
+            font-family: 'Playfair Display', serif;
+            font-style: normal;
+            font-weight: 800;
+            color: #EDE0CC;
+            letter-spacing: -0.01em;
         }
 
         header p {
-            opacity: 0.9;
-            font-size: 1.1rem;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.55);
+            margin-top: 0.6rem;
+            font-family: 'Libre Franklin', sans-serif;
         }
 
         .nav-links {
-            margin-top: 1rem;
+            margin-top: 0.9rem;
         }
 
         .nav-links a {
-            color: #d4c4bc;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.75);
             text-decoration: none;
-            margin: 0 1rem;
-            transition: color 0.3s;
+            margin: 0 0.6rem;
+            border-bottom: 1px solid rgba(196,167,125,0.2);
+            padding-bottom: 1px;
+            transition: color 0.2s, border-color 0.2s;
         }
 
         .nav-links a:hover {
-            color: white;
+            color: var(--latte);
+            border-bottom-color: var(--latte);
         }
 
         .container {
@@ -230,20 +314,31 @@
         }
 
         footer {
-            background: #333;
-            color: white;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px
+                ),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #2A1508 100%);
+            color: rgba(196,167,125,0.7);
             text-align: center;
-            padding: 2rem;
+            padding: 1.75rem 2rem;
             margin-top: 3rem;
+            border-top: 3px solid var(--accent-red);
         }
 
         footer a {
-            color: #8b6f47;
+            color: var(--latte);
             text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(196,167,125,0.25);
+            transition: color 0.2s, border-color 0.2s;
         }
 
         footer a:hover {
-            text-decoration: underline;
+            color: #EDE0CC;
+            border-bottom-color: var(--latte);
         }
 
         @media (max-width: 768px) {
@@ -294,11 +389,14 @@
     </form>
 
     <header>
-        <h1>☕ Submit a Coffee Spot</h1>
-        <p>Help grow the San Diego specialty coffee community</p>
-        <div class="nav-links">
-            <a href="index.html">🏠 Home</a>
-            <a href="map.html">🗺️ View Map</a>
+        <div class="header-inner">
+            <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
+            <h1><em>San Diego</em> <strong>Specialty Coffee</strong></h1>
+            <p>Submit a Location or Correction</p>
+            <div class="nav-links">
+                <a href="index.html">🏠 Home</a>
+                <a href="map.html">🗺️ View Map</a>
+            </div>
         </div>
     </header>
 

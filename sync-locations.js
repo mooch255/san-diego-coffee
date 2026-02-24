@@ -1,0 +1,139 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// sync-locations.js
+// Fetches coffee details from Google Sheets and merges them into locations.js
+//
+// Usage: node sync-locations.js
+// ─────────────────────────────────────────────────────────────────────────────
+
+const fs   = require('fs');
+const path = require('path');
+
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_r5rgwohLWHtizzAEhad9NNGG0pbnEiF23fg1-jxs7VgYbb2DfTyQQ--S7in8wZgD/exec';
+const LOCATIONS_FILE  = path.join(__dirname, 'locations.js');
+
+async function fetchSheet(sheetName) {
+  const url = `${APPS_SCRIPT_URL}?sheet=${sheetName}`;
+  console.log(`  Fetching ${sheetName} tab...`);
+  const res  = await fetch(url);
+  const data = await res.json();
+  if (!Array.isArray(data)) throw new Error(`Unexpected response from ${sheetName}: ${JSON.stringify(data)}`);
+  console.log(`  ✓ Got ${data.length} rows from ${sheetName}`);
+  return data;
+}
+
+async function main() {
+  console.log('\n🔄 Syncing Google Sheets → locations.js\n');
+
+  // ── 1. Fetch both sheets ──────────────────────────────────────────────────
+  const [roasterRows, cafeRows] = await Promise.all([
+    fetchSheet('Roasters'),
+    fetchSheet('Cafes'),
+  ]);
+
+  // Build lookup maps keyed by id
+  const roasterData = {};
+  roasterRows.forEach(row => { if (row.id) roasterData[row.id] = row; });
+
+  const cafeData = {};
+  cafeRows.forEach(row => { if (row.id) cafeData[row.id] = row; });
+
+  const totalSheetEntries = Object.keys(roasterData).length + Object.keys(cafeData).length;
+  console.log(`\n  Total sheet entries: ${totalSheetEntries}`);
+
+  // ── 2. Read existing locations.js ─────────────────────────────────────────
+  console.log('\n  Reading locations.js...');
+  const raw = fs.readFileSync(LOCATIONS_FILE, 'utf8');
+
+  // Extract the array contents from: window.COFFEE_LOCATIONS = [...];
+  const match = raw.match(/window\.COFFEE_LOCATIONS\s*=\s*(\[[\s\S]*\]);/);
+  if (!match) throw new Error('Could not parse window.COFFEE_LOCATIONS from locations.js');
+
+  let locations;
+  try {
+    locations = JSON.parse(match[1]);
+  } catch (e) {
+    throw new Error('Could not JSON.parse the COFFEE_LOCATIONS array: ' + e.message);
+  }
+  console.log(`  ✓ Loaded ${locations.length} locations from locations.js`);
+
+  // ── 3. Merge sheet data into each location ────────────────────────────────
+  console.log('\n  Merging sheet data...');
+  let updated = 0;
+  let skipped = 0;
+
+  locations = locations.map(loc => {
+    const id   = loc.id;
+    const type = loc.basicInfo?.type;
+
+    const sheetRow = type === 'roaster' ? roasterData[id] : cafeData[id];
+
+    if (!sheetRow) {
+      skipped++;
+      return loc; // No sheet data yet — leave location unchanged
+    }
+
+    updated++;
+
+    // Merge coffee-specific details into a `coffeeDetails` block
+    if (type === 'roaster') {
+      loc.coffeeDetails = {
+        yearEstablished:   sheetRow.yearEstablished   || '',
+        roastScale:        sheetRow.roastScale        || '',
+        roastStyle:        sheetRow.roastStyle        || '',
+        visitorExperience: sheetRow.visitorExperience || '',
+        multipleLocations: sheetRow.multipleLocations || '',
+        amenities:         sheetRow.amenities
+                             ? sheetRow.amenities.split(',').map(a => a.trim()).filter(Boolean)
+                             : [],
+        notes:             sheetRow.notes             || '',
+        description:       sheetRow.description       || '',
+        lastUpdated:       sheetRow.timestamp         || '',
+      };
+    } else {
+      loc.coffeeDetails = {
+        yearEstablished:   sheetRow.yearEstablished   || '',
+        multipleLocations: sheetRow.multipleLocations || '',
+        specialtyBarista:  sheetRow.specialtyBarista  || '',
+        roastersServed:    sheetRow.roastersServed
+                             ? sheetRow.roastersServed.split(',').map(r => r.trim()).filter(Boolean)
+                             : [],
+        brewingOptions:    sheetRow.brewingOptions
+                             ? sheetRow.brewingOptions.split(',').map(b => b.trim()).filter(Boolean)
+                             : [],
+        amenities:         sheetRow.amenities
+                             ? sheetRow.amenities.split(',').map(a => a.trim()).filter(Boolean)
+                             : [],
+        notes:             sheetRow.notes             || '',
+        description:       sheetRow.description       || '',
+        lastUpdated:       sheetRow.timestamp         || '',
+      };
+    }
+
+    return loc;
+  });
+
+  console.log(`  ✓ Updated: ${updated} locations`);
+  console.log(`  ○ No sheet data yet: ${skipped} locations`);
+
+  // ── 4. Write updated locations.js ─────────────────────────────────────────
+  console.log('\n  Writing locations.js...');
+
+  const json    = JSON.stringify(locations, null, 2);
+  const output  = `// Auto-generated by sync-locations.js — do not edit the coffeeDetails blocks manually\n// Last synced: ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}\n\nwindow.COFFEE_LOCATIONS = ${json};\n`;
+
+  // Backup the original just in case
+  fs.writeFileSync(LOCATIONS_FILE + '.backup', raw, 'utf8');
+  fs.writeFileSync(LOCATIONS_FILE, output, 'utf8');
+
+  console.log(`  ✓ locations.js updated`);
+  console.log(`  ✓ Backup saved to locations.js.backup`);
+  console.log('\n✅ Sync complete! Review locations.js then run:\n');
+  console.log('   git add locations.js');
+  console.log('   git commit -m "Sync coffee details from Google Sheets"');
+  console.log('   git push\n');
+}
+
+main().catch(err => {
+  console.error('\n❌ Sync failed:', err.message);
+  process.exit(1);
+});

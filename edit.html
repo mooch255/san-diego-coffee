@@ -586,6 +586,11 @@
         return `
         <div class="form-card">
             <div class="section-label">Roaster Details</div>
+            <div class="field-group">
+                <label class="field-label">Neighborhood</label>
+                <div class="current-val">Currently: <span>${cur(c.neighborhood)}</span></div>
+                <input type="text" id="f-neighborhood" placeholder="e.g. Little Italy" value="${c.neighborhood || ''}">
+            </div>
             <div class="field-row">
                 <div class="field-group">
                     <label class="field-label">Roast Scale</label>
@@ -676,6 +681,11 @@
         return `
         <div class="form-card">
             <div class="section-label">Cafe Details</div>
+            <div class="field-group">
+                <label class="field-label">Neighborhood</label>
+                <div class="current-val">Currently: <span>${cur(c.neighborhood)}</span></div>
+                <input type="text" id="f-neighborhood" placeholder="e.g. North Park" value="${c.neighborhood || ''}">
+            </div>
             <div class="field-row">
                 <div class="field-group">
                     <label class="field-label">Specialty-Level Barista?</label>
@@ -773,6 +783,8 @@
             description:   getVal('f-description'),
             userNotes:     getVal('f-userNotes'),
         };
+
+        payload.neighborhood = getVal('f-neighborhood');
 
         if (isRoaster) {
             payload.roastScale        = getVal('f-roastScale');

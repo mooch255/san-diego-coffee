@@ -1126,6 +1126,7 @@
 
             if (isRoaster) {
                 rows = `
+                    ${detailRow('Neighborhood', u(custom.neighborhood))}
                     ${detailRow('Roast Style', u(custom.roastStyle))}
                     ${detailRow('Roast Scale', u(custom.roastScale))}
                     ${detailRow('Visitor Experience', u(custom.visitorExperience))}
@@ -1136,6 +1137,7 @@
                 `;
             } else {
                 rows = `
+                    ${detailRow('Neighborhood', u(custom.neighborhood))}
                     ${detailRow('Specialty Barista Service', u(custom.specialtyBarista))}
                     ${detailRow('Multiple Locations', u(custom.multipleLocations))}
                     ${detailRow('Year Established', u(custom.yearEstablished))}

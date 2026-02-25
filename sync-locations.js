@@ -77,6 +77,7 @@ async function main() {
     // Merge coffee-specific details into a `coffeeDetails` block
     if (type === 'roaster') {
       loc.coffeeDetails = {
+        neighborhood:      sheetRow.neighborhood      || '',
         yearEstablished:   sheetRow.yearEstablished   || '',
         roastScale:        sheetRow.roastScale        || '',
         roastStyle:        sheetRow.roastStyle        || '',
@@ -91,6 +92,7 @@ async function main() {
       };
     } else {
       loc.coffeeDetails = {
+        neighborhood:      sheetRow.neighborhood      || '',
         yearEstablished:   sheetRow.yearEstablished   || '',
         multipleLocations: sheetRow.multipleLocations || '',
         specialtyBarista:  sheetRow.specialtyBarista  || '',

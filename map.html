@@ -511,6 +511,41 @@
             flex: 1;
         }
 
+        /* Sort toggle */
+        .sort-toggle {
+            display: flex;
+            gap: 0;
+            margin-top: 0.4rem;
+            border: 1.5px solid #c4b8ac;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .sort-btn {
+            flex: 1;
+            padding: 0.28rem 0.4rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            background: var(--white);
+            color: #999;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: 'Libre Franklin', sans-serif;
+        }
+        .sort-btn + .sort-btn {
+            border-left: 1.5px solid #c4b8ac;
+        }
+        .sort-btn.active {
+            background: var(--espresso);
+            color: var(--cream);
+        }
+        .sort-btn:hover:not(.active) {
+            background: var(--cream);
+            color: var(--espresso);
+        }
+
         /* Location Cards */
         .list-panel-cards {
             flex: 1;
@@ -1113,6 +1148,10 @@
                     <button id="toggleFilters" class="toggle-filters-btn">⚙️ Filters</button>
                     <button id="clearBtn" style="background: var(--white); color: var(--coffee-brown); border-color: var(--coffee-brown);">✕ Clear</button>
                     <button id="showMyLocation" class="location-btn" style="background:#2e7d32; color:white; border-color:#2e7d32;">📍 Near Me</button>
+                </div>
+                <div class="sort-toggle">
+                    <button class="sort-btn" id="sortNearest" onclick="setSort('nearest')">📍 Nearest</button>
+                    <button class="sort-btn active" id="sortAZ" onclick="setSort('az')">A–Z</button>
                 </div>
             </div>
 
@@ -1736,7 +1775,10 @@ function showUserLocation() {
                 btn.textContent = '📍 Near Me';
                 if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
 
-                // Re-render cards sorted by distance
+                // Switch to nearest sort and re-render
+                currentSort = 'nearest';
+                document.getElementById('sortNearest').classList.add('active');
+                document.getElementById('sortAZ').classList.remove('active');
                 const visibleMarkers = markers.filter(m => shouldShowMarker(m));
                 renderLocationCards(visibleMarkers);
             },
@@ -2028,8 +2070,11 @@ function renderLocationCards(visibleMarkers) {
 
     let sortedMarkers = [...visibleMarkers];
 
-    // Sort by distance if user location is known
-    if (userLatLng) {
+    if (currentSort === 'az') {
+        sortedMarkers.sort((a, b) =>
+            a.locationData.basicInfo.name.localeCompare(b.locationData.basicInfo.name)
+        );
+    } else if (currentSort === 'nearest' && userLatLng) {
         sortedMarkers.sort((a, b) => {
             const ca = a.locationData.basicInfo.address.coordinates;
             const cb = b.locationData.basicInfo.address.coordinates;
@@ -2164,6 +2209,14 @@ function selectLocationCard(locationId) {
 
 // ── Distance sorting when "find my location" is used ──────────────────────
 let userLatLng = null;
+let currentSort = 'az';
+
+function setSort(mode) {
+    currentSort = mode;
+    document.getElementById('sortNearest').classList.toggle('active', mode === 'nearest');
+    document.getElementById('sortAZ').classList.toggle('active', mode === 'az');
+    applyFilters();
+}
 
 function getDistanceKm(lat1, lng1, lat2, lng2) {
     const R = 6371;

@@ -23,6 +23,7 @@ exports.handler = async function (event) {
       id:                data.id                || '',
       locationName:      data.locationName      || '',
       locationType:      data.locationType      || '',
+      neighborhood:      data.neighborhood      || '',
       roastScale:        data.roastScale        || '',
       roastStyle:        data.roastStyle        || '',
       visitorExperience: data.visitorExperience || '',

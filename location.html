@@ -6,7 +6,7 @@
     <title>Location — San Diego Specialty Coffee</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,600;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,600;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         :root {
             --espresso: #3D2817;
@@ -32,57 +32,133 @@
             line-height: 1.6;
         }
 
-        /* ── Nav ────────────────────────────────────────────────────────── */
-        nav {
-            background: var(--espresso);
+        /* ── Header ─────────────────────────────────────────────────────── */
+        header {
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.016) 39px, rgba(255,255,255,0.016) 40px
+                ),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            color: var(--white);
+            border-top: 3px solid var(--accent-red);
             border-bottom: 3px solid var(--accent-red);
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 56px;
             position: sticky;
             top: 0;
             z-index: 100;
+            overflow: hidden;
         }
 
-        .nav-logo {
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--white);
-            text-decoration: none;
-            letter-spacing: -0.02em;
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%);
+            pointer-events: none;
         }
 
-        .nav-links {
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0.85rem 2rem;
             display: flex;
-            gap: 0.25rem;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
-        .nav-links a {
-            color: var(--latte);
+        .header-brand-eyebrow {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.6);
+            margin-bottom: 0.25rem;
+        }
+
+        .header-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            line-height: 1;
+            color: #EDE0CC;
             text-decoration: none;
-            font-size: 0.85rem;
+            display: block;
+        }
+
+        .header-logo em {
+            font-style: italic;
+            color: #C9A97E;
+            font-weight: 400;
+        }
+
+        .header-logo strong {
+            font-family: 'Playfair Display', serif;
+            font-style: normal;
+            font-weight: 800;
+            color: #EDE0CC;
+            letter-spacing: -0.01em;
+        }
+
+        .header-subtitle {
+            font-size: 0.6rem;
+            color: rgba(196,167,125,0.55);
+            margin-top: 0.25rem;
             font-weight: 600;
-            padding: 0.4rem 0.85rem;
-            border-radius: 3px;
-            transition: all 0.2s;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
         }
 
-        .nav-links a:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--white);
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
         }
 
-        .nav-links a.submit {
+        .header-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            border: 1px solid rgba(196,167,125,0.32);
+            color: rgba(196,167,125,0.8);
+            background: transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-family: 'Libre Franklin', sans-serif;
+            border-radius: 0;
+        }
+
+        .header-btn:hover {
+            border-color: var(--latte);
+            color: var(--latte);
+            background: rgba(196,167,125,0.07);
+        }
+
+        .header-btn.active {
             background: var(--accent-red);
+            border-color: var(--accent-red);
             color: white;
         }
 
-        .nav-links a.submit:hover { background: #a04e30; }
+        .header-btn.active:hover {
+            background: #a04a28;
+            border-color: #a04a28;
+        }
 
         /* ── Loading / Error states ─────────────────────────────────────── */
         .state-container {
@@ -115,7 +191,7 @@
         /* ── Hero ───────────────────────────────────────────────────────── */
         .hero {
             background: linear-gradient(135deg, var(--espresso) 0%, var(--warm-brown) 100%);
-            padding: 3rem 2rem 0;
+            padding: 1.5rem 2rem 0;
             position: relative;
             overflow: hidden;
         }
@@ -149,7 +225,7 @@
             font-weight: 600;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.75rem;
             transition: color 0.2s;
         }
 
@@ -182,12 +258,12 @@
 
         .hero h1 {
             font-family: 'Crimson Pro', serif;
-            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
             font-weight: 600;
             color: var(--white);
             letter-spacing: -0.03em;
             line-height: 1.1;
-            margin-bottom: 1rem;
+            margin-bottom: 0.6rem;
         }
 
         .hero-meta {
@@ -195,7 +271,7 @@
             align-items: center;
             gap: 1.5rem;
             flex-wrap: wrap;
-            padding-bottom: 2rem;
+            padding-bottom: 1.25rem;
         }
 
         .rating-display {
@@ -265,14 +341,14 @@
 
         .gallery-photo {
             flex-shrink: 0;
-            height: 320px;
+            height: 200px;
             overflow: hidden;
             cursor: pointer;
             position: relative;
         }
 
-        .gallery-photo:first-child { flex: 2; min-width: 400px; }
-        .gallery-photo:not(:first-child) { flex: 1; min-width: 220px; }
+        .gallery-photo:first-child { flex: 2; min-width: 300px; }
+        .gallery-photo:not(:first-child) { flex: 1; min-width: 160px; }
 
         .gallery-photo img {
             width: 100%;
@@ -290,8 +366,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            height: 320px;
+            gap: 0.75rem;
+            height: 140px;
             color: var(--latte);
         }
 
@@ -345,10 +421,10 @@
         .content-wrap {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: 2rem 2rem;
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 3rem;
+            grid-template-columns: 1fr 340px;
+            gap: 2.5rem;
             align-items: start;
         }
 
@@ -356,7 +432,7 @@
 
         /* Hours */
         .section {
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.75rem;
         }
 
         .section-label {
@@ -499,13 +575,12 @@
             background: var(--white);
             border: 1px solid var(--light-tan);
             border-top: 3px solid var(--accent-red);
-            position: sticky;
-            top: 72px;
         }
 
         .suggest-edit-btn {
             display: block;
             margin-top: 0.75rem;
+            margin-bottom: 2rem;
             padding: 0.7rem 1rem;
             background: transparent;
             border: 2px solid var(--light-tan);
@@ -676,6 +751,15 @@
         footer a { color: var(--latte); }
         footer a:hover { color: white; }
 
+        /* Right column (hours) sticks while scrolling */
+        .right-col {
+            position: sticky;
+            top: 88px;
+        }
+
+        /* mobile-hours-inline: hidden on desktop (right col has hours), visible on mobile */
+        .mobile-hours-inline { display: none; }
+
         /* ── Responsive ─────────────────────────────────────────────────── */
         @media (max-width: 900px) {
             .content-wrap {
@@ -684,19 +768,30 @@
             }
 
             .details-card { position: static; }
-            .gallery-photo:first-child { min-width: 280px; }
-            .gallery-photo:not(:first-child) { min-width: 180px; }
-            .gallery-photo { height: 220px; }
+            .gallery-photo:first-child { min-width: 240px; }
+            .gallery-photo:not(:first-child) { min-width: 150px; }
+            .gallery-photo { height: 160px; }
+
+            /* Show hours inline in left col, hide right col (which only has hours) */
+            .mobile-hours-inline { display: block; }
+            .right-col { display: none; }
         }
 
         @media (max-width: 600px) {
-            .hero { padding: 2rem 1.25rem 0; }
-            .content-wrap { padding: 2rem 1.25rem; }
+            .hero { padding: 1rem 1.25rem 0; }
+            .content-wrap { padding: 1.5rem 1.25rem; }
             .action-strip { padding: 0 1.25rem 2rem; flex-direction: column; }
             .action-btn { justify-content: center; }
-            nav { padding: 0 1.25rem; }
-            .nav-logo { font-size: 1rem; }
-            .nav-links a { padding: 0.35rem 0.6rem; font-size: 0.78rem; }
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 0.6rem;
+                padding: 0.75rem 1rem;
+            }
+            .header-subtitle { display: none; }
+            .header-buttons { justify-content: center; flex-wrap: wrap; }
+            .header-btn { padding: 0.35rem 0.75rem; font-size: 0.68rem; }
         }
 
         /* Animate in */
@@ -729,14 +824,20 @@
     </svg>
 
     <!-- Nav -->
-    <nav>
-        <a href="index.html" class="nav-logo">San Diego Specialty Coffee</a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="map.html">Map</a>
-            <a href="submit.html" class="submit">+ Submit</a>
+    <header>
+        <div class="header-content">
+            <div>
+                <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
+                <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+                <p class="header-subtitle">Interactive Map of Specialty Coffee Locations</p>
+            </div>
+            <div class="header-buttons">
+                <a href="index.html" class="header-btn">🏠 Home</a>
+                <a href="map.html" class="header-btn">🗺️ Map</a>
+                <a href="submit.html" class="header-btn active">📍 Submit Location</a>
+            </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Dynamic content injected here -->
     <div id="pageContent">
@@ -828,11 +929,14 @@
                 <div class="content-wrap">
                     <div class="left-col fade-up">
                         ${renderDescription(custom, loc.legacyData)}
-                        ${renderHours(hours, today)}
+                        ${renderDetailsCard(isRoaster, custom, loc)}
+                        <div class="mobile-hours-inline">
+                            ${renderHours(hours, today)}
+                        </div>
                         ${renderContact(contact, info)}
                     </div>
                     <div class="right-col fade-up">
-                        ${renderDetailsCard(isRoaster, custom, loc)}
+                        ${renderHours(hours, today)}
                     </div>
                 </div>
                 ${renderActions(contact, placeId)}
@@ -916,13 +1020,11 @@
 
         function renderDescription(custom, legacyData) {
             const desc = custom.description || legacyData?.originalDescription || '';
-            const isLegacy = !custom.description && !!legacyData?.originalDescription;
             if (!desc) return '';
             return `
                 <div class="section fade-up">
                     <div class="section-label">About</div>
                     <div class="description-text">${desc}</div>
-                    ${isLegacy ? '<div style="font-size:0.72rem;color:#bbb;margin-top:0.5rem;font-style:italic;">ℹ️ Description not yet updated — edit in admin panel to refresh.</div>' : ''}
                 </div>
             `;
         }
@@ -1070,12 +1172,6 @@
 
         function renderActions(contact, placeId) {
             let html = '';
-            if (contact.googleMapsUrl) {
-                html += `<a href="${contact.googleMapsUrl}" target="_blank" class="action-btn primary">🗺️ Open in Google Maps</a>`;
-            }
-            if (contact.website) {
-                html += `<a href="${contact.website}" target="_blank" class="action-btn secondary">🌐 Visit Website</a>`;
-            }
             html += `<a href="map.html" class="action-btn secondary">← Back to Map</a>`;
             return `<div class="action-strip">${html}</div>`;
         }

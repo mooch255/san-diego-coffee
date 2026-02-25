@@ -473,6 +473,17 @@
             100% { transform: scale(1); opacity: 0; }
         }
 
+        /* Mobile-only CTA below the hero map — hidden on desktop */
+        .hero-mobile-cta {
+            display: none;
+        }
+
+        /* Map wrap — transparent passthrough on desktop, relative container on mobile */
+        .hero-map-wrap {
+            position: absolute;
+            inset: 0;
+        }
+
         /* Page transition flash on CTA click */
         .page-transition {
             position: fixed;
@@ -579,8 +590,7 @@
             border: 1.5px solid #FF4500; padding: 0.35rem 0.85rem; transition: all 0.2s; white-space: nowrap;
         }
         .reddit-view-all:hover { background: #FF4500; color: white; }
-        .reddit-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.25rem; }
-        .reddit-tab {
+        .reddit-tab-hidden {
             padding: 0.3rem 0.85rem; font-size: 0.78rem; font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.05em; border: 1.5px solid var(--light-tan);
             background: white; color: #888; cursor: pointer; transition: all 0.2s;
@@ -686,6 +696,137 @@
             .cta-button {
                 width: 100%;
             }
+
+            /* ── Hero Map: stack content above map on mobile ── */
+            .hero-map-section {
+                height: auto;
+                min-height: unset;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Hide the dark overlay — no text sitting on map anymore */
+            .hero-overlay {
+                display: none;
+            }
+
+            /* Lift content out of absolute positioning, render above map */
+            .hero-content {
+                position: static;
+                transform: none;
+                padding: 1.1rem 1.25rem 1rem;
+                max-width: 100%;
+                background: linear-gradient(135deg, var(--espresso) 0%, var(--warm-brown) 100%);
+                color: var(--white);
+                order: -1;
+            }
+
+            .hero-title {
+                font-size: 1.3rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .hero-title br {
+                display: none;
+            }
+
+            .hero-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 0.9rem;
+                line-height: 1.5;
+            }
+
+            .hero-stats {
+                gap: 1rem;
+                margin-bottom: 0;
+                flex-wrap: wrap;
+            }
+
+            .hero-stat-num {
+                font-size: 1.25rem;
+            }
+
+            .hero-stat-label {
+                font-size: 0.62rem;
+            }
+
+            /* Map and overlay sit inside a relative wrapper on mobile */
+            .hero-map-wrap {
+                position: relative;
+                inset: unset;
+                order: 0;
+            }
+
+            #previewMap {
+                height: 62vw;
+                min-height: 260px;
+                max-height: 380px;
+                position: static;
+            }
+
+            /* Re-enable the hazy overlay — it now only covers the map block */
+            .hero-overlay {
+                display: block;
+                background: linear-gradient(
+                    180deg,
+                    rgba(30, 16, 8, 0.18) 0%,
+                    rgba(30, 16, 8, 0.08) 50%,
+                    rgba(30, 16, 8, 0.28) 100%
+                );
+            }
+
+            /* Hide the "Explore Full Map" CTA that's baked into the overlay content */
+            .hero-cta {
+                display: none;
+            }
+
+            /* Teaser bar — reposition below map as a proper CTA strip */
+            .hero-teaser-bar {
+                position: static;
+                background: var(--espresso);
+                padding: 0;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                order: 1;
+            }
+
+            .hero-teaser-text {
+                display: none;
+            }
+
+            /* Legend moves inside the bar, small and subtle */
+            .hero-legend {
+                padding: 0.55rem 1.25rem;
+                font-size: 0.72rem;
+                color: rgba(255,255,255,0.55);
+                justify-content: center;
+                gap: 1.25rem;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+            }
+
+            /* Real tap-friendly "Explore Full Map" button below map */
+            .hero-mobile-cta {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.6rem;
+                background: var(--accent-red);
+                color: white;
+                text-decoration: none;
+                font-weight: 700;
+                font-size: 1rem;
+                letter-spacing: 0.02em;
+                padding: 1.1rem 1.25rem;
+                width: 100%;
+                order: 2;
+                box-shadow: 0 -2px 12px rgba(184,92,56,0.3);
+                transition: background 0.2s;
+            }
+
+            .hero-mobile-cta:active {
+                background: #a04a28;
+            }
         }
     </style>
 </head>
@@ -718,11 +859,13 @@
     <!-- Intro -->
     <!-- Hero Map -->
     <section class="hero-map-section">
-        <div id="previewMap"></div>
-        <div class="hero-overlay"></div>
+        <div class="hero-map-wrap">
+            <div id="previewMap"></div>
+            <div class="hero-overlay"></div>
+        </div>
 
         <div class="hero-content">
-            <h2 class="hero-title">Every great cup.<br><em>All in one place.</em></h2>
+            <h2 class="hero-title">Every great cup. <br><em>All in one place.</em></h2>
             <p class="hero-subtitle">The most complete map of specialty roasters and multi-roaster cafes across San Diego County — built by the community, for coffee fanatics.</p>
 
             <div class="hero-stats">
@@ -755,6 +898,11 @@
                 <span><span class="hero-legend-dot" style="background:#0288D1;"></span>Multi-Roaster Cafe</span>
             </div>
         </div>
+
+        <!-- Mobile-only CTA: rendered below the map, hidden on desktop -->
+        <a href="map.html" class="hero-mobile-cta" id="mobileMapBtn">
+            Explore the Full Map <span class="hero-cta-arrow">→</span>
+        </a>
     </section>
 
     <div class="page-transition" id="pageTransition"></div>
@@ -777,11 +925,7 @@
                 <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" class="reddit-view-all">Visit Subreddit →</a>
             </div>
 
-            <div class="reddit-tabs">
-                <button class="reddit-tab active" data-sort="hot">🔥 Hot</button>
-                <button class="reddit-tab" data-sort="new">✨ New</button>
-                <button class="reddit-tab" data-sort="top">⬆️ Top</button>
-            </div>
+
 
             <div class="reddit-grid" id="redditGrid">
                 <div class="reddit-loading">Loading community posts…</div>
@@ -850,7 +994,7 @@
             if (fc) fc.textContent = total;
 
             // Page transition on both map CTAs and stat links
-            ['fullMapBtn', 'navMapBtn', 'heroStatTotal', 'heroStatRoasters', 'heroStatCafes'].forEach(id => {
+            ['fullMapBtn', 'navMapBtn', 'mobileMapBtn', 'heroStatTotal', 'heroStatRoasters', 'heroStatCafes'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) btn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -984,8 +1128,6 @@
         }
 
         // ── Reddit Dashboard ──────────────────────────────────────────────
-        let currentSort = 'hot';
-
         function timeAgo(utc) {
             const secs = Math.floor(Date.now() / 1000) - utc;
             if (secs < 3600) return Math.floor(secs / 60) + 'm ago';
@@ -1030,9 +1172,12 @@
             const grid = document.getElementById('redditGrid');
             grid.innerHTML = '<div class="reddit-loading">Loading posts…</div>';
             try {
-                const res = await fetch(`/.netlify/functions/reddit-posts?sort=${sort}&limit=6`);
+                // Request 8 so that after the function filters stickied posts we still have 3
+                const res = await fetch(`/.netlify/functions/reddit-posts?sort=${sort}&limit=8`);
                 const data = await res.json();
-                renderRedditPosts(data.posts);
+                // Always render exactly 3
+                const posts = (data.posts || []).slice(0, 3);
+                renderRedditPosts(posts);
             } catch (e) {
                 grid.innerHTML = '<div class="reddit-error">Could not load posts. <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" style="color:#FF4500;">Visit the subreddit →</a></div>';
             }
@@ -1040,14 +1185,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadRedditPosts('hot');
-            document.querySelectorAll('.reddit-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.reddit-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    currentSort = tab.dataset.sort;
-                    loadRedditPosts(currentSort);
-                });
-            });
         });
     </script>
 </body>

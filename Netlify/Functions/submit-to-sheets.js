@@ -1,8 +1,6 @@
 const { google } = require('googleapis');
 
-// Your Google Sheet ID (set as Netlify env var)
-const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const SHEET_NAME = 'Submissions';
+const SHEET_ID = '1ur57tq0ztZhlgIy82-SaoBYcHaPgdBteqLXa4zOH4yY';
 
 async function getAuthClient() {
   const auth = new google.auth.GoogleAuth({
@@ -16,7 +14,6 @@ async function getAuthClient() {
 }
 
 exports.handler = async function (event) {
-  // Netlify sends form submissions as POST with JSON body
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -28,58 +25,74 @@ exports.handler = async function (event) {
     return { statusCode: 400, body: 'Invalid JSON' };
   }
 
-  // Netlify wraps form data inside payload.data
   const data = payload.data || payload;
-
   const submissionType = data.submissionType || '';
   const timestamp = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
 
-  // Build the row matching your sheet columns exactly:
-  // Timestamp | Submission Type |
-  // Roaster Business Name | Roaster Neighborhood | Roaster Google Maps Link | Roaster Website | Roaster Why Specialty | Roaster Additional Info |
-  // Cafe Business Name | Cafe Neighborhood | Cafe Google Maps Link | Cafe Website | Cafe Roasters Served | Cafe Why Specialty | Cafe Additional Info |
-  // Correction Business Name | Correction Type | Correction Details | Correction Source Proof
-
+  let sheetName;
   let row;
 
   if (submissionType === 'roaster') {
+    sheetName = 'Roasters';
     row = [
       timestamp,
       'Roaster',
-      data.businessName || '',
-      data.neighborhood || '',
-      data.googleMapsLink || '',
-      data.website || '',
-      data.whySpecialty || '',
-      data.additionalInfo || '',
-      '', '', '', '', '', '', '', // Cafe columns (blank)
-      '', '', '', '',             // Correction columns (blank)
+      data.roaster_businessName || '',
+      data.roaster_neighborhood || '',
+      data.roaster_googleMapsLink || '',
+      data.roaster_website || '',
+      data.roaster_category || '',
+      data.roaster_multipleLocations || '',
+      data.roaster_roastStyle || '',
+      data.roaster_originFocus || '',
+      Array.isArray(data.roaster_brewMethods) ? data.roaster_brewMethods.join(', ') : (data.roaster_brewMethods || ''),
+      data.roaster_onlineOrdering || '',
+      data.roaster_dogFriendly || '',
+      data.roaster_yearFounded || '',
+      data.roaster_founderHistory || '',
+      data.roaster_sourcing || '',
+      data.roaster_personallyVisited || '',
+      data.roaster_discoveryMethod || '',
+      data.roaster_whySpecialty || '',
+      data.roaster_additionalInfo || '',
     ];
+
   } else if (submissionType === 'multi-roaster-cafe') {
+    sheetName = 'Cafes';
     row = [
       timestamp,
       'Multi-Roaster Cafe',
-      '', '', '', '', '', '',     // Roaster columns (blank)
-      data.businessName || '',
-      data.neighborhood || '',
-      data.googleMapsLink || '',
-      data.website || '',
-      data.roastersServed || '',
-      data.whySpecialty || '',
-      data.additionalInfo || '',
-      '', '', '', '',             // Correction columns (blank)
+      data.cafe_businessName || '',
+      data.cafe_neighborhood || '',
+      data.cafe_googleMapsLink || '',
+      data.cafe_website || '',
+      data.cafe_multipleLocations || '',
+      data.cafe_roastersServed || '',
+      data.cafe_roasterRotation || '',
+      Array.isArray(data.cafe_brewingOptions) ? data.cafe_brewingOptions.join(', ') : (data.cafe_brewingOptions || ''),
+      data.cafe_foodMenu || '',
+      data.cafe_seating || '',
+      data.cafe_dogFriendly || '',
+      data.cafe_vibe || '',
+      Array.isArray(data.cafe_notableFeatures) ? data.cafe_notableFeatures.join(', ') : (data.cafe_notableFeatures || ''),
+      data.cafe_roasterConnections || '',
+      data.cafe_personallyVisited || '',
+      data.cafe_discoveryMethod || '',
+      data.cafe_whySpecialty || '',
+      data.cafe_additionalInfo || '',
     ];
+
   } else if (submissionType === 'correction') {
+    sheetName = 'Corrections';
     row = [
       timestamp,
       'Correction',
-      '', '', '', '', '', '',     // Roaster columns (blank)
-      '', '', '', '', '', '', '', // Cafe columns (blank)
       data.businessName || '',
       data.correctionType || '',
       data.correctionDetails || '',
       data.sourceProof || '',
     ];
+
   } else {
     return { statusCode: 400, body: 'Unknown submission type' };
   }
@@ -90,7 +103,7 @@ exports.handler = async function (event) {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: SHEET_ID,
-      range: `${SHEET_NAME}!A1`,
+      range: `${sheetName}!A1`,
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: { values: [row] },

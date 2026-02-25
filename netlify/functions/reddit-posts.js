@@ -1,14 +1,10 @@
 exports.handler = async function(event, context) {
   const subreddit = 'SanDiegoCoffeeBeans';
   const sort = event.queryStringParameters?.sort || 'hot';
-  const limit = parseInt(event.queryStringParameters?.limit || '6', 10);
-
-  // Fetch extra so we still hit the target count after filtering stickied posts.
-  // Reddit subreddits typically pin 1-2 posts, so fetching limit + 5 is safe buffer.
-  const fetchCount = limit + 5;
+  const limit = event.queryStringParameters?.limit || 6;
 
   try {
-    const url = `https://www.reddit.com/r/${subreddit}/${sort}.json?limit=${fetchCount}&raw_json=1`;
+    const url = `https://www.reddit.com/r/${subreddit}/${sort}.json?limit=${limit}&raw_json=1`;
 
     const response = await fetch(url, {
       headers: {
@@ -23,17 +19,17 @@ exports.handler = async function(event, context) {
 
     const data = await response.json();
 
+    // Extract only what we need
     const posts = data.data.children
-      .filter(child => !child.data.stickied)   // skip pinned mod posts
-      .slice(0, limit)                          // trim to exactly what was asked for
+      .filter(child => !child.data.stickied) // skip pinned mod posts
       .map(child => {
         const p = child.data;
 
-        // Best thumbnail: prefer full image previews over reddit's low-res thumbnails
+        // Best thumbnail: prefer image previews over reddit's low-res thumbnails
         let image = null;
         if (p.preview?.images?.[0]?.source?.url) {
           image = p.preview.images[0].source.url.replace(/&amp;/g, '&');
-        } else if (p.thumbnail && !['self', 'default', 'nsfw', 'spoiler', ''].includes(p.thumbnail)) {
+        } else if (p.thumbnail && !['self','default','nsfw','spoiler',''].includes(p.thumbnail)) {
           image = p.thumbnail;
         }
 
@@ -47,9 +43,9 @@ exports.handler = async function(event, context) {
           domain: p.domain,
           isSelf: p.is_self,
           selftext: p.selftext ? p.selftext.slice(0, 120) : null,
-          image,
           flair: p.link_flair_text || null,
-          created: p.created_utc,
+          image,
+          created: p.created_utc
         };
       });
 
@@ -57,18 +53,15 @@ exports.handler = async function(event, context) {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300', // cache 5 minutes
-        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'public, max-age=300' // cache 5 minutes
       },
-      body: JSON.stringify({ posts }),
+      body: JSON.stringify({ posts })
     };
 
   } catch (err) {
-    console.error('Reddit fetch error:', err.message);
     return {
       statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ posts: [], error: err.message }),
+      body: JSON.stringify({ error: err.message })
     };
   }
 };

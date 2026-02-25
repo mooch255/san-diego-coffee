@@ -72,7 +72,7 @@
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 0.85rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -87,7 +87,7 @@
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: rgba(196,167,125,0.6);
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.25rem;
         }
 
         h1 {
@@ -116,7 +116,7 @@
         .subtitle {
             font-size: 0.6rem;
             color: rgba(196, 167, 125, 0.55);
-            margin-top: 0.3rem;
+            margin-top: 0.25rem;
             font-weight: 600;
             letter-spacing: 0.18em;
             text-transform: uppercase;
@@ -293,7 +293,7 @@
             background: #f1f8f4;
         }
 
-        #searchBtn, #clearBtn {
+        #clearBtn {
             padding: 0.6rem 1.2rem;
             background: #6F4E37;
             color: white;
@@ -306,7 +306,7 @@
             white-space: nowrap;
         }
 
-        #searchBtn:hover, #clearBtn:hover {
+        #clearBtn:hover {
             background: #5a3d2b;
         }
 
@@ -764,7 +764,43 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Footer */
+        /* Floating Near Me button — mobile only, bottom-right of map */
+        .map-float-nearme {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .map-float-nearme {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: fixed;
+                bottom: 5rem;
+                left: 1rem;
+                z-index: 999;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: white;
+                border: 2px solid #E0DBD3;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+                font-size: 1.1rem;
+                cursor: pointer;
+                transition: box-shadow 0.2s, transform 0.2s;
+                padding: 0;
+                font-family: inherit;
+            }
+
+            .map-float-nearme:active {
+                transform: scale(0.92);
+                box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            }
+
+            /* Hide it when list panel is open */
+            .map-float-nearme.hidden {
+                display: none;
+            }
+        }
         footer {
             background:
                 repeating-linear-gradient(
@@ -802,9 +838,27 @@
             h1 { font-size: 1.2rem; }
             .subtitle { display: none; }
 
+            /* Stack header: title centered on top, buttons below */
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 0.6rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .header-buttons {
+                justify-content: center;
+            }
+
+            .header-btn {
+                padding: 0.35rem 0.75rem;
+                font-size: 0.68rem;
+            }
+
             .map-layout {
                 flex-direction: column;
-                height: calc(100vh - 56px);
+                height: calc(100vh - 90px);
             }
 
             .list-panel {
@@ -829,31 +883,46 @@
             .mobile-toggle { display: block; }
         }
         .info-window {
-            padding: 0.1rem 1rem 1rem 1rem;
-            min-width: 320px;
-            max-width: 360px;
+            padding: 0.1rem 0.9rem 0.8rem 0.9rem;
+            min-width: 280px;
+            max-width: 340px;
+            box-sizing: border-box;
         }
         .info-window-divider {
             border: none;
             border-top: 1px solid #e8e0d8;
-            margin: 0.8rem 0;
+            margin: 0.5rem 0;
         }
         .info-window-coffee-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 0.25rem 0.5rem;
-            font-size: 0.78rem;
-            margin-bottom: 0.6rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.15rem 0;
+            margin-bottom: 0.5rem;
+            align-items: baseline;
+            font-size: 0.73rem;
+        }
+        .info-window-coffee-grid .cg-item {
+            display: inline-flex;
+            align-items: baseline;
+            white-space: normal;
+            flex-wrap: wrap;
+        }
+        .info-window-coffee-grid .cg-sep {
+            margin: 0 0.45rem;
+            color: #d0c4b8;
+            font-size: 0.8rem;
         }
         .info-window-coffee-grid .cg-label {
-            color: #888;
-            font-weight: 600;
+            color: #a08070;
+            font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.72rem;
-            letter-spacing: 0.03em;
+            font-size: 0.6rem;
+            letter-spacing: 0.05em;
+            margin-right: 0.25rem;
         }
         .info-window-coffee-grid .cg-val {
             color: #3a2a1a;
+            font-weight: 500;
         }
         .info-window-brew-tags {
             display: flex;
@@ -872,10 +941,10 @@
             font-weight: 500;
         }
         .info-window-description {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: #555;
-            line-height: 1.5;
-            margin-bottom: 0.6rem;
+            line-height: 1.4;
+            margin-bottom: 0.4rem;
             font-style: italic;
         }
         .info-window-badge {
@@ -900,14 +969,14 @@
         .info-window-badges-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.4rem;
-            margin-bottom: 0.6rem;
+            gap: 0.3rem;
+            margin-bottom: 0.4rem;
         }
 
         .info-window h3 {
             color: #6F4E37;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
         }
 
         .info-window-section {
@@ -988,9 +1057,8 @@
                     <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
                 </div>
                 <div class="button-row">
-                    <button id="searchBtn">🔍 Search</button>
-                    <button id="clearBtn" style="background: var(--white); color: var(--coffee-brown); border-color: var(--coffee-brown);">Clear</button>
                     <button id="toggleFilters" class="toggle-filters-btn">⚙️ Filters</button>
+                    <button id="clearBtn" style="background: var(--white); color: var(--coffee-brown); border-color: var(--coffee-brown);">✕ Clear</button>
                     <button id="showMyLocation" class="location-btn" style="background:#2e7d32; color:white; border-color:#2e7d32;">📍 Near Me</button>
                 </div>
             </div>
@@ -1015,9 +1083,9 @@
                         <h3>Region</h3>
                         <label class="filter-label"><input type="checkbox" class="regionFilter" value="all" checked><span>All</span></label>
                         <label class="filter-label"><input type="checkbox" class="regionFilter" value="central"><span>Central</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="north-coastal"><span>N. Coastal</span></label>
+                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="north-coastal"><span>North Coastal</span></label>
                         <label class="filter-label"><input type="checkbox" class="regionFilter" value="coastal"><span>Beach</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="north-inland"><span>N. Inland</span></label>
+                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="north-inland"><span>North Inland</span></label>
                         <label class="filter-label"><input type="checkbox" class="regionFilter" value="east"><span>East County</span></label>
                         <label class="filter-label"><input type="checkbox" class="regionFilter" value="south"><span>South Bay</span></label>
                     </div>
@@ -1043,6 +1111,9 @@
     </div><!-- end .map-layout -->
 
     <!-- Mobile Toggle Button -->
+    <!-- Floating Near Me — mobile map view only -->
+    <button class="map-float-nearme" id="mapFloatNearMe" aria-label="Near Me">📍</button>
+
     <button class="mobile-toggle" id="mobileToggle">☰ Show List</button>
     <!-- Loading Indicator -->
     <div id="loading">
@@ -1298,18 +1369,22 @@ function createInfoWindowContent(location, custom) {
     const typeLabel = isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
 
     let html = `<div class="info-window"><h3>${info.name}</h3>`;
-    html += `<div class="info-window-section"><span class="info-window-label">${typeLabel}</span></div>`;
 
-    if (info.address.fullAddress) {
-        html += `<div class="info-window-section"><span class="info-window-label">📍</span>${isOnline ? '<strong>Online Only</strong><br>' : ''}${info.address.street || info.address.fullAddress}</div>`;
-    }
+    // Line 1: type badge + address (clickable Google Maps link)
+    const mapsUrl = contact.googleMapsUrl || (info.address.fullAddress ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(info.address.fullAddress)}` : null);
+    const addrText = isOnline ? 'Online Only' : (info.address.street || info.address.fullAddress || '');
+    const addrLink = mapsUrl && addrText ? `<a href="${mapsUrl}" target="_blank" style="color:#5a8fc2; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${addrText}</a>` : addrText;
+    html += `<div class="info-window-section" style="font-size:0.73rem; color:#666; margin-bottom:0.15rem;">`;
+    html += `<span style="font-weight:600; color:#8B6552; margin-right:0.4rem;">${typeLabel}</span>`;
+    if (addrText) html += `<span style="color:#bbb;">·</span> <span style="margin-left:0.3rem;">${addrLink}</span>`;
+    html += `</div>`;
 
-    if (todayHours) {
-        html += `<div class="info-window-section"><span class="info-window-label">🕐</span>${todayHours}</div>`;
-    }
-
-    if (contact.website) {
-        html += `<div class="info-window-section"><span class="info-window-label">🌐</span><a href="${contact.website}" target="_blank">Visit Website</a></div>`;
+    // Line 2: hours + website (only if either exists)
+    const line2Parts = [];
+    if (todayHours) line2Parts.push(`<span>🕐 ${todayHours}</span>`);
+    if (contact.website) line2Parts.push(`<a href="${contact.website}" target="_blank" style="color:#5a8fc2; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">🌐 Website</a>`);
+    if (line2Parts.length) {
+        html += `<div class="info-window-section" style="font-size:0.72rem; color:#777; margin-bottom:0.25rem;">${line2Parts.join(' <span style="color:#ddd; margin:0 0.3rem;">·</span> ')}</div>`;
     }
 
     // ── Coffee details from Sheet ──────────────────────────────────────
@@ -1339,8 +1414,9 @@ function createInfoWindowContent(location, custom) {
 
         if (gridItems.length) {
             html += `<div class="info-window-coffee-grid">`;
-            gridItems.forEach(([label, val]) => {
-                html += `<span class="cg-label">${label}</span><span class="cg-val">${val}</span>`;
+            gridItems.forEach(([label, val], i) => {
+                if (i > 0) html += `<span class="cg-sep">·</span>`;
+                html += `<span class="cg-item"><span class="cg-label">${label}</span><span class="cg-val">${val}</span></span>`;
             });
             html += `</div>`;
         }
@@ -1363,24 +1439,19 @@ function createInfoWindowContent(location, custom) {
     }
 
     // ── Buttons ────────────────────────────────────────────────────────
-    html += `<div style="margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem;">`;
+    html += `<div style="margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem;">`;
     html += `<a href="location.html?id=${location.id}" class="directions-btn" style="width: 100%; text-align: center; background: #6F4E37; padding: 0.35rem 0.8rem; font-size: 0.78rem;">📋 View Full Details</a>`;
     html += `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="width: 100%; text-align: center; background: transparent; color: #6B4E3D !important; border: 1.5px solid #C8B9AC; padding: 0.35rem 0.8rem; font-size: 0.78rem;">✏️ Suggest an Edit</a>`;
-    html += `<div style="display: flex; gap: 0.6rem;">`;
 
     if (hasUserLocation && !isOnline) {
         const lat = info.address.coordinates.lat;
         const lng = info.address.coordinates.lng;
         const userPos = userLocationMarker.getPosition();
         const directionsUrl = `https://www.google.com/maps/dir/${userPos.lat()},${userPos.lng()}/${lat},${lng}`;
-        html += `<a href="${directionsUrl}" target="_blank" class="directions-btn" style="flex: 1; text-align: center; background: #2e7d32; color: white !important; padding: 0.35rem 0.8rem; font-size: 0.78rem;">🧭 Directions</a>`;
+        html += `<a href="${directionsUrl}" target="_blank" class="directions-btn" style="width: 100%; text-align: center; background: #2e7d32; color: white !important; padding: 0.35rem 0.8rem; font-size: 0.78rem;">🧭 Directions</a>`;
     }
 
-    if (contact.googleMapsUrl) {
-        html += `<a href="${contact.googleMapsUrl}" target="_blank" class="directions-btn" style="${hasUserLocation && !isOnline ? 'flex: 1;' : 'width: 100%;'} text-align: center; background: #1976d2; color: white !important; padding: 0.35rem 0.8rem; font-size: 0.78rem;">🗺️ Google Maps</a>`;
-    }
-
-    html += `</div></div></div>`;
+    html += `</div></div>`;
     return html;
 }
 
@@ -1539,7 +1610,7 @@ function fitMapToBounds() {
 function setupEventListeners() {
     setupAutocomplete();
     
-    document.getElementById('searchBtn').addEventListener('click', performSearch);
+    // Search button removed — users press Enter or select from autocomplete
     document.getElementById('searchInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && autocompleteIndex === -1) performSearch();
     });
@@ -1577,8 +1648,10 @@ function setupEventListeners() {
 
 function showUserLocation() {
     const btn = document.getElementById('showMyLocation');
+    const floatBtn = document.getElementById('mapFloatNearMe');
     btn.disabled = true;
     btn.textContent = '⏳';
+    if (floatBtn) { floatBtn.disabled = true; floatBtn.textContent = '⏳'; }
     
     if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -1607,6 +1680,7 @@ function showUserLocation() {
                 map.setZoom(12);
                 btn.disabled = false;
                 btn.textContent = '📍 Near Me';
+                if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
 
                 // Re-render cards sorted by distance
                 const visibleMarkers = markers.filter(m => shouldShowMarker(m));
@@ -1616,6 +1690,7 @@ function showUserLocation() {
                 alert('Could not get your location. Please enable location services.');
                 btn.disabled = false;
                 btn.textContent = '📍 Near Me';
+                if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
             }
         );
     }
@@ -2010,9 +2085,18 @@ function selectLocationCard(locationId) {
     const card = document.querySelector(`.location-card[data-id="${locationId}"]`);
     if (card) {
         card.classList.add('active');
-        // Scroll card to top of the panel list
         const panelCards = document.getElementById('locationCards');
         if (panelCards) panelCards.scrollTop = card.offsetTop - panelCards.offsetTop;
+    }
+
+    // On mobile: close list panel and show map so the pin is visible
+    const panel = document.getElementById('listPanel');
+    const toggle = document.getElementById('mobileToggle');
+    const floatBtn = document.getElementById('mapFloatNearMe');
+    if (panel && panel.classList.contains('mobile-visible') && window.innerWidth <= 768) {
+        panel.classList.remove('mobile-visible');
+        if (toggle) toggle.textContent = '☰ Show List';
+        if (floatBtn) floatBtn.classList.remove('hidden');
     }
 
     // Zoom in and open info window on map
@@ -2040,11 +2124,19 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
 document.addEventListener('DOMContentLoaded', () => {
     const toggle = document.getElementById('mobileToggle');
     const panel = document.getElementById('listPanel');
+    const floatBtn = document.getElementById('mapFloatNearMe');
+
     if (toggle && panel) {
         toggle.addEventListener('click', () => {
             const isVisible = panel.classList.toggle('mobile-visible');
             toggle.textContent = isVisible ? '🗺️ Show Map' : '☰ Show List';
+            // Hide floating button when list is open
+            if (floatBtn) floatBtn.classList.toggle('hidden', isVisible);
         });
+    }
+
+    if (floatBtn) {
+        floatBtn.addEventListener('click', showUserLocation);
     }
 });
 

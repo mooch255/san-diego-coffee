@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suggest an Edit — San Diego Specialty Coffee</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Libre+Franklin:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Libre+Franklin:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         :root {
             --espresso:      #2C1A0E;
@@ -30,33 +30,141 @@
 
         /* ── Header ── */
         header {
-            background: var(--espresso);
-            padding: 1rem 1.5rem;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.016) 39px, rgba(255,255,255,0.016) 40px
+                ),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            color: #fff;
+            border-top: 3px solid #B85C38;
+            border-bottom: 3px solid #B85C38;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-brand-eyebrow {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.6);
+            margin-bottom: 0.3rem;
         }
 
         .header-logo {
-            font-family: 'Lora', serif;
-            color: var(--cream);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            line-height: 1;
+            color: #EDE0CC;
             text-decoration: none;
-            font-size: 1rem;
+        }
+
+        .header-logo em {
+            font-style: italic;
+            color: #C9A97E;
+        }
+
+        .header-logo strong {
+            font-style: normal;
+            font-weight: 800;
+            color: #EDE0CC;
+        }
+
+        .header-subtitle {
+            font-size: 0.6rem;
+            color: rgba(196,167,125,0.55);
+            margin-top: 0.3rem;
             font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
         }
 
-        .header-logo em { font-style: italic; color: #C4A882; }
-
-        .header-back {
-            font-size: 0.8rem;
-            color: #C4A882;
-            text-decoration: none;
+        .header-buttons {
             display: flex;
+            gap: 0.5rem;
             align-items: center;
-            gap: 0.4rem;
-            transition: color 0.2s;
         }
-        .header-back:hover { color: var(--cream); }
+
+        .header-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            border: 1px solid rgba(196,167,125,0.32);
+            color: rgba(196,167,125,0.8);
+            background: transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-family: 'Libre Franklin', sans-serif;
+            border-radius: 0;
+            cursor: pointer;
+        }
+
+        .header-btn:hover {
+            border-color: #C4A77D;
+            color: #C4A77D;
+            background: rgba(196,167,125,0.07);
+        }
+
+        .header-btn.active {
+            background: #B85C38;
+            border-color: #B85C38;
+            color: white;
+        }
+
+        .header-btn.active:hover {
+            background: #a04a28;
+            border-color: #a04a28;
+        }
+
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 0.6rem;
+                padding: 0.75rem 1rem;
+            }
+            .header-logo { font-size: 1.2rem; }
+            .header-subtitle { display: none; }
+            .header-buttons { justify-content: center; flex-wrap: wrap; }
+            .header-btn { padding: 0.35rem 0.75rem; font-size: 0.68rem; }
+        }
 
         /* ── Page layout ── */
         .page-wrap {
@@ -253,6 +361,27 @@
         .btn-submit:hover { background: #A04E2E; }
         .btn-submit:disabled { background: #C4A882; cursor: not-allowed; }
 
+        .btn-back-secondary {
+            display: block;
+            width: 100%;
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--coffee-brown);
+            border: 1.5px solid var(--light-tan);
+            background: var(--white);
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .btn-back-secondary:hover {
+            background: var(--cream);
+            border-color: var(--coffee-brown);
+        }
+
         /* ── Thank you state ── */
         .thank-you {
             display: none;
@@ -340,8 +469,18 @@
 <body>
 
 <header>
-    <a href="index.html" class="header-logo"><em>San Diego</em> Specialty Coffee</a>
-    <a href="javascript:history.back()" class="header-back">← Back</a>
+    <div class="header-content">
+        <div>
+            <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
+            <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+            <p class="header-subtitle">Suggest an Edit</p>
+        </div>
+        <div class="header-buttons">
+            <a href="index.html" class="header-btn">🏠 Home</a>
+            <a href="map.html" class="header-btn">🗺️ Map</a>
+            <a href="javascript:history.back()" class="header-btn active">← Back</a>
+        </div>
+    </div>
 </header>
 
 <div class="page-wrap">
@@ -371,6 +510,7 @@
         <div class="submit-section">
             <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">Submit Suggested Edit</button>
             <div class="alert" id="alertBox"></div>
+            <a href="javascript:history.back()" class="btn-back-secondary">← Back</a>
         </div>
 
     </div>

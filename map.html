@@ -887,6 +887,7 @@
             min-width: 280px;
             max-width: 340px;
             box-sizing: border-box;
+            overflow: hidden;
         }
         .info-window-divider {
             border: none;
@@ -1020,6 +1021,58 @@
             text-decoration: none;
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* ── Mobile info window — no scrolling ──────────────────────────── */
+        @media (max-width: 768px) {
+            .info-window {
+                min-width: 0;
+                max-width: calc(100vw - 80px);
+                width: calc(100vw - 80px);
+                padding: 0.1rem 0.75rem 0.7rem 0.75rem;
+                overflow: hidden;
+            }
+
+            .info-window h3 {
+                font-size: 0.9rem;
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            .info-window-section {
+                font-size: 0.7rem;
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            .info-window-coffee-grid {
+                font-size: 0.68rem;
+            }
+
+            .info-window-description {
+                font-size: 0.72rem;
+            }
+
+            .directions-btn {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+                font-size: 0.82rem;
+                padding: 0.55rem 0.75rem;
+                border-radius: 6px;
+                margin-top: 0.6rem;
+            }
+
+            /* Force Google's info window container to not add extra width */
+            .gm-style .gm-style-iw-c {
+                max-width: calc(100vw - 60px) !important;
+                overflow: hidden !important;
+            }
+
+            .gm-style .gm-style-iw-d {
+                overflow: hidden !important;
+                max-width: calc(100vw - 80px) !important;
+            }
         }
 
     </style>
@@ -1234,6 +1287,7 @@ function initMap() {
         center: { lat: 32.9, lng: -117.2 },
         mapTypeControl: true,
         streetViewControl: false,
+        gestureHandling: 'greedy',
         fullscreenControl: true,
         zoomControl: true,
         styles: mapStyles,

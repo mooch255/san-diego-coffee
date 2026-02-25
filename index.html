@@ -287,6 +287,36 @@
             height: 100%;
         }
 
+        /* Tap-to-activate overlay — mobile only */
+        .map-tap-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .map-tap-overlay-inner {
+            background: rgba(0,0,0,0.35);
+            color: rgba(255,255,255,0.75);
+            padding: 0.45rem 0.9rem;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            border: 1px solid rgba(255,255,255,0.12);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .map-tap-overlay {
+                display: flex;
+            }
+        }
+
         /* Dark gradient overlay from left */
         .hero-overlay {
             position: absolute;
@@ -862,6 +892,9 @@
         <div class="hero-map-wrap">
             <div id="previewMap"></div>
             <div class="hero-overlay"></div>
+            <div class="map-tap-overlay" id="mapTapOverlay">
+                <div class="map-tap-overlay-inner">Tap to interact with map</div>
+            </div>
         </div>
 
         <div class="hero-content">
@@ -1028,10 +1061,22 @@
                 fullscreenControl: false,
                 zoomControl: true,
                 scrollwheel: false,
+                gestureHandling: 'cooperative',
                 draggable: true,
                 disableDoubleClickZoom: false,
                 styles: mapStyles
             });
+
+            // Tap-to-activate on mobile: overlay fades out and enables greedy panning
+            const tapOverlay = document.getElementById('mapTapOverlay');
+            if (tapOverlay) {
+                tapOverlay.addEventListener('click', function() {
+                    tapOverlay.style.opacity = '0';
+                    tapOverlay.style.pointerEvents = 'none';
+                    previewMap.setOptions({ gestureHandling: 'greedy' });
+                    setTimeout(() => { tapOverlay.style.display = 'none'; }, 300);
+                });
+            }
 
             const infoWindow = new google.maps.InfoWindow();
             const locations = window.COFFEE_LOCATIONS || [];

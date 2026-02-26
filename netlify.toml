@@ -1,6 +1,9 @@
 [build]
   functions = "netlify/functions"
 
+[build.environment]
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI"
+
 [[notifications]]
   event = "submission_created"
   url = "/.netlify/functions/submit-to-sheets"

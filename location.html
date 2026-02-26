@@ -881,7 +881,21 @@
                 // Fall back to live sheet fetch if not present
                 const merged = location.coffeeDetails;
                 if (merged) {
-                    renderPage(location, merged);
+                    // If multipleLocations is missing from the synced data, fetch it from sheet
+                    if (merged.multipleLocations === undefined) {
+                        const isRoasterType = location.basicInfo.type === 'roaster';
+                        const sheetTab = isRoasterType ? 'Roasters' : 'Cafes';
+                        fetch(SHEET_URL + '?sheet=' + sheetTab)
+                            .then(r => r.json())
+                            .then(rows => {
+                                const row = rows.find(r => r.id === locationId) || {};
+                                merged.multipleLocations = row.multipleLocations || '';
+                                renderPage(location, merged);
+                            })
+                            .catch(() => { merged.multipleLocations = ''; renderPage(location, merged); });
+                    } else {
+                        renderPage(location, merged);
+                    }
                 } else {
                     const isRoasterType = location.basicInfo.type === 'roaster';
                     const sheetTab = isRoasterType ? 'Roasters' : 'Cafes';

@@ -342,6 +342,10 @@
             color: var(--coffee-brown);
         }
 
+        #openNowBtn {
+            min-width: 6.5rem;
+        }
+
         .toggle-filters-btn:hover {
             background: var(--cream);
         }
@@ -1139,7 +1143,7 @@
                     <input 
                         type="text" 
                         id="searchInput" 
-                        placeholder="Search by name or neighborhood..."
+                        placeholder="Search by name or zip code..."
                         autocomplete="off"
                     >
                     <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
@@ -1147,6 +1151,7 @@
                 <div class="button-row">
                     <button id="toggleFilters" class="toggle-filters-btn">⚙️ Filters</button>
                     <button id="clearBtn" style="background: var(--white); color: var(--coffee-brown); border-color: var(--coffee-brown);">✕ Clear</button>
+                    <button id="openNowBtn" class="toggle-filters-btn">🕐 Open Now</button>
                     <button id="showMyLocation" class="location-btn" style="background:#2e7d32; color:white; border-color:#2e7d32;">📍 Near Me</button>
                 </div>
                 <div class="sort-toggle">
@@ -1569,15 +1574,20 @@ function setupAutocomplete() {
         
         // Debounce
         searchTimeout = setTimeout(() => {
-            performSearch(query);
+            updateAutocompleteDropdown(query);
         }, 300);
     });
     
-    function performSearch(query) {
+    function updateAutocompleteDropdown(query) {
         // Search our existing locations
+        const isZip = /^\d{3,5}$/.test(query.trim());
         const matches = allLocations.filter(loc => {
             const name = loc.basicInfo.name.toLowerCase();
             const address = loc.basicInfo.address.fullAddress?.toLowerCase() || '';
+            const zip = (loc.basicInfo.address.zip || '').trim();
+            if (isZip) {
+                return zip.startsWith(query) || address.includes(query.toLowerCase());
+            }
             return name.includes(query.toLowerCase()) || address.includes(query.toLowerCase());
         }).slice(0, 8); // Show up to 8 results
         
@@ -1601,6 +1611,14 @@ function setupAutocomplete() {
                 </div>`;
         });
         
+        // For zip code searches, append a "show all" prompt at the bottom
+        if (isZip && matches.length > 0) {
+            html += `
+                <div class="autocomplete-item autocomplete-zip-all" style="cursor:pointer; border-top: 1px solid #eee; font-style: italic; color: #666;">
+                    <span class="autocomplete-name" style="font-size:0.85em;">Press Enter to show all locations in ${query}</span>
+                </div>`;
+        }
+
         dropdown.innerHTML = html;
         dropdown.classList.add('show');
         console.log('✅ Dropdown shown with', matches.length, 'results');
@@ -1616,16 +1634,32 @@ function setupAutocomplete() {
         });
     }
     
-    // Keyboard navigation - Enter key
+    // Keyboard navigation - Arrow keys + Enter
     searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const firstItem = dropdown.querySelector('.autocomplete-item');
-            if (firstItem) {
-                const id = firstItem.getAttribute('data-id');
-                selectLocation(id);
+        const items = dropdown.querySelectorAll('.autocomplete-item');
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            autocompleteIndex = Math.min(autocompleteIndex + 1, items.length - 1);
+            items.forEach((item, i) => item.classList.toggle('selected', i === autocompleteIndex));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            autocompleteIndex = Math.max(autocompleteIndex - 1, 0);
+            items.forEach((item, i) => item.classList.toggle('selected', i === autocompleteIndex));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (autocompleteIndex >= 0) {
+                // User arrow-navigated to a specific item — select that single location
+                const selectedItem = dropdown.querySelector('.autocomplete-item.selected');
+                if (selectedItem) selectLocation(selectedItem.getAttribute('data-id'));
+            } else {
+                // No item highlighted — run full filter search (works for zip codes & names)
+                dropdown.classList.remove('show');
+                autocompleteIndex = -1;
+                performSearch();
             }
         } else if (e.key === 'Escape') {
             dropdown.classList.remove('show');
+            autocompleteIndex = -1;
         }
     });
     
@@ -1661,19 +1695,21 @@ function selectLocation(locationId) {
     }
 }
 
-function updateAllFilterCounts() {
+function updateAllFilterCounts(visibleMarkers) {
+    // If visibleMarkers passed (e.g. when Open Now active), count those; otherwise count all
+    const source = visibleMarkers || markers;
     const types = {roasters: 0, cafes: 0};
     const regions = {'central': 0, 'north-coastal': 0, 'coastal': 0, 'north-inland': 0, 'east': 0, 'south': 0};
-    
-    markers.forEach(marker => {
+
+    source.forEach(marker => {
         if (marker.locationType === 'roaster') types.roasters++;
         else types.cafes++;
         if (regions[marker.region] !== undefined) regions[marker.region]++;
     });
-    
+
     if (document.getElementById('count-roasters')) document.getElementById('count-roasters').textContent = `(${types.roasters})`;
     if (document.getElementById('count-cafes')) document.getElementById('count-cafes').textContent = `(${types.cafes})`;
-    
+
     for (const [region, count] of Object.entries(regions)) {
         const el = document.getElementById(`count-${region}`);
         if (el) el.textContent = `(${count})`;
@@ -1703,13 +1739,31 @@ function fitMapToBounds() {
 function setupEventListeners() {
     setupAutocomplete();
     
-    // Search button removed — users press Enter or select from autocomplete
-    document.getElementById('searchInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && autocompleteIndex === -1) performSearch();
-    });
+    // Enter key handled by keydown listener above (supports zip codes + name search)
     document.getElementById('clearBtn').addEventListener('click', () => {
         document.getElementById('searchInput').value = '';
         document.getElementById('autocompleteDropdown').classList.remove('show');
+        // Reset Open Now if active
+        if (openNowActive) {
+            openNowActive = false;
+            const onBtn = document.getElementById('openNowBtn');
+            if (onBtn) {
+                onBtn.style.background = '';
+                onBtn.style.color = '';
+                onBtn.style.borderColor = '';
+                onBtn.textContent = '🕐 Open Now';
+            }
+        }
+        // Reset nearest sort back to A-Z
+        currentSort = 'az';
+        document.getElementById('sortAZ').classList.add('active');
+        document.getElementById('sortNearest').classList.remove('active');
+        // Remove user location marker
+        if (userLocationMarker) {
+            userLocationMarker.setMap(null);
+            userLocationMarker = null;
+        }
+        userLatLng = null;
         applyFilters();
     });
     document.getElementById('filterRoasters').addEventListener('change', applyFilters);
@@ -1775,12 +1829,11 @@ function showUserLocation() {
                 btn.textContent = '📍 Near Me';
                 if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
 
-                // Switch to nearest sort and re-render
+                // Switch to nearest sort and re-render — preserves any active zip/name search
                 currentSort = 'nearest';
                 document.getElementById('sortNearest').classList.add('active');
                 document.getElementById('sortAZ').classList.remove('active');
-                const visibleMarkers = markers.filter(m => shouldShowMarker(m));
-                renderLocationCards(visibleMarkers);
+                applyFilters(); // respects active search query + all other filters
             },
             () => {
                 alert('Could not get your location. Please enable location services.');
@@ -1855,10 +1908,16 @@ function performSearch() {
             infoWindow.open(map);
         }, 500);
     } else {
+        const isZipSearch = /^\d{5}$/.test(query);
         const visibleMarkers = markers.filter(marker => {
             const location = marker.locationData;
             const name = location.basicInfo.name.toLowerCase();
             const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
+            const zip = (location.basicInfo.address.zip || '').trim();
+            if (isZipSearch) {
+                // Zip code search: match zip field OR zip appearing in address
+                return (zip === query || address.includes(query)) && shouldShowMarker(marker);
+            }
             return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
         });
         
@@ -2038,6 +2097,8 @@ function applyFilters() {
     updateVisibleCount(visibleMarkers.length);
     renderLocationCards(visibleMarkers);
     fitMapToBounds();
+    // Update filter counts to reflect current visibility (respects Open Now)
+    updateAllFilterCounts(openNowActive ? visibleMarkers : null);
 }
 
 function shouldShowMarker(marker) {
@@ -2056,6 +2117,8 @@ function shouldShowMarker(marker) {
         if (checkedRegions.length > 0 && !checkedRegions.includes(marker.region)) return false;
     }
     
+    if (openNowActive && !isLocationOpenNow(location)) return false;
+
     return true;
 }
 
@@ -2255,6 +2318,77 @@ document.addEventListener('DOMContentLoaded', () => {
 window.gm_authFailure = function() {
     document.getElementById('loading').innerHTML = '<div style="color: red; padding: 2rem;"><h3>⚠️ Map Loading Error</h3></div>';
 };
+
+// ── Open Now Filter ─────────────────────────────────────────────────────────
+let openNowActive = false;
+
+function parseTimeToMinutes(timeStr) {
+    const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+    if (!match) return null;
+    let hours = parseInt(match[1]);
+    const mins = parseInt(match[2]);
+    const period = match[3].toUpperCase();
+    if (period === 'AM' && hours === 12) hours = 0;
+    if (period === 'PM' && hours !== 12) hours += 12;
+    return hours * 60 + mins;
+}
+
+function isLocationOpenNow(location) {
+    const weekdayDescriptions = location.hours && location.hours.weekdayDescriptions;
+    if (!weekdayDescriptions || weekdayDescriptions.length === 0) return false;
+
+    const now = new Date();
+    const jsDay = now.getDay();
+    const monIdx = jsDay === 0 ? 6 : jsDay - 1;
+    const todayEntry = weekdayDescriptions[monIdx];
+    if (!todayEntry) return false;
+
+    const hoursStr = todayEntry.replace(/^[^:]+:\s*/, '').trim();
+    if (hoursStr.toLowerCase() === 'closed') return false;
+    if (hoursStr.toLowerCase() === 'open 24 hours') return true;
+
+    const currentMins = now.getHours() * 60 + now.getMinutes();
+    const ranges = hoursStr.split(',').map(function(s) { return s.trim(); });
+
+    for (let r = 0; r < ranges.length; r++) {
+        const parts = ranges[r].split(/\s*[\u2013\-]\s*/);
+        if (parts.length !== 2) continue;
+
+        let openStr = parts[0].trim();
+        let closeStr = parts[1].trim();
+
+        if (!/AM|PM/i.test(openStr) && /AM|PM/i.test(closeStr)) {
+            const m = closeStr.match(/(AM|PM)/i);
+            if (m) openStr += ' ' + m[1];
+        }
+
+        const openMins = parseTimeToMinutes(openStr);
+        let closeMins = parseTimeToMinutes(closeStr);
+        if (openMins === null || closeMins === null) continue;
+
+        if (closeMins === 0) closeMins = 24 * 60;
+
+        if (closeMins < openMins) {
+            if (currentMins >= openMins || currentMins < closeMins) return true;
+        } else {
+            if (currentMins >= openMins && currentMins < closeMins) return true;
+        }
+    }
+    return false;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('openNowBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function() {
+        openNowActive = !openNowActive;
+        btn.style.background = openNowActive ? '#2e7d32' : '';
+        btn.style.color = openNowActive ? 'white' : '';
+        btn.style.borderColor = openNowActive ? '#2e7d32' : '';
+        btn.textContent = '🕐 Open Now';
+        applyFilters();
+    });
+});
     </script>
     
     <!-- Google Maps API with Places library -->

@@ -117,27 +117,6 @@
             color: var(--latte);
         }
 
-        /* ── Dot ornament: · ● · */
-        .header-dots {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.32rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .header-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent-red);
-        }
-
-        .header-dot.small {
-            width: 4px;
-            height: 4px;
-            background: rgba(196, 167, 125, 0.55);
-        }
 
         /* ── Title: *San Diego* **Coffee Beans** — Playfair Display italic + bold serif */
         .logo {
@@ -766,9 +745,26 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
-                padding: 1rem 1.25rem;
-                gap: 0.75rem;
+                padding: 0.5rem 1.25rem;
+                gap: 0.25rem;
                 flex-wrap: wrap;
+            }
+
+            .header-eyebrow {
+                margin-bottom: 0.3rem;
+            }
+
+            .header-eyebrow-text {
+                font-size: 0.5rem;
+            }
+
+            .tagline {
+                margin-top: 0.3rem;
+                font-size: 0.5rem;
+            }
+
+            .header-nav {
+                margin-top: 0.5rem;
             }
 
             .header-eyebrow-line { width: 20px; }
@@ -931,6 +927,10 @@
             .hero-mobile-cta:active {
                 background: #a04a28;
             }
+
+            .recent-section {
+                padding-top: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -944,13 +944,8 @@
                     <span class="header-eyebrow-text">Roasters · Cafes · Community</span>
                     <span class="header-eyebrow-line"></span>
                 </div>
-                <div class="header-dots">
-                    <span class="header-dot small"></span>
-                    <span class="header-dot"></span>
-                    <span class="header-dot small"></span>
-                </div>
                 <div class="logo"><em>San Diego</em> <strong>Specialty Coffee</strong></div>
-                <div class="tagline">A Resource to High Quality Coffee in San Diego</div>
+                <div class="tagline">Curated by San Diego's Coffee Community</div>
             </div>
             <nav class="header-nav">
                 <a href="map.html" class="nav-btn primary" id="navMapBtn">☕ Explore Map</a>
@@ -1022,7 +1017,6 @@
                     <div class="recent-title">Recently Added</div>
                     <div class="recent-subtitle">The latest additions to the guide</div>
                 </div>
-                <a href="map.html" class="recent-view-all">Explore Full Map →</a>
             </div>
             <div class="recent-grid" id="recentGrid">
                 <!-- Populated by JS -->
@@ -1316,7 +1310,7 @@
                 const newBadge = isNew ? '<span class="recent-new-badge">New</span>' : '';
 
                 return `
-                <a class="recent-card" href="location.html?id=${loc.id}">
+                <a class="recent-card" href="location.html?id=${loc.id}&from=home">
                     ${imageHtml}
                     <div class="recent-card-body">
                         <div class="recent-card-type ${typeClass}">${typeLabel}</div>

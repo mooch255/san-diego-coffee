@@ -837,7 +837,7 @@
             <div>
                 <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
                 <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
-                <p class="header-subtitle">Interactive Map of Specialty Coffee Locations</p>
+                <p class="header-subtitle">Location Details</p>
             </div>
             <div class="header-buttons">
                 <a href="index.html" class="header-btn">🏠 Home</a>
@@ -875,6 +875,9 @@
         // ── Get location from URL ──────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
         const locationId = params.get('id');
+        const fromHome = params.get('from') === 'home';
+        const backHref = fromHome ? 'index.html' : 'map.html';
+        const backLabel = fromHome ? '← Back to Homepage' : '← Back to Map';
 
         if (!locationId) {
             showError('No location specified.', 'Head back to the map to find a location.');
@@ -976,7 +979,7 @@
             return `
                 <div class="hero">
                     <div class="hero-inner">
-                        <a href="map.html" class="back-link">← Back to Map</a>
+                        <a href="${backHref}" class="back-link">${backLabel}</a>
                         <div class="type-badge ${typeClass}">${typeLabel}</div>
                         <h1>${info.name}</h1>
                         <div class="hero-meta">
@@ -1228,7 +1231,7 @@
 
         function renderActions(contact, placeId) {
             let html = '';
-            html += `<a href="map.html" class="action-btn secondary">← Back to Map</a>`;
+            html += `<a href="${backHref}" class="action-btn secondary">${backLabel}</a>`;
             return `<div class="action-strip">${html}</div>`;
         }
 
@@ -1253,7 +1256,7 @@
                 <div class="state-container">
                     <h2>${title}</h2>
                     <p>${msg}</p>
-                    <a href="map.html" class="btn-back">← Back to Map</a>
+                    <a href="${backHref}" class="btn-back">${backLabel}</a>
                 </div>
             `;
         }

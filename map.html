@@ -465,7 +465,7 @@
         /* Split Layout */
         .map-layout {
             display: flex;
-            height: calc(100vh - 70px - 40px); /* header ~70px, footer ~40px */
+            height: calc(100vh - 70px); /* header ~70px */
             overflow: hidden;
         }
 
@@ -1045,9 +1045,9 @@
 
         @media (max-width: 768px) {
             header { padding: 0.75rem 1rem; }
-            h1 { font-size: 1.1rem; }
-            .subtitle { display: none; }
-            .header-brand-eyebrow { display: none; }
+            .header-brand-eyebrow { font-size: 0.45rem; margin-bottom: 0.3rem; }
+            h1 { font-size: 1rem; }
+            .subtitle { font-size: 0.45rem; margin-top: 0.5rem; }
 
             /* Single-row compact header */
             .header-content {
@@ -1282,6 +1282,38 @@
                 max-width: calc(100vw - 80px) !important;
                 overflow: auto !important;
             }
+
+            .autocomplete-address {
+                display: none;
+            }
+
+            .search-container {
+                min-width: 0;
+            }
+
+            .autocomplete-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.2rem;
+                padding: 0.65rem 1rem;
+            }
+
+            .autocomplete-name {
+                white-space: normal;
+                width: 100%;
+                word-break: break-word;
+                overflow-wrap: break-word;
+            }
+
+            .autocomplete-type {
+                margin-top: 0;
+            }
+
+            .location-card-name {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: unset;
+            }
         }
 
     </style>
@@ -1290,11 +1322,11 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <div>
+            <a href="index.html" style="text-decoration: none; color: inherit;">
                 <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
                 <h1><em>San Diego</em> <strong>Specialty Coffee</strong></h1>
                 <p class="subtitle">Interactive Map of Specialty Coffee Locations</p>
-            </div>
+            </a>
             <div class="header-buttons">
                 <a href="index.html" class="header-btn secondary">🏠 Home</a>
                 <a href="submit.html" class="header-btn">📍 Submit Location</a>
@@ -1407,12 +1439,6 @@
     </div>
 
     <!-- Footer -->
-    <footer>
-        <p>
-            Community-driven map for <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> | 
-            <a href="submit.html">Submit a Location</a>
-        </p>
-    </footer>
 
     <!-- Locations data -->
     <script src="locations.js"></script>

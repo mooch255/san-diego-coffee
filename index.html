@@ -600,13 +600,13 @@
             letter-spacing: 0.08em;
         }
 
-        /* ── Reddit Dashboard ────────────────────────────────────────── */
-        .reddit-section {
+        /* ── Recently Added Section ──────────────────────────────────── */
+        .recent-section {
             background: var(--cream);
             padding: 3.5rem 0 4rem;
             border-top: 2px solid var(--light-tan);
         }
-        .reddit-header {
+        .recent-header {
             display: flex;
             align-items: baseline;
             justify-content: space-between;
@@ -614,67 +614,133 @@
             flex-wrap: wrap;
             gap: 0.75rem;
         }
-        .reddit-header-left { display: flex; align-items: center; gap: 0.85rem; }
-        .reddit-logo {
-            width: 28px; height: 28px; background: #FF4500; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .reddit-logo svg { width: 18px; height: 18px; fill: white; }
-        .reddit-title { font-family: "Lora", serif; font-size: 1.6rem; font-weight: 600; color: var(--espresso); }
-        .reddit-subtitle { font-size: 0.8rem; color: #aaa; font-style: italic; }
-        .reddit-view-all {
+        .recent-header-left { display: flex; flex-direction: column; gap: 0.2rem; }
+        .recent-title { font-family: "Lora", serif; font-size: 1.6rem; font-weight: 600; color: var(--espresso); }
+        .recent-subtitle { font-size: 0.8rem; color: #aaa; font-style: italic; }
+        .recent-view-all {
             font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.07em; color: #FF4500; text-decoration: none;
-            border: 1.5px solid #FF4500; padding: 0.35rem 0.85rem; transition: all 0.2s; white-space: nowrap;
+            letter-spacing: 0.07em; color: var(--accent-red); text-decoration: none;
+            border: 1.5px solid var(--accent-red); padding: 0.35rem 0.85rem;
+            transition: all 0.2s; white-space: nowrap;
         }
-        .reddit-view-all:hover { background: #FF4500; color: white; }
-        .reddit-tab-hidden {
-            padding: 0.3rem 0.85rem; font-size: 0.78rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.05em; border: 1.5px solid var(--light-tan);
-            background: white; color: #888; cursor: pointer; transition: all 0.2s;
+        .recent-view-all:hover { background: var(--accent-red); color: white; }
+        .recent-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
         }
-        .reddit-tab.active, .reddit-tab:hover { border-color: #FF4500; color: #FF4500; }
-        .reddit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-        .reddit-card {
-            background: var(--white); border: 1.5px solid var(--light-tan);
-            display: flex; flex-direction: column; text-decoration: none; color: inherit;
-            transition: all 0.22s ease; overflow: hidden;
+        .recent-card {
+            background: var(--white);
+            border: 1.5px solid var(--light-tan);
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.22s ease;
+            overflow: hidden;
         }
-        .reddit-card:hover {
-            border-color: #FF4500; transform: translateY(-3px);
+        .recent-card:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-3px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         }
-        .reddit-card-image { width: 100%; height: 140px; object-fit: cover; display: block; }
-        .reddit-card-image-placeholder {
-            width: 100%; height: 140px;
-            background: linear-gradient(135deg, #3D2817 0%, #6B4E3D 100%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; color: rgba(255,255,255,0.25);
+        /* Real photo */
+        .recent-card-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
         }
-        .reddit-card-body { padding: 0.9rem 1rem 0.75rem; flex: 1; display: flex; flex-direction: column; }
-        .reddit-card-flair {
-            display: inline-block; font-size: 0.65rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.07em; color: #FF4500; margin-bottom: 0.4rem;
+        /* Fallback: initials on branded gradient */
+        .recent-card-initials {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: linear-gradient(145deg, #2A1508 0%, #5C3420 50%, #3D2010 100%);
+            flex-shrink: 0;
         }
-        .reddit-card-title {
-            font-family: "Lora", serif; font-size: 0.92rem; font-weight: 600;
-            line-height: 1.35; color: var(--espresso); margin-bottom: 0.5rem; flex: 1;
-            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        .recent-card-initials-text {
+            font-family: "Playfair Display", serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: rgba(196, 167, 125, 0.9);
+            letter-spacing: 0.05em;
+            line-height: 1;
         }
-        .reddit-card-selftext {
-            font-size: 0.75rem; color: #888; line-height: 1.5; margin-bottom: 0.5rem;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        .recent-card-initials-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(196, 167, 125, 0.45);
         }
-        .reddit-card-meta {
-            display: flex; align-items: center; gap: 0.75rem; font-size: 0.7rem; color: #aaa;
-            margin-top: auto; padding-top: 0.5rem; border-top: 1px solid var(--light-tan);
+        .recent-card-body {
+            padding: 1rem 1.1rem 0.9rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
-        .reddit-card-meta span { display: flex; align-items: center; gap: 0.25rem; }
-        .reddit-card-score { color: #FF4500; font-weight: 700; }
-        .reddit-loading { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #aaa; font-size: 0.9rem; }
-        .reddit-error { grid-column: 1 / -1; text-align: center; padding: 2rem; color: #aaa; font-size: 0.85rem; }
-        @media (max-width: 900px) { .reddit-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { .reddit-grid { grid-template-columns: 1fr; } }
+        .recent-card-type {
+            font-size: 0.63rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.35rem;
+        }
+        .recent-card-type.roaster { color: #2e7d32; }
+        .recent-card-type.cafe { color: #1565c0; }
+        .recent-card-name {
+            font-family: "Lora", serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--espresso);
+            margin-bottom: 0.35rem;
+        }
+        .recent-card-meta {
+            font-size: 0.72rem;
+            color: #999;
+            margin-top: auto;
+            padding-top: 0.65rem;
+            border-top: 1px solid var(--light-tan);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .recent-card-neighborhood {
+            font-size: 0.72rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+        .recent-card-desc {
+            font-size: 0.75rem;
+            color: #888;
+            line-height: 1.5;
+            flex: 1;
+            margin-bottom: 0.4rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .recent-new-badge {
+            display: inline-block;
+            background: var(--accent-red);
+            color: white;
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.15rem 0.45rem;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+        }
+        @media (max-width: 900px) { .recent-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .recent-grid { grid-template-columns: 1fr; } }
 
         /* ── Minimal Footer ──────────────────────────────────────────── */
         footer {
@@ -948,28 +1014,18 @@
 
     <div class="page-transition" id="pageTransition"></div>
 
-    <!-- Reddit Dashboard -->
-    <section class="reddit-section">
+    <!-- Recently Added -->
+    <section class="recent-section">
         <div class="container">
-            <div class="reddit-header">
-                <div class="reddit-header-left">
-                    <div class="reddit-logo">
-                        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 0C4.478 0 0 4.478 0 10s4.478 10 10 10 10-4.478 10-10S15.522 0 10 0zm4.98 8.37a1.177 1.177 0 0 1 .828 2.008 3.95 3.95 0 0 1 .055.648c0 2.76-3.115 4.99-6.963 4.99-3.847 0-6.963-2.23-6.963-4.99 0-.222.019-.44.056-.648a1.178 1.178 0 1 1 1.38-1.867c.813-.523 1.888-.858 3.072-.934l.632-2.788a.276.276 0 0 1 .33-.21l2 .435a.826.826 0 1 1-.09.548l-1.772-.385-.558 2.46c1.15.087 2.194.42 2.99.936a1.178 1.178 0 1 1 .843 2.176.274.274 0 0 1-.015.093 2.87 2.87 0 0 1-2.877 2.563 2.87 2.87 0 0 1-2.878-2.563.274.274 0 0 1-.014-.093 1.176 1.176 0 0 1 .366-2.258c.133 0 .26.024.378.068-.83-.52-1.356-1.22-1.356-1.99 0-.11.013-.218.036-.323a1.178 1.178 0 0 1-.828-1.124z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="reddit-title">From the Community</div>
-                        <div class="reddit-subtitle">r/SanDiegoCoffeeBeans · live posts</div>
-                    </div>
+            <div class="recent-header">
+                <div class="recent-header-left">
+                    <div class="recent-title">Recently Added</div>
+                    <div class="recent-subtitle">The latest additions to the guide</div>
                 </div>
-                <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" class="reddit-view-all">Visit Subreddit →</a>
+                <a href="map.html" class="recent-view-all">Explore Full Map →</a>
             </div>
-
-
-
-            <div class="reddit-grid" id="redditGrid">
-                <div class="reddit-loading">Loading community posts…</div>
+            <div class="recent-grid" id="recentGrid">
+                <!-- Populated by JS -->
             </div>
         </div>
     </section>
@@ -1180,64 +1236,104 @@
             });
         }
 
-        // ── Reddit Dashboard ──────────────────────────────────────────────
-        function timeAgo(utc) {
-            const secs = Math.floor(Date.now() / 1000) - utc;
-            if (secs < 3600) return Math.floor(secs / 60) + 'm ago';
-            if (secs < 86400) return Math.floor(secs / 3600) + 'h ago';
-            return Math.floor(secs / 86400) + 'd ago';
+        // ── Recently Added ────────────────────────────────────────────────
+        function getInitials(name) {
+    const FILLER = new Set(['the','a','an','of','and','&','at','by','for','in','on','to']);
+        const clean = name
+            .replace(/\s*[-\u2013]\s*.+$/, '')
+            .replace(/\s*\(.*?\)\s*$/, '')
+            .trim();
+        const words = clean.split(/\s+/).filter(w => w.length > 0 && !FILLER.has(w.toLowerCase()));
+        if (words.length === 0) return name.slice(0, 2).toUpperCase();
+        if (words.length === 1) return words[0].slice(0, Math.min(4, words[0].length)).toUpperCase();
+        return words.map(w => w[0]).join('').toUpperCase().slice(0, 4);
         }
 
-        function renderRedditPosts(posts) {
-            const grid = document.getElementById('redditGrid');
-            if (!posts || posts.length === 0) {
-                grid.innerHTML = '<div class="reddit-error">Could not load posts. <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" style="color:#FF4500;">Visit the subreddit directly →</a></div>';
-                return;
-            }
-            grid.innerHTML = posts.map(post => {
-                const imgHtml = post.image
-                    ? `<img class="reddit-card-image" src="${post.image}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                       <div class="reddit-card-image-placeholder" style="display:none;">☕</div>`
-                    : `<div class="reddit-card-image-placeholder">☕</div>`;
+        function formatAddedDate(isoString) {
+            if (!isoString) return null;
+            const d = new Date(isoString);
+            if (isNaN(d)) return null;
+            const now = new Date();
+            const diffDays = Math.floor((now - d) / 86400000);
+            if (diffDays === 0) return 'Added today';
+            if (diffDays === 1) return 'Added yesterday';
+            if (diffDays < 7) return `Added ${diffDays} days ago`;
+            if (diffDays < 30) return `Added ${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) > 1 ? 's' : ''} ago`;
+            return `Added ${d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+        }
 
-                const flairHtml = post.flair ? `<span class="reddit-card-flair">${post.flair}</span>` : '';
-                const selftextHtml = post.selftext ? `<div class="reddit-card-selftext">${post.selftext}…</div>` : '';
+        function renderRecentLocations() {
+            const grid = document.getElementById('recentGrid');
+            if (!grid) return;
+
+            const locations = window.COFFEE_LOCATIONS || [];
+
+            // Sort by importDate descending, take 3
+            const recent = [...locations]
+                .filter(l => l.metadata?.importDate)
+                .sort((a, b) => new Date(b.metadata.importDate) - new Date(a.metadata.importDate))
+                .slice(0, 3);
+
+            // Fallback: just take last 3 in array order if no dates
+            const toShow = recent.length >= 3 ? recent : locations.slice(-3).reverse();
+
+            const API_KEY = 'AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI';
+
+            grid.innerHTML = toShow.map(loc => {
+                const info = loc.basicInfo || {};
+                const isRoaster = info.type === 'roaster';
+                const isOnline = loc.basicInfo?.onlineOnly || loc.customFlags?.onlineOnly;
+                const name = info.name || 'Unknown';
+                const neighborhood = info.neighborhood || info.address?.city || '';
+                const desc = loc.coffeeDetails?.description || '';
+                const addedLabel = formatAddedDate(loc.metadata?.importDate);
+                const isNew = loc.metadata?.importDate && (new Date() - new Date(loc.metadata.importDate)) < 14 * 86400000;
+
+                // Photo: use first Google photo if available
+                const photos = loc.googlePhotos || [];
+                let imageHtml;
+                if (photos.length > 0 && photos[0].name) {
+                    const photoUrl = `https://places.googleapis.com/v1/${photos[0].name}/media?maxWidthPx=600&key=${API_KEY}`;
+                    const initials = getInitials(name);
+                    imageHtml = `
+                        <img class="recent-card-image" src="${photoUrl}" alt="${name}"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="recent-card-initials" style="display:none;">
+                            <div class="recent-card-initials-text">${initials}</div>
+                            <div class="recent-card-initials-label">San Diego Coffee</div>
+                        </div>`;
+                } else {
+                    const initials = getInitials(name);
+                    imageHtml = `
+                        <div class="recent-card-initials">
+                            <div class="recent-card-initials-text">${initials}</div>
+                            <div class="recent-card-initials-label">San Diego Coffee</div>
+                        </div>`;
+                }
+
+                const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
+                const typeClass = isRoaster ? 'roaster' : 'cafe';
+                const newBadge = isNew ? '<span class="recent-new-badge">New</span>' : '';
 
                 return `
-                <a class="reddit-card" href="${post.url}" target="_blank" rel="noopener">
-                    ${imgHtml}
-                    <div class="reddit-card-body">
-                        ${flairHtml}
-                        <div class="reddit-card-title">${post.title}</div>
-                        ${selftextHtml}
-                        <div class="reddit-card-meta">
-                            <span class="reddit-card-score">▲ ${post.score >= 1000 ? (post.score/1000).toFixed(1)+'k' : post.score}</span>
-                            <span>💬 ${post.numComments}</span>
-                            <span>${timeAgo(post.created)}</span>
-                            <span style="margin-left:auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">u/${post.author}</span>
+                <a class="recent-card" href="location.html?id=${loc.id}">
+                    ${imageHtml}
+                    <div class="recent-card-body">
+                        <div class="recent-card-type ${typeClass}">${typeLabel}</div>
+                        <div class="recent-card-name">${name}${newBadge}</div>
+                        ${neighborhood ? `<div class="recent-card-neighborhood">📍 ${neighborhood}</div>` : ''}
+                        ${desc ? `<div class="recent-card-desc">"${desc}"</div>` : ''}
+                        <div class="recent-card-meta">
+                            <span>${addedLabel || ''}</span>
+                            <span style="color:var(--accent-red); font-weight:600; font-size:0.68rem;">View Details →</span>
                         </div>
                     </div>
                 </a>`;
             }).join('');
         }
 
-        async function loadRedditPosts(sort) {
-            const grid = document.getElementById('redditGrid');
-            grid.innerHTML = '<div class="reddit-loading">Loading posts…</div>';
-            try {
-                // Request 8 so that after the function filters stickied posts we still have 3
-                const res = await fetch(`/.netlify/functions/reddit-posts?sort=${sort}&limit=8`);
-                const data = await res.json();
-                // Always render exactly 3
-                const posts = (data.posts || []).slice(0, 3);
-                renderRedditPosts(posts);
-            } catch (e) {
-                grid.innerHTML = '<div class="reddit-error">Could not load posts. <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" style="color:#FF4500;">Visit the subreddit →</a></div>';
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            loadRedditPosts('hot');
+            renderRecentLocations();
         });
     </script>
 </body>

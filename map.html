@@ -371,8 +371,8 @@
         }
 
         .filters-panel.expanded {
-            max-height: 200px;
-            padding: 2rem;
+            max-height: 140px;
+            padding: 0;
             overflow-y: auto;
         }
 
@@ -515,14 +515,32 @@
             flex: 1;
         }
 
-        /* Sort toggle */
+        /* Active filter dot indicator */
+        #toggleFilters {
+            position: relative;
+        }
+        #toggleFilters .filter-dot {
+            display: none;
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-red);
+        }
+        #toggleFilters.filters-active .filter-dot {
+            display: block;
+        }
+
+        /* Sort toggle — now lives inside filters panel */
         .sort-toggle {
             display: flex;
             gap: 0;
-            margin-top: 0.4rem;
             border: 1.5px solid #c4b8ac;
             border-radius: 2px;
             overflow: hidden;
+            margin-top: 0.15rem;
         }
         .sort-btn {
             flex: 1;
@@ -567,6 +585,9 @@
             background: var(--cream);
             border-bottom: 1px solid #E0DBD3;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
         }
 
         .location-card {
@@ -583,6 +604,11 @@
 
         .location-card:hover {
             background: #fdf8f3;
+        }
+
+        .location-card.map-hover {
+            background: #fdf3eb;
+            border-left: 3px solid var(--latte);
         }
 
         .location-card.active {
@@ -602,12 +628,26 @@
             width: 72px;
             height: 72px;
             flex-shrink: 0;
-            background: linear-gradient(135deg, #c4a77d 0%, #8b6552 100%);
+            background: linear-gradient(145deg, #2A1508 0%, #5C3420 50%, #3D2010 100%);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: white;
+            gap: 2px;
+        }
+        .location-card-img-placeholder .card-initials {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: rgba(196, 167, 125, 0.9);
+            letter-spacing: 0.04em;
+            line-height: 1;
+        }
+        .location-card-img-placeholder .card-initials-dot {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: rgba(196, 167, 125, 0.35);
         }
 
         .location-card-body {
@@ -693,6 +733,39 @@
             -webkit-box-orient: vertical;
         }
 
+        /* Map Legend */
+        .map-legend {
+            position: absolute;
+            bottom: 5.5rem;
+            right: 0.75rem;
+            background: rgba(255,255,255,0.93);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.4rem 0.6rem;
+            font-size: 0.7rem;
+            font-family: 'Libre Franklin', sans-serif;
+            color: #555;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+            z-index: 5;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        @media (max-width: 768px) {
+            .map-legend { display: none; }
+        }
+        .map-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .map-legend-item img {
+            width: 14px;
+            height: 14px;
+            object-fit: contain;
+        }
+
         /* Right Map */
         .map-right {
             flex: 1;
@@ -712,7 +785,7 @@
             bottom: 1.5rem;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1000;
+            z-index: 10200;
             background: var(--espresso);
             color: white;
             border: none;
@@ -724,27 +797,65 @@
             cursor: pointer;
             white-space: nowrap;
         }
-
         /* Filters panel inside left panel */
         #filtersPanel {
             background: var(--white);
             border-bottom: 1px solid #E0DBD3;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.35s ease;
+            transition: max-height 0.3s ease;
             flex-shrink: 0;
         }
 
         #filtersPanel.expanded {
-            max-height: 240px;
+            max-height: 280px;
             overflow-y: auto;
+        }
+
+        /* On all screen sizes: overlay the card list when expanded */
+        #filtersPanel.overlay-open {
+            position: fixed;
+            left: auto;
+            z-index: 10100;
+            border-bottom: 2px solid #c4b8ac;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        /* On mobile, always use fixed overlay when open */
+        @media (max-width: 768px) {
+            .list-panel-controls {
+                position: relative;
+                z-index: 60;
+            }
+            #filtersPanel.overlay-open {
+                left: 0;
+                right: 0;
+                width: 100%;
+            }
         }
 
         .filters-inner {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            padding: 1rem 0.85rem;
+            gap: 0.75rem;
+            padding: 0.75rem 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .filters-inner {
+                display: flex;
+                gap: 0;
+                padding: 0;
+            }
+            .filters-section {
+                flex: 1;
+                padding: 0.65rem 0.85rem;
+            }
+            .filters-section:nth-child(2) { /* Sort */
+                border-left: 1px solid #f0ebe4;
+            }
         }
 
         .filters-section h3 {
@@ -803,7 +914,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Floating Near Me button — mobile only, bottom-right of map */
+        /* Floating Near Me button — mobile only, inline with Show List toggle */
         .map-float-nearme {
             display: none;
         }
@@ -814,15 +925,17 @@
                 align-items: center;
                 justify-content: center;
                 position: fixed;
-                bottom: 5rem;
-                left: 1rem;
-                z-index: 999;
+                bottom: 1.5rem;
+                /* Sit to the left of the centered .mobile-toggle pill (~160px wide).
+                   Place the 44px circle just left of it with an 8px gap. */
+                left: calc(50% - 80px - 8px - 44px);
+                z-index: 10200;
                 width: 44px;
                 height: 44px;
-                border-radius: 50%;
+                border-radius: 50px;
                 background: white;
-                border: 2px solid #E0DBD3;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+                border: 2px solid #c4b8ac;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.25);
                 font-size: 1.1rem;
                 cursor: pointer;
                 transition: box-shadow 0.2s, transform 0.2s;
@@ -872,23 +985,83 @@
 
         #visibleCount { font-weight: 600; color: var(--latte); }
 
+        @keyframes countFlash {
+            0%   { color: var(--accent-red); transform: scale(1.15); }
+            100% { color: var(--latte);      transform: scale(1); }
+        }
+        #visibleCount.flash {
+            animation: countFlash 0.4s ease-out forwards;
+        }
+
+        /* Mobile nav dropdown — fixed below header, never covers hamburger button */
+        .mobile-nav-menu {
+            display: none;
+            z-index: 9998;
+            min-width: 180px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        .mobile-nav-menu.open {
+            display: block;
+            position: fixed;
+            top: 48px; /* below the compact mobile header */
+            right: 0;
+            background: #2A1508;
+            border: 1px solid rgba(196,167,125,0.3);
+            border-top: none;
+        }
+        .mobile-nav-menu a {
+            display: block;
+            padding: 0.75rem 1.1rem;
+            color: rgba(196,167,125,0.85);
+            text-decoration: none;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(196,167,125,0.1);
+            font-family: 'Libre Franklin', sans-serif;
+            transition: background 0.15s, color 0.15s;
+        }
+        .mobile-nav-menu a:last-child { border-bottom: none; }
+        .mobile-nav-menu a:hover { background: rgba(196,167,125,0.1); color: var(--latte); }
+
+        .hamburger-btn {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(196,167,125,0.32);
+            color: rgba(196,167,125,0.8);
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            border-radius: 0;
+            font-family: inherit;
+            text-transform: none;
+            letter-spacing: 0;
+            position: relative;
+            z-index: 9999;
+        }
+        .hamburger-btn:hover { background: rgba(196,167,125,0.1); color: var(--latte); }
+
         @media (max-width: 768px) {
             header { padding: 0.75rem 1rem; }
-            h1 { font-size: 1.2rem; }
+            h1 { font-size: 1.1rem; }
             .subtitle { display: none; }
+            .header-brand-eyebrow { display: none; }
 
-            /* Stack header: title centered on top, buttons below */
+            /* Single-row compact header */
             .header-content {
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
-                text-align: center;
-                gap: 0.6rem;
-                padding: 0.75rem 1rem;
+                justify-content: space-between;
+                padding: 0.6rem 1rem;
+                gap: 0;
+                position: relative;
             }
 
-            .header-buttons {
-                justify-content: center;
-            }
+            /* Hide desktop nav buttons, show hamburger */
+            .header-buttons { display: none; }
+            .hamburger-btn { display: block; }
 
             .header-btn {
                 padding: 0.35rem 0.75rem;
@@ -902,12 +1075,14 @@
 
             .list-panel {
                 width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0; left: 0;
-                z-index: 10;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 10000;
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
+                overflow: hidden;
             }
 
             .list-panel.mobile-visible {
@@ -926,7 +1101,7 @@
             min-width: 280px;
             max-width: 340px;
             box-sizing: border-box;
-            overflow: hidden;
+            overflow: visible;
         }
         .info-window-divider {
             border: none;
@@ -1041,25 +1216,27 @@
         }
 
         .directions-btn {
-            display: inline-block;
-            margin-top: 0.8rem;
-            padding: 0.7rem 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.28rem 0.55rem;
             background: #6F4E37;
-            color: white !important;
+            color: white;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            border-radius: 5px;
+            font-size: 0.72rem;
             font-weight: 600;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background 0.15s, box-shadow 0.15s;
+            border: 1.5px solid transparent;
+            white-space: nowrap;
+            font-family: 'Libre Franklin', sans-serif;
         }
 
         .directions-btn:hover {
             background: #5a3d2b;
             text-decoration: none;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
 
         /* ── Mobile info window — no scrolling ──────────────────────────── */
@@ -1093,24 +1270,17 @@
             }
 
             .directions-btn {
-                width: 100%;
-                text-align: center;
-                box-sizing: border-box;
-                font-size: 0.82rem;
-                padding: 0.55rem 0.75rem;
-                border-radius: 6px;
-                margin-top: 0.6rem;
+                font-size: 0.7rem;
+                padding: 0.28rem 0.45rem;
             }
 
-            /* Force Google's info window container to not add extra width */
+            /* Google info window — allow content to show fully */
             .gm-style .gm-style-iw-c {
                 max-width: calc(100vw - 60px) !important;
-                overflow: hidden !important;
             }
-
             .gm-style .gm-style-iw-d {
-                overflow: hidden !important;
                 max-width: calc(100vw - 80px) !important;
+                overflow: auto !important;
             }
         }
 
@@ -1128,6 +1298,12 @@
             <div class="header-buttons">
                 <a href="index.html" class="header-btn secondary">🏠 Home</a>
                 <a href="submit.html" class="header-btn">📍 Submit Location</a>
+            </div>
+            <!-- Mobile hamburger -->
+            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">☰</button>
+            <div class="mobile-nav-menu" id="mobileNavMenu">
+                <a href="index.html">🏠 Home</a>
+                <a href="submit.html">📍 Submit Location</a>
             </div>
         </div>
     </header>
@@ -1149,15 +1325,12 @@
                     <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
                 </div>
                 <div class="button-row">
-                    <button id="toggleFilters" class="toggle-filters-btn">⚙️ Filters</button>
+                    <button id="toggleFilters" class="toggle-filters-btn" id="toggleFiltersBtn">⚙️ Filters<span class="filter-dot"></span></button>
                     <button id="clearBtn" style="background: var(--white); color: var(--coffee-brown); border-color: var(--coffee-brown);">✕ Clear</button>
                     <button id="openNowBtn" class="toggle-filters-btn">🕐 Open Now</button>
-                    <button id="showMyLocation" class="location-btn" style="background:#2e7d32; color:white; border-color:#2e7d32;">📍 Near Me</button>
                 </div>
-                <div class="sort-toggle">
-                    <button class="sort-btn" id="sortNearest" onclick="setSort('nearest')">📍 Nearest</button>
-                    <button class="sort-btn active" id="sortAZ" onclick="setSort('az')">A–Z</button>
-                </div>
+                <!-- Hidden anchor for geolocation — triggered by sort toggle and float button -->
+                <button id="showMyLocation" style="display:none;" aria-hidden="true"></button>
             </div>
 
             <!-- Filters Panel (inside left panel) -->
@@ -1175,23 +1348,27 @@
                             <span class="cafe-badge">☕ Cafes</span>
                             <span class="filter-count" id="count-cafes"></span>
                         </label>
+                        <label class="filter-label">
+                            <input type="checkbox" id="filterOnlineOnly" checked>
+                            <span style="background:#ede8f5; color:#7B4F9E; padding:4px 10px; font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">🌐 Online Roasters</span>
+                            <span class="filter-count" id="count-online"></span>
+                        </label>
                     </div>
                     <div class="filters-section">
-                        <h3>Region</h3>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="all" checked><span>All</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="central"><span>Central</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="north-coastal"><span>North Coastal</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="coastal"><span>Beach</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="north-inland"><span>North Inland</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="east"><span>East County</span></label>
-                        <label class="filter-label"><input type="checkbox" class="regionFilter" value="south"><span>South Bay</span></label>
+                        <h3>Sort</h3>
+                        <div class="sort-toggle">
+                            <button class="sort-btn active" id="sortAZ" onclick="setSort('az')">A–Z</button>
+                            <button class="sort-btn" id="sortNearest" onclick="setSort('nearest')">📍 Nearest</button>
+                        </div>
+                        <div id="locationHint" style="font-size:0.7rem; color:#aaa; margin-top:0.4rem; display:none;">Tap Nearest to enable location</div>
                     </div>
                 </div>
             </div>
 
             <!-- Count header -->
             <div class="list-panel-header">
-                Showing <span id="visibleCount">—</span> locations
+                <span id="visibleCount">—</span>&thinsp;locations in view
+                <span id="zoomNudge" style="display:none; font-size:0.68rem; color:var(--latte); font-style:italic; font-weight:400; text-transform:none; letter-spacing:0;">zoom out for more</span>
             </div>
 
             <!-- Scrollable Cards -->
@@ -1203,6 +1380,17 @@
         <!-- Right: Map -->
         <div class="map-right">
             <div id="map"></div>
+            <!-- Map Legend -->
+            <div class="map-legend" id="mapLegend">
+                <div class="map-legend-item">
+                    <img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png" width="16" height="16" alt="roaster">
+                    <span>Roaster</span>
+                </div>
+                <div class="map-legend-item">
+                    <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" width="16" height="16" alt="cafe">
+                    <span>Cafe</span>
+                </div>
+            </div>
         </div>
 
     </div><!-- end .map-layout -->
@@ -1247,24 +1435,6 @@ function loadSheetData() {
     renderLocationCards(visibleMarkers);
 }
 let autocompleteIndex = -1;
-
-function getRegion(location) {
-    const address = location.basicInfo.address.fullAddress || '';
-    const zip = location.basicInfo.address.zip || '';
-    
-    if (address.match(/Oceanside|Carlsbad|Encinitas|Solana Beach|Del Mar|Cardiff/i)) return 'north-coastal';
-    if (address.match(/San Marcos|Vista|Escondido|Poway|Rancho Bernardo/i) || ['92127', '92128', '92129', '92131'].includes(zip)) return 'north-inland';
-    if (address.match(/Downtown|Little Italy|North Park|South Park|Hillcrest|East Village/i) || ['92101', '92103', '92104', '92105', '92116', '92102'].includes(zip)) return 'central';
-    if (address.match(/La Jolla|Pacific Beach|Ocean Beach|Mission Beach|Point Loma/i) || ['92107', '92109', '92110'].includes(zip)) return 'coastal';
-    if (address.match(/La Mesa|El Cajon|Santee/i) || ['92115', '92119', '92120'].includes(zip)) return 'east';
-    if (address.match(/Chula Vista|Imperial Beach|Coronado/i)) return 'south';
-    if (address.includes('San Diego')) {
-        if (['92106', '92108', '92111', '92117', '92123'].includes(zip)) return 'coastal';
-        if (['92113', '92114'].includes(zip)) return 'south';
-        return 'central';
-    }
-    return 'north-coastal';
-}
 
 function initMap() {
     // Custom map styling - warm, minimal, coffee-themed
@@ -1338,7 +1508,9 @@ function initMap() {
         mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
             position: google.maps.ControlPosition.TOP_RIGHT,
-        }
+        },
+        // On mobile, pan/info windows clear the bottom Show List button row
+        padding: window.innerWidth <= 768 ? { bottom: 70 } : undefined,
     });
     
     infoWindow = new google.maps.InfoWindow();
@@ -1360,6 +1532,10 @@ function initMap() {
     } else if (filterParam === 'cafes') {
         document.getElementById('filterRoasters').checked = false;
         applyFilters();
+    } else if (filterParam === 'online') {
+        document.getElementById('filterRoasters').checked = false;
+        document.getElementById('filterCafes').checked = false;
+        applyFilters();
     }
     
     // Apply search from URL
@@ -1367,13 +1543,29 @@ function initMap() {
         document.getElementById('searchInput').value = searchQuery;
         performSearch();
     }
+
+    // Handle ?location=id deep links from share button
+    const locationParam = urlParams.get('location');
+    if (locationParam) {
+        setTimeout(() => {
+            const loc = allLocations.find(l => l.id === locationParam);
+            const marker = markers.find(m => m.locationData?.id === locationParam);
+            if (marker && loc) {
+                map.setZoom(16);
+                map.panTo(marker.getPosition());
+                setTimeout(() => showInfoWindow(marker, loc), 300);
+                selectLocationCard(locationParam);
+            }
+        }, 800);
+    }
 }
 
 function loadLocations() {
     allLocations = COFFEE_LOCATIONS;
     allLocations.forEach(location => {
-        location.region = getRegion(location);
-        createMarker(location);
+        if (!location.basicInfo?.onlineOnly) {
+            createMarker(location);
+        }
     });
     
     // Custom renderer for color-coded clusters
@@ -1414,7 +1606,8 @@ function loadLocations() {
     });
     
     fitMapToBounds();
-    updateVisibleCount(markers.length);
+    const initialOnlineCount = allLocations.filter(loc => loc.basicInfo?.onlineOnly).length;
+    updateVisibleCount(markers.length + initialOnlineCount);
     renderLocationCards(markers);
 }
 
@@ -1433,7 +1626,6 @@ function createMarker(location) {
         icon: markerColor,
         locationType: location.basicInfo.type,
         locationData: location,
-        region: location.region
     });
     
     marker.addListener('click', () => {
@@ -1444,6 +1636,17 @@ function createMarker(location) {
         if (card) card.classList.add('active');
         if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
+
+    // Map → List: hovering a marker highlights its card
+    marker.addListener('mouseover', () => {
+        const card = document.querySelector(`.location-card[data-id="${location.id}"]`);
+        if (card) card.classList.add('map-hover');
+    });
+    marker.addListener('mouseout', () => {
+        const card = document.querySelector(`.location-card[data-id="${location.id}"]`);
+        if (card) card.classList.remove('map-hover');
+    });
+
     markers.push(marker);
 }
 
@@ -1461,10 +1664,10 @@ function createInfoWindowContent(location, custom) {
     const monIdx = jsDay === 0 ? 6 : jsDay - 1;
     const todayEntry = hours.weekdayDescriptions ? hours.weekdayDescriptions[monIdx] : '';
     const todayHours = todayEntry ? todayEntry.replace(/^\w+:\s*/, '') : '';
-    const isOnline = location.customFlags?.onlineOnly || false;
-    const hasUserLocation = userLocationMarker !== null;
+    const isOnline = info.onlineOnly || location.basicInfo?.onlineOnly || false;
     const isRoaster = info.type === 'roaster';
-    const typeLabel = isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
+    const typeLabel = isOnline ? '🌐 Online Roaster' : (isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe');
+    const hasUserLocation = userLocationMarker !== null;
 
     let html = `<div class="info-window"><h3>${info.name}</h3>`;
 
@@ -1537,19 +1740,24 @@ function createInfoWindowContent(location, custom) {
     }
 
     // ── Buttons ────────────────────────────────────────────────────────
-    html += `<div style="margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem;">`;
-    html += `<a href="location.html?id=${location.id}" class="directions-btn" style="width: 100%; text-align: center; background: #6F4E37; padding: 0.35rem 0.8rem; font-size: 0.78rem;">📋 View Full Details</a>`;
-    html += `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="width: 100%; text-align: center; background: transparent; color: #6B4E3D !important; border: 1.5px solid #C8B9AC; padding: 0.35rem 0.8rem; font-size: 0.78rem;">✏️ Suggest an Edit</a>`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?location=${encodeURIComponent(location.id)}`;
 
+    // Each button is full-width stacked — no flex squishing, no clipping possible
+    const w = 'display:block;width:100%;box-sizing:border-box;text-align:center;margin-bottom:0.3rem;';
+    const primaryBtn = `<a href="location.html?id=${location.id}" class="directions-btn" style="${w}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
+    const editBtn    = `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="${w}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;">&#9999;&#65039; Suggest Edit</a>`;
+    const shareBtn   = `<button onclick="copyShareLink('${shareUrl}', this)" class="directions-btn" style="${w}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;cursor:pointer;">&#128279; Share Location</button>`;
+
+    let dirBtn = '';
     if (hasUserLocation && !isOnline) {
         const lat = info.address.coordinates.lat;
         const lng = info.address.coordinates.lng;
         const userPos = userLocationMarker.getPosition();
         const directionsUrl = `https://www.google.com/maps/dir/${userPos.lat()},${userPos.lng()}/${lat},${lng}`;
-        html += `<a href="${directionsUrl}" target="_blank" class="directions-btn" style="width: 100%; text-align: center; background: #2e7d32; color: white !important; padding: 0.35rem 0.8rem; font-size: 0.78rem;">🧭 Directions</a>`;
+        dirBtn = `<a href="${directionsUrl}" target="_blank" class="directions-btn" style="${w}background:#2e7d32;color:white !important;">&#129517; Get Directions</a>`;
     }
 
-    html += `</div></div>`;
+    html += `<div style="margin-top:0.6rem;">${primaryBtn}${editBtn}${dirBtn}${shareBtn}</div></div>`;
     return html;
 }
 
@@ -1601,12 +1809,14 @@ function setupAutocomplete() {
         let html = '';
         
         matches.forEach((loc) => {
+            const isOnlineLoc = loc.basicInfo?.onlineOnly || false;
             const typeClass = loc.basicInfo.type === 'roaster' ? 'roaster' : 'cafe';
-            const typeLabel = loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe';
+            const typeLabel = isOnlineLoc ? '🌐 Online Roaster' : (loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe');
+            const addrDisplay = isOnlineLoc ? 'Online Only' : (loc.basicInfo.address.street || loc.basicInfo.address.fullAddress || '');
             html += `
                 <div class="autocomplete-item" data-type="existing" data-id="${loc.id}" style="cursor: pointer;">
                     <span class="autocomplete-name">${loc.basicInfo.name}</span>
-                    <span class="autocomplete-address">${loc.basicInfo.address.street || loc.basicInfo.address.fullAddress}</span>
+                    <span class="autocomplete-address">${addrDisplay}</span>
                     <span class="autocomplete-type ${typeClass}">${typeLabel}</span>
                 </div>`;
         });
@@ -1676,13 +1886,18 @@ function selectLocation(locationId) {
     if (!location) return;
     
     document.getElementById('autocompleteDropdown').classList.remove('show');
-    document.getElementById('searchInput').value = location.basicInfo.name;
-    
+    // Clear input so applyFilters doesn't keep calling performSearch on every idle event
+    document.getElementById('searchInput').value = '';
+
     const marker = markers.find(m => m.locationData.id === locationId);
     if (marker) {
+        suppressIdleFilter = true;
         map.setZoom(16);
         map.panTo(marker.getPosition());
-        setTimeout(() => showInfoWindow(marker, location), 300);
+        setTimeout(() => {
+            showInfoWindow(marker, location);
+            setTimeout(() => { suppressIdleFilter = false; }, 500);
+        }, 300);
     }
 
     // Highlight and jump card to top of panel
@@ -1699,35 +1914,34 @@ function updateAllFilterCounts(visibleMarkers) {
     // If visibleMarkers passed (e.g. when Open Now active), count those; otherwise count all
     const source = visibleMarkers || markers;
     const types = {roasters: 0, cafes: 0};
-    const regions = {'central': 0, 'north-coastal': 0, 'coastal': 0, 'north-inland': 0, 'east': 0, 'south': 0};
-
     source.forEach(marker => {
         if (marker.locationType === 'roaster') types.roasters++;
         else types.cafes++;
-        if (regions[marker.region] !== undefined) regions[marker.region]++;
     });
+
+    // Count online-only separately (they don't have markers)
+    const onlineCount = (window.COFFEE_LOCATIONS || []).filter(loc => loc.basicInfo?.onlineOnly).length;
 
     if (document.getElementById('count-roasters')) document.getElementById('count-roasters').textContent = `(${types.roasters})`;
     if (document.getElementById('count-cafes')) document.getElementById('count-cafes').textContent = `(${types.cafes})`;
+    if (document.getElementById('count-online')) document.getElementById('count-online').textContent = `(${onlineCount})`;
 
-    for (const [region, count] of Object.entries(regions)) {
-        const el = document.getElementById(`count-${region}`);
-        if (el) el.textContent = `(${count})`;
-    }
 }
 
-function fitMapToBounds() {
+function fitMapToBounds(useAllMarkers) {
     const bounds = new google.maps.LatLngBounds();
-    let hasVisibleMarkers = false;
+    let hasMarkers = false;
     
     markers.forEach(marker => {
-        if (marker.getMap() !== null) {
+        // useAllMarkers=true: include every marker (used by clear)
+        // default: only currently visible markers
+        if (useAllMarkers || marker.getMap() !== null) {
             bounds.extend(marker.getPosition());
-            hasVisibleMarkers = true;
+            hasMarkers = true;
         }
     });
     
-    if (hasVisibleMarkers) {
+    if (hasMarkers) {
         map.fitBounds(bounds);
         const listener = google.maps.event.addListener(map, 'idle', () => {
             if (map.getZoom() > 15) map.setZoom(15);
@@ -1754,50 +1968,105 @@ function setupEventListeners() {
                 onBtn.textContent = '🕐 Open Now';
             }
         }
+        // Reset all type filters back to checked
+        document.getElementById('filterRoasters').checked = true;
+        document.getElementById('filterCafes').checked = true;
+        const onlineFilter = document.getElementById('filterOnlineOnly');
+        if (onlineFilter) onlineFilter.checked = true;
+
         // Reset nearest sort back to A-Z
         currentSort = 'az';
         document.getElementById('sortAZ').classList.add('active');
         document.getElementById('sortNearest').classList.remove('active');
+        pendingScrollTop = true; // renderLocationCards will scroll to top after next render
         // Remove user location marker
         if (userLocationMarker) {
             userLocationMarker.setMap(null);
             userLocationMarker = null;
         }
         userLatLng = null;
-        applyFilters();
+        // Show ALL markers then fit bounds.
+        // suppressIdleFilter blocks idle events during the animation so the
+        // bounds filter doesn't re-run mid-flight. After 600ms the animation
+        // is settled, we release the flag and call applyFilters() explicitly
+        // with the correct full-SD bounds — works on both desktop and mobile.
+        markers.forEach(m => m.setMap(map));
+        markerCluster.clearMarkers();
+        markerCluster.addMarkers(markers);
+        suppressIdleFilter = true;
+        fitMapToBounds(true);
+        setTimeout(() => {
+            suppressIdleFilter = false;
+            applyFilters();
+        }, 700);
     });
     document.getElementById('filterRoasters').addEventListener('change', applyFilters);
     document.getElementById('filterCafes').addEventListener('change', applyFilters);
+    if (document.getElementById('filterOnlineOnly')) {
+        document.getElementById('filterOnlineOnly').addEventListener('change', applyFilters);
+    }
+
+    // Update card list whenever map finishes moving (idle fires once movement settles)
+    // Debounced so rapid zoom steps don't re-render on every tick
+    let idleDebounce = null;
+    google.maps.event.addListener(map, 'idle', () => {
+        if (suppressIdleFilter) return;
+        clearTimeout(idleDebounce);
+        idleDebounce = setTimeout(() => applyFilters(), 150);
+    });
     
     document.querySelectorAll('input[name="ratingFilter"]').forEach(radio => {
         radio.addEventListener('change', applyFilters);
     });
     
-    document.querySelectorAll('.regionFilter').forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            if (checkbox.value === 'all' && checkbox.checked) {
-                document.querySelectorAll('.regionFilter').forEach(cb => {
-                    if (cb.value !== 'all') cb.checked = false;
-                });
-            } else if (checkbox.value !== 'all') {
-                document.querySelector('.regionFilter[value="all"]').checked = false;
-            }
-            applyFilters();
-        });
-    });
+
     
     document.getElementById('toggleFilters').addEventListener('click', () => {
-        document.getElementById('filtersPanel').classList.toggle('expanded');
+        const panel = document.getElementById('filtersPanel');
+        const controls = document.querySelector('.list-panel-controls');
+        const isExpanding = !panel.classList.contains('expanded');
+
+        panel.classList.toggle('expanded');
+        panel.classList.toggle('overlay-open', isExpanding);
+
+        if (isExpanding && controls) {
+            const rect = controls.getBoundingClientRect();
+            panel.style.top = rect.bottom + 'px';
+            // On desktop: match the width and left of the list panel controls
+            if (window.innerWidth > 768) {
+                panel.style.left = rect.left + 'px';
+                panel.style.width = rect.width + 'px';
+            } else {
+                panel.style.left = '0';
+                panel.style.width = '100%';
+            }
+        } else if (!isExpanding) {
+            // Remove overlay positioning when closing
+            panel.style.top = '';
+            panel.style.left = '';
+            panel.style.width = '';
+        }
     });
     
     document.getElementById('showMyLocation').addEventListener('click', showUserLocation);
+
+    // Close filter panel when clicking outside it
+    document.addEventListener('click', (e) => {
+        const panel = document.getElementById('filtersPanel');
+        const toggleBtn = document.getElementById('toggleFilters');
+        if (panel && panel.classList.contains('expanded')) {
+            if (!panel.contains(e.target) && e.target !== toggleBtn && !toggleBtn.contains(e.target)) {
+                panel.classList.remove('expanded', 'overlay-open');
+                panel.style.top = '';
+                panel.style.left = '';
+                panel.style.width = '';
+            }
+        }
+    });
 }
 
 function showUserLocation() {
-    const btn = document.getElementById('showMyLocation');
     const floatBtn = document.getElementById('mapFloatNearMe');
-    btn.disabled = true;
-    btn.textContent = '⏳';
     if (floatBtn) { floatBtn.disabled = true; floatBtn.textContent = '⏳'; }
     
     if ('geolocation' in navigator) {
@@ -1825,9 +2094,10 @@ function showUserLocation() {
                 
                 map.setCenter(userPos);
                 map.setZoom(12);
-                btn.disabled = false;
-                btn.textContent = '📍 Near Me';
                 if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
+                // Hide the location hint now that we have a position
+                const hint = document.getElementById('locationHint');
+                if (hint) hint.style.display = 'none';
 
                 // Switch to nearest sort and re-render — preserves any active zip/name search
                 currentSort = 'nearest';
@@ -1837,8 +2107,6 @@ function showUserLocation() {
             },
             () => {
                 alert('Could not get your location. Please enable location services.');
-                btn.disabled = false;
-                btn.textContent = '📍 Near Me';
                 if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
             }
         );
@@ -1909,27 +2177,68 @@ function performSearch() {
         }, 500);
     } else {
         const isZipSearch = /^\d{5}$/.test(query);
-        const visibleMarkers = markers.filter(marker => {
-            const location = marker.locationData;
-            const name = location.basicInfo.name.toLowerCase();
-            const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
-            const zip = (location.basicInfo.address.zip || '').trim();
-            if (isZipSearch) {
-                // Zip code search: match zip field OR zip appearing in address
-                return (zip === query || address.includes(query)) && shouldShowMarker(marker);
+
+        if (isZipSearch) {
+            // Zip search: filter by zip field only (bypass bounds check so current
+            // map position doesn't exclude results in the target zip)
+            const zipMarkers = markers.filter(marker => {
+                const loc = marker.locationData;
+                const zip = (loc.basicInfo.address.zip || '').trim();
+                const addr = loc.basicInfo.address.fullAddress?.toLowerCase() || '';
+                // Type filters still apply
+                if (marker.locationType === 'roaster' && !document.getElementById('filterRoasters').checked) return false;
+                if (marker.locationType === 'cafe' && !document.getElementById('filterCafes').checked) return false;
+                return zip === query || addr.includes(query);
+            });
+
+            markerCluster.clearMarkers();
+            markerCluster.addMarkers(zipMarkers);
+            updateVisibleCount(zipMarkers.length);
+            renderLocationCards(zipMarkers);
+
+            // Clear input so idle → applyFilters doesn't re-trigger performSearch loop
+            document.getElementById('searchInput').value = '';
+
+            // Zoom to fit the matched markers — no async, no race conditions.
+            // If we have matches, fit the map to their bounding box.
+            // If somehow no coords, fall back to geocoding the zip.
+            suppressIdleFilter = true;
+            if (zipMarkers.length > 0) {
+                const bounds = new google.maps.LatLngBounds();
+                zipMarkers.forEach(m => bounds.extend(m.getPosition()));
+                map.fitBounds(bounds);
+                // Don't zoom in closer than 14 (single-pin case)
+                const listener = google.maps.event.addListener(map, 'idle', () => {
+                    if (map.getZoom() > 14) map.setZoom(14);
+                    google.maps.event.removeListener(listener);
+                    suppressIdleFilter = false;
+                });
+            } else {
+                // No matching markers — geocode and pan to the zip area
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ address: query + ', San Diego, CA' }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        map.fitBounds(results[0].geometry.viewport || results[0].geometry.bounds);
+                    }
+                    suppressIdleFilter = false;
+                });
             }
-            return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
-        });
-        
-        markerCluster.clearMarkers();
-        markerCluster.addMarkers(visibleMarkers);
-        updateVisibleCount(visibleMarkers.length);
-        renderLocationCards(visibleMarkers);
-        
-        if (visibleMarkers.length === 0) {
-            searchGooglePlaces(query);
         } else {
-            fitMapToBounds();
+            const visibleMarkers = markers.filter(marker => {
+                const location = marker.locationData;
+                const name = location.basicInfo.name.toLowerCase();
+                const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
+                return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
+            });
+
+            markerCluster.clearMarkers();
+            markerCluster.addMarkers(visibleMarkers);
+            updateVisibleCount(visibleMarkers.length);
+            renderLocationCards(visibleMarkers);
+
+            if (visibleMarkers.length === 0) {
+                searchGooglePlaces(query);
+            }
         }
     }
 }
@@ -2094,36 +2403,52 @@ function applyFilters() {
     const visibleMarkers = markers.filter(marker => shouldShowMarker(marker));
     markerCluster.clearMarkers();
     markerCluster.addMarkers(visibleMarkers);
-    updateVisibleCount(visibleMarkers.length);
+
+    // Online roasters only count when zoomed out (city-wide view, zoom < 12)
+    const showOnline = (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
+                       && map.getZoom() < 12;
+    const onlineCount = showOnline ? allLocations.filter(loc => loc.basicInfo?.onlineOnly).length : 0;
+    updateVisibleCount(visibleMarkers.length + onlineCount);
+
     renderLocationCards(visibleMarkers);
-    fitMapToBounds();
     // Update filter counts to reflect current visibility (respects Open Now)
     updateAllFilterCounts(openNowActive ? visibleMarkers : null);
 }
 
 function shouldShowMarker(marker) {
     const location = marker.locationData;
-    
+
+    // Type filters
     if (marker.locationType === 'roaster' && !document.getElementById('filterRoasters').checked) return false;
     if (marker.locationType === 'cafe' && !document.getElementById('filterCafes').checked) return false;
-    
-    const allRegionsChecked = document.querySelector('.regionFilter[value="all"]').checked;
-    
-    if (!allRegionsChecked) {
-        const checkedRegions = Array.from(document.querySelectorAll('.regionFilter:checked'))
-            .map(cb => cb.value)
-            .filter(val => val !== 'all');
-        
-        if (checkedRegions.length > 0 && !checkedRegions.includes(marker.region)) return false;
+
+    // Bounds filter — list reflects what's visible on the map
+    if (map && map.getBounds()) {
+        const coords = location.basicInfo?.address?.coordinates;
+        if (coords) {
+            const inBounds = map.getBounds().contains(new google.maps.LatLng(coords.lat, coords.lng));
+            if (!inBounds) return false;
+        }
     }
-    
+
     if (openNowActive && !isLocationOpenNow(location)) return false;
 
     return true;
 }
 
 function updateVisibleCount(count) {
-    document.getElementById('visibleCount').textContent = count;
+    const el = document.getElementById('visibleCount');
+    if (!el) return;
+    if (el.textContent !== String(count)) {
+        el.textContent = count;
+        el.classList.remove('flash');
+        void el.offsetWidth;
+        el.classList.add('flash');
+        setTimeout(() => el.classList.remove('flash'), 450);
+    }
+    // Show "zoom out for more" nudge when very few results visible
+    const nudge = document.getElementById('zoomNudge');
+    if (nudge) nudge.style.display = (count > 0 && count < 10) ? 'inline' : 'none';
 }
 
 // ── Location Cards ─────────────────────────────────────────────────────────
@@ -2131,31 +2456,52 @@ function renderLocationCards(visibleMarkers) {
     const container = document.getElementById('locationCards');
     if (!container) return;
 
-    let sortedMarkers = [...visibleMarkers];
+    // Online roasters only appear in list when zoomed out to city-wide view (zoom < 12)
+    const showOnline = (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
+                       && map.getZoom() < 12;
+    const onlineLocations = showOnline ? allLocations.filter(loc => loc.basicInfo?.onlineOnly) : [];
 
+    // Combine: marker locations + online-only as plain location objects
+    let combined = [
+        ...visibleMarkers.map(m => ({ loc: m.locationData, marker: m })),
+        ...onlineLocations.map(loc => ({ loc, marker: null }))
+    ];
+
+    // Sort the unified list
     if (currentSort === 'az') {
-        sortedMarkers.sort((a, b) =>
-            a.locationData.basicInfo.name.localeCompare(b.locationData.basicInfo.name)
-        );
+        combined.sort((a, b) => a.loc.basicInfo.name.localeCompare(b.loc.basicInfo.name));
     } else if (currentSort === 'nearest' && userLatLng) {
-        sortedMarkers.sort((a, b) => {
-            const ca = a.locationData.basicInfo.address.coordinates;
-            const cb = b.locationData.basicInfo.address.coordinates;
+        combined.sort((a, b) => {
+            const ca = a.loc.basicInfo.address?.coordinates;
+            const cb = b.loc.basicInfo.address?.coordinates;
+            // Online-only with no coords sort to the end
+            if (!ca) return 1;
+            if (!cb) return -1;
             return getDistanceKm(userLatLng.lat, userLatLng.lng, ca.lat, ca.lng)
                  - getDistanceKm(userLatLng.lat, userLatLng.lng, cb.lat, cb.lng);
         });
     }
 
-    if (sortedMarkers.length === 0) {
+    if (combined.length === 0) {
         container.innerHTML = '<div style="padding:2rem 1rem; text-align:center; color:#999; font-size:0.85rem;">No locations match your search.</div>';
         return;
     }
 
-    container.innerHTML = sortedMarkers.map(marker => {
-        const loc = marker.locationData;
+    container.innerHTML = combined.map(({ loc }) => renderCard(loc)).join('');
+    document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
+
+    // Scroll to top if clear was just pressed
+    if (pendingScrollTop) {
+        container.scrollTop = 0;
+        pendingScrollTop = false;
+    }
+}
+
+function renderCard(loc) {
         const info = loc.basicInfo;
         const custom = sheetDataByLocation[loc.id] || {};
         const isRoaster = info.type === 'roaster';
+        const isOnline = info.onlineOnly || false;
 
         // Photo - googlePhotos entries are objects with a name field
         const photos = loc.googlePhotos || [];
@@ -2168,10 +2514,11 @@ function renderLocationCards(visibleMarkers) {
                 photoUrl = `https://places.googleapis.com/v1/${photo.name}/media?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&maxWidthPx=200`;
             }
         }
+        const _initials = getCardInitials(info.name);
         const imgHtml = photoUrl
-            ? `<img class="location-card-img" src="${photoUrl}" alt="${info.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-               <div class="location-card-img-placeholder" style="display:none;">☕</div>`
-            : `<div class="location-card-img-placeholder">☕</div>`;
+            ? `<img class="location-card-img" src="${photoUrl}" alt="${info.name}" onerror="this.style.display='none'; this.nextElementSibling.style.removeProperty('display');">
+               <div class="location-card-img-placeholder" style="display:none;"><div class="card-initials">${_initials}</div><div class="card-initials-dot"></div></div>`
+            : `<div class="location-card-img-placeholder"><div class="card-initials">${_initials}</div><div class="card-initials-dot"></div></div>`;
 
         // Distance
         let distHtml = '';
@@ -2228,17 +2575,69 @@ function renderLocationCards(visibleMarkers) {
 
 
         return `
-        <div class="location-card" data-id="${loc.id}" onclick="selectLocationCard('${loc.id}')">
+        <div class="location-card" data-id="${loc.id}"
+             onclick="selectLocationCard('${loc.id}')"
+             onmouseenter="highlightMarker('${loc.id}', true)"
+             onmouseleave="highlightMarker('${loc.id}', false)">
             ${imgHtml}
             <div class="location-card-body">
                 <div class="location-card-name">${info.name}</div>
-                <div class="location-card-type ${isRoaster ? 'roaster' : 'cafe'}">${isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe'}</div>
+                <div class="location-card-type ${isRoaster ? 'roaster' : 'cafe'}">${isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe'}</div>
                 ${distHtml}
                 ${detailLines}
 
             </div>
         </div>`;
-    }).join('');
+}
+
+// ── Initials helper (for image fallback) ─────────────────────────────────────
+function getCardInitials(name) {
+    const clean = name
+        .replace(/\s*[-–]\s*.+$/, '')
+        .replace(/\s*\(.*?\)\s*$/, '')
+        .trim();
+    const words = clean.split(/\s+/).filter(w => w.length > 2 || w === w.toUpperCase());
+    if (words.length === 0) return name.slice(0, 2).toUpperCase();
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+}
+
+// ── Share link helper ──────────────────────────────────────────────────────
+function copyShareLink(url, btn) {
+    const origText = '🔗 Share Location';
+    const copy = () => {
+        btn.textContent = '✅ Copied!';
+        btn.style.color = '#2e7d32';
+        btn.style.borderColor = '#2e7d32';
+        setTimeout(() => {
+            btn.textContent = origText;
+            btn.style.color = '';
+            btn.style.borderColor = '';
+        }, 2000);
+    };
+    navigator.clipboard.writeText(url).then(copy).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copy();
+    });
+}
+
+function highlightMarker(locationId, on) {
+    const marker = markers.find(m => m.locationData?.id === locationId);
+    if (!marker) return;
+    if (on) {
+        marker._origIcon = marker.getIcon();
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
+        marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+    } else {
+        if (marker._origIcon) marker.setIcon(marker._origIcon);
+        marker.setZIndex(undefined);
+    }
 }
 
 function selectLocationCard(locationId) {
@@ -2256,17 +2655,34 @@ function selectLocationCard(locationId) {
     const toggle = document.getElementById('mobileToggle');
     const floatBtn = document.getElementById('mapFloatNearMe');
     if (panel && panel.classList.contains('mobile-visible') && window.innerWidth <= 768) {
+        // Save scroll position before closing
+        const cards = document.getElementById('locationCards');
+        if (cards) panel.dataset.savedScroll = cards.scrollTop;
         panel.classList.remove('mobile-visible');
         if (toggle) toggle.textContent = '☰ Show List';
         if (floatBtn) floatBtn.classList.remove('hidden');
     }
 
     // Zoom in and open info window on map
+    // Suppress idle-triggered applyFilters during this zoom so the map doesn't flash
     const marker = markers.find(m => m.locationData?.id === locationId);
     if (marker) {
+        suppressIdleFilter = true;
         map.setZoom(16);
         map.panTo(marker.getPosition());
-        setTimeout(() => showInfoWindow(marker, marker.locationData), 300);
+        setTimeout(() => {
+            showInfoWindow(marker, marker.locationData);
+            // Re-enable idle filter once animation has settled
+            setTimeout(() => { suppressIdleFilter = false; }, 400);
+        }, 300);
+    } else {
+        // Online-only roasters have no map marker — show info window at map center
+        const loc = (window.COFFEE_LOCATIONS || []).find(l => l.id === locationId);
+        if (loc) {
+            infoWindow.setContent(createInfoWindowContent(loc, sheetDataByLocation[loc.id] || {}));
+            infoWindow.setPosition(map.getCenter());
+            infoWindow.open(map);
+        }
     }
 }
 
@@ -2276,6 +2692,12 @@ let currentSort = 'az';
 
 function setSort(mode) {
     if (mode === 'nearest' && !userLatLng) {
+        // Show hint briefly on mobile (no hover)
+        const hint = document.getElementById('locationHint');
+        if (hint) {
+            hint.style.display = 'block';
+            hint.textContent = '📍 Getting your location…';
+        }
         // Trigger geolocation — reuse the existing showUserLocation logic
         showUserLocation();
         return; // showUserLocation will call applyFilters once location is found
@@ -2305,13 +2727,73 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.addEventListener('click', () => {
             const isVisible = panel.classList.toggle('mobile-visible');
             toggle.textContent = isVisible ? '🗺️ Show Map' : '☰ Show List';
-            // Hide floating button when list is open
             if (floatBtn) floatBtn.classList.toggle('hidden', isVisible);
+
+            // Restore saved scroll position when re-opening list
+            if (isVisible) {
+                const savedScroll = parseInt(panel.dataset.savedScroll || '0', 10);
+                const cards = document.getElementById('locationCards');
+                if (cards) requestAnimationFrame(() => { cards.scrollTop = savedScroll; });
+            }
         });
     }
 
     if (floatBtn) {
         floatBtn.addEventListener('click', showUserLocation);
+    }
+
+    // Hamburger menu toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileNavMenu = document.getElementById('mobileNavMenu');
+    if (hamburgerBtn && mobileNavMenu) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = mobileNavMenu.classList.toggle('open');
+            hamburgerBtn.textContent = isOpen ? '✕' : '☰';
+        });
+        document.addEventListener('click', (e) => {
+            // Don't close if the click was on the hamburger button itself
+            if (e.target === hamburgerBtn || hamburgerBtn.contains(e.target)) return;
+            if (mobileNavMenu.classList.contains('open')) {
+                mobileNavMenu.classList.remove('open');
+                hamburgerBtn.textContent = '☰';
+            }
+        });
+    }
+
+    // Active filter dot — show when any filter is non-default
+    function updateFilterDot() {
+        const filterBtn = document.getElementById('toggleFilters');
+        if (!filterBtn) return;
+        const roasters = document.getElementById('filterRoasters');
+        const cafes = document.getElementById('filterCafes');
+        const online = document.getElementById('filterOnlineOnly');
+        const openNow = openNowActive;
+        const anyNonDefault = (roasters && !roasters.checked) ||
+                              (cafes && !cafes.checked) ||
+                              (online && !online.checked) ||
+                              openNow;
+        filterBtn.classList.toggle('filters-active', anyNonDefault);
+    }
+
+    // Attach dot-updater to all filter inputs
+    ['filterRoasters','filterCafes','filterOnlineOnly'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', updateFilterDot);
+    });
+    document.getElementById('openNowBtn')?.addEventListener('click', () => setTimeout(updateFilterDot, 50));
+    document.getElementById('clearBtn')?.addEventListener('click', () => setTimeout(updateFilterDot, 50));
+
+    // Location hint on sort nearest button (shown until location is granted)
+    const sortNearestBtn = document.getElementById('sortNearest');
+    const locationHint = document.getElementById('locationHint');
+    if (sortNearestBtn && locationHint) {
+        sortNearestBtn.addEventListener('mouseenter', () => {
+            if (!userLatLng) locationHint.style.display = 'block';
+        });
+        sortNearestBtn.addEventListener('mouseleave', () => {
+            locationHint.style.display = 'none';
+        });
     }
 });
 
@@ -2321,6 +2803,8 @@ window.gm_authFailure = function() {
 
 // ── Open Now Filter ─────────────────────────────────────────────────────────
 let openNowActive = false;
+let pendingScrollTop = false; // set by clear to scroll cards to top after render
+let suppressIdleFilter = false; // prevents idle re-render during card selection zoom
 
 function parseTimeToMinutes(timeStr) {
     const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
@@ -2377,6 +2861,14 @@ function isLocationOpenNow(location) {
     return false;
 }
 
+// Count how many physical locations (markers) have hours data entered
+function countLocationsWithHours() {
+    return allLocations.filter(loc => {
+        if (loc.basicInfo?.onlineOnly) return false;
+        return loc.hours?.weekdayDescriptions?.length > 0;
+    }).length;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('openNowBtn');
     if (!btn) return;
@@ -2386,6 +2878,49 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.style.color = openNowActive ? 'white' : '';
         btn.style.borderColor = openNowActive ? '#2e7d32' : '';
         btn.textContent = '🕐 Open Now';
+
+        // Show coverage hint tooltip briefly when activating
+        if (openNowActive) {
+            const total = markers.length;
+            const withHours = countLocationsWithHours();
+            const noHours = total - withHours;
+            if (noHours > 0) {
+                // Remove any existing hint
+                const existing = document.getElementById('openNowHint');
+                if (existing) existing.remove();
+                const hint = document.createElement('div');
+                hint.id = 'openNowHint';
+                // Position above the button using body-level fixed positioning
+                // so it is never clipped by panel overflow:hidden
+                const rect = btn.getBoundingClientRect();
+                // Estimate tooltip width to clamp it within the viewport
+                const approxWidth = 220;
+                const margin = 8;
+                let leftPos = rect.left + rect.width / 2 - approxWidth / 2;
+                // Clamp so tooltip never goes off either edge
+                leftPos = Math.max(margin, Math.min(leftPos, window.innerWidth - approxWidth - margin));
+                hint.style.cssText = `
+                    position: fixed;
+                    bottom: ${window.innerHeight - rect.top + 6}px;
+                    left: ${leftPos}px;
+                    background: #333;
+                    color: #fff;
+                    font-size: 0.68rem;
+                    padding: 0.35rem 0.7rem;
+                    border-radius: 4px;
+                    white-space: nowrap;
+                    z-index: 99999;
+                    pointer-events: none;
+                    font-family: 'Libre Franklin', sans-serif;
+                    font-weight: 500;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+                `;
+                hint.textContent = `Hours data for ${withHours} of ${total} locations`;
+                document.body.appendChild(hint);
+                setTimeout(() => { hint.remove(); }, 3000);
+            }
+        }
+
         applyFilters();
     });
 });

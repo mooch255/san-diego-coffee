@@ -50,11 +50,12 @@ exports.handler = async function (event) {
       amenities:         data.amenities         || '',
       notes:             data.notes             || '',
       description:       data.description       || '',
+      onlineWebsite:     data.onlineWebsite     || '',
+      onlineInstagram:   data.onlineInstagram   || '',
     };
 
   } else if (locationType === 'cafe') {
     payload = {
-      sheet:             'Cafes',
       id:                data.id                || '',
       timestamp:         data.timestamp         || new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
       locationName:      data.locationName      || '',

@@ -189,6 +189,7 @@
         .dd-item:last-child { border-bottom: none; }
         .dd-item:hover { background: var(--cream); }
 
+        .badge-online { background: #7B4F9E; color: #fff; }
         .dd-item-badge {
             font-size: 0.6rem;
             font-weight: 800;
@@ -416,6 +417,11 @@
         .alert.visible { display: block; }
         .alert.success { background: #e8f5e9; color: var(--success); border-left: 3px solid var(--success); }
         .alert.error   { background: #ffebee; color: var(--error);   border-left: 3px solid var(--error); }
+        .alert.info    { background: #e8f0fe; color: #1a56b0;        border-left: 3px solid #1a56b0; }
+        .snippet-box { display: none; margin-top: 1rem; background: #1e1e1e; border-radius: 6px; padding: 1rem; }
+        .snippet-box.visible { display: block; }
+        .snippet-box pre { color: #d4d4d4; font-size: 0.72rem; line-height: 1.5; white-space: pre-wrap; word-break: break-all; margin: 0; }
+        .snippet-copy-btn { margin-top: 0.5rem; background: #3a3a3a; color: #fff; border: none; padding: 0.4rem 0.75rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
 
         /* ── Footer ─────────────────────────────────────────────────── */
         footer { background: var(--espresso); color: rgba(196,167,125,0.65); text-align: center; padding: 0.85rem 2rem; border-top: 2px solid var(--accent-red); font-size: 0.78rem; }
@@ -630,6 +636,18 @@
                     </div>
                 </div>
 
+                <div class="form-section" id="r-online-links-section" style="display:none;">
+                    <div class="section-label">🌐 Online Roaster Links</div>
+                    <div class="field-group">
+                        <label>Website URL</label>
+                        <input type="text" id="r-onlineWebsite" placeholder="e.g. https://frequentcoffee.com">
+                    </div>
+                    <div class="field-group">
+                        <label>Instagram URL</label>
+                        <input type="text" id="r-onlineInstagram" placeholder="e.g. https://instagram.com/frequentcoffee">
+                    </div>
+                </div>
+
                 <div class="form-section">
                     <div class="section-label">Admin Notes</div>
                     <div class="field-group" style="margin-bottom:0;">
@@ -742,6 +760,11 @@
                     Save to Google Sheets
                 </button>
                 <div class="alert" id="alertBox"></div>
+                <div class="snippet-box" id="snippetBox">
+                    <div style="color:#9cdcfe; font-size:0.72rem; margin-bottom:0.5rem; font-weight:600;">📋 PASTE THIS INTO locations.js</div>
+                    <pre id="snippetContent"></pre>
+                    <button class="snippet-copy-btn" onclick="copySnippet()">Copy Snippet</button>
+                </div>
             </div>
 
         </div><!-- /form-panel-wrap -->
@@ -864,6 +887,7 @@
         // ── Unified Search ─────────────────────────────────────────────
         function doSearch(query) {
             const q = query.toLowerCase();
+            const searchVal = query.trim();
 
             // 1. Search existing locations
             const existingMatches = ALL_LOCATIONS.filter(loc => {
@@ -880,11 +904,11 @@
                 location: new google.maps.LatLng(32.7157, -117.1611),
                 radius: 60000,
             }, (predictions, status) => {
-                renderDropdown(existingMatches, predictions || []);
+                renderDropdown(existingMatches, predictions || [], searchVal);
             });
         }
 
-        function renderDropdown(existing, predictions) {
+        function renderDropdown(existing, predictions, searchVal) {
             const dd = document.getElementById('adminDropdown');
             let html = '';
 
@@ -926,6 +950,18 @@
                 html = '<div class="dd-empty">No results found — try different keywords</div>';
             }
 
+            // Always append online-only option at the bottom
+            if (searchVal) {
+                html += `<div class="dd-section-header">🌐 Online Only</div>`;
+                html += `<div class="dd-item" onclick="selectOnlineOnly('${searchVal.replace(/'/g, "\\'")}')">
+                    <span class="dd-item-badge badge-online">Online</span>
+                    <div class="dd-item-text">
+                        <div class="dd-item-name">${searchVal}</div>
+                        <div class="dd-item-meta">No physical location — sidebar only</div>
+                    </div>
+                </div>`;
+            }
+
             dd.innerHTML = html;
             dd.classList.add('open');
         }
@@ -965,8 +1001,21 @@
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('mapHint').style.display = 'none';
 
+            // Show online links section only for online-only roasters
+            const isOnline = loc.basicInfo?.onlineOnly || false;
+            document.getElementById('r-online-links-section').style.display = isOnline ? 'block' : 'none';
+
             // Scroll form panel to top
             document.getElementById('formPanelWrap').scrollTop = 0;
+        }
+
+        // ── Get next available location ID ────────────────────────────
+        function getNextId() {
+            const nums = ALL_LOCATIONS
+                .map(l => parseInt((l.id || '').replace('loc_', '')))
+                .filter(n => !isNaN(n));
+            const highest = nums.length ? Math.max(...nums) : 0;
+            return 'loc_' + String(highest + 1).padStart(3, '0');
         }
 
         // ── Select New Place from Google Places ───────────────────────
@@ -991,7 +1040,7 @@
                 document.getElementById('adminSearchClear').classList.add('visible');
 
                 const nextNum     = ALL_LOCATIONS.length + 1;
-                const suggestedId = 'loc_' + String(nextNum).padStart(3, '0');
+                const suggestedId = getNextId();
                 const hood        = extractNeighborhood(place.formatted_address);
 
                 showLocationHeader('ADDING NEW LOCATION', place.name, place.formatted_address);
@@ -1000,6 +1049,7 @@
 
                 document.getElementById('emptyState').style.display = 'none';
                 document.getElementById('mapHint').style.display = 'none';
+                document.getElementById('r-online-links-section').style.display = 'none';
 
                 // Drop a temporary marker on the map
                 if (place.geometry?.location) {
@@ -1034,6 +1084,36 @@
             });
         }
 
+        function selectOnlineOnly(name) {
+            closeDropdown();
+
+            const suggestedId = getNextId();
+
+            selectedLocation = {
+                isNew: true,
+                isOnlineOnly: true,
+                name: name,
+            };
+
+            currentMode = 'add';
+
+            document.getElementById('adminSearchInput').value = name;
+            document.getElementById('adminSearchClear').classList.add('visible');
+
+            showLocationHeader('ADDING ONLINE-ONLY LOCATION', name, '🌐 No physical location — sidebar only');
+            prefillFields(suggestedId, name, '');
+            showTypeSection(null);
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('mapHint').style.display = 'none';
+            document.getElementById('formPanelWrap').scrollTop = 0;
+
+            // Show online links section
+            document.getElementById('r-online-links-section').style.display = 'block';
+
+            showAlert('🌐 Online-only mode: fill in the form and save to Sheets, then copy the locations.js snippet shown below.', 'info');
+        }
+
         function extractNeighborhood(address) {
             const parts = address.split(',');
             return parts.length >= 2 ? parts[1].trim() : '';
@@ -1066,6 +1146,8 @@
                 setVal('r-multipleLocations', d.multipleLocations);
                 setVal('r-notes',           d.notes);
                 setVal('r-description',     d.description);
+                setVal('r-onlineWebsite',   d.onlineWebsite   || '');
+                setVal('r-onlineInstagram', d.onlineInstagram || '');
                 if (d.amenities && d.amenities.length) {
                     setCheckboxes('r-amenities', d.amenities);
                 }
@@ -1213,6 +1295,8 @@
                     amenities:         getChecked('r-amenities'),
                     notes:             document.getElementById('r-notes').value.trim(),
                     description:       document.getElementById('r-description').value.trim(),
+                    onlineWebsite:     document.getElementById('r-onlineWebsite').value.trim(),
+                    onlineInstagram:   document.getElementById('r-onlineInstagram').value.trim(),
                 };
             } else {
                 payload = {
@@ -1242,6 +1326,12 @@
                     const action = data.action === 'updated' ? 'Updated' : 'Added';
                     showAlert(`✓ ${action} "${payload.locationName}" in the ${currentType === 'roaster' ? 'Roasters' : 'Cafes'} sheet!`, 'success');
                     btn.textContent = `✓ ${action}!`;
+
+                    // If online-only, generate the locations.js snippet
+                    if (selectedLocation?.isOnlineOnly) {
+                        generateOnlineSnippet(payload);
+                    }
+
                     setTimeout(() => {
                         btn.disabled = false;
                         btn.textContent = `${currentMode === 'add' ? 'Add' : 'Update'} ${currentType === 'roaster' ? 'Roaster' : 'Cafe'} in Google Sheets`;
@@ -1255,6 +1345,41 @@
                 btn.disabled = false;
                 btn.textContent = `${currentMode === 'add' ? 'Add' : 'Update'} ${currentType === 'roaster' ? 'Roaster' : 'Cafe'} in Google Sheets`;
             }
+        }
+
+        function generateOnlineSnippet(payload) {
+            const snippet = {
+                id: payload.id,
+                basicInfo: {
+                    name: payload.locationName,
+                    type: payload.locationType,
+                    onlineOnly: true,
+                    address: {
+                        street: '',
+                        fullAddress: 'San Diego, CA',
+                        neighborhood: payload.neighborhood || '',
+                        city: 'San Diego',
+                        state: 'CA',
+                        zip: '',
+                        coordinates: { lat: 0, lng: 0 }
+                    }
+                },
+                googlePhotos: [],
+                coffeeDetails: {}
+            };
+
+            const snippetStr = JSON.stringify(snippet, null, 2);
+            document.getElementById('snippetContent').textContent = snippetStr + ',';
+            document.getElementById('snippetBox').classList.add('visible');
+        }
+
+        function copySnippet() {
+            const text = document.getElementById('snippetContent').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.snippet-copy-btn');
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => btn.textContent = 'Copy Snippet', 2000);
+            });
         }
 
         function showAlert(msg, type) {

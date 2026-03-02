@@ -88,6 +88,8 @@ async function main() {
                              : [],
         notes:             sheetRow.notes             || '',
         description:       sheetRow.description       || '',
+        onlineWebsite:     sheetRow.onlineWebsite     || '',
+        onlineInstagram:   sheetRow.onlineInstagram   || '',
         lastUpdated:       sheetRow.timestamp         || '',
       };
     } else {

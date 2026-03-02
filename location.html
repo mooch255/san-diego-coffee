@@ -371,6 +371,14 @@
             color: var(--latte);
         }
 
+        .gallery-placeholder-initials {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: rgba(196, 167, 125, 0.9);
+            letter-spacing: 0.08em;
+            line-height: 1;
+        }
         .gallery-placeholder .placeholder-icon {
             font-size: 4rem;
             opacity: 0.4;
@@ -947,7 +955,7 @@
                         <div class="mobile-hours-inline">
                             ${renderHours(hours, today)}
                         </div>
-                        ${renderContact(contact, info)}
+                        ${renderContact(contact, info, custom)}
                     </div>
                     <div class="right-col fade-up">
                         ${renderHours(hours, today)}
@@ -1001,13 +1009,25 @@
             return html;
         }
 
+        function getLocationInitials(name) {
+            const FILLER = new Set(['the','a','an','of','and','&','at','by','for','in','on','to']);
+                const clean = name
+                    .replace(/\s*[-\u2013]\s*.+$/, '')
+                    .replace(/\s*\(.*?\)\s*$/, '')
+                    .trim();
+                const words = clean.split(/\s+/).filter(w => w.length > 0 && !FILLER.has(w.toLowerCase()));
+                if (words.length === 0) return name.slice(0, 2).toUpperCase();
+                if (words.length === 1) return words[0].slice(0, Math.min(4, words[0].length)).toUpperCase();
+                return words.map(w => w[0]).join('').toUpperCase().slice(0, 4);
+        }
+
         function renderGallery(photos, placeId, name) {
             if (!photos || !photos.length) {
                 return `
                     <div class="gallery-section">
                         <div class="gallery-placeholder">
-                            <div class="placeholder-icon">☕</div>
-                            <p>No photos available yet for ${name}</p>
+                            <div class="gallery-placeholder-initials">${getLocationInitials(name)}</div>
+                            <p>No photos yet</p>
                         </div>
                     </div>
                 `;
@@ -1083,8 +1103,28 @@
             `;
         }
 
-        function renderContact(contact, info) {
+        function renderContact(contact, info, custom) {
+            custom = custom || {};
             let html = '';
+
+            // For online-only roasters, show their links prominently instead of address
+            if (info.onlineOnly) {
+                if (custom.onlineWebsite) {
+                    const display = custom.onlineWebsite.replace(/https?:\/\//, '').replace(/\/$/, '');
+                    html += contactItem('🌐', 'Website', `<a href="${custom.onlineWebsite}" target="_blank">${display}</a>`);
+                }
+                if (custom.onlineInstagram) {
+                    const display = custom.onlineInstagram.replace(/https?:\/\/(www\.)?instagram\.com\//, '@').replace(/\/$/, '');
+                    html += contactItem('📸', 'Instagram', `<a href="${custom.onlineInstagram}" target="_blank">${display}</a>`);
+                }
+                if (!html) return '';
+                return `
+                    <div class="section">
+                        <div class="section-label">Find Them Online</div>
+                        <div class="contact-grid">${html}</div>
+                    </div>
+                `;
+            }
 
             if (info.address.fullAddress) {
                 html += contactItem('📍', 'Address', info.address.fullAddress);

@@ -87,6 +87,15 @@ async function main() {
       continue;
     }
 
+    // If image file already exists on disk, just register it without downloading
+    const existingPath = path.join(IMAGES_DIR, `${loc.id}.jpg`);
+    if (fs.existsSync(existingPath)) {
+      loc.localImage = `/images/locations/${loc.id}.jpg`;
+      downloaded++;
+      console.log(`  ✓  ${name} (used existing file)`);
+      continue;
+    }
+
     // If no photo references stored, try fetching them from Places API using placeId
     let photos = loc.googlePhotos;
     if ((!photos || !photos.length || !photos[0]?.name) && loc.googleData?.placeId) {

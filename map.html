@@ -264,12 +264,6 @@
             display: block;
         }
 
-        .autocomplete-address {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 0.2rem;
-        }
-
         .autocomplete-type {
             display: inline-block;
             font-size: 0.75rem;
@@ -371,7 +365,7 @@
         }
 
         .filters-panel.expanded {
-            max-height: 140px;
+            max-height: 210px;
             padding: 0;
             overflow-y: auto;
         }
@@ -420,6 +414,23 @@
             font-size: 0.85rem;
             margin-left: 0.25rem;
             font-weight: 400;
+        }
+
+        .neighborhood-select {
+            width: 100%;
+            padding: 0.35rem 0.5rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            border: 1px solid rgba(107, 78, 61, 0.25);
+            border-radius: 6px;
+            background: var(--warm-white);
+            color: var(--rich-brown);
+            cursor: pointer;
+            appearance: auto;
+        }
+        .neighborhood-select:focus {
+            outline: none;
+            border-color: var(--coffee-brown);
         }
 
         .location-btn {
@@ -736,8 +747,8 @@
         /* Map Legend */
         .map-legend {
             position: absolute;
-            bottom: 5.5rem;
-            right: 0.75rem;
+            bottom: 2.25rem;
+            left: 0.75rem;
             background: rgba(255,255,255,0.93);
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -846,15 +857,27 @@
         @media (max-width: 768px) {
             .filters-inner {
                 display: flex;
+                flex-wrap: wrap;
                 gap: 0;
                 padding: 0;
             }
             .filters-section {
-                flex: 1;
+                flex: 1 1 50%;
                 padding: 0.65rem 0.85rem;
+                box-sizing: border-box;
             }
-            .filters-section:nth-child(2) { /* Sort */
+            .filters-section:nth-child(2) { /* Neighborhood */
                 border-left: 1px solid #f0ebe4;
+            }
+            .filters-section:nth-child(3) { /* Sort — full-width second row */
+                flex: 0 0 100%;
+                border-top: 1px solid #f0ebe4;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filters-panel.expanded {
+                max-height: 260px;
             }
         }
 
@@ -1076,6 +1099,7 @@
             .list-panel {
                 width: 100%;
                 height: 100vh;
+                height: 100dvh; /* iOS Safari: use actual visible viewport height */
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -1283,10 +1307,6 @@
                 overflow: auto !important;
             }
 
-            .autocomplete-address {
-                display: none;
-            }
-
             .search-container {
                 min-width: 0;
             }
@@ -1385,6 +1405,12 @@
                             <span style="background:#ede8f5; color:#7B4F9E; padding:4px 10px; font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">🌐 Online Roasters</span>
                             <span class="filter-count" id="count-online"></span>
                         </label>
+                    </div>
+                    <div class="filters-section">
+                        <h3>Neighborhood</h3>
+                        <select id="filterNeighborhood" class="neighborhood-select">
+                            <option value="">All Neighborhoods</option>
+                        </select>
                     </div>
                     <div class="filters-section">
                         <h3>Sort</h3>
@@ -1837,12 +1863,12 @@ function setupAutocomplete() {
         matches.forEach((loc) => {
             const isOnlineLoc = loc.basicInfo?.onlineOnly || false;
             const typeClass = loc.basicInfo.type === 'roaster' ? 'roaster' : 'cafe';
-            const typeLabel = isOnlineLoc ? '🌐 Online Roaster' : (loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe');
-            const addrDisplay = isOnlineLoc ? 'Online Only' : (loc.basicInfo.address.street || loc.basicInfo.address.fullAddress || '');
+            const typeBase = isOnlineLoc ? '🌐 Online Roaster' : (loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe');
+            const neighborhood = loc.coffeeDetails?.neighborhood || '';
+            const typeLabel = neighborhood ? `${typeBase} · ${neighborhood}` : typeBase;
             html += `
                 <div class="autocomplete-item" data-type="existing" data-id="${loc.id}" style="cursor: pointer;">
                     <span class="autocomplete-name">${loc.basicInfo.name}</span>
-                    <span class="autocomplete-address">${addrDisplay}</span>
                     <span class="autocomplete-type ${typeClass}">${typeLabel}</span>
                 </div>`;
         });
@@ -1999,6 +2025,8 @@ function setupEventListeners() {
         document.getElementById('filterCafes').checked = true;
         const onlineFilter = document.getElementById('filterOnlineOnly');
         if (onlineFilter) onlineFilter.checked = true;
+        const nbrFilter = document.getElementById('filterNeighborhood');
+        if (nbrFilter) nbrFilter.value = '';
 
         // Reset nearest sort back to A-Z
         currentSort = 'az';
@@ -2025,6 +2053,43 @@ function setupEventListeners() {
             suppressIdleFilter = false;
             applyFilters();
         }, 700);
+    });
+    // Populate neighborhood select with optgroups
+    (function buildNeighborhoodSelect() {
+        const regionMap = {
+            'North County Coastal':  ['Carlsbad','Cardiff-by-the-Sea','Encinitas','Oceanside','Solana Beach'],
+            'North County Inland':   ['Escondido','La Mesa','Poway','San Marcos','Vista'],
+            'North San Diego Inland': ['Carmel Mountain Ranch','Carmel Valley','Mira Mesa','Rancho Bernardo','Sorrento Valley'],
+            'Downtown & Uptown':     ["Banker's Hill",'Downtown','Golden Hill','Hillcrest','Mission Hills','Normal Heights','North Park','South Park'],
+            'Beach Communities':     ['Bay Park','Bird Rock','La Jolla','Ocean Beach','Pacific Beach','Point Loma'],
+            'Central & East SD':     ['Allied Gardens','Barrio Logan','City Heights','College Area','Del Cerro','El Cajon','Lemon Grove','Logan Heights','Mission Valley','Old Town'],
+            'South Bay':             ['Chula Vista','Coronado','Imperial Beach'],
+        };
+        // Collect neighborhoods that actually exist in the data
+        const present = new Set(
+            allLocations.map(l => l.coffeeDetails?.neighborhood).filter(Boolean)
+        );
+        const sel = document.getElementById('filterNeighborhood');
+        Object.entries(regionMap)
+            .map(([region, hoods]) => [region, hoods.filter(h => present.has(h))])
+            .filter(([, inData]) => inData.length > 0)
+            .sort(([, a], [, b]) => b.length - a.length)
+            .forEach(([region, inData]) => {
+                const grp = document.createElement('optgroup');
+                grp.label = region;
+                inData.forEach(h => {
+                    const opt = document.createElement('option');
+                    opt.value = h;
+                    opt.textContent = h;
+                    grp.appendChild(opt);
+                });
+                sel.appendChild(grp);
+            });
+    })();
+
+    document.getElementById('filterNeighborhood').addEventListener('change', () => {
+        neighborhoodZoomPending = true;
+        applyFilters();
     });
     document.getElementById('filterRoasters').addEventListener('change', applyFilters);
     document.getElementById('filterCafes').addEventListener('change', applyFilters);
@@ -2417,7 +2482,7 @@ function applyFilters() {
         performSearch();
         return;
     }
-    
+
     const visibleMarkers = markers.filter(marker => shouldShowMarker(marker));
     markerCluster.clearMarkers();
     markerCluster.addMarkers(visibleMarkers);
@@ -2431,6 +2496,24 @@ function applyFilters() {
     renderLocationCards(visibleMarkers);
     // Update filter counts to reflect current visibility (respects Open Now)
     updateAllFilterCounts(openNowActive ? visibleMarkers : null);
+
+    // Auto-zoom to fit neighborhood — only fires once when the user picks from the dropdown,
+    // not on every subsequent idle event (so the user can freely zoom out after).
+    if (neighborhoodZoomPending) {
+        neighborhoodZoomPending = false;
+        const nbrFilter = document.getElementById('filterNeighborhood')?.value;
+        if (nbrFilter && visibleMarkers.length > 0) {
+            suppressIdleFilter = true;
+            const bounds = new google.maps.LatLngBounds();
+            visibleMarkers.forEach(m => bounds.extend(m.getPosition()));
+            map.fitBounds(bounds);
+            const listener = google.maps.event.addListener(map, 'idle', () => {
+                if (map.getZoom() > 14) map.setZoom(14);
+                google.maps.event.removeListener(listener);
+                suppressIdleFilter = false;
+            });
+        }
+    }
 }
 
 function shouldShowMarker(marker) {
@@ -2439,6 +2522,10 @@ function shouldShowMarker(marker) {
     // Type filters
     if (marker.locationType === 'roaster' && !document.getElementById('filterRoasters').checked) return false;
     if (marker.locationType === 'cafe' && !document.getElementById('filterCafes').checked) return false;
+
+    // Neighborhood filter
+    const nbrFilter = document.getElementById('filterNeighborhood')?.value;
+    if (nbrFilter && marker.locationData?.coffeeDetails?.neighborhood !== nbrFilter) return false;
 
     // Bounds filter — list reflects what's visible on the map
     if (map && map.getBounds()) {
@@ -2521,17 +2608,8 @@ function renderCard(loc) {
         const isRoaster = info.type === 'roaster';
         const isOnline = info.onlineOnly || false;
 
-        // Photo - googlePhotos entries are objects with a name field
-        const photos = loc.googlePhotos || [];
-        let photoUrl = null;
-        if (photos.length) {
-            const photo = photos[0];
-            if (typeof photo === 'string') {
-                photoUrl = photo;
-            } else if (photo.name) {
-                photoUrl = `https://places.googleapis.com/v1/${photo.name}/media?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&maxWidthPx=200`;
-            }
-        }
+        // Photo - use self-hosted localImage to avoid live Places API calls
+        const photoUrl = loc.localImage || null;
         const _initials = getCardInitials(info.name);
         const imgHtml = photoUrl
             ? `<img class="location-card-img" src="${photoUrl}" alt="${info.name}" onerror="this.style.display='none'; this.nextElementSibling.style.removeProperty('display');">
@@ -2787,15 +2865,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const cafes = document.getElementById('filterCafes');
         const online = document.getElementById('filterOnlineOnly');
         const openNow = openNowActive;
+        const neighbourhood = document.getElementById('filterNeighborhood');
         const anyNonDefault = (roasters && !roasters.checked) ||
                               (cafes && !cafes.checked) ||
                               (online && !online.checked) ||
+                              (neighbourhood && neighbourhood.value !== '') ||
                               openNow;
         filterBtn.classList.toggle('filters-active', anyNonDefault);
     }
 
     // Attach dot-updater to all filter inputs
-    ['filterRoasters','filterCafes','filterOnlineOnly'].forEach(id => {
+    ['filterRoasters','filterCafes','filterOnlineOnly','filterNeighborhood'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', updateFilterDot);
     });
@@ -2823,6 +2903,7 @@ window.gm_authFailure = function() {
 let openNowActive = false;
 let pendingScrollTop = false; // set by clear to scroll cards to top after render
 let suppressIdleFilter = false; // prevents idle re-render during card selection zoom
+let neighborhoodZoomPending = false; // one-shot flag: zoom on select, not on every idle
 
 function parseTimeToMinutes(timeStr) {
     const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);

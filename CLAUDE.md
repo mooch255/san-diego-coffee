@@ -41,6 +41,12 @@ A specialty coffee directory and interactive map for the [r/SanDiegoCoffeeBeans]
 - For new locations added via admin, `migrate-photos.js` auto-fetches the photo reference from Places API using `placeId` if `googlePhotos` is empty
 - Location pages show the hero image + a "More photos on Google Maps ↗" link using the stored `placeId`
 
+**To manually add a photo for a location:**
+1. Find the location's `id` in `locations.js` (search by name, e.g. `loc_153`)
+2. Drop any image into `/images/locations/` named `{id}.jpg` (e.g. `loc_153.jpg`)
+3. Run `node migrate-photos.js` — detects the file and registers it in `locations.js` without any API calls
+4. Commit and push
+
 ## Google Sheets Setup
 - **Roasters** and **Cafes** tabs both require a `placeId` column header — the Apps Script maps payload fields to headers automatically, so no Apps Script changes are needed when adding new columns
 - The Apps Script at `netlify/functions/admin-to-sheets.js` handles insert vs. update by matching on column A (`id`)

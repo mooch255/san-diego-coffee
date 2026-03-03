@@ -901,7 +901,6 @@
     <script src="locations.js"></script>
     <script>
         const API_KEY = 'AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI';
-        const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw_r5rgwohLWHtizzAEhad9NNGG0pbnEiF23fg1-jxs7VgYbb2DfTyQQ--S7in8wZgD/exec';
         const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
         // ── Get location from URL ──────────────────────────────────────────
@@ -920,51 +919,8 @@
             } else {
                 document.title = location.basicInfo.name + ' — San Diego Specialty Coffee';
 
-                // Use coffeeDetails already merged into locations.js by sync-locations.js
-                // Fall back to live sheet fetch if not present
-                const merged = location.coffeeDetails;
-                if (merged) {
-                    // If multipleLocations is missing from the synced data, fetch it from sheet
-                    if (merged.multipleLocations === undefined) {
-                        const isRoasterType = location.basicInfo.type === 'roaster';
-                        const sheetTab = isRoasterType ? 'Roasters' : 'Cafes';
-                        fetch(SHEET_URL + '?sheet=' + sheetTab)
-                            .then(r => r.json())
-                            .then(rows => {
-                                const row = rows.find(r => r.id === locationId) || {};
-                                merged.multipleLocations = row.multipleLocations || '';
-                                renderPage(location, merged);
-                            })
-                            .catch(() => { merged.multipleLocations = ''; renderPage(location, merged); });
-                    } else {
-                        renderPage(location, merged);
-                    }
-                } else {
-                    const isRoasterType = location.basicInfo.type === 'roaster';
-                    const sheetTab = isRoasterType ? 'Roasters' : 'Cafes';
-                    fetch(SHEET_URL + '?sheet=' + sheetTab)
-                        .then(r => r.json())
-                        .then(rows => {
-                            const row = rows.find(r => r.id === locationId) || {};
-                            const custom = {
-                                yearEstablished:   row.yearEstablished   || '',
-                                multipleLocations: row.multipleLocations || '',
-                                amenities: row.amenities ? row.amenities.split(',').map(s => s.trim()).filter(Boolean) : [],
-                                notes: row.notes || '',
-                            };
-                            if (isRoasterType) {
-                                custom.roastScale        = row.roastScale        || '';
-                                custom.roastStyle        = row.roastStyle        || '';
-                                custom.visitorExperience = row.visitorExperience || '';
-                            } else {
-                                custom.specialtyBarista = row.specialtyBarista || '';
-                                custom.roastersServed = row.roastersServed ? row.roastersServed.split(',').map(s => s.trim()).filter(Boolean) : [];
-                                custom.brewingOptions = row.brewingOptions ? row.brewingOptions.split(',').map(s => s.trim()).filter(Boolean) : [];
-                            }
-                            renderPage(location, custom);
-                        })
-                        .catch(() => renderPage(location, {}));
-                }
+                // coffeeDetails is always populated by sync-locations.js — no live Sheets fetch needed
+                renderPage(location, location.coffeeDetails || {});
             }
         }
 

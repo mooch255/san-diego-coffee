@@ -390,6 +390,38 @@
             font-style: italic;
         }
 
+        .gallery-hero {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            overflow: hidden;
+        }
+
+        .gallery-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-maps-link {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            background: rgba(0,0,0,0.55);
+            color: #fff;
+            font-size: 0.78rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+            text-decoration: none;
+            backdrop-filter: blur(4px);
+            transition: background 0.2s;
+        }
+
+        .gallery-maps-link:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
         /* Lightbox */
         .lightbox {
             display: none;
@@ -945,12 +977,11 @@
             const hours = loc.hours || {};
             const contact = info.contact || {};
             const placeId = loc.googleData?.placeId || '';
-            const photos = loc.googlePhotos || [];
             const today = new Date().getDay(); // 0=Sun
 
             document.getElementById('pageContent').innerHTML = `
                 ${renderHero(loc, isRoaster, rating, info, contact, today, hours)}
-                ${renderGallery(photos, placeId, info.name)}
+                ${renderGallery(loc.localImage, placeId, info.name)}
                 <div class="content-wrap">
                     <div class="left-col fade-up">
                         ${renderDescription(custom, loc.legacyData)}
@@ -1024,8 +1055,10 @@
                 return words.map(w => w[0]).join('').toUpperCase().slice(0, 4);
         }
 
-        function renderGallery(photos, placeId, name) {
-            if (!photos || !photos.length) {
+        function renderGallery(localImage, placeId, name) {
+            const mapsUrl = placeId ? `https://www.google.com/maps/place/?q=place_id:${placeId}` : '';
+
+            if (!localImage) {
                 return `
                     <div class="gallery-section">
                         <div class="gallery-placeholder">
@@ -1036,21 +1069,13 @@
                 `;
             }
 
-            const shown = photos.slice(0, 5);
-            const photoHtml = shown.map((photo, i) => {
-                // Build Google Places photo URL from photo name
-                const url = `https://places.googleapis.com/v1/${photo.name}/media?maxWidthPx=1200&key=${API_KEY}`;
-                return `
-                    <div class="gallery-photo" onclick="openLightbox('${url}')">
-                        <img src="${url}" alt="Photo of location" loading="${i === 0 ? 'eager' : 'lazy'}"
-                             onerror="this.parentElement.style.display='none'">
-                    </div>
-                `;
-            }).join('');
-
             return `
                 <div class="gallery-section">
-                    <div class="gallery-track">${photoHtml}</div>
+                    <div class="gallery-hero">
+                        <img src="${localImage}" alt="${name}" loading="eager"
+                             onerror="this.parentElement.style.display='none'">
+                        ${mapsUrl ? `<a class="gallery-maps-link" href="${mapsUrl}" target="_blank" rel="noopener">More photos on Google Maps ↗</a>` : ''}
+                    </div>
                 </div>
             `;
         }

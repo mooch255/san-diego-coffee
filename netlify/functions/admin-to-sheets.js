@@ -40,6 +40,7 @@ exports.handler = async function (event) {
       sheet:             'Roasters',
       id:                data.id                || '',
       timestamp:         data.timestamp         || new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+      placeId:           data.placeId           || '',
       locationName:      data.locationName      || '',
       neighborhood:      data.neighborhood      || '',
       yearEstablished:   data.yearEstablished   || '',
@@ -56,8 +57,10 @@ exports.handler = async function (event) {
 
   } else if (locationType === 'cafe') {
     payload = {
+      sheet:             'Cafes',
       id:                data.id                || '',
       timestamp:         data.timestamp         || new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+      placeId:           data.placeId           || '',
       locationName:      data.locationName      || '',
       neighborhood:      data.neighborhood      || '',
       yearEstablished:   data.yearEstablished   || '',

@@ -472,7 +472,7 @@
                         type="text"
                         class="map-search-input"
                         id="adminSearchInput"
-                        placeholder="Search your locations or any SD coffee spot…"
+                        placeholder="Search locations… press Enter to search"
                         autocomplete="off"
                     >
                     <button class="map-search-clear" id="adminSearchClear" title="Clear">✕</button>
@@ -784,6 +784,7 @@
         let autocompleteService = null;
         let placesService       = null;
         let adminMap            = null;
+        const placesCache       = {};  // Cache predictions by query to avoid redundant API calls
         let markers             = [];
         let infoWindow          = null;
 
@@ -859,14 +860,18 @@
             // Wire up search input
             const searchInput = document.getElementById('adminSearchInput');
             const clearBtn    = document.getElementById('adminSearchClear');
-            let searchTimeout;
 
+            // Typing only updates the clear button — no API calls until Enter
             searchInput.addEventListener('input', function() {
+                clearBtn.classList.toggle('visible', this.value.trim().length > 0);
+                if (!this.value.trim()) closeDropdown();
+            });
+
+            // Search fires only on Enter
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key !== 'Enter') return;
                 const q = this.value.trim();
-                clearBtn.classList.toggle('visible', q.length > 0);
-                clearTimeout(searchTimeout);
-                if (q.length < 2) { closeDropdown(); return; }
-                searchTimeout = setTimeout(() => doSearch(q), 200);
+                if (q.length >= 2) doSearch(q);
             });
 
             clearBtn.addEventListener('click', () => {
@@ -893,7 +898,13 @@
                 return name.includes(q) || hood.includes(q);
             }).slice(0, 6);
 
-            // 2. Simultaneously fetch Google Places suggestions
+            // 2. Fetch Google Places suggestions (with cache to avoid redundant API calls)
+            const cacheKey = query.trim().toLowerCase();
+            if (placesCache[cacheKey]) {
+                renderDropdown(existingMatches, placesCache[cacheKey], searchVal);
+                return;
+            }
+
             autocompleteService.getPlacePredictions({
                 input: query + ' coffee San Diego',
                 types: ['establishment'],
@@ -901,7 +912,9 @@
                 location: new google.maps.LatLng(32.7157, -117.1611),
                 radius: 60000,
             }, (predictions, status) => {
-                renderDropdown(existingMatches, predictions || [], searchVal);
+                const results = predictions || [];
+                placesCache[cacheKey] = results;  // Cache the result
+                renderDropdown(existingMatches, results, searchVal);
             });
         }
 
@@ -1016,19 +1029,46 @@
         }
 
         // ── Select New Place from Google Places ───────────────────────
+        function parseAddressComponents(components) {
+            const get = (type, nameType = 'long_name') =>
+                (components.find(c => c.types.includes(type)) || {})[nameType] || '';
+            return {
+                street:  [get('street_number'), get('route')].filter(Boolean).join(' '),
+                city:    get('locality') || get('sublocality_level_1'),
+                state:   get('administrative_area_level_1', 'short_name'),
+                zip:     get('postal_code'),
+            };
+        }
+
         function selectNewPlace(placeId) {
             closeDropdown();
             placesService.getDetails({
                 placeId,
-                fields: ['name', 'formatted_address', 'geometry', 'place_id']
+                fields: ['name', 'formatted_address', 'geometry', 'place_id',
+                         'formatted_phone_number', 'website', 'url',
+                         'rating', 'user_ratings_total', 'opening_hours',
+                         'address_components']
             }, (place, status) => {
                 if (status !== google.maps.places.PlacesServiceStatus.OK) return;
 
+                const parsed = parseAddressComponents(place.address_components || []);
                 selectedLocation = {
-                    isNew: true,
-                    placeId: place.place_id,
-                    name: place.name,
-                    address: place.formatted_address,
+                    isNew:               true,
+                    placeId:             place.place_id,
+                    name:                place.name,
+                    address:             place.formatted_address,
+                    lat:                 place.geometry?.location?.lat() || 0,
+                    lng:                 place.geometry?.location?.lng() || 0,
+                    phone:               place.formatted_phone_number   || '',
+                    website:             place.website                   || '',
+                    googleMapsUrl:       place.url                       || '',
+                    rating:              place.rating                    || null,
+                    reviewCount:         place.user_ratings_total        || 0,
+                    weekdayDescriptions: place.opening_hours?.weekday_text || [],
+                    parsedStreet:        parsed.street,
+                    parsedCity:          parsed.city,
+                    parsedState:         parsed.state,
+                    parsedZip:           parsed.zip,
                 };
 
                 currentMode = 'add';
@@ -1279,9 +1319,11 @@
 
             let payload;
 
+            const placeId = selectedLocation?.placeId || '';
+
             if (currentType === 'roaster') {
                 payload = {
-                    sheet: 'Roasters', locationType: 'roaster', timestamp, id,
+                    sheet: 'Roasters', locationType: 'roaster', timestamp, id, placeId,
                     locationName:      document.getElementById('r-locationName').value.trim(),
                     neighborhood:      document.getElementById('r-neighborhood').value.trim(),
                     yearEstablished:   document.getElementById('r-yearEstablished').value.trim(),
@@ -1297,7 +1339,7 @@
                 };
             } else {
                 payload = {
-                    sheet: 'Cafes', locationType: 'cafe', timestamp, id,
+                    sheet: 'Cafes', locationType: 'cafe', timestamp, id, placeId,
                     locationName:      document.getElementById('c-locationName').value.trim(),
                     neighborhood:      document.getElementById('c-neighborhood').value.trim(),
                     yearEstablished:   document.getElementById('c-yearEstablished').value.trim(),
@@ -1324,7 +1366,7 @@
                     showAlert(`✓ ${action} "${payload.locationName}" in the ${currentType === 'roaster' ? 'Roasters' : 'Cafes'} sheet!`, 'success');
                     btn.textContent = `✓ ${action}!`;
 
-                    // If online-only, generate the locations.js snippet
+                    // Generate locations.js snippet for online-only locations
                     if (selectedLocation?.isOnlineOnly) {
                         generateOnlineSnippet(payload);
                     }
@@ -1362,6 +1404,56 @@
                     }
                 },
                 googlePhotos: [],
+                coffeeDetails: {}
+            };
+
+            const snippetStr = JSON.stringify(snippet, null, 2);
+            document.getElementById('snippetContent').textContent = snippetStr + ',';
+            document.getElementById('snippetBox').classList.add('visible');
+        }
+
+        function generatePhysicalSnippet(payload) {
+            const loc = selectedLocation;
+            const snippet = {
+                id: payload.id,
+                basicInfo: {
+                    name: loc.name,
+                    type: payload.locationType,
+                    address: {
+                        street:       loc.parsedStreet,
+                        fullAddress:  loc.address,
+                        neighborhood: payload.neighborhood || '',
+                        city:         loc.parsedCity,
+                        state:        loc.parsedState,
+                        zip:          loc.parsedZip,
+                        coordinates:  { lat: loc.lat, lng: loc.lng }
+                    },
+                    contact: {
+                        phone:         loc.phone,
+                        website:       loc.website,
+                        googleMapsUrl: loc.googleMapsUrl
+                    }
+                },
+                googleData: {
+                    placeId:          loc.placeId,
+                    hasGoogleListing: true,
+                    lastSynced:       new Date().toISOString()
+                },
+                googleRating: {
+                    rating:      loc.rating,
+                    reviewCount: loc.reviewCount
+                },
+                hours: {
+                    weekdayDescriptions: loc.weekdayDescriptions,
+                    openNow: false
+                },
+                googlePhotos: [],
+                metadata: {
+                    status:      'active',
+                    importedFrom: 'admin',
+                    importDate:   new Date().toISOString(),
+                    needsEnrichment: false
+                },
                 coffeeDetails: {}
             };
 

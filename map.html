@@ -2329,7 +2329,7 @@ function displayGooglePlace(place, originalQuery) {
     map.setCenter(place.geometry.location);
     map.setZoom(16);
     
-    // Get detailed place information
+    // Get detailed place information (fetch once, reuse on marker click)
     const service = new google.maps.places.PlacesService(map);
     service.getDetails({
         placeId: place.place_id,
@@ -2337,19 +2337,11 @@ function displayGooglePlace(place, originalQuery) {
     }, (placeDetails, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             showGooglePlaceInfo(placeDetails, googlePlacesMarker);
-        }
-    });
-    
-    // Add click listener
-    googlePlacesMarker.addListener('click', () => {
-        service.getDetails({
-            placeId: place.place_id,
-            fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'rating', 'user_ratings_total', 'opening_hours', 'photos', 'url']
-        }, (placeDetails, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
+            // Reuse already-fetched data on click instead of calling API again
+            googlePlacesMarker.addListener('click', () => {
                 showGooglePlaceInfo(placeDetails, googlePlacesMarker);
-            }
-        });
+            });
+        }
     });
 }
 

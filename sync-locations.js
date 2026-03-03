@@ -1,15 +1,29 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // sync-locations.js
-// Fetches coffee details from Google Sheets and merges them into locations.js
+// Fetches coffee details from Google Sheets and merges them into locations.js.
+// Also inserts brand-new locations found in Sheets that aren't in locations.js yet.
 //
-// Usage: node sync-locations.js
+// Usage:
+//   node sync-locations.js
+//
+// For new location insertion, set your Places API key:
+//   GOOGLE_PLACES_API_KEY=your_key node sync-locations.js
 // ─────────────────────────────────────────────────────────────────────────────
 
 const fs   = require('fs');
 const path = require('path');
 
+// Load .env
+try {
+  fs.readFileSync(path.join(__dirname, '.env'), 'utf8').split('\n').forEach(line => {
+    const eq = line.indexOf('=');
+    if (eq > 0) process.env[line.slice(0, eq).trim()] = line.slice(eq + 1).trim().replace(/^"|"$/g, '');
+  });
+} catch {}
+
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_r5rgwohLWHtizzAEhad9NNGG0pbnEiF23fg1-jxs7VgYbb2DfTyQQ--S7in8wZgD/exec';
 const LOCATIONS_FILE  = path.join(__dirname, 'locations.js');
+const API_KEY         = process.env.GOOGLE_PLACES_API_KEY || '';
 
 async function fetchSheet(sheetName) {
   const url = `${APPS_SCRIPT_URL}?sheet=${sheetName}`;
@@ -21,6 +35,114 @@ async function fetchSheet(sheetName) {
   return data;
 }
 
+async function fetchPlaceDetails(placeId) {
+  const fields = [
+    'displayName', 'formattedAddress', 'location',
+    'nationalPhoneNumber', 'websiteUri', 'googleMapsUri',
+    'rating', 'userRatingCount', 'regularOpeningHours', 'addressComponents',
+  ].join(',');
+  const url = `https://places.googleapis.com/v1/places/${placeId}?fields=${fields}&key=${API_KEY}`;
+  const res  = await fetch(url);
+  if (!res.ok) throw new Error(`Places API HTTP ${res.status}`);
+  return await res.json();
+}
+
+function parseAddressComponents(components) {
+  const get = (type, nameType = 'longText') =>
+    (components.find(c => c.types.includes(type)) || {})[nameType] || '';
+  return {
+    street: [get('street_number'), get('route')].filter(Boolean).join(' '),
+    city:   get('locality') || get('sublocality_level_1'),
+    state:  get('administrative_area_level_1', 'shortText'),
+    zip:    get('postal_code'),
+  };
+}
+
+function buildCoffeeDetails(type, row) {
+  if (type === 'roaster') {
+    return {
+      neighborhood:      row.neighborhood      || '',
+      yearEstablished:   row.yearEstablished   || '',
+      roastScale:        row.roastScale        || '',
+      roastStyle:        row.roastStyle        || '',
+      visitorExperience: row.visitorExperience || '',
+      multipleLocations: row.multipleLocations || '',
+      amenities:         row.amenities ? row.amenities.split(',').map(a => a.trim()).filter(Boolean) : [],
+      notes:             row.notes             || '',
+      description:       row.description       || '',
+      onlineWebsite:     row.onlineWebsite     || '',
+      onlineInstagram:   row.onlineInstagram   || '',
+      lastUpdated:       row.timestamp         || '',
+    };
+  }
+  return {
+    neighborhood:      row.neighborhood      || '',
+    yearEstablished:   row.yearEstablished   || '',
+    multipleLocations: row.multipleLocations || '',
+    specialtyBarista:  row.specialtyBarista  || '',
+    roastersServed:    row.roastersServed    ? row.roastersServed.split(',').map(r => r.trim()).filter(Boolean) : [],
+    brewingOptions:    row.brewingOptions    ? row.brewingOptions.split(',').map(b => b.trim()).filter(Boolean) : [],
+    amenities:         row.amenities         ? row.amenities.split(',').map(a => a.trim()).filter(Boolean) : [],
+    notes:             row.notes             || '',
+    description:       row.description       || '',
+    lastUpdated:       row.timestamp         || '',
+  };
+}
+
+async function buildNewLocation(id, type, row) {
+  if (!row.placeId) throw new Error('no placeId in sheet row');
+
+  const place  = await fetchPlaceDetails(row.placeId);
+  const addr   = parseAddressComponents(place.addressComponents || []);
+  const hood   = row.neighborhood || addr.city || '';
+
+  return {
+    id,
+    basicInfo: {
+      name: row.locationName || place.displayName?.text || '',
+      type,
+      address: {
+        street:       addr.street,
+        fullAddress:  place.formattedAddress  || '',
+        neighborhood: hood,
+        city:         addr.city,
+        state:        addr.state,
+        zip:          addr.zip,
+        coordinates: {
+          lat: place.location?.latitude  || 0,
+          lng: place.location?.longitude || 0,
+        },
+      },
+      contact: {
+        phone:         place.nationalPhoneNumber || '',
+        website:       place.websiteUri          || '',
+        googleMapsUrl: place.googleMapsUri       || '',
+      },
+    },
+    googleData: {
+      placeId:          row.placeId,
+      hasGoogleListing: true,
+      lastSynced:       new Date().toISOString(),
+    },
+    googleRating: {
+      rating:      place.rating           || null,
+      reviewCount: place.userRatingCount  || 0,
+    },
+    hours: {
+      weekdayDescriptions: place.regularOpeningHours?.weekdayDescriptions || [],
+      openNow: false,
+    },
+    googlePhotos: [],
+    metadata: {
+      status:         'active',
+      importedFrom:   'admin',
+      importDate:     new Date().toISOString(),
+      needsEnrichment: false,
+    },
+    coffeeDetails: buildCoffeeDetails(type, row),
+  };
+}
+
 async function main() {
   console.log('\n🔄 Syncing Google Sheets → locations.js\n');
 
@@ -30,21 +152,18 @@ async function main() {
     fetchSheet('Cafes'),
   ]);
 
-  // Build lookup maps keyed by id
   const roasterData = {};
   roasterRows.forEach(row => { if (row.id) roasterData[row.id] = row; });
 
   const cafeData = {};
   cafeRows.forEach(row => { if (row.id) cafeData[row.id] = row; });
 
-  const totalSheetEntries = Object.keys(roasterData).length + Object.keys(cafeData).length;
-  console.log(`\n  Total sheet entries: ${totalSheetEntries}`);
+  console.log(`\n  Total sheet entries: ${Object.keys(roasterData).length + Object.keys(cafeData).length}`);
 
   // ── 2. Read existing locations.js ─────────────────────────────────────────
   console.log('\n  Reading locations.js...');
   const raw = fs.readFileSync(LOCATIONS_FILE, 'utf8');
 
-  // Extract the array contents from: window.COFFEE_LOCATIONS = [...];
   const match = raw.match(/window\.COFFEE_LOCATIONS\s*=\s*(\[[\s\S]*\]);/);
   if (!match) throw new Error('Could not parse window.COFFEE_LOCATIONS from locations.js');
 
@@ -56,7 +175,7 @@ async function main() {
   }
   console.log(`  ✓ Loaded ${locations.length} locations from locations.js`);
 
-  // ── 3. Merge sheet data into each location ────────────────────────────────
+  // ── 3. Merge sheet data into existing locations ───────────────────────────
   console.log('\n  Merging sheet data...');
   let updated = 0;
   let skipped = 0;
@@ -64,76 +183,70 @@ async function main() {
   locations = locations.map(loc => {
     const id   = loc.id;
     const type = loc.basicInfo?.type;
-
     const sheetRow = type === 'roaster' ? roasterData[id] : cafeData[id];
 
-    if (!sheetRow) {
-      skipped++;
-      return loc; // No sheet data yet — leave location unchanged
-    }
+    if (!sheetRow) { skipped++; return loc; }
 
     updated++;
-
-    // Merge coffee-specific details into a `coffeeDetails` block
-    if (type === 'roaster') {
-      loc.coffeeDetails = {
-        neighborhood:      sheetRow.neighborhood      || '',
-        yearEstablished:   sheetRow.yearEstablished   || '',
-        roastScale:        sheetRow.roastScale        || '',
-        roastStyle:        sheetRow.roastStyle        || '',
-        visitorExperience: sheetRow.visitorExperience || '',
-        multipleLocations: sheetRow.multipleLocations || '',
-        amenities:         sheetRow.amenities
-                             ? sheetRow.amenities.split(',').map(a => a.trim()).filter(Boolean)
-                             : [],
-        notes:             sheetRow.notes             || '',
-        description:       sheetRow.description       || '',
-        onlineWebsite:     sheetRow.onlineWebsite     || '',
-        onlineInstagram:   sheetRow.onlineInstagram   || '',
-        lastUpdated:       sheetRow.timestamp         || '',
-      };
-    } else {
-      loc.coffeeDetails = {
-        neighborhood:      sheetRow.neighborhood      || '',
-        yearEstablished:   sheetRow.yearEstablished   || '',
-        multipleLocations: sheetRow.multipleLocations || '',
-        specialtyBarista:  sheetRow.specialtyBarista  || '',
-        roastersServed:    sheetRow.roastersServed
-                             ? sheetRow.roastersServed.split(',').map(r => r.trim()).filter(Boolean)
-                             : [],
-        brewingOptions:    sheetRow.brewingOptions
-                             ? sheetRow.brewingOptions.split(',').map(b => b.trim()).filter(Boolean)
-                             : [],
-        amenities:         sheetRow.amenities
-                             ? sheetRow.amenities.split(',').map(a => a.trim()).filter(Boolean)
-                             : [],
-        notes:             sheetRow.notes             || '',
-        description:       sheetRow.description       || '',
-        lastUpdated:       sheetRow.timestamp         || '',
-      };
-    }
-
+    loc.coffeeDetails = buildCoffeeDetails(type, sheetRow);
     return loc;
   });
 
   console.log(`  ✓ Updated: ${updated} locations`);
   console.log(`  ○ No sheet data yet: ${skipped} locations`);
 
-  // ── 4. Write updated locations.js ─────────────────────────────────────────
+  // ── 4. Insert brand-new locations from Sheets ─────────────────────────────
+  const existingIds = new Set(locations.map(loc => loc.id));
+
+  const newRows = [
+    ...roasterRows.filter(r => r.id && !existingIds.has(r.id)).map(r => ({ ...r, _type: 'roaster' })),
+    ...cafeRows.filter(r => r.id && !existingIds.has(r.id)).map(r => ({ ...r, _type: 'cafe' })),
+  ];
+
+  if (newRows.length > 0) {
+    console.log(`\n  Found ${newRows.length} new location(s) to insert...`);
+
+    if (!API_KEY) {
+      console.log('  ⚠️  GOOGLE_PLACES_API_KEY not set — skipping new location insertion.');
+      console.log('     Run: GOOGLE_PLACES_API_KEY=your_key node sync-locations.js');
+    } else {
+      let inserted = 0;
+      let insertFailed = 0;
+
+      for (const row of newRows) {
+        const name = row.locationName || row.id;
+        try {
+          process.stdout.write(`  ↓  ${name} ... `);
+          const newLoc = await buildNewLocation(row.id, row._type, row);
+          locations.push(newLoc);
+          inserted++;
+          console.log('✓');
+        } catch (err) {
+          insertFailed++;
+          console.log(`✗  (${err.message})`);
+        }
+      }
+
+      console.log(`  ✓ Inserted: ${inserted} new location(s)`);
+      if (insertFailed > 0) console.log(`  ✗ Failed:   ${insertFailed} (check placeId in Sheets)`);
+    }
+  }
+
+  // ── 5. Write updated locations.js ─────────────────────────────────────────
   console.log('\n  Writing locations.js...');
 
-  const json    = JSON.stringify(locations, null, 2);
-  const output  = `// Auto-generated by sync-locations.js — do not edit the coffeeDetails blocks manually\n// Last synced: ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}\n\nwindow.COFFEE_LOCATIONS = ${json};\n`;
+  const json   = JSON.stringify(locations, null, 2);
+  const output = `// Auto-generated by sync-locations.js — do not edit the coffeeDetails blocks manually\n// Last synced: ${new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}\n\nwindow.COFFEE_LOCATIONS = ${json};\n`;
 
-  // Backup the original just in case
   fs.writeFileSync(LOCATIONS_FILE + '.backup', raw, 'utf8');
   fs.writeFileSync(LOCATIONS_FILE, output, 'utf8');
 
   console.log(`  ✓ locations.js updated`);
   console.log(`  ✓ Backup saved to locations.js.backup`);
-  console.log('\n✅ Sync complete! Review locations.js then run:\n');
-  console.log('   git add locations.js');
-  console.log('   git commit -m "Sync coffee details from Google Sheets"');
+  console.log('\n✅ Sync complete! Run:\n');
+  console.log('   GOOGLE_PLACES_API_KEY=your_key node migrate-photos.js');
+  console.log('   git add locations.js images/locations/');
+  console.log('   git commit -m "Sync and add new locations"');
   console.log('   git push\n');
 }
 

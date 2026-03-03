@@ -1283,21 +1283,18 @@
                 const addedLabel = formatAddedDate(loc.metadata?.importDate);
                 const isNew = loc.metadata?.importDate && (new Date() - new Date(loc.metadata.importDate)) < 14 * 86400000;
 
-                // Photo: use first Google photo if available
-                const photos = loc.googlePhotos || [];
+                // Photo: use self-hosted localImage (no API call)
+                const initials = getInitials(name);
                 let imageHtml;
-                if (photos.length > 0 && photos[0].name) {
-                    const photoUrl = `https://places.googleapis.com/v1/${photos[0].name}/media?maxWidthPx=600&key=${API_KEY}`;
-                    const initials = getInitials(name);
+                if (loc.localImage) {
                     imageHtml = `
-                        <img class="recent-card-image" src="${photoUrl}" alt="${name}"
+                        <img class="recent-card-image" src="${loc.localImage}" alt="${name}"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="recent-card-initials" style="display:none;">
                             <div class="recent-card-initials-text">${initials}</div>
                             <div class="recent-card-initials-label">San Diego Coffee</div>
                         </div>`;
                 } else {
-                    const initials = getInitials(name);
                     imageHtml = `
                         <div class="recent-card-initials">
                             <div class="recent-card-initials-text">${initials}</div>

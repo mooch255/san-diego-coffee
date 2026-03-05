@@ -228,6 +228,23 @@
             display: block;
         }
 
+        .search-no-result {
+            padding: 0.85rem 1.25rem;
+            font-size: 0.88rem;
+            color: var(--coffee-brown);
+        }
+
+        .search-no-result a {
+            color: var(--accent-red);
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 0.4rem;
+        }
+
+        .search-no-result a:hover {
+            text-decoration: underline;
+        }
+
         .autocomplete-item {
             padding: 0.85rem 1.25rem;
             cursor: pointer;
@@ -464,13 +481,13 @@
         }
 
         .roaster-badge {
-            background: var(--coffee-brown);
-            color: var(--white);
+            background: #e8f5e9;
+            color: #2e7d32;
         }
 
         .cafe-badge {
-            background: var(--accent-red);
-            color: var(--white);
+            background: #e3f2fd;
+            color: #1565c0;
         }
 
         /* Split Layout */
@@ -686,6 +703,7 @@
 
         .location-card-type.roaster { color: #2e7d32; }
         .location-card-type.cafe { color: #1565c0; }
+        .location-card-type.online { color: #7B4F9E; }
 
         .location-card-tags {
             display: flex;
@@ -854,6 +872,11 @@
             padding: 0.75rem 0.85rem;
         }
 
+        /* Desktop: Neighborhood spans full width on its own row */
+        .filters-inner .filters-section:nth-child(3) {
+            grid-column: 1 / -1;
+        }
+
         @media (max-width: 768px) {
             .filters-inner {
                 display: flex;
@@ -866,11 +889,12 @@
                 padding: 0.65rem 0.85rem;
                 box-sizing: border-box;
             }
-            .filters-section:nth-child(2) { /* Neighborhood */
+            .filters-section:nth-child(2) { /* Sort */
                 border-left: 1px solid #f0ebe4;
             }
-            .filters-section:nth-child(3) { /* Sort — full-width second row */
+            .filters-section:nth-child(3) { /* Neighborhood — full-width second row */
                 flex: 0 0 100%;
+                grid-column: unset;
                 border-top: 1px solid #f0ebe4;
             }
         }
@@ -1349,13 +1373,14 @@
             </a>
             <div class="header-buttons">
                 <a href="index.html" class="header-btn secondary">🏠 Home</a>
-                <a href="submit.html" class="header-btn">📍 Submit Location</a>
+                <a href="submit.html" class="header-btn">📍 Add a Spot</a>
             </div>
             <!-- Mobile hamburger -->
             <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">☰</button>
             <div class="mobile-nav-menu" id="mobileNavMenu">
                 <a href="index.html">🏠 Home</a>
-                <a href="submit.html">📍 Submit Location</a>
+                <a href="submit.html">📍 Add a Spot</a>
+                <a href="about.html">ℹ️ About</a>
             </div>
         </div>
     </header>
@@ -1407,18 +1432,18 @@
                         </label>
                     </div>
                     <div class="filters-section">
-                        <h3>Neighborhood</h3>
-                        <select id="filterNeighborhood" class="neighborhood-select">
-                            <option value="">All Neighborhoods</option>
-                        </select>
-                    </div>
-                    <div class="filters-section">
                         <h3>Sort</h3>
                         <div class="sort-toggle">
                             <button class="sort-btn active" id="sortAZ" onclick="setSort('az')">A–Z</button>
                             <button class="sort-btn" id="sortNearest" onclick="setSort('nearest')">📍 Nearest</button>
                         </div>
                         <div id="locationHint" style="font-size:0.7rem; color:#aaa; margin-top:0.4rem; display:none;">Tap Nearest to enable location</div>
+                    </div>
+                    <div class="filters-section">
+                        <h3>Neighborhood</h3>
+                        <select id="filterNeighborhood" class="neighborhood-select">
+                            <option value="">All Neighborhoods</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -1792,7 +1817,7 @@ function createInfoWindowContent(location, custom) {
     }
 
     // ── Buttons ────────────────────────────────────────────────────────
-    const shareUrl = `${window.location.origin}${window.location.pathname}?location=${encodeURIComponent(location.id)}`;
+    const shareUrl = `${window.location.origin}/location.html?id=${encodeURIComponent(location.id)}`;
 
     // Each button is full-width stacked — no flex squishing, no clipping possible
     const w = 'display:block;width:100%;box-sizing:border-box;text-align:center;margin-bottom:0.3rem;';
@@ -1909,6 +1934,7 @@ function setupAutocomplete() {
             items.forEach((item, i) => item.classList.toggle('selected', i === autocompleteIndex));
         } else if (e.key === 'Enter') {
             e.preventDefault();
+            clearTimeout(searchTimeout);
             if (autocompleteIndex >= 0) {
                 // User arrow-navigated to a specific item — select that single location
                 const selectedItem = dropdown.querySelector('.autocomplete-item.selected');
@@ -2105,6 +2131,14 @@ function setupEventListeners() {
         clearTimeout(idleDebounce);
         idleDebounce = setTimeout(() => applyFilters(), 150);
     });
+
+    // When user manually pans or zooms while in nearest mode, revert to bounds-only list
+    google.maps.event.addListener(map, 'dragstart', () => {
+        if (!suppressNearestInteraction && currentSort === 'nearest') nearestUserInteracted = true;
+    });
+    google.maps.event.addListener(map, 'zoom_changed', () => {
+        if (!suppressNearestInteraction && currentSort === 'nearest') nearestUserInteracted = true;
+    });
     
     document.querySelectorAll('input[name="ratingFilter"]').forEach(radio => {
         radio.addEventListener('change', applyFilters);
@@ -2183,8 +2217,11 @@ function showUserLocation() {
                     zIndex: 1000
                 });
                 
+                nearestUserInteracted = false;
+                suppressNearestInteraction = true;
                 map.setCenter(userPos);
                 map.setZoom(12);
+                setTimeout(() => { suppressNearestInteraction = false; }, 800);
                 if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
                 // Hide the location hint now that we have a position
                 const hint = document.getElementById('locationHint');
@@ -2206,7 +2243,14 @@ function showUserLocation() {
 
 function performSearch() {
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
-    document.getElementById('autocompleteDropdown').classList.remove('show');
+    const dropdown = document.getElementById('autocompleteDropdown');
+    dropdown.classList.remove('show');
+
+    // Clear any stale Google Places marker
+    if (googlePlacesMarker) {
+        googlePlacesMarker.setMap(null);
+        googlePlacesMarker = null;
+    }
     
     if (!query) {
         applyFilters();
@@ -2322,13 +2366,14 @@ function performSearch() {
                 return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
             });
 
-            markerCluster.clearMarkers();
-            markerCluster.addMarkers(visibleMarkers);
-            updateVisibleCount(visibleMarkers.length);
-            renderLocationCards(visibleMarkers);
-
             if (visibleMarkers.length === 0) {
-                searchGooglePlaces(query);
+                dropdown.innerHTML = `<div class="search-no-result">Not yet in our guide.<a href="submit.html">Add this location →</a></div>`;
+                dropdown.classList.add('show');
+            } else {
+                markerCluster.clearMarkers();
+                markerCluster.addMarkers(visibleMarkers);
+                updateVisibleCount(visibleMarkers.length);
+                renderLocationCards(visibleMarkers);
             }
         }
     }
@@ -2491,9 +2536,15 @@ function applyFilters() {
     const showOnline = (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
                        && map.getZoom() < 12;
     const onlineCount = showOnline ? allLocations.filter(loc => loc.basicInfo?.onlineOnly).length : 0;
+    // Count always reflects what's actually in the map viewport
     updateVisibleCount(visibleMarkers.length + onlineCount);
 
-    renderLocationCards(visibleMarkers);
+    // Card list: show all locations sorted by distance when nearest is active and the
+    // user hasn't manually panned/zoomed yet. Once they interact, revert to in-bounds only.
+    const cardMarkers = (currentSort === 'nearest' && !nearestUserInteracted)
+        ? markers.filter(m => shouldShowMarker(m, true))
+        : visibleMarkers;
+    renderLocationCards(cardMarkers);
     // Update filter counts to reflect current visibility (respects Open Now)
     updateAllFilterCounts(openNowActive ? visibleMarkers : null);
 
@@ -2516,7 +2567,7 @@ function applyFilters() {
     }
 }
 
-function shouldShowMarker(marker) {
+function shouldShowMarker(marker, ignoreBounds = false) {
     const location = marker.locationData;
 
     // Type filters
@@ -2528,7 +2579,7 @@ function shouldShowMarker(marker) {
     if (nbrFilter && marker.locationData?.coffeeDetails?.neighborhood !== nbrFilter) return false;
 
     // Bounds filter — list reflects what's visible on the map
-    if (map && map.getBounds()) {
+    if (!ignoreBounds && map && map.getBounds()) {
         const coords = location.basicInfo?.address?.coordinates;
         if (coords) {
             const inBounds = map.getBounds().contains(new google.maps.LatLng(coords.lat, coords.lng));
@@ -2564,7 +2615,7 @@ function renderLocationCards(visibleMarkers) {
     // Online roasters only appear in list when zoomed out to city-wide view (zoom < 12)
     const showOnline = (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
                        && map.getZoom() < 12;
-    const onlineLocations = showOnline ? allLocations.filter(loc => loc.basicInfo?.onlineOnly) : [];
+    const onlineLocations = showOnline && !openNowActive ? allLocations.filter(loc => loc.basicInfo?.onlineOnly) : [];
 
     // Combine: marker locations + online-only as plain location objects
     let combined = [
@@ -2678,7 +2729,7 @@ function renderCard(loc) {
             ${imgHtml}
             <div class="location-card-body">
                 <div class="location-card-name">${info.name}</div>
-                <div class="location-card-type ${isRoaster ? 'roaster' : 'cafe'}">${isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe'}</div>
+                <div class="location-card-type ${isOnline ? 'online' : isRoaster ? 'roaster' : 'cafe'}">${(() => { const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe'; const hood = loc.coffeeDetails?.neighborhood; return hood ? `${typeLabel} · ${hood}` : typeLabel; })()}</div>
                 ${distHtml}
                 ${detailLines}
 
@@ -2700,15 +2751,15 @@ function getCardInitials(name) {
 
 // ── Share link helper ──────────────────────────────────────────────────────
 function copyShareLink(url, btn) {
-    const origText = '🔗 Share Location';
+    const origHTML  = btn.innerHTML;
+    const origStyle = btn.getAttribute('style');
     const copy = () => {
-        btn.textContent = '✅ Copied!';
+        btn.innerHTML = '✅ Copied!';
         btn.style.color = '#2e7d32';
         btn.style.borderColor = '#2e7d32';
         setTimeout(() => {
-            btn.textContent = origText;
-            btn.style.color = '';
-            btn.style.borderColor = '';
+            btn.innerHTML = origHTML;
+            btn.setAttribute('style', origStyle);
         }, 2000);
     };
     navigator.clipboard.writeText(url).then(copy).catch(() => {
@@ -2785,6 +2836,8 @@ function selectLocationCard(locationId) {
 // ── Distance sorting when "find my location" is used ──────────────────────
 let userLatLng = null;
 let currentSort = 'az';
+let nearestUserInteracted = false;   // true once user pans/zooms after selecting nearest
+let suppressNearestInteraction = false; // true during programmatic zoom in showUserLocation
 
 function setSort(mode) {
     if (mode === 'nearest' && !userLatLng) {
@@ -2798,6 +2851,7 @@ function setSort(mode) {
         showUserLocation();
         return; // showUserLocation will call applyFilters once location is found
     }
+    if (mode === 'nearest') nearestUserInteracted = false;
     currentSort = mode;
     document.getElementById('sortNearest').classList.toggle('active', mode === 'nearest');
     document.getElementById('sortAZ').classList.toggle('active', mode === 'az');

@@ -527,7 +527,7 @@
 
 <script src="locations.js"></script>
 <script>
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_r5rgwohLWHtizzAEhad9NNGG0pbnEiF23fg1-jxs7VgYbb2DfTyQQ--S7in8wZgD/exec';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBRiGUsyU5HIHC-VWTlcRXMxT5gCCvbuDFkwF7nxRC6fa9jDrpAhZTr6CuurQHpAc/exec';
 
     // ── Get location from URL ──────────────────────────────────────────
     const params     = new URLSearchParams(window.location.search);
@@ -812,9 +812,9 @@
                 throw new Error(result.error || 'Submission failed');
             }
         } catch (err) {
-            const alert  = document.getElementById('alertBox');
-            alert.className = 'alert error';
-            alert.textContent = 'Something went wrong — please try again or submit via the form page.';
+            const alertEl = document.getElementById('alertBox');
+            alertEl.className = 'alert error';
+            alertEl.textContent = 'Something went wrong: ' + err.message;
             btn.disabled    = false;
             btn.textContent = 'Submit Suggested Edit';
         }

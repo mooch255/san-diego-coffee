@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_r5rgwohLWHtizzAEhad9NNGG0pbnEiF23fg1-jxs7VgYbb2DfTyQQ--S7in8wZgD/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBRiGUsyU5HIHC-VWTlcRXMxT5gCCvbuDFkwF7nxRC6fa9jDrpAhZTr6CuurQHpAc/exec';
 
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
@@ -77,6 +77,8 @@ exports.handler = async function (event) {
     return { statusCode: 400, body: `Unknown sheet/locationType: "${data.sheet || data.locationType}"` };
   }
 
+  const jsonHeaders = { 'Content-Type': 'application/json' };
+
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
@@ -84,11 +86,23 @@ exports.handler = async function (event) {
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
+    let result;
+    const text = await response.text();
+    try {
+      result = JSON.parse(text);
+    } catch {
+      console.error('Apps Script non-JSON response:', text);
+      return {
+        statusCode: 500,
+        headers: jsonHeaders,
+        body: JSON.stringify({ success: false, error: `Apps Script returned unexpected response: ${text.slice(0, 200)}` }),
+      };
+    }
 
     if (result.success) {
       return {
         statusCode: 200,
+        headers: jsonHeaders,
         body: JSON.stringify({
           success: true,
           action: result.action,
@@ -97,14 +111,19 @@ exports.handler = async function (event) {
         }),
       };
     } else {
-      throw new Error(result.error || 'Apps Script returned failure');
+      return {
+        statusCode: 500,
+        headers: jsonHeaders,
+        body: JSON.stringify({ success: false, error: result.error || 'Apps Script returned failure' }),
+      };
     }
 
   } catch (err) {
     console.error('Apps Script error:', err);
     return {
       statusCode: 500,
-      body: `Failed to write to Google Sheets: ${err.message}`,
+      headers: jsonHeaders,
+      body: JSON.stringify({ success: false, error: `Failed to reach Google Sheets: ${err.message}` }),
     };
   }
 };

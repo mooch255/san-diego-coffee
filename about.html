@@ -73,7 +73,7 @@
         }
 
         .header-content {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0.85rem 2rem;
             display: flex;
@@ -169,15 +169,123 @@
 
         /* ── Layout ──────────────────────────────────────────────────── */
         .container {
-            max-width: 860px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 272px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .content-sidebar {
+            padding-top: 2.45rem;
+            padding-left: 1rem;
+        }
+
+        .sidebar-card {
+            background: var(--cream);
+            border: 1px solid var(--light-tan);
+            border-top: 3px solid var(--accent-red);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-card-title {
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 1.25rem;
+        }
+
+        .sidebar-stat {
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--light-tan);
+        }
+
+        .sidebar-stat:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .sidebar-stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--espresso);
+            line-height: 1.2;
+        }
+
+        .sidebar-stat-word {
+            font-size: 1.1rem;
+            line-height: 1.2;
+        }
+
+        .sidebar-stat-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .sidebar-stat-link:hover .sidebar-stat-number {
+            display: inline-block;
+            border-bottom: 1.5px solid var(--espresso);
+            padding-bottom: 4px;
+        }
+
+        .sidebar-stat-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--coffee-brown);
+            margin-top: 0.3rem;
+        }
+
+        .sidebar-links-title {
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.75rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0;
+            border-bottom: 1px solid var(--light-tan);
+            color: var(--warm-brown);
+            text-decoration: none;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: 'Libre Franklin', sans-serif;
+            transition: color 0.2s;
+        }
+
+        .sidebar-link:last-child {
+            border-bottom: none;
+        }
+
+        .sidebar-link:hover {
+            color: var(--accent-red);
         }
 
         /* ── Intro Section ───────────────────────────────────────────── */
         .intro {
             background: linear-gradient(135deg, #E8D9C8 0%, #D9C9B4 100%);
-            padding: 0.6rem 0;
+            padding: 1.75rem 0 1.5rem;
             border-bottom: 1px solid #E0DBD3;
             position: relative;
             overflow: hidden;
@@ -196,12 +304,20 @@
 
         .intro h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.75rem;
+            font-size: 3rem;
             font-weight: 700;
-            margin-bottom: 1.25rem;
+            margin-bottom: 0;
             color: var(--espresso);
             letter-spacing: -0.03em;
-            line-height: 1.2;
+            line-height: 1.25;
+        }
+
+        .intro h1 em {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--accent-red);
+            display: block;
+            font-size: 3.5rem;
         }
 
         .intro-stats {
@@ -285,6 +401,169 @@
         .section a:hover {
             color: #a04a28;
             border-bottom-color: #a04a28;
+        }
+
+        /* ── Feature Cards ───────────────────────────────────────────── */
+        .feature-section {
+            margin-bottom: 3rem;
+        }
+
+        .feature-section-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--light-tan);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .feature-card {
+            background: var(--cream);
+            border: 1px solid var(--light-tan);
+            border-top: 3px solid var(--accent-red);
+            padding: 1.5rem 1.25rem;
+        }
+
+        .feature-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .feature-card-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--espresso);
+            margin-bottom: 0.65rem;
+            line-height: 1.3;
+        }
+
+        .feature-card-body {
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: #4A3728;
+        }
+
+        /* ── How to Contribute (workflow diagram) ───────────────────── */
+        .hiw-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hiw-path {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hiw-step--condition {
+            background: var(--warm-brown);
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hiw-condition-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #EDE0CC;
+            text-align: center;
+        }
+
+        .hiw-step--action {
+            background: var(--cream);
+            border: 1px solid var(--latte);
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hiw-action-heading {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--espresso);
+            text-decoration: none;
+            display: block;
+        }
+
+        .hiw-action-heading:hover { opacity: 0.75; }
+
+        .hiw-step--details {
+            background: var(--white);
+            border: 1px solid var(--light-tan);
+            padding: 0.85rem 1.25rem;
+            flex: 1;
+        }
+
+        .hiw-detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hiw-detail-list li {
+            font-size: 0.83rem;
+            line-height: 1.6;
+            color: #4A3728;
+            padding: 0.28rem 0 0.28rem 1rem;
+            border-bottom: 1px solid var(--light-tan);
+            position: relative;
+        }
+
+        .hiw-detail-list li:last-child { border-bottom: none; }
+
+        .hiw-detail-list li::before {
+            content: '–';
+            position: absolute;
+            left: 0;
+            color: var(--latte);
+        }
+
+        .hiw-connector {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--coffee-brown);
+            line-height: 1;
+            padding: 0.15rem 0;
+        }
+
+        .hiw-footer {
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--coffee-brown);
+            text-align: center;
+            padding: 1rem 1.5rem;
+            background: var(--cream);
+            border: 1px solid var(--light-tan);
+            margin-top: 0.25rem;
         }
 
         /* ── Contact Button ──────────────────────────────────────────── */
@@ -426,8 +705,24 @@
         .hamburger-btn:hover { background: rgba(196,167,125,0.1); color: var(--latte); }
 
         /* ── Responsive ──────────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-sidebar {
+                position: static;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .hiw-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .intro h1 { font-size: 2rem; }
+            .intro h1 em { font-size: 2.4rem; }
             .header-subtitle { display: none; }
             .header-brand-eyebrow { display: none; }
             .header-buttons { display: none; }
@@ -437,7 +732,8 @@
         }
 
         @media (max-width: 580px) {
-            .intro h1 { font-size: 1.65rem; text-align: center; }
+            .intro h1 { font-size: 1.45rem; text-align: center; }
+            .intro h1 em { font-size: 1.9rem; }
             .intro-stats { flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
             .intro-stats-sep { display: none; }
             .intro-stats a {
@@ -482,52 +778,136 @@
     <!-- Intro -->
     <section class="intro">
         <div class="container">
-            <h1>A guide built by and for San Diego's coffee community</h1>
-            <div class="intro-stats">
-                <a href="map.html"><span id="introCount">148</span> locations</a>
-                <span class="intro-stats-sep">·</span>
-                <a href="map.html">29 neighborhoods</a>
-                <span class="intro-stats-sep">·</span>
-                <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
-            </div>
+            <h1>A guide built by and for<br><em>San Diego's coffee community.</em></h1>
         </div>
     </section>
 
     <!-- Content -->
     <div class="content-area">
         <div class="container">
+            <div class="content-grid">
 
-            <!-- What This Is -->
-            <div class="section">
-                <div class="section-label">What This Is</div>
-                <p>A community-built directory of specialty coffee in San Diego. Not a generic aggregator, not an algorithm-ranked list. Think of it as a coffee nerd's field guide to the city.</p>
-                <p>The map covers locations across San Diego neighborhoods: roasters, cafes, and online-only operations shipping from the county. Each listing includes details you won't find on Google Maps: roast style, year established, brew types, amenities, and more. Every location has been reviewed by someone who actually cares about this stuff.</p>
+                <main class="content-main">
+
+                    <!-- What makes this different -->
+                    <div class="feature-section">
+                        <div class="feature-section-label">What makes this different</div>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <span class="feature-card-icon">🧡</span>
+                                <div class="feature-card-heading">Born on Reddit</div>
+                                <p class="feature-card-body">The passion and obsession of the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a> community is the reason this exists. What started as conversation became an interactive map.</p>
+                            </div>
+                            <div class="feature-card">
+                                <span class="feature-card-icon">🗺️</span>
+                                <div class="feature-card-heading">Every Hidden Gem, Mapped</div>
+                                <p class="feature-card-body">Roasters and specialty cafés mapped across San Diego neighborhoods. Filter, browse, and find your next go-to spot.</p>
+                            </div>
+                            <div class="feature-card">
+                                <span class="feature-card-icon">✍️</span>
+                                <div class="feature-card-heading">Community Input &amp; Expertise</div>
+                                <p class="feature-card-body">We rely on the knowledge of the community to keep this directory alive and accurate. Every submission goes through a manual review queue before it goes live.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- How to Contribute -->
+                    <div class="section hiw-section">
+                        <div class="section-label">How to Contribute</div>
+                        <div class="hiw-grid">
+
+                            <div class="hiw-path">
+                                <div class="hiw-step hiw-step--condition">
+                                    <span class="hiw-condition-label">New to the map</span>
+                                </div>
+                                <div class="hiw-connector">↓</div>
+                                <div class="hiw-step hiw-step--action">
+                                    <a href="submit.html" class="hiw-action-heading">Add a Spot</a>
+                                </div>
+                                <div class="hiw-connector">↓</div>
+                                <div class="hiw-step hiw-step--details">
+                                    <ul class="hiw-detail-list">
+                                        <li>Full location details &amp; address</li>
+                                        <li>Roast profile &amp; brew methods</li>
+                                        <li>Amenities, vibe &amp; hours</li>
+                                        <li>Opening year &amp; online presence</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="hiw-path">
+                                <div class="hiw-step hiw-step--condition">
+                                    <span class="hiw-condition-label">Already on the map</span>
+                                </div>
+                                <div class="hiw-connector">↓</div>
+                                <div class="hiw-step hiw-step--action">
+                                    <a href="map.html" class="hiw-action-heading">Suggest an Edit</a>
+                                </div>
+                                <div class="hiw-connector">↓</div>
+                                <div class="hiw-step hiw-step--details">
+                                    <ul class="hiw-detail-list">
+                                        <li>Quick corrections to existing listings</li>
+                                        <li>Found on any location card/page</li>
+                                        <li>Focuses on the coffee details fields</li>
+                                        <li>Any other corrections you find necessary</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="hiw-footer">
+                            Either way, we review it before anything goes live.
+                        </div>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="section">
+                        <div class="section-label">Contact</div>
+                        <p>Have a suggestion, spotted an error, or want to collaborate? We'd love to hear from you.</p>
+                        <div class="contact-actions">
+                            <a href="mailto:sdcoffeebeans@gmail.com" class="hero-cta">✉ sdcoffeebeans@gmail.com</a>
+                            <span class="contact-secondary">or <a href="submit.html">submit a location or correction →</a></span>
+                        </div>
+                    </div>
+
+                </main>
+
+                <aside class="content-sidebar">
+                    <!-- By the Numbers card -->
+                    <div class="sidebar-card">
+                        <div class="sidebar-card-title">By the Numbers</div>
+                        <a href="map.html" class="sidebar-stat sidebar-stat-link">
+                            <div class="sidebar-stat-number" id="sidebarCount">—</div>
+                            <div class="sidebar-stat-label">Total locations</div>
+                        </a>
+                        <a href="map.html?filter=roasters" class="sidebar-stat sidebar-stat-link">
+                            <div class="sidebar-stat-number" id="statRoasterCount">—</div>
+                            <div class="sidebar-stat-label" id="statRoasterLabel">Roasters</div>
+                        </a>
+                        <a href="map.html?filter=cafes" class="sidebar-stat sidebar-stat-link">
+                            <div class="sidebar-stat-number" id="statCafeCount">—</div>
+                            <div class="sidebar-stat-label">Specialty Cafes</div>
+                        </a>
+                        <a href="map.html" class="sidebar-stat sidebar-stat-link">
+                            <div class="sidebar-stat-number" id="statNeighborhoodCount">—</div>
+                            <div class="sidebar-stat-label">Neighborhoods</div>
+                        </a>
+                        <a href="map.html" class="sidebar-stat sidebar-stat-link" id="linkNeighborhood">
+                            <div class="sidebar-stat-number sidebar-stat-word" id="statNeighborhoodName">—</div>
+                            <div class="sidebar-stat-label" id="statNeighborhoodLabel">Most caffeinated neighborhood</div>
+                        </a>
+                        <a href="#" class="sidebar-stat sidebar-stat-link" id="linkOldestRoaster">
+                            <div class="sidebar-stat-number sidebar-stat-word" id="statOldestName">—</div>
+                            <div class="sidebar-stat-label" id="statOldestLabel">Oldest roaster</div>
+                        </a>
+                        <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" class="sidebar-stat sidebar-stat-link">
+                            <div class="sidebar-stat-number sidebar-stat-word" id="statSubredditAge">—</div>
+                            <div class="sidebar-stat-label">Subreddit Age</div>
+                        </a>
+                    </div>
+                </aside>
+
             </div>
-
-            <!-- The Community -->
-            <div class="section">
-                <div class="section-label">The Community</div>
-                <p>This project grew out of <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>, a subreddit for San Diego coffee enthusiasts. What started as a place to swap tips and recommendations turned into a full collaborative map, because the community wanted a real resource, not just Reddit posts.</p>
-                <p>Each submission is vetted: checking for specialty focus, verifying details, and filling in roast and brew data before anything goes live. The result is a smaller, more reliable directory than open crowdsourcing produces.</p>
-            </div>
-
-            <!-- How It Works -->
-            <div class="section">
-                <div class="section-label">How It Works</div>
-                <p>New locations and edits come in through two places. The <a href="submit.html">Add a Spot</a> page is the more comprehensive option, covering everything from location details to roast profile and amenities. For quick corrections to an existing listing, the Suggest an Edit option on any <a href="map.html">map</a> card focuses specifically on the coffee details fields. We review each submission, research the spot, and add or update it before anything goes live.</p>
-                <p>Hours change, roasters open and close. If you spot something out of date, either path gets it in front of someone who can fix it.</p>
-            </div>
-
-            <!-- Contact -->
-            <div class="section">
-                <div class="section-label">Contact</div>
-                <p>Have a suggestion, spotted an error, or want to collaborate? We'd love to hear from you.</p>
-                <div class="contact-actions">
-                    <a href="mailto:sdcoffeebeans@gmail.com" class="hero-cta">✉ sdcoffeebeans@gmail.com</a>
-                    <span class="contact-secondary">or <a href="submit.html">submit a location or correction →</a></span>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -561,11 +941,85 @@
         }
 
         if (window.COFFEE_LOCATIONS) {
-            const count = window.COFFEE_LOCATIONS.length;
+            const locs = window.COFFEE_LOCATIONS;
+
+            // Deduplication helper — mirrors homepage logic
+            function normalizeBrandName(name) {
+                return name
+                    .replace(/\s*[-–—@]\s*.+$/, '')
+                    .replace(/\s*\(.*?\)\s*$/, '')
+                    .replace(/\s+roaster\s*$/i, '')
+                    .replace(/\s+(north|south|east|west|downtown|gaslamp|hillcrest|north park|south park|la jolla|mission hills|liberty station|little italy|ocean beach|pacific beach|point loma|kensington|normal heights|university heights|clairemont|mission valley|del mar|encinitas|carlsbad|solana beach|chula vista|el cajon|santee|lakeside|poway|rancho bernardo|san marcos|city heights|coronado|imperial beach|vista|escondido|oceanside|on park)\s*$/i, '')
+                    .replace(/\.\s*$/, '')
+                    .trim()
+                    .toLowerCase();
+            }
+
+            // Total locations
             const fc = document.getElementById('footerCount');
-            const ic = document.getElementById('introCount');
-            if (fc) fc.textContent = count;
-            if (ic) ic.textContent = count;
+            const sc = document.getElementById('sidebarCount');
+            if (fc) fc.textContent = locs.length;
+            if (sc) sc.textContent = locs.length;
+
+            // Total roasters — deduplicated, with online-only count in label
+            const roasterLocs = locs.filter(l => l.basicInfo && l.basicInfo.type === 'roaster');
+            const onlineOnly = roasterLocs.filter(l => l.basicInfo.onlineOnly).length;
+            const uniqueRoasters = new Set(roasterLocs.map(l => normalizeBrandName(l.basicInfo.name || ''))).size;
+            const roasterEl = document.getElementById('statRoasterCount');
+            const roasterLabelEl = document.getElementById('statRoasterLabel');
+            if (roasterEl) roasterEl.textContent = uniqueRoasters;
+            if (roasterLabelEl) roasterLabelEl.textContent = 'Roasters (' + onlineOnly + ' online-only)';
+
+            // Total cafes — deduplicated
+            const cafeLocs = locs.filter(l => l.basicInfo && l.basicInfo.type !== 'roaster');
+            const uniqueCafes = new Set(cafeLocs.map(l => normalizeBrandName(l.basicInfo.name || ''))).size;
+            const cafeEl = document.getElementById('statCafeCount');
+            if (cafeEl) cafeEl.textContent = uniqueCafes;
+
+            // Neighborhood count — unique values from data
+            const uniqueNeighborhoods = new Set(locs.map(l => l.coffeeDetails && l.coffeeDetails.neighborhood).filter(Boolean)).size;
+            const neighCountEl = document.getElementById('statNeighborhoodCount');
+            if (neighCountEl) neighCountEl.textContent = uniqueNeighborhoods;
+
+            // Most caffeinated neighborhood
+            const nCounts = {};
+            locs.forEach(l => {
+                const n = l.coffeeDetails && l.coffeeDetails.neighborhood;
+                if (n) nCounts[n] = (nCounts[n] || 0) + 1;
+            });
+            const topN = Object.entries(nCounts).sort((a, b) => b[1] - a[1])[0];
+            if (topN) {
+                const nameEl = document.getElementById('statNeighborhoodName');
+                const labelEl = document.getElementById('statNeighborhoodLabel');
+                const linkEl = document.getElementById('linkNeighborhood');
+                if (nameEl) nameEl.textContent = topN[0];
+                if (labelEl) labelEl.textContent = 'Most Caffeinated Neighborhood · ' + topN[1] + ' spots';
+                if (linkEl) linkEl.href = 'map.html?search=' + encodeURIComponent(topN[0]);
+            }
+
+            // Oldest roaster
+            const withYear = locs.filter(l => l.coffeeDetails && l.coffeeDetails.yearEstablished);
+            if (withYear.length) {
+                const oldest = withYear.reduce((a, b) =>
+                    a.coffeeDetails.yearEstablished < b.coffeeDetails.yearEstablished ? a : b
+                );
+                const nameEl = document.getElementById('statOldestName');
+                const labelEl = document.getElementById('statOldestLabel');
+                const linkEl = document.getElementById('linkOldestRoaster');
+                if (nameEl) nameEl.textContent = oldest.basicInfo.name;
+                if (labelEl) labelEl.textContent = 'Oldest Roaster – Est. ' + oldest.coffeeDetails.yearEstablished;
+                if (linkEl) linkEl.href = 'location.html?id=' + encodeURIComponent(oldest.id);
+            }
+
+            // Subreddit age — spelled out months and days
+            const founded = new Date('2026-01-21');
+            const totalDays = Math.floor((new Date() - founded) / (1000 * 60 * 60 * 24));
+            const months = Math.floor(totalDays / 30);
+            const days = totalDays % 30;
+            const monthStr = months === 1 ? '1 month' : months + ' months';
+            const dayStr = days === 1 ? '1 day' : days + ' days';
+            const ageEl = document.getElementById('statSubredditAge');
+            if (ageEl) ageEl.textContent = monthStr + ', ' + dayStr;
         }
     </script>
 

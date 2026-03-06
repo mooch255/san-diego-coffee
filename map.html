@@ -1617,8 +1617,10 @@ function initMap() {
     
     // Apply search from URL
     if (searchQuery) {
-        document.getElementById('searchInput').value = searchQuery;
-        performSearch();
+        setTimeout(() => {
+            document.getElementById('searchInput').value = searchQuery;
+            performSearch();
+        }, 800);
     }
 
     // Handle ?location=id deep links from share button
@@ -2304,7 +2306,10 @@ function performSearch() {
         
         map.setCenter({ lat: neighborhood.lat, lng: neighborhood.lng });
         map.setZoom(neighborhood.zoom);
-        
+
+        // Clear input so idle event doesn't re-trigger performSearch in a loop
+        document.getElementById('searchInput').value = '';
+
         setTimeout(() => {
             infoWindow.setContent(`<div class="info-window"><h3>Viewing: ${query.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h3><p>Zoomed to show coffee locations in this area</p></div>`);
             infoWindow.setPosition(map.getCenter());

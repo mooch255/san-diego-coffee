@@ -21,7 +21,7 @@ try {
   });
 } catch {}
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw_r5rgwohLWHtizzAEhad9NNGG0pbnEiF23fg1-jxs7VgYbb2DfTyQQ--S7in8wZgD/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBRiGUsyU5HIHC-VWTlcRXMxT5gCCvbuDFkwF7nxRC6fa9jDrpAhZTr6CuurQHpAc/exec';
 const LOCATIONS_FILE  = path.join(__dirname, 'locations.js');
 const API_KEY         = process.env.GOOGLE_PLACES_API_KEY || '';
 

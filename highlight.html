@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roaster Highlight · San Diego Specialty Coffee</title>
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --espresso: #3D2817;
+            --coffee-brown: #6B4E3D;
+            --cream: #F8F5F0;
+            --white: #FFFFFF;
+            --latte: #C4A77D;
+            --accent-red: #B85C38;
+            --warm-brown: #5C4033;
+            --light-tan: #E8DED2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Libre Franklin', -apple-system, sans-serif;
+            color: var(--espresso);
+            background: var(--white);
+        }
+
+        /* ── Header ──────────────────────────────────────────────────── */
+        header {
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.016) 39px, rgba(255,255,255,0.016) 40px
+                ),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            color: var(--white);
+            border-top: 3px solid var(--accent-red);
+            border-bottom: 3px solid var(--accent-red);
+            overflow: hidden;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.85rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-brand-eyebrow {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.6);
+            margin-bottom: 0.4rem;
+        }
+
+        .header-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            line-height: 1;
+            color: #EDE0CC;
+            text-decoration: none;
+            display: block;
+        }
+
+        .header-logo em { font-style: italic; color: #C9A97E; font-weight: 400; }
+        .header-logo strong { font-family: 'Playfair Display', serif; font-style: normal; font-weight: 800; color: #EDE0CC; letter-spacing: -0.01em; }
+
+        .header-subtitle {
+            font-size: 0.6rem;
+            color: rgba(196,167,125,0.55);
+            margin-top: 0.4rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        /* ── Hamburger Nav ───────────────────────────────────────────── */
+        .nav-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(196,167,125,0.08);
+            border: 1px solid rgba(196,167,125,0.4);
+            color: rgba(196,167,125,0.9);
+            padding: 0.5rem 0.9rem;
+            cursor: pointer;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 0;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-toggle-icon { font-size: 1.15rem; line-height: 1; }
+
+        .nav-toggle:hover, .nav-toggle.open {
+            border-color: var(--latte);
+            color: var(--latte);
+            background: rgba(196,167,125,0.13);
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: fixed;
+            background: #2A1508;
+            border-left: 1px solid rgba(196,167,125,0.25);
+            border-bottom: 1px solid rgba(196,167,125,0.25);
+            border-top: 2px solid var(--accent-red);
+            min-width: 210px;
+            z-index: 9999;
+            box-shadow: -4px 8px 32px rgba(0,0,0,0.45);
+        }
+
+        .nav-dropdown.open { display: block; }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 0.9rem 1.5rem;
+            color: rgba(196,167,125,0.8);
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(196,167,125,0.1);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .nav-dropdown a:last-child { border-bottom: none; }
+
+        .nav-dropdown a:hover {
+            background: rgba(196,167,125,0.1);
+            color: var(--latte);
+        }
+
+        .nav-dropdown a.active {
+            color: var(--latte);
+            border-left: 3px solid var(--accent-red);
+            padding-left: calc(1.5rem - 3px);
+        }
+
+        /* ── Article Layout ──────────────────────────────────────────── */
+        .article-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--coffee-brown);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(107,78,61,0.25);
+            padding-bottom: 1px;
+            margin-bottom: 1.75rem;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--accent-red);
+            border-bottom-color: var(--accent-red);
+        }
+
+        /* ── Hero Image ──────────────────────────────────────────────── */
+        .hero-image {
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2A1508 0%, #4A2C18 60%, #3A2010 100%);
+            margin-bottom: 1.75rem;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            opacity: 0.2;
+        }
+
+        /* ── Post Header Card ────────────────────────────────────────── */
+        .post-header {
+            border-top: 3px solid var(--accent-red);
+            border: 1px solid var(--light-tan);
+            border-top: 3px solid var(--accent-red);
+            background: var(--cream);
+            padding: 1.75rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .post-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.75rem;
+        }
+
+        .post-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--espresso);
+            line-height: 1.2;
+            margin-bottom: 0.6rem;
+        }
+
+        .post-meta {
+            font-size: 0.8rem;
+            color: var(--coffee-brown);
+            font-weight: 600;
+        }
+
+        /* ── Body Content ────────────────────────────────────────────── */
+        .post-body {
+            margin-bottom: 2.5rem;
+        }
+
+        .text-block {
+            font-size: 1rem;
+            line-height: 1.85;
+            color: #4A3728;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── Q&A Block ───────────────────────────────────────────────── */
+        .qa-block {
+            border: 1px solid var(--light-tan);
+            border-top: 3px solid var(--accent-red);
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .qa-question {
+            background: var(--cream);
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid var(--light-tan);
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--espresso);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .qa-answer {
+            padding: 1.1rem 1.4rem;
+            font-size: 0.93rem;
+            line-height: 1.85;
+            color: var(--warm-brown);
+        }
+
+        .qa-answer p { margin: 0 0 0.75rem; }
+        .qa-answer p:last-child { margin-bottom: 0; }
+
+        /* ── Inline Image Block ──────────────────────────────────────── */
+        .image-block {
+            margin: 2rem 0;
+        }
+
+        .image-block img {
+            width: 100%;
+            display: block;
+        }
+
+        .image-block figcaption {
+            font-size: 0.78rem;
+            color: var(--coffee-brown);
+            margin-top: 0.5rem;
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* ── Reddit CTA ──────────────────────────────────────────────── */
+        .reddit-cta {
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-tan);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 1.5px solid var(--accent-red);
+            color: var(--accent-red);
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        /* ── Not Found ───────────────────────────────────────────────── */
+        .not-found {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .not-found h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--espresso);
+            margin-bottom: 1rem;
+        }
+
+        .not-found p {
+            color: var(--coffee-brown);
+            margin-bottom: 1.5rem;
+        }
+
+        .not-found a {
+            color: var(--accent-red);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* ── Footer ──────────────────────────────────────────────────── */
+        footer {
+            background: var(--espresso);
+            color: rgba(196,167,125,0.65);
+            text-align: center;
+            padding: 1.5rem 2rem;
+            font-size: 0.78rem;
+        }
+
+        footer a { color: var(--latte); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+        footer a:hover { color: #EDE0CC; }
+        .footer-sep { opacity: 0.4; margin: 0 0.4rem; }
+
+        /* ── Responsive ──────────────────────────────────────────────── */
+        @media (max-width: 600px) {
+            .article-wrap { padding: 1.5rem 1.25rem 3rem; }
+            .post-header { padding: 1.25rem; }
+            .post-header h1 { font-size: 1.5rem; }
+            .qa-question { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
+                <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+                <p class="header-subtitle">Roaster Highlights</p>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                <span class="nav-toggle-icon">≡</span>
+                <span class="nav-toggle-label">Menu</span>
+            </button>
+        </div>
+    </header>
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home</a>
+        <a href="map.html">Explore Map</a>
+        <a href="roaster-highlights.html" class="active">Roaster Highlights</a>
+        <a href="submit.html">Add a Spot</a>
+        <a href="about.html">About</a>
+    </nav>
+
+    <div id="pageContent">
+        <div class="article-wrap">
+            <p style="color: var(--coffee-brown); font-size: 0.9rem;">Loading…</p>
+        </div>
+    </div>
+
+    <footer>
+        <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
+        <span class="footer-sep">·</span>
+        <a href="roaster-highlights.html">Roaster Highlights</a>
+        <span class="footer-sep">·</span>
+        <a href="map.html">Explore Map</a>
+    </footer>
+
+    <script src="highlights.js"></script>
+    <script>
+        // Nav dropdown
+        (function() {
+            const toggle = document.getElementById('navToggle');
+            const dropdown = document.getElementById('navDropdown');
+            if (!toggle || !dropdown) return;
+            function closeNav() {
+                dropdown.classList.remove('open');
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.querySelector('.nav-toggle-icon').textContent = '≡';
+                toggle.querySelector('.nav-toggle-label').textContent = 'Menu';
+            }
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (dropdown.classList.contains('open')) {
+                    closeNav();
+                } else {
+                    toggle.querySelector('.nav-toggle-icon').textContent = '✕';
+                    toggle.querySelector('.nav-toggle-label').textContent = 'Close';
+                    toggle.classList.add('open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                    const hBottom = document.querySelector('header').getBoundingClientRect().bottom;
+                    const tRect = toggle.getBoundingClientRect();
+                    dropdown.style.top = hBottom + 'px';
+                    dropdown.style.right = Math.max(0, document.documentElement.clientWidth - tRect.right) + 'px';
+                    dropdown.classList.add('open');
+                }
+            });
+            document.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+        })();
+
+        function formatDate(iso) {
+            const d = new Date(iso + 'T00:00:00');
+            const day = d.getDate();
+            const suffix = (day >= 11 && day <= 13) ? 'th' : (['th','st','nd','rd'][day % 10] || 'th');
+            const month = d.toLocaleDateString('en-US', { month: 'long' });
+            return `${month} ${day}${suffix}, ${d.getFullYear()}`;
+        }
+
+        function renderParagraphs(text, cls) {
+            return text.split('\n\n').map(p => `<p${cls ? ` class="${cls}"` : ''}>${p.trim()}</p>`).join('');
+        }
+        function renderBody(bodyArr) {
+            return bodyArr.map(block => {
+                if (block.type === 'text') {
+                    return renderParagraphs(block.content, 'text-block');
+                }
+                if (block.type === 'qa') {
+                    return `
+                        <div class="qa-block">
+                            <div class="qa-question">${block.question}</div>
+                            <div class="qa-answer">${renderParagraphs(block.answer)}</div>
+                        </div>`;
+                }
+                if (block.type === 'image') {
+                    return `
+                        <figure class="image-block">
+                            <img src="${block.src}" alt="${block.caption || ''}">
+                            ${block.caption ? `<figcaption>${block.caption}</figcaption>` : ''}
+                        </figure>`;
+                }
+                return '';
+            }).join('');
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const entry = window.highlights && window.highlights.find(h => h.id === id);
+        const container = document.getElementById('pageContent');
+
+        if (!entry) {
+            document.title = 'Highlight Not Found · San Diego Specialty Coffee';
+            container.innerHTML = `
+                <div class="not-found">
+                    <h2>Highlight Not Found</h2>
+                    <p>We couldn't find that roaster highlight.</p>
+                    <a href="roaster-highlights.html">← All Highlights</a>
+                </div>`;
+        } else {
+            // Update page meta
+            document.title = entry.roasterName + ' · San Diego Specialty Coffee';
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            if (ogTitle) ogTitle.content = entry.roasterName + ' · San Diego Specialty Coffee';
+
+            const heroHtml = entry.image
+                ? `<div class="hero-image"><img src="${entry.image}" alt="${entry.roasterName}"></div>`
+                : `<div class="hero-image"><div class="hero-image-placeholder">☕</div></div>`;
+
+            container.innerHTML = `
+                <div class="article-wrap">
+                    <a href="roaster-highlights.html" class="back-link">← All Highlights</a>
+                    ${heroHtml}
+                    <div class="post-header">
+                        <div class="post-eyebrow">Roaster Highlight</div>
+                        <h1>${entry.locationUrl ? `<a href="${entry.locationUrl}" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--accent-red);padding-bottom:2px;">${entry.roasterName}</a>` : entry.roasterName}</h1>
+                        <div class="post-meta">${formatDate(entry.date)}</div>
+                    </div>
+                    <div class="post-body">
+                        ${renderBody(entry.body)}
+                    </div>
+                    <div class="reddit-cta">
+                        <a href="${entry.redditUrl}" target="_blank" rel="noopener" class="btn-secondary">Read the original post on Reddit ↗</a>
+                    </div>
+                </div>`;
+        }
+    </script>
+
+</body>
+</html>

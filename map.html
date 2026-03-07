@@ -122,55 +122,73 @@
             text-transform: uppercase;
         }
 
-        .header-buttons {
+        /* ── Hamburger Nav ───────────────────────────────────────────── */
+        .nav-toggle {
             display: flex;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(196,167,125,0.08);
+            border: 1px solid rgba(196,167,125,0.4);
+            color: rgba(196,167,125,0.9);
+            padding: 0.5rem 0.9rem;
+            cursor: pointer;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 0;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .header-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.4rem 0.9rem;
-            font-size: 0.7rem;
+        .nav-toggle-icon { font-size: 1.15rem; line-height: 1; }
+
+        .nav-toggle:hover, .nav-toggle.open {
+            border-color: var(--latte);
+            color: var(--latte);
+            background: rgba(196,167,125,0.13);
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: fixed;
+            background: #2A1508;
+            border-left: 1px solid rgba(196,167,125,0.25);
+            border-bottom: 1px solid rgba(196,167,125,0.25);
+            border-top: 2px solid var(--accent-red);
+            min-width: 210px;
+            z-index: 9999;
+            box-shadow: -4px 8px 32px rgba(0,0,0,0.45);
+        }
+
+        .nav-dropdown.open { display: block; }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 0.9rem 1.5rem;
+            color: rgba(196,167,125,0.8);
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            text-decoration: none;
-            border: 1px solid rgba(196,167,125,0.32);
-            color: rgba(196,167,125,0.8);
-            background: transparent;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            font-family: 'Libre Franklin', sans-serif;
-            border-radius: 0;
+            border-bottom: 1px solid rgba(196,167,125,0.1);
+            transition: background 0.15s, color 0.15s;
         }
 
-        .header-btn:hover {
-            border-color: var(--latte);
+        .nav-dropdown a:last-child { border-bottom: none; }
+
+        .nav-dropdown a:hover {
+            background: rgba(196,167,125,0.1);
             color: var(--latte);
-            background: rgba(196,167,125,0.07);
-            transform: none;
         }
 
-        .header-btn.secondary {
-            background: transparent;
-        }
-
-        .header-btn.secondary:hover {
-            background: rgba(196,167,125,0.07);
-        }
-
-        /* The "Submit" button gets accent-red fill */
-        .header-btn:last-child {
-            background: var(--accent-red);
-            border-color: var(--accent-red);
-            color: white;
-        }
-
-        .header-btn:last-child:hover {
-            background: #a04a28;
-            border-color: #a04a28;
+        .nav-dropdown a.active {
+            color: var(--latte);
+            border-left: 3px solid var(--accent-red);
+            padding-left: calc(1.5rem - 3px);
         }
 
         /* Controls Bar - Compact */
@@ -1040,84 +1058,16 @@
             animation: countFlash 0.4s ease-out forwards;
         }
 
-        /* Mobile nav dropdown — fixed below header, never covers hamburger button */
-        .mobile-nav-menu {
-            display: none;
-            z-index: 9998;
-            min-width: 180px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-        }
-        .mobile-nav-menu.open {
-            display: block;
-            position: fixed;
-            top: 48px; /* below the compact mobile header */
-            right: 0;
-            background: #2A1508;
-            border: 1px solid rgba(196,167,125,0.3);
-            border-top: none;
-        }
-        .mobile-nav-menu a {
-            display: block;
-            padding: 0.75rem 1.1rem;
-            color: rgba(196,167,125,0.85);
-            text-decoration: none;
-            font-size: 0.78rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-bottom: 1px solid rgba(196,167,125,0.1);
-            font-family: 'Libre Franklin', sans-serif;
-            transition: background 0.15s, color 0.15s;
-        }
-        .mobile-nav-menu a:last-child { border-bottom: none; }
-        .mobile-nav-menu a:hover { background: rgba(196,167,125,0.1); color: var(--latte); }
-
-        .hamburger-btn {
-            display: none;
-            background: transparent;
-            border: 1px solid rgba(196,167,125,0.32);
-            color: rgba(196,167,125,0.8);
-            padding: 0.4rem 0.6rem;
-            cursor: pointer;
-            font-size: 1rem;
-            line-height: 1;
-            border-radius: 0;
-            font-family: inherit;
-            text-transform: none;
-            letter-spacing: 0;
-            position: relative;
-            z-index: 9999;
-        }
-        .hamburger-btn:hover { background: rgba(196,167,125,0.1); color: var(--latte); }
 
         @media (max-width: 768px) {
-            header { padding: 0.75rem 1rem; }
+            .header-content { padding: 0.6rem 1rem; }
             .header-brand-eyebrow { font-size: 0.45rem; margin-bottom: 0.3rem; }
             h1 { font-size: 1rem; }
             .subtitle { font-size: 0.45rem; margin-top: 0.5rem; }
 
-            /* Single-row compact header */
-            .header-content {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0.6rem 1rem;
-                gap: 0;
-                position: relative;
-            }
-
-            /* Hide desktop nav buttons, show hamburger */
-            .header-buttons { display: none; }
-            .hamburger-btn { display: block; }
-
-            .header-btn {
-                padding: 0.35rem 0.75rem;
-                font-size: 0.68rem;
-            }
-
             .map-layout {
                 flex-direction: column;
-                height: calc(100vh - 90px);
+                height: calc(100vh - 60px);
             }
 
             .list-panel {
@@ -1371,19 +1321,19 @@
                 <h1><em>San Diego</em> <strong>Specialty Coffee</strong></h1>
                 <p class="subtitle">Interactive Map of Specialty Coffee Locations</p>
             </a>
-            <div class="header-buttons">
-                <a href="index.html" class="header-btn secondary">🏠 Home</a>
-                <a href="submit.html" class="header-btn">📍 Add a Spot</a>
-            </div>
-            <!-- Mobile hamburger -->
-            <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">☰</button>
-            <div class="mobile-nav-menu" id="mobileNavMenu">
-                <a href="index.html">🏠 Home</a>
-                <a href="submit.html">📍 Add a Spot</a>
-                <a href="about.html">ℹ️ About</a>
-            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                <span class="nav-toggle-icon">≡</span>
+                <span class="nav-toggle-label">Menu</span>
+            </button>
         </div>
     </header>
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home</a>
+        <a href="map.html" class="active">Explore Map</a>
+        <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="submit.html">Add a Spot</a>
+        <a href="about.html">About</a>
+    </nav>
 
     <!-- Split Layout -->
     <div class="map-layout">
@@ -1501,6 +1451,7 @@ let map, markers = [], markerCluster, infoWindow, allLocations = [], userLocatio
 // Use coffeeDetails already merged into locations.js by sync-locations.js
 // Build lookup from the already-loaded COFFEE_LOCATIONS array
 let sheetDataByLocation = {};
+let communityData = { likes: {}, reviews: {} };
 function loadSheetData() {
     (window.COFFEE_LOCATIONS || []).forEach(loc => {
         if (loc.coffeeDetails) {
@@ -1594,6 +1545,7 @@ function initMap() {
     loadLocations();
     setupEventListeners();
     loadSheetData();
+    loadCommunityDataForMap();
     document.getElementById('loading').classList.add('hidden');
     updateAllFilterCounts();
     
@@ -1766,6 +1718,19 @@ function createInfoWindowContent(location, custom) {
     if (line2Parts.length) {
         html += `<div class="info-window-section" style="font-size:0.72rem; color:#777; margin-bottom:0.25rem;">${line2Parts.join(' <span style="color:#ddd; margin:0 0.3rem;">·</span> ')}</div>`;
     }
+
+    // Line 3: like button + community counts
+    const pinLikes   = communityData.likes[location.id] || 0;
+    const pinReviews = (communityData.reviews[location.id] || []).length;
+    const pinIsLiked = localStorage.getItem('liked_' + location.id) === 'true';
+    const likeBtnColor = pinIsLiked ? '#B85C38' : '#6B4E3D';
+    const likeBtnBorder = pinIsLiked ? '#B85C38' : '#C8B9AC';
+    const likeBtnStyle = `cursor:pointer;background:transparent;border:1px solid ${likeBtnBorder};color:${likeBtnColor};padding:0.18rem 0.55rem;font-size:0.7rem;font-family:'Libre Franklin',sans-serif;font-weight:600;line-height:1.4;`;
+    const reviewsUrl = `location.html?id=${location.id}#reviews`;
+    const linkStyle = `font-size:0.7rem;color:#C4A77D;text-decoration:none;`;
+    const likeCountHtml = pinLikes > 0 ? `<a id="map-like-count-${location.id}" href="${reviewsUrl}" style="${linkStyle}">${pinLikes} ${pinLikes === 1 ? 'like' : 'likes'}</a>` : `<span id="map-like-count-${location.id}" style="font-size:0.7rem;color:#C4A77D;"></span>`;
+    const reviewCountHtml = pinReviews > 0 ? `<a href="${reviewsUrl}" style="${linkStyle}">· 💬 ${pinReviews} review${pinReviews > 1 ? 's' : ''}</a>` : '';
+    html += `<div class="info-window-section" style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.35rem;flex-wrap:wrap;"><button id="map-like-btn-${location.id}" onclick="toggleLikeFromMap('${location.id}',this)" style="${likeBtnStyle}">${pinIsLiked ? '♥ Liked' : '♡ Like'}</button>${likeCountHtml}${reviewCountHtml}</div>`;
 
     // ── Coffee details from Sheet ──────────────────────────────────────
     const hasAnyCustom = custom.description || custom.roastScale || custom.roastStyle ||
@@ -2093,10 +2058,13 @@ function setupEventListeners() {
             'Central & East SD':     ['Allied Gardens','Barrio Logan','City Heights','College Area','Del Cerro','El Cajon','Lemon Grove','Logan Heights','Mission Valley','Old Town'],
             'South Bay':             ['Chula Vista','Coronado','Imperial Beach'],
         };
-        // Collect neighborhoods that actually exist in the data
-        const present = new Set(
-            allLocations.map(l => l.coffeeDetails?.neighborhood).filter(Boolean)
-        );
+        // Collect neighborhoods that actually exist in the data + count per neighborhood
+        const nbrCount = {};
+        allLocations.forEach(l => {
+            const n = l.coffeeDetails?.neighborhood;
+            if (n) nbrCount[n] = (nbrCount[n] || 0) + 1;
+        });
+        const present = new Set(Object.keys(nbrCount));
         const sel = document.getElementById('filterNeighborhood');
         Object.entries(regionMap)
             .map(([region, hoods]) => [region, hoods.filter(h => present.has(h))])
@@ -2108,7 +2076,7 @@ function setupEventListeners() {
                 inData.forEach(h => {
                     const opt = document.createElement('option');
                     opt.value = h;
-                    opt.textContent = h;
+                    opt.textContent = h + ' (' + (nbrCount[h] || 0) + ')';
                     grp.appendChild(opt);
                 });
                 sel.appendChild(grp);
@@ -2726,6 +2694,17 @@ function renderCard(loc) {
 
 
 
+        // Community likes + review count for this card
+        const locLikes   = communityData.likes[loc.id] || 0;
+        const locReviews = (communityData.reviews[loc.id] || []).length;
+        let communityHtml = '';
+        if (locLikes > 0 || locReviews > 0) {
+            const parts = [];
+            if (locLikes   > 0) parts.push(`♥ ${locLikes}`);
+            if (locReviews > 0) parts.push(`💬 ${locReviews} review${locReviews > 1 ? 's' : ''}`);
+            communityHtml = `<div style="font-size:0.7rem; color:#C4A77D; margin-bottom:0.25rem;">${parts.join(' · ')}</div>`;
+        }
+
         return `
         <div class="location-card" data-id="${loc.id}"
              onclick="selectLocationCard('${loc.id}')"
@@ -2736,6 +2715,7 @@ function renderCard(loc) {
                 <div class="location-card-name">${info.name}</div>
                 <div class="location-card-type ${isOnline ? 'online' : isRoaster ? 'roaster' : 'cafe'}">${(() => { const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe'; const hood = loc.coffeeDetails?.neighborhood; return hood ? `${typeLabel} · ${hood}` : typeLabel; })()}</div>
                 ${distHtml}
+                ${communityHtml}
                 ${detailLines}
 
             </div>
@@ -2777,6 +2757,57 @@ function copyShareLink(url, btn) {
         document.body.removeChild(ta);
         copy();
     });
+}
+
+// ── Community Data ─────────────────────────────────────────────────────────
+async function toggleLikeFromMap(locId, btn) {
+    btn.disabled = true;
+    try {
+        const res = await fetch('/.netlify/functions/toggle-like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ locationId: locId }),
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+
+        localStorage.setItem('liked_' + locId, String(data.liked));
+        communityData.likes[locId] = data.newCount;
+
+        btn.textContent = data.liked ? '♥ Liked' : '♡ Like';
+        btn.style.color = data.liked ? '#B85C38' : '#6B4E3D';
+        btn.style.borderColor = data.liked ? '#B85C38' : '#C8B9AC';
+
+        const countEl = document.getElementById('map-like-count-' + locId);
+        if (countEl) {
+            countEl.textContent = data.newCount > 0
+                ? `${data.newCount} ${data.newCount === 1 ? 'like' : 'likes'}`
+                : '';
+        }
+
+        // Refresh the sidebar card count too
+        const visibleMarkers = markers.filter(m => shouldShowMarker(m));
+        renderLocationCards(visibleMarkers);
+    } catch (e) {
+        // fail silently
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+async function loadCommunityDataForMap() {
+    try {
+        const res = await fetch('/.netlify/functions/get-community-data');
+        if (!res.ok) return;
+        const data = await res.json();
+        communityData.likes   = data.likes   || {};
+        communityData.reviews = data.reviews || {};
+        // Re-render cards so community counts appear
+        const visibleMarkers = markers.filter(m => shouldShowMarker(m));
+        renderLocationCards(visibleMarkers);
+    } catch (e) {
+        // Non-critical — community data is optional
+    }
 }
 
 function highlightMarker(locationId, on) {
@@ -2897,24 +2928,39 @@ document.addEventListener('DOMContentLoaded', () => {
         floatBtn.addEventListener('click', showUserLocation);
     }
 
-    // Hamburger menu toggle
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileNavMenu = document.getElementById('mobileNavMenu');
-    if (hamburgerBtn && mobileNavMenu) {
-        hamburgerBtn.addEventListener('click', (e) => {
+    // Nav dropdown
+    (function() {
+        const toggle = document.getElementById('navToggle');
+        const dropdown = document.getElementById('navDropdown');
+        if (!toggle || !dropdown) return;
+        function closeNav() {
+            dropdown.classList.remove('open');
+            toggle.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.querySelector('.nav-toggle-icon').textContent = '≡';
+            toggle.querySelector('.nav-toggle-label').textContent = 'Menu';
+        }
+        toggle.addEventListener('click', function(e) {
             e.stopPropagation();
-            const isOpen = mobileNavMenu.classList.toggle('open');
-            hamburgerBtn.textContent = isOpen ? '✕' : '☰';
-        });
-        document.addEventListener('click', (e) => {
-            // Don't close if the click was on the hamburger button itself
-            if (e.target === hamburgerBtn || hamburgerBtn.contains(e.target)) return;
-            if (mobileNavMenu.classList.contains('open')) {
-                mobileNavMenu.classList.remove('open');
-                hamburgerBtn.textContent = '☰';
+            if (dropdown.classList.contains('open')) {
+                closeNav();
+            } else {
+                toggle.querySelector('.nav-toggle-icon').textContent = '✕';
+                toggle.querySelector('.nav-toggle-label').textContent = 'Close';
+                toggle.classList.add('open');
+                toggle.setAttribute('aria-expanded', 'true');
+                requestAnimationFrame(function() {
+                    const hBottom = document.querySelector('header').getBoundingClientRect().bottom;
+                    const tRect = toggle.getBoundingClientRect();
+                    dropdown.style.top = hBottom + 'px';
+                    dropdown.style.right = Math.max(0, document.documentElement.clientWidth - tRect.right) + 'px';
+                    dropdown.classList.add('open');
+                });
             }
         });
-    }
+        document.addEventListener('click', closeNav);
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+    })();
 
     // Active filter dot — show when any filter is non-default
     function updateFilterDot() {

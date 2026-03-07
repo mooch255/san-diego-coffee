@@ -13,8 +13,8 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: #2c1810;
+            font-family: 'Libre Franklin', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--espresso);
             background: #f8f6f4;
         }
 
@@ -45,10 +45,8 @@
                 ),
                 linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
             color: white;
-            padding: 1.5rem 2rem 1.25rem;
             border-top: 3px solid var(--accent-red);
             border-bottom: 3px solid var(--accent-red);
-            text-align: center;
             position: relative;
             overflow: hidden;
         }
@@ -64,6 +62,12 @@
         }
 
         .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.85rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: relative;
             z-index: 1;
         }
@@ -78,100 +82,176 @@
             font-family: 'Libre Franklin', sans-serif;
         }
 
-        header h1 {
+        .header-logo {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-size: 1.45rem;
             font-weight: 400;
             line-height: 1;
             color: #EDE0CC;
             letter-spacing: -0.01em;
-            margin-bottom: 0;
+            text-decoration: none;
+            display: block;
         }
 
-        header h1 em {
-            font-style: italic;
-            color: #C9A97E;
-            font-weight: 400;
-        }
+        .header-logo em { font-style: italic; color: #C9A97E; font-weight: 400; }
+        .header-logo strong { font-family: 'Playfair Display', serif; font-style: normal; font-weight: 800; color: #EDE0CC; }
 
-        header h1 strong {
-            font-family: 'Playfair Display', serif;
-            font-style: normal;
-            font-weight: 800;
-            color: #EDE0CC;
-            letter-spacing: -0.01em;
-        }
-
-        header p {
+        .header-subtitle {
             font-size: 0.6rem;
             font-weight: 600;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: rgba(196,167,125,0.55);
-            margin-top: 0.9rem;
+            margin-top: 0.5rem;
             font-family: 'Libre Franklin', sans-serif;
         }
 
-        .nav-links {
-            margin-top: 0.9rem;
-        }
-
-        .nav-links a {
+        /* ── Hamburger Nav ───────────────────────────────────────────── */
+        .nav-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(196,167,125,0.08);
+            border: 1px solid rgba(196,167,125,0.4);
+            color: rgba(196,167,125,0.9);
+            padding: 0.5rem 0.9rem;
+            cursor: pointer;
             font-family: 'Libre Franklin', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: rgba(196,167,125,0.75);
-            text-decoration: none;
-            margin: 0 0.6rem;
-            border-bottom: 1px solid rgba(196,167,125,0.2);
-            padding-bottom: 1px;
-            transition: color 0.2s, border-color 0.2s;
+            border-radius: 0;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .nav-links a:hover {
+        .nav-toggle-icon { font-size: 1.15rem; line-height: 1; }
+
+        .nav-toggle:hover, .nav-toggle.open {
+            border-color: var(--latte);
             color: var(--latte);
-            border-bottom-color: var(--latte);
+            background: rgba(196,167,125,0.13);
         }
 
+        .nav-dropdown {
+            display: none;
+            position: fixed;
+            background: #2A1508;
+            border-left: 1px solid rgba(196,167,125,0.25);
+            border-bottom: 1px solid rgba(196,167,125,0.25);
+            border-top: 2px solid var(--accent-red);
+            min-width: 210px;
+            z-index: 9999;
+            box-shadow: -4px 8px 32px rgba(0,0,0,0.45);
+        }
+
+        .nav-dropdown.open { display: block; }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 0.9rem 1.5rem;
+            color: rgba(196,167,125,0.8);
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(196,167,125,0.1);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .nav-dropdown a:last-child { border-bottom: none; }
+
+        .nav-dropdown a:hover {
+            background: rgba(196,167,125,0.1);
+            color: var(--latte);
+        }
+
+        .nav-dropdown a.active {
+            color: var(--latte);
+            border-left: 3px solid var(--accent-red);
+            padding-left: calc(1.5rem - 3px);
+        }
+
+        /* ── Layout ──────────────────────────────────────────────────── */
         .container {
             max-width: 700px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
+        /* ── Intro Card ──────────────────────────────────────────────── */
         .intro-card {
-            background: white;
+            background: var(--cream);
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--light-tan);
+            border-top: 3px solid var(--accent-red);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
             margin-bottom: 2rem;
         }
 
-        .intro-card h2 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            color: #2c1810;
-            margin-bottom: 1rem;
+        .intro-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.5rem;
         }
 
-        .intro-card p {
-            color: #5c4a42;
+        .intro-card h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .intro-card > p {
+            color: var(--warm-brown);
             line-height: 1.6;
             margin-bottom: 0.8rem;
+            font-size: 0.95rem;
         }
 
         .intro-card ul {
-            color: #5c4a42;
-            padding-left: 1.5rem;
-            line-height: 1.8;
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 1rem;
         }
 
+        .intro-card ul li {
+            color: var(--warm-brown);
+            line-height: 1.8;
+            font-size: 0.9rem;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .intro-card ul li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--latte);
+            font-weight: 600;
+        }
+
+        .review-note {
+            font-size: 0.82rem;
+            color: var(--coffee-brown);
+            font-style: italic;
+        }
+
+        /* ── Form Container ──────────────────────────────────────────── */
         .form-container {
             background: white;
             padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--light-tan);
+            border-top: 3px solid var(--accent-red);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
 
         .form-section {
@@ -183,53 +263,94 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .form-section-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.4rem;
+        }
+
         .form-section h2 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-size: 1.8rem;
-            color: #2c1810;
-            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--espresso);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
         }
 
         .form-description {
-            color: #5c4a42;
-            margin-bottom: 1.5rem;
+            color: var(--coffee-brown);
+            margin-bottom: 2rem;
             line-height: 1.6;
+            font-size: 0.9rem;
         }
 
+        /* ── Section Divider Labels ──────────────────────────────────── */
+        .form-section-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 2rem 0 1.25rem;
+        }
+
+        .form-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--light-tan);
+        }
+
+        /* ── Form Groups ─────────────────────────────────────────────── */
         .form-group {
-            margin-bottom: 1.8rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
             display: block;
-            font-weight: 500;
-            color: #2c1810;
-            margin-bottom: 0.5rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--espresso);
+            margin-bottom: 0.45rem;
         }
 
         .required::after {
             content: ' *';
-            color: #c44536;
+            color: var(--accent-red);
         }
 
         .field-description {
-            font-size: 0.9rem;
-            color: #7a6a62;
-            margin-top: 0.3rem;
+            font-size: 0.82rem;
+            color: var(--coffee-brown);
+            margin-top: 0.2rem;
+            margin-bottom: 0.4rem;
             font-style: italic;
+            line-height: 1.5;
         }
 
+        /* ── Form Inputs ─────────────────────────────────────────────── */
         input[type="text"],
         input[type="email"],
         input[type="url"],
         select,
         textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d4c4bc;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-family: inherit;
+            padding: 0.7rem 0.85rem;
+            border: 1px solid var(--light-tan);
+            border-radius: 2px;
+            font-size: 0.95rem;
+            font-family: 'Libre Franklin', sans-serif;
+            color: var(--espresso);
+            background: white;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
@@ -237,8 +358,8 @@
         select:focus,
         textarea:focus {
             outline: none;
-            border-color: #8b6f47;
-            box-shadow: 0 0 0 3px rgba(139, 111, 71, 0.1);
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 3px rgba(184,92,56,0.1);
         }
 
         textarea {
@@ -246,28 +367,114 @@
             min-height: 100px;
         }
 
+        /* ── Checkboxes ──────────────────────────────────────────────── */
         .checkbox-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
             margin-top: 0.25rem;
         }
 
         .checkbox-label {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            cursor: pointer;
+            gap: 0.6rem;
+            font-size: 0.88rem;
             font-weight: normal;
+            font-family: 'Libre Franklin', sans-serif;
+            color: var(--warm-brown);
+            cursor: pointer;
+            padding: 0.45rem 0;
+            border-bottom: 1px solid rgba(232,222,210,0.5);
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .checkbox-label:last-child {
+            border-bottom: none;
         }
 
         .checkbox-label input[type="checkbox"] {
-            width: auto;
-            margin: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            border: 1.5px solid var(--light-tan);
+            border-radius: 2px;
             cursor: pointer;
+            position: relative;
+            background: white;
+            transition: background 0.15s, border-color 0.15s;
         }
 
+        .checkbox-label input[type="checkbox"]:checked {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .checkbox-label input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1px;
+            width: 5px;
+            height: 9px;
+            border: 2px solid white;
+            border-top: none;
+            border-left: none;
+            transform: rotate(45deg);
+        }
+
+        /* ── Type Picker Cards ───────────────────────────────────────── */
+        .type-picker {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0 0;
+        }
+
+        .type-card {
+            border: 1px solid var(--light-tan);
+            border-top: 2px solid var(--light-tan);
+            padding: 1.25rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            position: relative;
+        }
+
+        .type-card:hover {
+            border-top-color: var(--latte);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .type-card.selected {
+            border-top-color: var(--accent-red);
+            background: rgba(184,92,56,0.04);
+        }
+
+        .type-card-icon {
+            font-size: 1.4rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .type-card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--espresso);
+            margin-bottom: 0.35rem;
+            line-height: 1.2;
+        }
+
+        .type-card-desc {
+            font-size: 0.78rem;
+            color: var(--coffee-brown);
+            line-height: 1.5;
+        }
+
+        /* ── Buttons ─────────────────────────────────────────────────── */
         .button-group {
             display: flex;
             gap: 1rem;
@@ -275,66 +482,71 @@
         }
 
         .btn {
-            padding: 0.875rem 1.75rem;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 500;
+            padding: 0.8rem 1.75rem;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            font-family: 'Libre Franklin', sans-serif;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
             cursor: pointer;
             transition: all 0.2s;
             border: none;
-            font-family: inherit;
         }
 
         .btn-primary {
-            background: #8b6f47;
+            background: var(--accent-red);
             color: white;
             flex: 1;
         }
 
         .btn-primary:hover:not(:disabled) {
-            background: #755d3a;
+            background: #a04e2f;
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(139, 111, 71, 0.2);
+            box-shadow: 0 4px 10px rgba(184,92,56,0.25);
         }
 
         .btn-primary:disabled {
-            background: #d4c4bc;
+            background: var(--light-tan);
+            color: var(--coffee-brown);
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.7;
         }
 
         .btn-secondary {
-            background: #f8f6f4;
-            color: #2c1810;
-            border: 1px solid #d4c4bc;
+            background: transparent;
+            color: var(--coffee-brown);
+            border: 1px solid var(--light-tan);
         }
 
         .btn-secondary:hover {
-            background: #eae6e3;
+            border-color: var(--coffee-brown);
+            background: var(--cream);
         }
 
+        /* ── Alerts ──────────────────────────────────────────────────── */
         .alert {
             padding: 1rem 1.25rem;
-            border-radius: 4px;
             margin-bottom: 1.5rem;
         }
 
         .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: rgba(196,167,125,0.12);
+            border-left: 3px solid var(--latte);
+            color: var(--warm-brown);
         }
 
         .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: rgba(184,92,56,0.08);
+            border-left: 3px solid var(--accent-red);
+            color: var(--accent-red);
         }
 
         .hidden {
             display: none;
         }
 
+        /* ── Footer ──────────────────────────────────────────────────── */
         footer {
             background:
                 repeating-linear-gradient(
@@ -363,7 +575,8 @@
             border-bottom-color: var(--latte);
         }
 
-        @media (max-width: 768px) {
+        /* ── Responsive ──────────────────────────────────────────────── */
+        @media (max-width: 600px) {
             header h1 {
                 font-size: 1.8rem;
             }
@@ -378,6 +591,10 @@
 
             .btn {
                 width: 100%;
+            }
+
+            .type-picker {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -398,39 +615,28 @@
         <!-- Roaster fields -->
         <input type="text" name="roaster_businessName">
         <input type="text" name="roaster_neighborhood">
-        <input type="url" name="roaster_googleMapsLink">
-        <input type="url" name="roaster_website">
+        <input type="text" name="roaster_website">
         <input type="text" name="roaster_category">
         <input type="text" name="roaster_multipleLocations">
         <input type="text" name="roaster_roastStyle">
         <input type="text" name="roaster_originFocus">
         <input type="text" name="roaster_brewMethods">
-        <input type="text" name="roaster_onlineOrdering">
-        <input type="text" name="roaster_dogFriendly">
+        <input type="text" name="roaster_amenities">
         <input type="text" name="roaster_yearFounded">
         <textarea name="roaster_founderHistory"></textarea>
         <textarea name="roaster_sourcing"></textarea>
-        <input type="text" name="roaster_personallyVisited">
-        <input type="text" name="roaster_discoveryMethod">
         <textarea name="roaster_whySpecialty"></textarea>
         <textarea name="roaster_additionalInfo"></textarea>
         <!-- Cafe fields -->
         <input type="text" name="cafe_businessName">
         <input type="text" name="cafe_neighborhood">
-        <input type="url" name="cafe_googleMapsLink">
-        <input type="url" name="cafe_website">
+        <input type="text" name="cafe_website">
         <input type="text" name="cafe_multipleLocations">
         <textarea name="cafe_roastersServed"></textarea>
         <input type="text" name="cafe_roasterRotation">
         <input type="text" name="cafe_brewingOptions">
-        <input type="text" name="cafe_foodMenu">
-        <input type="text" name="cafe_seating">
-        <input type="text" name="cafe_dogFriendly">
-        <input type="text" name="cafe_vibe">
-        <input type="text" name="cafe_notableFeatures">
+        <input type="text" name="cafe_amenities">
         <textarea name="cafe_roasterConnections"></textarea>
-        <input type="text" name="cafe_personallyVisited">
-        <input type="text" name="cafe_discoveryMethod">
         <textarea name="cafe_whySpecialty"></textarea>
         <textarea name="cafe_additionalInfo"></textarea>
         <!-- Correction fields -->
@@ -442,27 +648,37 @@
 
     <header>
         <div class="header-inner">
-            <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
-            <h1><em>San Diego</em> <strong>Specialty Coffee</strong></h1>
-            <p>Submit a Location or Correction</p>
-            <div class="nav-links">
-                <a href="index.html">🏠 Home</a>
-                <a href="map.html">🗺️ View Map</a>
+            <div>
+                <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
+                <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+                <p class="header-subtitle">Submit a Location or Correction</p>
             </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                <span class="nav-toggle-icon">≡</span>
+                <span class="nav-toggle-label">Menu</span>
+            </button>
         </div>
     </header>
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home</a>
+        <a href="map.html">Explore Map</a>
+        <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="submit.html" class="active">Add a Spot</a>
+        <a href="about.html">About</a>
+    </nav>
 
     <div class="container">
         <div class="intro-card">
-            <h2>📍 Submit a Location</h2>
-            <p><strong>This form is for submitting roasters, multi-roaster cafes, or corrections to the San Diego Specialty Coffee Map and Directory.</strong></p>
-            <p>The goal is to maintain a <strong>curated map with notes on each spot</strong> to help navigate the specialty coffee scene across San Diego County.</p>
+            <h2>Nominate a Spot</h2>
+            <p><strong>This form is for submitting roasters, multi-roaster cafes, or corrections to the San Diego Specialty Coffee Map.</strong></p>
+            <p>The goal is to maintain a curated map with detailed notes on each spot — helping navigate San Diego's specialty coffee scene.</p>
+            <p><strong>What makes a good submission</strong></p>
             <ul>
-                <li>✅ Locally roasted San Diego beans</li>
-                <li>☕ Skilled, knowledgeable baristas</li>
-                <li>🎯 Focus on quality and technique</li>
+                <li>A place you've visited or know firsthand</li>
+                <li>Details about their roast style, coffee program, or barista skillset</li>
+                <li>Roasters and cafes with a genuine specialty focus</li>
             </ul>
-            <p><em>Submissions are reviewed before being added. Not all entries will be accepted.</em></p>
+            <p class="review-note">Submissions are reviewed before being added. Not all entries will be accepted.</p>
         </div>
 
         <div class="form-container">
@@ -475,19 +691,28 @@
 
                 <!-- Section 1: Submission type selection -->
                 <div id="section1" class="form-section">
-                    <h2>What would you like to submit?</h2>
+                    <div class="form-section-eyebrow">Get Started</div>
+                    <h2>Share a Discovery</h2>
 
-                    <div class="form-group">
-                        <label class="required">Submission Type</label>
-                        <select name="submissionType" id="submissionType" required>
-                            <option value="">Choose</option>
-                            <option value="roaster">Roaster</option>
-                            <option value="multi-roaster-cafe">Multi-Roaster Cafe</option>
-                            <option value="correction">Correction / Update</option>
-                        </select>
+                    <input type="hidden" name="submissionType" id="submissionType">
+
+                    <div class="type-picker">
+                        <div class="type-card" onclick="selectType('roaster', this)">
+                            <div class="type-card-icon">☕</div>
+                            <div class="type-card-title">Roaster</div>
+                            <div class="type-card-desc">San Diego beans roasted locally</div>
+                        </div>
+                        <div class="type-card" onclick="selectType('multi-roaster-cafe', this)">
+                            <div class="type-card-icon">🏪</div>
+                            <div class="type-card-title">Multi-Roaster Cafe</div>
+                            <div class="type-card-desc">Specialty cafe dedicated to quality</div>
+                        </div>
+                        <div class="type-card" onclick="selectType('correction', this)">
+                            <div class="type-card-icon">✏️</div>
+                            <div class="type-card-title">Correction</div>
+                            <div class="type-card-desc">Closure, location change, info update, etc</div>
+                        </div>
                     </div>
-
-                    <button type="button" class="btn btn-primary" onclick="goToSection2()">Next</button>
                 </div>
 
                 <!-- Section 2: Dynamically injected based on type -->
@@ -503,6 +728,45 @@
     </footer>
 
     <script>
+        // Nav dropdown
+        (function() {
+            const toggle = document.getElementById('navToggle');
+            const dropdown = document.getElementById('navDropdown');
+            if (!toggle || !dropdown) return;
+            function closeNav() {
+                dropdown.classList.remove('open');
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.querySelector('.nav-toggle-icon').textContent = '≡';
+                toggle.querySelector('.nav-toggle-label').textContent = 'Menu';
+            }
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (dropdown.classList.contains('open')) {
+                    closeNav();
+                } else {
+                    toggle.querySelector('.nav-toggle-icon').textContent = '✕';
+                    toggle.querySelector('.nav-toggle-label').textContent = 'Close';
+                    toggle.classList.add('open');
+                    toggle.setAttribute('aria-expanded', 'true');
+                    const hBottom = document.querySelector('header').getBoundingClientRect().bottom;
+                    const tRect = toggle.getBoundingClientRect();
+                    dropdown.style.top = hBottom + 'px';
+                    dropdown.style.right = Math.max(0, document.documentElement.clientWidth - tRect.right) + 'px';
+                    dropdown.classList.add('open');
+                }
+            });
+            document.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+        })();
+
+        function selectType(type, cardEl) {
+            document.getElementById('submissionType').value = type;
+            document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+            cardEl.classList.add('selected');
+            setTimeout(() => goToSection2(), 180);
+        }
+
         function goToSection2() {
             const submissionType = document.getElementById('submissionType').value;
 
@@ -527,8 +791,11 @@
         function loadRoasterSection() {
             document.getElementById('dynamicSections').innerHTML = `
                 <div class="form-section">
+                    <div class="form-section-eyebrow">Roaster</div>
                     <h2>Roaster Submission</h2>
                     <p class="form-description">This form is for submitting <strong>San Diego coffee roasters.</strong></p>
+
+                    <div class="form-section-label">About the Business</div>
 
                     <div class="form-group">
                         <label class="required">Business Name</label>
@@ -537,18 +804,13 @@
 
                     <div class="form-group">
                         <label class="required">Neighborhood</label>
-                        <p class="field-description">For roasters with multiple locations, prioritize: 1) Main roasting facility, 2) Flagship café, 3) Main office</p>
+                        <p class="field-description">Specific Neighborhood in San Diego (ex. North Park, City Heights, etc)</p>
                         <input type="text" name="roaster_neighborhood" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Google Maps Link</label>
-                        <input type="url" name="roaster_googleMapsLink" placeholder="https://maps.google.com/...">
-                    </div>
-
-                    <div class="form-group">
                         <label>Website / Instagram</label>
-                        <input type="url" name="roaster_website" placeholder="https://...">
+                        <input type="text" name="roaster_website" placeholder="e.g. example.com or @handle">
                     </div>
 
                     <div class="form-group">
@@ -573,28 +835,28 @@
                         </select>
                     </div>
 
+                    <div class="form-section-label">Coffee Program</div>
+
                     <div class="form-group">
-                        <label class="required">Roast Style</label>
+                        <label>Roast Style</label>
                         <p class="field-description">Many roasters span multiple styles — select "Full range" if they don't lean one direction</p>
-                        <select name="roaster_roastStyle" required>
+                        <select name="roaster_roastStyle">
                             <option value="">Choose one</option>
-                            <option value="light">Light roasts</option>
-                            <option value="medium">Medium roasts</option>
-                            <option value="dark">Dark roasts</option>
-                            <option value="light-medium">Light-Medium</option>
-                            <option value="medium-dark">Medium-Dark</option>
-                            <option value="full-range">Full range across styles</option>
+                            <option value="light">Light Roast</option>
+                            <option value="medium">Medium Roast</option>
+                            <option value="dark">Dark Roast</option>
+                            <option value="full-range">Full Range</option>
                             <option value="unknown">Unknown</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="required">Origin Focus</label>
-                        <select name="roaster_originFocus" required>
+                        <label>Origin Focus</label>
+                        <select name="roaster_originFocus">
                             <option value="">Choose one</option>
-                            <option value="single-origin">Single Origin focused</option>
-                            <option value="blends">Blends focused</option>
-                            <option value="both">Both single origin & blends</option>
+                            <option value="single-origin">Single-Origin</option>
+                            <option value="blends">Blend</option>
+                            <option value="both">Single-Origin & Blend</option>
                             <option value="unknown">Unknown</option>
                         </select>
                     </div>
@@ -603,37 +865,27 @@
                         <label>Brew Methods Available (if they have a café)</label>
                         <p class="field-description">Check all that you've personally observed or seen on their menu</p>
                         <div class="checkbox-group">
-                            <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Espresso"> Espresso</label>
                             <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Manual Pour Over"> Manual Pour Over</label>
-                            <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Batch Brew Single Origins"> Batch Brew Single Origins</label>
                             <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Espresso: Single Origin Option"> Espresso: Single Origin Option</label>
                             <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Cold Brew"> Cold Brew</label>
-                            <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Aeropress"> Aeropress</label>
-                            <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Siphon"> Siphon</label>
                             <label class="checkbox-label"><input type="checkbox" name="roaster_brewMethods" value="Decaf Espresso"> Decaf Espresso available</label>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Online Ordering Available?</label>
-                        <select name="roaster_onlineOrdering">
-                            <option value="">Choose one</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                            <option value="unknown">Unknown</option>
-                        </select>
-                    </div>
+                    <div class="form-section-label">Ambiance & Access</div>
 
                     <div class="form-group">
-                        <label>Dog Friendly?</label>
-                        <select name="roaster_dogFriendly">
-                            <option value="">Choose one</option>
-                            <option value="yes-both">Yes (Indoors & Outdoors)</option>
-                            <option value="yes-patio">Yes (Patio/Outside only)</option>
-                            <option value="no">No (Service Animals Only)</option>
-                            <option value="unknown">Unknown</option>
-                        </select>
+                        <label>Amenities</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label"><input type="checkbox" name="roaster_amenities" value="Dog Friendly"> Dog Friendly</label>
+                            <label class="checkbox-label"><input type="checkbox" name="roaster_amenities" value="Dedicated Parking"> Dedicated Parking</label>
+                            <label class="checkbox-label"><input type="checkbox" name="roaster_amenities" value="Wi-Fi Available"> Wi-Fi Available</label>
+                            <label class="checkbox-label"><input type="checkbox" name="roaster_amenities" value="Offers Food/Pastries"> Offers Food/Pastries</label>
+                            <label class="checkbox-label"><input type="checkbox" name="roaster_amenities" value="Sells Beans Online"> Sells Beans Online</label>
+                        </div>
                     </div>
+
+                    <div class="form-section-label">History & Sourcing</div>
 
                     <div class="form-group">
                         <label>Year Established</label>
@@ -653,26 +905,7 @@
                         <textarea name="roaster_sourcing" rows="3" placeholder="Leave blank if unknown"></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label class="required">Have you personally visited this spot?</label>
-                        <select name="roaster_personallyVisited" required>
-                            <option value="">Choose one</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required">How did you discover this place?</label>
-                        <select name="roaster_discoveryMethod" required>
-                            <option value="">Choose one</option>
-                            <option value="regular">I'm a regular</option>
-                            <option value="visited">Visited once or twice</option>
-                            <option value="online">Found online (Yelp, Google, Instagram, etc)</option>
-                            <option value="recommended">Friend or family recommended</option>
-                            <option value="worked">I work/worked there</option>
-                        </select>
-                    </div>
+                    <div class="form-section-label">Your Experience</div>
 
                     <div class="form-group">
                         <label class="required">Why does this belong on a specialty coffee map?</label>
@@ -697,8 +930,11 @@
         function loadCafeSection() {
             document.getElementById('dynamicSections').innerHTML = `
                 <div class="form-section">
-                    <h2>Multi-Roaster Cafe Submission</h2>
+                    <div class="form-section-eyebrow">Multi-Roaster Cafe</div>
+                    <h2>Cafe Submission</h2>
                     <p class="form-description">This form is for submitting <strong>San Diego multi-roaster cafes.</strong></p>
+
+                    <div class="form-section-label">About the Business</div>
 
                     <div class="form-group">
                         <label class="required">Business Name</label>
@@ -707,18 +943,13 @@
 
                     <div class="form-group">
                         <label class="required">Neighborhood</label>
-                        <p class="field-description">For cafés with multiple locations, list the original or flagship location</p>
+                        <p class="field-description">Specific Neighborhood in San Diego (ex. North Park, City Heights, etc)</p>
                         <input type="text" name="cafe_neighborhood" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Google Maps Link</label>
-                        <input type="url" name="cafe_googleMapsLink" placeholder="https://maps.google.com/...">
-                    </div>
-
-                    <div class="form-group">
                         <label>Website / Instagram</label>
-                        <input type="url" name="cafe_website" placeholder="https://...">
+                        <input type="text" name="cafe_website" placeholder="e.g. example.com or @handle">
                     </div>
 
                     <div class="form-group">
@@ -730,6 +961,8 @@
                             <option value="unknown">Unknown</option>
                         </select>
                     </div>
+
+                    <div class="form-section-label">Coffee Program</div>
 
                     <div class="form-group">
                         <label>Which roasters do they serve?</label>
@@ -753,79 +986,26 @@
                         <p class="field-description">Check all that you've personally observed or seen on their menu</p>
                         <div class="checkbox-group">
                             <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Manual Pour Over"> Manual Pour Over</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Batch Brew Single Origins"> Batch Brew Single Origins</label>
                             <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Espresso: Single Origin Option"> Espresso: Single Origin Option</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Espresso: Guest Option"> Espresso: Guest Option</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Decaf Espresso"> Decaf Espresso available</label>
                             <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Cold Brew"> Cold Brew</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Aeropress"> Aeropress</label>
+                            <label class="checkbox-label"><input type="checkbox" name="cafe_brewingOptions" value="Decaf Espresso"> Decaf Espresso available</label>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Food Menu</label>
-                        <select name="cafe_foodMenu">
-                            <option value="">Choose one</option>
-                            <option value="none">None</option>
-                            <option value="pastries">Pastries Only</option>
-                            <option value="light-bites">Light Bites</option>
-                            <option value="full-menu">Full Menu</option>
-                            <option value="unknown">Unknown</option>
-                        </select>
-                    </div>
+                    <div class="form-section-label">Ambiance & Access</div>
 
                     <div class="form-group">
-                        <label>Seating</label>
-                        <select name="cafe_seating">
-                            <option value="">Choose one</option>
-                            <option value="indoor">Indoor only</option>
-                            <option value="outdoor">Outdoor only</option>
-                            <option value="both">Both indoor & outdoor</option>
-                            <option value="none">No seating</option>
-                            <option value="unknown">Unknown</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Dog Friendly?</label>
-                        <select name="cafe_dogFriendly">
-                            <option value="">Choose one</option>
-                            <option value="yes-both">Yes (Indoors & Outdoors)</option>
-                            <option value="yes-patio">Yes (Patio/Outside only)</option>
-                            <option value="no">No (Service Animals Only)</option>
-                            <option value="unknown">Unknown</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>What's the vibe / atmosphere?</label>
-                        <p class="field-description">How would you describe the feel of this place?</p>
-                        <select name="cafe_vibe">
-                            <option value="">Choose one</option>
-                            <option value="cozy-neighborhood">Cozy neighborhood spot</option>
-                            <option value="minimalist-modern">Minimalist / Modern</option>
-                            <option value="industrial-hip">Industrial / Hip</option>
-                            <option value="bright-airy">Bright & Airy</option>
-                            <option value="quiet-studious">Quiet / Studious</option>
-                            <option value="lively-social">Lively / Social</option>
-                            <option value="third-wave-serious">Third-wave serious (coffee-forward)</option>
-                            <option value="unknown">Hard to describe / Unknown</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Notable Features</label>
-                        <p class="field-description">Anything that makes this cafe stand out beyond the coffee program</p>
+                        <label>Amenities</label>
                         <div class="checkbox-group">
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_notableFeatures" value="Roaster on-site"> Roaster on-site (you can see/smell roasting)</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_notableFeatures" value="Cuppings or tasting events"> Hosts cuppings or tasting events</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_notableFeatures" value="Retail bags for sale"> Retail coffee bags for sale</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_notableFeatures" value="Natural wine or beer"> Natural wine or craft beer</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_notableFeatures" value="Local art displayed"> Local art displayed / gallery feel</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_notableFeatures" value="Great outdoor patio"> Great outdoor patio</label>
-                            <label class="checkbox-label"><input type="checkbox" name="cafe_notableFeatures" value="Drive-through or walk-up window"> Drive-through or walk-up window</label>
+                            <label class="checkbox-label"><input type="checkbox" name="cafe_amenities" value="Dog Friendly"> Dog Friendly</label>
+                            <label class="checkbox-label"><input type="checkbox" name="cafe_amenities" value="Dedicated Parking"> Dedicated Parking</label>
+                            <label class="checkbox-label"><input type="checkbox" name="cafe_amenities" value="Wi-Fi Available"> Wi-Fi Available</label>
+                            <label class="checkbox-label"><input type="checkbox" name="cafe_amenities" value="Offers Food/Pastries"> Offers Food/Pastries</label>
+                            <label class="checkbox-label"><input type="checkbox" name="cafe_amenities" value="Sells Beans Online"> Sells Beans Online</label>
                         </div>
                     </div>
+
+                    <div class="form-section-label">Community Connection</div>
 
                     <div class="form-group">
                         <label>Any connection to the local roaster community?</label>
@@ -833,26 +1013,7 @@
                         <textarea name="cafe_roasterConnections" rows="2" placeholder="Leave blank if unknown"></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label class="required">Have you personally visited this spot?</label>
-                        <select name="cafe_personallyVisited" required>
-                            <option value="">Choose one</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required">How did you discover this place?</label>
-                        <select name="cafe_discoveryMethod" required>
-                            <option value="">Choose one</option>
-                            <option value="regular">I'm a regular</option>
-                            <option value="visited">Visited once or twice</option>
-                            <option value="online">Found online (Yelp, Google, Instagram, etc)</option>
-                            <option value="recommended">Friend or family recommended</option>
-                            <option value="worked">I work/worked there</option>
-                        </select>
-                    </div>
+                    <div class="form-section-label">Your Experience</div>
 
                     <div class="form-group">
                         <label class="required">Why does this belong on a specialty coffee map?</label>
@@ -877,7 +1038,10 @@
         function loadCorrectionSection() {
             document.getElementById('dynamicSections').innerHTML = `
                 <div class="form-section">
-                    <h2>Correction or Information Update</h2>
+                    <div class="form-section-eyebrow">Correction</div>
+                    <h2>Report an Update</h2>
+
+                    <div class="form-section-label">Report Details</div>
 
                     <div class="form-group">
                         <label class="required">Business Name</label>

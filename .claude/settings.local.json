@@ -3,7 +3,9 @@
     "allow": [
       "Bash(node:*)",
       "Bash(python3:*)",
-      "WebFetch(domain:www.spottedbylocals.com)"
+      "WebFetch(domain:www.spottedbylocals.com)",
+      "Bash(ls:*)",
+      "Bash(sed:*)"
     ]
   }
 }

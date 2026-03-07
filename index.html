@@ -819,34 +819,39 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
-                padding: 0.5rem 1.25rem;
-                gap: 0.25rem;
-                flex-wrap: wrap;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.25rem 1.25rem;
+                gap: 0;
+                flex-wrap: nowrap;
+                text-align: left;
+            }
+
+            .header-brand {
+                align-items: flex-start;
             }
 
             .header-eyebrow {
-                margin-bottom: 0.3rem;
+                justify-content: flex-start;
+                margin-bottom: 0.25rem;
             }
 
-            .header-eyebrow-text {
-                font-size: 0.5rem;
-            }
-
-            .tagline {
-                margin-top: 0.3rem;
-                font-size: 0.5rem;
-            }
-
-            .header-nav {
-                margin-top: 0.5rem;
-            }
-
-            .header-eyebrow-line { width: 20px; }
+            .header-eyebrow-line { display: none; }
+            .header-eyebrow-text { font-size: 0.55rem; }
 
             .logo { font-size: 1.35rem; }
 
+            .tagline { font-size: 0.55rem; margin-top: 0.2rem; }
+
+            .nav-toggle {
+                position: static;
+                transform: none;
+                flex-shrink: 0;
+            }
+
             .header-nav {
-                gap: 0.3rem;
+                display: none;
             }
 
             .nav-btn {

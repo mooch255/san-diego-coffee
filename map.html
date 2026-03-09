@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Diego Specialty Coffee - Specialty Coffee Map</title>
-    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sandiegocoffee.co/map.html">
+    <meta property="og:title" content="Explore the Map · San Diego Specialty Coffee">
+    <meta property="og:description" content="Browse 150+ specialty roasters and cafes across San Diego neighborhoods. Filter by type, roast style, and amenities.">
+    <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Explore the Map · San Diego Specialty Coffee">
+    <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta name="description" content="Browse 150+ specialty roasters and cafes across San Diego neighborhoods. Filter by type, roast style, and amenities.">
+
     <!-- Marker Clusterer -->
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
     
@@ -1740,8 +1749,9 @@ function createInfoWindowContent(location, custom) {
     if (hasAnyCustom) {
         html += `<hr class="info-window-divider">`;
 
-        if (custom.description) {
-            html += `<div class="info-window-description">"${custom.description}"</div>`;
+        const infoDesc = custom.description || location.legacyData?.originalDescription || '';
+        if (infoDesc) {
+            html += `<div class="info-window-description">"${infoDesc}"</div>`;
         }
 
         const gridItems = [];
@@ -1810,19 +1820,15 @@ function setupAutocomplete() {
     const dropdown = document.getElementById('autocompleteDropdown');
     let searchTimeout;
     
-    console.log('🔧 Setting up autocomplete (existing locations only)...');
-    
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.trim();
-        
+
         clearTimeout(searchTimeout);
-        
+
         if (query.length < 2) {
             dropdown.classList.remove('show');
             return;
         }
-        
-        console.log('🔍 Searching for:', query);
         
         // Debounce
         searchTimeout = setTimeout(() => {
@@ -1841,9 +1847,7 @@ function setupAutocomplete() {
                 return zip.startsWith(query) || address.includes(query.toLowerCase());
             }
             return name.includes(query.toLowerCase()) || address.includes(query.toLowerCase());
-        }).slice(0, 8); // Show up to 8 results
-        
-        console.log('📍 Found', matches.length, 'matches');
+        }).slice(0, 8);
         
         if (matches.length === 0) {
             dropdown.classList.remove('show');
@@ -1875,14 +1879,12 @@ function setupAutocomplete() {
 
         dropdown.innerHTML = html;
         dropdown.classList.add('show');
-        console.log('✅ Dropdown shown with', matches.length, 'results');
         
         // Add click handlers
         dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const id = item.getAttribute('data-id');
-                console.log('📍 Selecting location:', id);
                 selectLocation(id);
             });
         });
@@ -2334,6 +2336,8 @@ function performSearch() {
         } else {
             const visibleMarkers = markers.filter(marker => {
                 const location = marker.locationData;
+                const isOnline = location.basicInfo?.onlineOnly || location.coffeeDetails?.visitorExperience === 'Online Only';
+                if (isOnline) return false;
                 const name = location.basicInfo.name.toLowerCase();
                 const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
                 return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker);
@@ -2346,7 +2350,7 @@ function performSearch() {
                 markerCluster.clearMarkers();
                 markerCluster.addMarkers(visibleMarkers);
                 updateVisibleCount(visibleMarkers.length);
-                renderLocationCards(visibleMarkers);
+                renderLocationCards(visibleMarkers, true);
             }
         }
     }
@@ -2581,12 +2585,14 @@ function updateVisibleCount(count) {
 }
 
 // ── Location Cards ─────────────────────────────────────────────────────────
-function renderLocationCards(visibleMarkers) {
+function renderLocationCards(visibleMarkers, suppressOnline = false) {
     const container = document.getElementById('locationCards');
     if (!container) return;
 
     // Online roasters only appear in list when zoomed out to city-wide view (zoom < 12)
-    const showOnline = (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
+    // and never when called from a name/address search result
+    const showOnline = !suppressOnline
+                       && (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
                        && map.getZoom() < 12;
     const onlineLocations = showOnline && !openNowActive ? allLocations.filter(loc => loc.basicInfo?.onlineOnly) : [];
 
@@ -2685,8 +2691,9 @@ function renderCard(loc) {
             }
 
             // Full description
-            if (custom.description) {
-                lines.push(`<div class="card-detail-line card-description">"${custom.description}"</div>`);
+            const cardDesc = custom.description || loc.legacyData?.originalDescription || '';
+            if (cardDesc) {
+                lines.push(`<div class="card-detail-line card-description">"${cardDesc}"</div>`);
             }
 
             detailLines = lines.join('');

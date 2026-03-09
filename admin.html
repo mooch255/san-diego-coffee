@@ -440,6 +440,16 @@
     </style>
 </head>
 <body>
+<script>
+    (function() {
+        const correct = 'sdcoffee2026';
+        const entered = prompt('Admin access required. Enter password:');
+        if (entered !== correct) {
+            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#555;">Access denied.</div>';
+            history.replaceState(null, '', 'index.html');
+        }
+    })();
+</script>
 
     <div class="header">
         <div class="header-content">
@@ -896,7 +906,7 @@
                 const name = (loc.basicInfo?.name || '').toLowerCase();
                 const hood = (loc.basicInfo?.address?.neighborhood || loc.basicInfo?.address?.city || '').toLowerCase();
                 return name.includes(q) || hood.includes(q);
-            }).slice(0, 6);
+            }).slice(0, 12);
 
             // 2. Fetch Google Places suggestions (with cache to avoid redundant API calls)
             const cacheKey = query.trim().toLowerCase();
@@ -925,13 +935,15 @@
             if (existing.length > 0) {
                 html += `<div class="dd-section-header">✏️ Your Locations — click to edit</div>`;
                 html += existing.map(loc => {
-                    const hood = loc.basicInfo?.address?.neighborhood || loc.basicInfo?.address?.city || '';
-                    const type = loc.basicInfo?.type || 'roaster';
+                    const hood   = loc.coffeeDetails?.neighborhood || loc.basicInfo?.address?.city || '';
+                    const street = loc.basicInfo?.address?.street || '';
+                    const meta   = [hood, street].filter(Boolean).join(' · ');
+                    const type   = loc.basicInfo?.type || 'roaster';
                     return `<div class="dd-item" onclick="selectExistingFromDropdown('${loc.id}')">
                         <span class="dd-item-badge ${type === 'cafe' ? 'badge-cafe' : 'badge-edit'}">${type === 'cafe' ? 'Cafe' : 'Roaster'}</span>
                         <div class="dd-item-text">
                             <div class="dd-item-name">${loc.basicInfo?.name || ''}</div>
-                            <div class="dd-item-meta">${hood}${hood ? ' · ' : ''}Edit existing</div>
+                            <div class="dd-item-meta">${meta}${meta ? ' · ' : ''}Edit existing</div>
                         </div>
                     </div>`;
                 }).join('');
@@ -1366,9 +1378,9 @@
                     showAlert(`✓ ${action} "${payload.locationName}" in the ${currentType === 'roaster' ? 'Roasters' : 'Cafes'} sheet!`, 'success');
                     btn.textContent = `✓ ${action}!`;
 
-                    // Generate locations.js snippet for online-only locations
+                    // For online-only locations, sync-locations.js handles insertion automatically
                     if (selectedLocation?.isOnlineOnly) {
-                        generateOnlineSnippet(payload);
+                        showAlert('✓ Saved! Run node sync-locations.js to auto-insert into locations.js.', 'info');
                     }
 
                     setTimeout(() => {

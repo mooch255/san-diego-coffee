@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location — San Diego Specialty Coffee</title>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sandiegocoffee.co/location.html">
+    <meta property="og:title" content="Location — San Diego Specialty Coffee">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Location — San Diego Specialty Coffee">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta name="description" content="">
+    <script type="application/ld+json" id="ld-schema"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,600;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
@@ -1035,11 +1046,17 @@
     <!-- Footer -->
     <footer>
         <p>Community-driven guide for <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a></p>
-        <p style="margin-top:0.5rem; opacity:0.5; font-size:0.78rem;">148 locations and counting</p>
+        <p style="margin-top:0.5rem; opacity:0.5; font-size:0.78rem;"><span id="footerCount">150+</span> locations and counting</p>
     </footer>
 
     <script src="locations.js"></script>
     <script>
+        // Footer count
+        (function() {
+            const fc = document.getElementById('footerCount');
+            if (fc && window.COFFEE_LOCATIONS) fc.textContent = window.COFFEE_LOCATIONS.length;
+        })();
+
         // Nav dropdown
         (function() {
             const toggle = document.getElementById('navToggle');
@@ -1078,9 +1095,21 @@
         // ── Get location from URL ──────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
         const locationId = params.get('id');
-        const fromHome = params.get('from') === 'home';
-        const backHref = fromHome ? 'index.html' : 'map.html';
-        const backLabel = fromHome ? '← Back to Homepage' : '← Back to Map';
+        const fromParam = params.get('from');
+        const highlightId = params.get('highlightId');
+
+        let backHref, backLabel, useHistoryBack = false;
+        if (fromParam === 'home') {
+            backHref  = 'index.html';
+            backLabel = '← Back to Homepage';
+        } else if (fromParam === 'highlight' && highlightId) {
+            backHref  = `highlight.html?id=${highlightId}`;
+            backLabel = '← Back to Roaster Highlight';
+        } else {
+            backHref  = 'map.html';
+            backLabel = '← Back to Map';
+            useHistoryBack = true;
+        }
 
         if (!locationId) {
             showError('No location specified.', 'Head back to the map to find a location.');
@@ -1090,6 +1119,96 @@
                 showError('Location not found.', 'This location may have been removed or the link is incorrect.');
             } else {
                 document.title = location.basicInfo.name + ' — San Diego Specialty Coffee';
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.content = location.basicInfo.name + ' — San Diego Specialty Coffee';
+                const ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc && location.coffeeDetails?.description) ogDesc.content = location.coffeeDetails.description;
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc && location.coffeeDetails?.description) metaDesc.content = location.coffeeDetails.description;
+                const ogUrl = document.querySelector('meta[property="og:url"]');
+                if (ogUrl) ogUrl.content = 'https://sandiegocoffee.co/location.html?id=' + location.id;
+                const ogImage = document.querySelector('meta[property="og:image"]');
+                if (ogImage && location.localImage) ogImage.content = 'https://sandiegocoffee.co' + location.localImage;
+                const twTitle = document.querySelector('meta[name="twitter:title"]');
+                if (twTitle) twTitle.content = location.basicInfo.name + ' — San Diego Specialty Coffee';
+                const twDesc = document.querySelector('meta[name="twitter:description"]');
+                if (twDesc && location.coffeeDetails?.description) twDesc.content = location.coffeeDetails.description;
+                const twImage = document.querySelector('meta[name="twitter:image"]');
+                if (twImage && location.localImage) twImage.content = 'https://sandiegocoffee.co' + location.localImage;
+
+                // ── JSON-LD LocalBusiness schema ──────────────────────────
+                (function injectSchema(loc) {
+                    function parseTime(str) {
+                        var m = str.match(/(\d+):(\d+)\s*(AM|PM)/i);
+                        if (!m) return null;
+                        var h = parseInt(m[1]), mins = m[2], ampm = m[3].toUpperCase();
+                        if (ampm === 'PM' && h !== 12) h += 12;
+                        if (ampm === 'AM' && h === 12) h = 0;
+                        return String(h).padStart(2, '0') + ':' + mins;
+                    }
+                    var dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+                    var hoursSpecs = [];
+                    (loc.hours && loc.hours.weekdayDescriptions || []).forEach(function(desc) {
+                        var ci = desc.indexOf(':');
+                        if (ci === -1) return;
+                        var day = desc.slice(0, ci).trim();
+                        var range = desc.slice(ci + 1).trim();
+                        if (range.toLowerCase() === 'closed') return;
+                        var parts = range.split(/\s*[–—-]\s*/);
+                        if (parts.length !== 2) return;
+                        var opens = parseTime(parts[0].trim());
+                        var closes = parseTime(parts[1].trim());
+                        if (!opens || !closes) return;
+                        if (dayNames.indexOf(day) === -1) return;
+                        hoursSpecs.push({
+                            '@type': 'OpeningHoursSpecification',
+                            dayOfWeek: 'https://schema.org/' + day,
+                            opens: opens,
+                            closes: closes
+                        });
+                    });
+
+                    var addr = loc.basicInfo.address || {};
+                    var contact = loc.basicInfo.contact || {};
+                    var rating = loc.googleRating || {};
+                    var type = loc.basicInfo.type === 'cafe' ? 'CafeOrCoffeeShop' : 'LocalBusiness';
+
+                    var schema = {
+                        '@context': 'https://schema.org',
+                        '@type': type,
+                        name: loc.basicInfo.name,
+                        url: contact.website || ('https://sandiegocoffee.co/location.html?id=' + loc.id),
+                        image: loc.localImage ? 'https://sandiegocoffee.co' + loc.localImage : undefined,
+                        telephone: contact.phone || undefined,
+                        address: {
+                            '@type': 'PostalAddress',
+                            streetAddress: addr.street || undefined,
+                            addressLocality: addr.city || undefined,
+                            addressRegion: addr.state || undefined,
+                            postalCode: addr.zip || undefined,
+                            addressCountry: 'US'
+                        },
+                        geo: (addr.coordinates && addr.coordinates.lat) ? {
+                            '@type': 'GeoCoordinates',
+                            latitude: addr.coordinates.lat,
+                            longitude: addr.coordinates.lng
+                        } : undefined,
+                        aggregateRating: (rating.rating && rating.reviewCount) ? {
+                            '@type': 'AggregateRating',
+                            ratingValue: rating.rating,
+                            reviewCount: rating.reviewCount,
+                            bestRating: 5
+                        } : undefined,
+                        openingHoursSpecification: hoursSpecs.length ? hoursSpecs : undefined,
+                        sameAs: contact.googleMapsUrl || undefined
+                    };
+
+                    // Strip undefined values
+                    schema = JSON.parse(JSON.stringify(schema));
+
+                    var tag = document.getElementById('ld-schema');
+                    if (tag) tag.textContent = JSON.stringify(schema);
+                })(location);
 
                 // coffeeDetails is always populated by sync-locations.js — no live Sheets fetch needed
                 renderPage(location, location.coffeeDetails || {});
@@ -1126,6 +1245,13 @@
                 ${renderActions(contact, placeId)}
                 ${renderMapEmbed(placeId)}
             `;
+
+            // Use history.back() for map navigation so filters/zoom are preserved
+            if (useHistoryBack && window.history.length > 1 && document.referrer) {
+                document.querySelectorAll('a[href="map.html"]').forEach(el => {
+                    el.addEventListener('click', e => { e.preventDefault(); history.back(); });
+                });
+            }
         }
 
         function renderHero(loc, isRoaster, rating, info, contact, today, hours) {
@@ -1416,7 +1542,9 @@
 
         // ── Lightbox ───────────────────────────────────────────────────────
         function openLightbox(url) {
-            document.getElementById('lightboxImg').src = url;
+            const img = document.getElementById('lightboxImg');
+            img.src = url;
+            img.alt = document.title.split(' —')[0];
             document.getElementById('lightbox').classList.add('open');
             document.body.style.overflow = 'hidden';
         }

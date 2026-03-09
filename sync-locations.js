@@ -89,6 +89,47 @@ function buildCoffeeDetails(type, row) {
   };
 }
 
+function buildOnlineLocation(id, type, row) {
+  return {
+    id,
+    basicInfo: {
+      name: row.locationName || '',
+      type,
+      onlineOnly: true,
+      address: {
+        street:       '',
+        fullAddress:  'San Diego, CA',
+        neighborhood: row.neighborhood || '',
+        city:         'San Diego',
+        state:        'CA',
+        zip:          '',
+        coordinates:  { lat: 0, lng: 0 },
+      },
+      contact: {
+        phone:         '',
+        website:       row.onlineWebsite || '',
+        googleMapsUrl: '',
+      },
+    },
+    googleData: {
+      placeId:          '',
+      hasGoogleListing: false,
+      lastSynced:       new Date().toISOString(),
+    },
+    googleRating: { rating: null, reviewCount: 0 },
+    hours:        { weekdayDescriptions: [], openNow: false },
+    googlePhotos: [],
+    localImage:   null,
+    metadata: {
+      status:          'active',
+      importedFrom:    'admin',
+      importDate:      new Date().toISOString(),
+      needsEnrichment: false,
+    },
+    coffeeDetails: buildCoffeeDetails(type, row),
+  };
+}
+
 async function buildNewLocation(id, type, row) {
   if (!row.placeId) throw new Error('no placeId in sheet row');
 
@@ -188,6 +229,7 @@ async function main() {
     if (!sheetRow) { skipped++; return loc; }
 
     updated++;
+    if (sheetRow.locationName) loc.basicInfo.name = sheetRow.locationName;
     loc.coffeeDetails = buildCoffeeDetails(type, sheetRow);
     return loc;
   });
@@ -206,30 +248,77 @@ async function main() {
   if (newRows.length > 0) {
     console.log(`\n  Found ${newRows.length} new location(s) to insert...`);
 
-    if (!API_KEY) {
-      console.log('  ⚠️  GOOGLE_PLACES_API_KEY not set — skipping new location insertion.');
-      console.log('     Run: GOOGLE_PLACES_API_KEY=your_key node sync-locations.js');
-    } else {
-      let inserted = 0;
-      let insertFailed = 0;
+    // Online-only: no placeId — insert directly, no API call needed
+    const onlineRows   = newRows.filter(r => !r.placeId);
+    const physicalRows = newRows.filter(r =>  r.placeId);
 
-      for (const row of newRows) {
+    if (onlineRows.length > 0) {
+      console.log(`\n  Inserting ${onlineRows.length} online-only location(s)...`);
+      for (const row of onlineRows) {
         const name = row.locationName || row.id;
-        try {
-          process.stdout.write(`  ↓  ${name} ... `);
-          const newLoc = await buildNewLocation(row.id, row._type, row);
-          locations.push(newLoc);
-          inserted++;
-          console.log('✓');
-        } catch (err) {
-          insertFailed++;
-          console.log(`✗  (${err.message})`);
-        }
+        process.stdout.write(`  ↓  ${name} (online only) ... `);
+        locations.push(buildOnlineLocation(row.id, row._type, row));
+        console.log('✓');
       }
-
-      console.log(`  ✓ Inserted: ${inserted} new location(s)`);
-      if (insertFailed > 0) console.log(`  ✗ Failed:   ${insertFailed} (check placeId in Sheets)`);
     }
+
+    // Physical: requires Places API key
+    if (physicalRows.length > 0) {
+      console.log(`\n  Inserting ${physicalRows.length} physical location(s)...`);
+      if (!API_KEY) {
+        console.log('  ⚠️  GOOGLE_PLACES_API_KEY not set — skipping physical location insertion.');
+        console.log('     Run: GOOGLE_PLACES_API_KEY=your_key node sync-locations.js');
+      } else {
+        let inserted = 0;
+        let insertFailed = 0;
+
+        for (const row of physicalRows) {
+          const name = row.locationName || row.id;
+          try {
+            process.stdout.write(`  ↓  ${name} ... `);
+            const newLoc = await buildNewLocation(row.id, row._type, row);
+            locations.push(newLoc);
+            inserted++;
+            console.log('✓');
+          } catch (err) {
+            insertFailed++;
+            console.log(`✗  (${err.message})`);
+          }
+        }
+
+        console.log(`  ✓ Inserted: ${inserted} new location(s)`);
+        if (insertFailed > 0) console.log(`  ✗ Failed:   ${insertFailed} (check placeId in Sheets)`);
+      }
+    }
+  }
+
+  // ── 4.5. Auto-detect multiple locations by name ───────────────────────────
+  console.log('\n  Detecting multiple locations by name...');
+
+  const nameGroups = {};
+  locations.forEach(loc => {
+    const name = (loc.basicInfo?.name || '').toLowerCase().trim();
+    if (!name) return;
+    if (!nameGroups[name]) nameGroups[name] = [];
+    nameGroups[name].push(loc);
+  });
+
+  let multiUpdated = 0;
+  Object.values(nameGroups).forEach(group => {
+    if (group.length > 1) {
+      group.forEach(loc => {
+        if (loc.coffeeDetails && loc.coffeeDetails.multipleLocations !== 'Yes') {
+          loc.coffeeDetails.multipleLocations = 'Yes';
+          multiUpdated++;
+        }
+      });
+    }
+  });
+
+  if (multiUpdated > 0) {
+    console.log(`  ✓ Auto-set multipleLocations: Yes on ${multiUpdated} location(s)`);
+  } else {
+    console.log(`  ✓ No new multiple-location groups detected`);
   }
 
   // ── 5. Write updated locations.js ─────────────────────────────────────────
@@ -243,9 +332,80 @@ async function main() {
 
   console.log(`  ✓ locations.js updated`);
   console.log(`  ✓ Backup saved to locations.js.backup`);
+
+  // ── 6. Regenerate sitemap.xml ──────────────────────────────────────────────
+  console.log('\n  Regenerating sitemap.xml...');
+
+  const BASE_URL      = 'https://sandiegocoffee.co';
+  const SITEMAP_FILE  = path.join(__dirname, 'sitemap.xml');
+  const HIGHLIGHTS_FILE = path.join(__dirname, 'highlights.js');
+
+  function safeDate(str) {
+    if (!str) return new Date().toISOString().slice(0, 10);
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? new Date().toISOString().slice(0, 10) : d.toISOString().slice(0, 10);
+  }
+
+  function urlEntry(loc, lastmod, changefreq, priority) {
+    return [
+      '  <url>',
+      `    <loc>${loc}</loc>`,
+      `    <lastmod>${lastmod}</lastmod>`,
+      `    <changefreq>${changefreq}</changefreq>`,
+      `    <priority>${priority}</priority>`,
+      '  </url>',
+    ].join('\n');
+  }
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  const staticPages = [
+    { p: '/',                        cf: 'weekly',  pri: '1.0' },
+    { p: '/map.html',                cf: 'weekly',  pri: '0.9' },
+    { p: '/roaster-highlights.html', cf: 'weekly',  pri: '0.8' },
+    { p: '/about.html',              cf: 'monthly', pri: '0.5' },
+    { p: '/submit.html',             cf: 'monthly', pri: '0.5' },
+  ];
+
+  const sitemapEntries = [];
+
+  staticPages.forEach(pg => {
+    sitemapEntries.push(urlEntry(BASE_URL + pg.p, todayStr, pg.cf, pg.pri));
+  });
+
+  locations.forEach(loc => {
+    const lastmod = safeDate(loc.coffeeDetails && loc.coffeeDetails.lastUpdated);
+    sitemapEntries.push(urlEntry(`${BASE_URL}/location.html?id=${loc.id}`, lastmod, 'monthly', '0.8'));
+  });
+
+  let highlightCount = 0;
+  try {
+    const hlRaw = fs.readFileSync(HIGHLIGHTS_FILE, 'utf8');
+    const hlMatch = hlRaw.match(/window\.highlights\s*=\s*(\[[\s\S]*\]);?\s*$/m);
+    if (hlMatch) {
+      const highlights = Function('"use strict"; return ' + hlMatch[1])();
+      highlights.forEach(h => {
+        sitemapEntries.push(urlEntry(`${BASE_URL}/highlight.html?id=${h.id}`, safeDate(h.date), 'monthly', '0.8'));
+      });
+      highlightCount = highlights.length;
+    }
+  } catch (e) {
+    console.log('  ⚠️  Could not read highlights.js — highlight URLs skipped');
+  }
+
+  const sitemapXml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    sitemapEntries.join('\n'),
+    '</urlset>',
+  ].join('\n');
+
+  fs.writeFileSync(SITEMAP_FILE, sitemapXml, 'utf8');
+  console.log(`  ✓ sitemap.xml updated — ${sitemapEntries.length} URLs (${staticPages.length} static, ${locations.length} locations, ${highlightCount} highlights)`);
+
   console.log('\n✅ Sync complete! Run:\n');
   console.log('   GOOGLE_PLACES_API_KEY=your_key node migrate-photos.js');
-  console.log('   git add locations.js images/locations/');
+  console.log('   git add locations.js images/locations/ sitemap.xml');
   console.log('   git commit -m "Sync and add new locations"');
   console.log('   git push\n');
 }

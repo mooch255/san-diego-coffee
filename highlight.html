@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roaster Highlight · San Diego Specialty Coffee</title>
     <meta property="og:type" content="article">
+    <meta property="og:url" content="https://sandiegocoffee.co/highlight.html">
+    <meta property="og:title" content="Roaster Highlight · San Diego Specialty Coffee">
+    <meta property="og:description" content="">
     <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Roaster Highlight · San Diego Specialty Coffee">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta name="description" content="">
+    <script type="application/ld+json" id="ld-schema"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
@@ -491,7 +499,7 @@
                 if (block.type === 'image') {
                     return `
                         <figure class="image-block">
-                            <img src="${block.src}" alt="${block.caption || ''}">
+                            <img src="${block.src}" alt="${block.caption || entry.roasterName + ' photo'}">
                             ${block.caption ? `<figcaption>${block.caption}</figcaption>` : ''}
                         </figure>`;
                 }
@@ -517,6 +525,49 @@
             document.title = entry.roasterName + ' · San Diego Specialty Coffee';
             const ogTitle = document.querySelector('meta[property="og:title"]');
             if (ogTitle) ogTitle.content = entry.roasterName + ' · San Diego Specialty Coffee';
+            const ogDesc = document.querySelector('meta[property="og:description"]');
+            if (ogDesc && entry.excerpt) ogDesc.content = entry.excerpt;
+            const ogImage = document.querySelector('meta[property="og:image"]');
+            if (ogImage && entry.image) ogImage.content = 'https://sandiegocoffee.co' + entry.image;
+            const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+            if (twitterDesc && entry.excerpt) twitterDesc.content = entry.excerpt;
+            const twitterImage = document.querySelector('meta[name="twitter:image"]');
+            if (twitterImage && entry.image) twitterImage.content = 'https://sandiegocoffee.co' + entry.image;
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc && entry.excerpt) metaDesc.content = entry.excerpt;
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            if (ogUrl) ogUrl.content = 'https://sandiegocoffee.co/highlight.html?id=' + entry.id;
+            const twTitle = document.querySelector('meta[name="twitter:title"]');
+            if (twTitle) twTitle.content = entry.title + ' · San Diego Specialty Coffee';
+
+            // ── JSON-LD Article schema ────────────────────────────────────
+            (function injectArticleSchema(e) {
+                var schema = {
+                    '@context': 'https://schema.org',
+                    '@type': 'Article',
+                    headline: e.title,
+                    description: e.excerpt || undefined,
+                    image: e.image ? 'https://sandiegocoffee.co' + e.image : undefined,
+                    datePublished: e.date || undefined,
+                    author: {
+                        '@type': 'Organization',
+                        name: 'r/SanDiegoCoffeeBeans',
+                        url: 'https://reddit.com/r/SanDiegoCoffeeBeans'
+                    },
+                    publisher: {
+                        '@type': 'Organization',
+                        name: 'San Diego Specialty Coffee',
+                        url: 'https://sandiegocoffee.co'
+                    },
+                    mainEntityOfPage: {
+                        '@type': 'WebPage',
+                        '@id': 'https://sandiegocoffee.co/highlight.html?id=' + e.id
+                    }
+                };
+                schema = JSON.parse(JSON.stringify(schema));
+                var tag = document.getElementById('ld-schema');
+                if (tag) tag.textContent = JSON.stringify(schema);
+            })(entry);
 
             const heroHtml = entry.image
                 ? `<div class="hero-image"><img src="${entry.image}" alt="${entry.roasterName}"></div>`
@@ -528,7 +579,7 @@
                     ${heroHtml}
                     <div class="post-header">
                         <div class="post-eyebrow">Roaster Highlight</div>
-                        <h1>${entry.locationUrl ? `<a href="${entry.locationUrl}" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--accent-red);padding-bottom:2px;">${entry.roasterName}</a>` : entry.roasterName}</h1>
+                        <h1>${entry.locationUrl ? `<a href="${entry.locationUrl}&from=highlight&highlightId=${entry.id}" style="color:inherit;text-decoration:none;border-bottom:2px solid var(--accent-red);padding-bottom:2px;">${entry.roasterName}</a>` : entry.roasterName}</h1>
                         <div class="post-meta">${formatDate(entry.date)}</div>
                     </div>
                     <div class="post-body">

@@ -5,7 +5,13 @@
       "Bash(python3:*)",
       "WebFetch(domain:www.spottedbylocals.com)",
       "Bash(ls:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(for f in index.html map.html location.html submit.html roaster-highlights.html highlight.html)",
+      "Bash(do echo \"=== $f ===\")",
+      "Read(//c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/**)",
+      "Bash(done)"
     ]
   }
 }

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found · San Diego Specialty Coffee</title>
+    <meta name="robots" content="noindex">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --espresso:   #3D2817;
+            --coffee:     #6B4E3D;
+            --latte:      #C4A77D;
+            --cream:      #F8F5F0;
+            --white:      #FFFFFF;
+            --accent-red: #B85C38;
+            --light-tan:  #E8DED2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Libre Franklin', -apple-system, sans-serif;
+            color: var(--espresso);
+            background: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Header ─────────────────────────────────────────────────── */
+        header {
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px),
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.016) 39px, rgba(255,255,255,0.016) 40px),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            color: var(--white);
+            border-top: 3px solid var(--accent-red);
+            border-bottom: 3px solid var(--accent-red);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.85rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-brand-eyebrow {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            line-height: 1;
+            color: #EDE0CC;
+            text-decoration: none;
+            display: block;
+        }
+
+        .header-logo em   { font-style: italic; color: #C9A97E; font-weight: 400; }
+        .header-logo strong { font-style: normal; font-weight: 800; color: #EDE0CC; }
+
+        /* ── Hamburger Nav ───────────────────────────────────────────── */
+        .nav-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(196,167,125,0.08);
+            border: 1px solid rgba(196,167,125,0.4);
+            color: rgba(196,167,125,0.9);
+            padding: 0.5rem 0.9rem;
+            cursor: pointer;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-toggle-icon { font-size: 1.15rem; line-height: 1; }
+
+        .nav-toggle:hover, .nav-toggle.open {
+            border-color: var(--latte);
+            color: var(--latte);
+            background: rgba(196,167,125,0.13);
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: fixed;
+            background: #2A1508;
+            border-left: 1px solid rgba(196,167,125,0.25);
+            border-bottom: 1px solid rgba(196,167,125,0.25);
+            border-top: 2px solid var(--accent-red);
+            min-width: 210px;
+            z-index: 9999;
+            box-shadow: -4px 8px 32px rgba(0,0,0,0.45);
+        }
+
+        .nav-dropdown.open { display: block; }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 0.9rem 1.5rem;
+            color: rgba(196,167,125,0.8);
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(196,167,125,0.1);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .nav-dropdown a:last-child { border-bottom: none; }
+
+        .nav-dropdown a:hover {
+            background: rgba(196,167,125,0.1);
+            color: var(--latte);
+        }
+
+        /* ── 404 Content ─────────────────────────────────────────────── */
+        .error-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+        }
+
+        .error-inner {
+            max-width: 480px;
+            text-align: center;
+        }
+
+        .error-code {
+            font-family: 'Playfair Display', serif;
+            font-size: 7rem;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--light-tan);
+            letter-spacing: -0.04em;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-divider {
+            width: 48px;
+            height: 2px;
+            background: var(--accent-red);
+            margin: 0 auto 1.5rem;
+        }
+
+        .error-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--espresso);
+            margin-bottom: 0.85rem;
+            line-height: 1.2;
+        }
+
+        .error-body {
+            font-size: 0.92rem;
+            color: var(--coffee);
+            line-height: 1.65;
+            margin-bottom: 2rem;
+        }
+
+        .btn-map {
+            display: inline-block;
+            background: var(--accent-red);
+            color: var(--white);
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.85rem 2rem;
+            border: 2px solid var(--accent-red);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-map:hover {
+            background: transparent;
+            color: var(--accent-red);
+        }
+
+        .btn-home {
+            display: inline-block;
+            margin-left: 0.75rem;
+            color: var(--coffee);
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.85rem 1.25rem;
+            border: 2px solid var(--light-tan);
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .btn-home:hover {
+            border-color: var(--coffee);
+            color: var(--espresso);
+        }
+
+        @media (max-width: 480px) {
+            .error-code { font-size: 5rem; }
+            .error-heading { font-size: 1.3rem; }
+            .btn-home { margin-left: 0; margin-top: 0.75rem; }
+            .error-btns { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+            .error-btns a { margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
+                <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                <span class="nav-toggle-icon">≡</span>
+                <span class="nav-toggle-label">Menu</span>
+            </button>
+        </div>
+    </header>
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home</a>
+        <a href="map.html">Explore Map</a>
+        <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="submit.html">Add a Spot</a>
+        <a href="about.html">About</a>
+    </nav>
+
+    <div class="error-wrap">
+        <div class="error-inner">
+            <div class="error-code">404</div>
+            <div class="error-divider"></div>
+            <h1 class="error-heading">This cup has gone cold.</h1>
+            <p class="error-body">The page you're looking for doesn't exist or may have moved. Head back to the map to find your next great cup in San Diego.</p>
+            <div class="error-btns">
+                <a href="map.html" class="btn-map">Explore the Map</a><a href="index.html" class="btn-home">Go Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const toggle = document.getElementById('navToggle');
+        const dropdown = document.getElementById('navDropdown');
+        const label = toggle.querySelector('.nav-toggle-label');
+        const icon = toggle.querySelector('.nav-toggle-icon');
+
+        toggle.addEventListener('click', () => {
+            const isOpen = dropdown.classList.contains('open');
+            if (!isOpen) {
+                icon.textContent = '✕';
+                label.textContent = 'Close';
+                toggle.classList.add('open');
+                toggle.setAttribute('aria-expanded', 'true');
+                const tRect = toggle.getBoundingClientRect();
+                dropdown.style.right = Math.max(0, document.documentElement.clientWidth - tRect.right) + 'px';
+                dropdown.style.top = document.querySelector('header').getBoundingClientRect().bottom + 'px';
+                dropdown.classList.add('open');
+            } else {
+                icon.textContent = '≡';
+                label.textContent = 'Menu';
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                dropdown.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('click', e => {
+            if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+                icon.textContent = '≡';
+                label.textContent = 'Menu';
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                dropdown.classList.remove('open');
+            }
+        });
+    </script>
+
+</body>
+</html>

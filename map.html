@@ -1340,8 +1340,10 @@
         <a href="index.html">Home</a>
         <a href="map.html" class="active">Explore Map</a>
         <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="news.html">News &amp; Events</a>
         <a href="submit.html">Add a Spot</a>
         <a href="about.html">About</a>
+        <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
     </nav>
 
     <!-- Split Layout -->
@@ -1783,7 +1785,8 @@ function createInfoWindowContent(location, custom) {
             if (a.some(x => x.includes('Wifi') || x.includes('Working')))   amenityBits.push('💻 WiFi');
             if (a.some(x => x.includes('Food') || x.includes('Pastries')))  amenityBits.push('🥐 Food');
             if (a.some(x => x.includes('Beans Online')))                     amenityBits.push('🛒 Online Beans');
-            if (a.some(x => x.includes('Decaf')))                            amenityBits.push('☕ Decaf');
+            if (a.some(x => x.includes('Espresso Options')))                 amenityBits.push('☕ Espresso Options');
+            if (a.some(x => x.includes('Decaf')))                            amenityBits.push('🌙 Decaf Espresso');
             if (a.some(x => x.includes('Seating')))                          amenityBits.push('🪑 Seating');
             if (amenityBits.length) {
                 html += `<div class="info-window-badges-row">`;
@@ -2061,8 +2064,10 @@ function setupEventListeners() {
             'South Bay':             ['Chula Vista','Coronado','Imperial Beach'],
         };
         // Collect neighborhoods that actually exist in the data + count per neighborhood
+        // Exclude online-only roasters — they never appear in the panel when zoomed into a neighborhood
         const nbrCount = {};
         allLocations.forEach(l => {
+            if (l.basicInfo?.onlineOnly) return;
             const n = l.coffeeDetails?.neighborhood;
             if (n) nbrCount[n] = (nbrCount[n] || 0) + 1;
         });
@@ -2198,6 +2203,10 @@ function showUserLocation() {
                 // Hide the location hint now that we have a position
                 const hint = document.getElementById('locationHint');
                 if (hint) hint.style.display = 'none';
+
+                // Clear neighborhood filter — nearest is city-wide intent
+                const nbrSel = document.getElementById('filterNeighborhood');
+                if (nbrSel) nbrSel.value = '';
 
                 // Switch to nearest sort and re-render — preserves any active zip/name search
                 currentSort = 'nearest';
@@ -2505,12 +2514,16 @@ function applyFilters() {
         return;
     }
 
-    const visibleMarkers = markers.filter(marker => shouldShowMarker(marker));
+    // When a new neighborhood was just selected, ignore the current viewport bounds —
+    // the map hasn't zoomed yet so markers in the new neighborhood would be filtered out.
+    const visibleMarkers = markers.filter(marker => shouldShowMarker(marker, neighborhoodZoomPending));
     markerCluster.clearMarkers();
     markerCluster.addMarkers(visibleMarkers);
 
-    // Online roasters only count when zoomed out (city-wide view, zoom < 12)
-    const showOnline = (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
+    // Online roasters only count when zoomed out (city-wide view, zoom < 12) and no neighborhood filter active
+    const nbrFilterActive = !!document.getElementById('filterNeighborhood')?.value;
+    const showOnline = !nbrFilterActive
+                       && (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
                        && map.getZoom() < 12;
     const onlineCount = showOnline ? allLocations.filter(loc => loc.basicInfo?.onlineOnly).length : 0;
     // Count always reflects what's actually in the map viewport
@@ -2546,6 +2559,9 @@ function applyFilters() {
 
 function shouldShowMarker(marker, ignoreBounds = false) {
     const location = marker.locationData;
+
+    // Online-only locations are handled separately via renderLocationCards — never count as visible markers
+    if (location.basicInfo?.onlineOnly) return false;
 
     // Type filters
     if (marker.locationType === 'roaster' && !document.getElementById('filterRoasters').checked) return false;
@@ -2589,9 +2605,11 @@ function renderLocationCards(visibleMarkers, suppressOnline = false) {
     const container = document.getElementById('locationCards');
     if (!container) return;
 
-    // Online roasters only appear in list when zoomed out to city-wide view (zoom < 12)
-    // and never when called from a name/address search result
+    // Online roasters only appear in list when zoomed out to city-wide view (zoom < 12),
+    // never when a neighborhood filter is active, and never from a name/address search result
+    const nbrFilter = document.getElementById('filterNeighborhood')?.value;
     const showOnline = !suppressOnline
+                       && !nbrFilter
                        && (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
                        && map.getZoom() < 12;
     const onlineLocations = showOnline && !openNowActive ? allLocations.filter(loc => loc.basicInfo?.onlineOnly) : [];
@@ -2685,7 +2703,8 @@ function renderCard(loc) {
                 if (a.some(x => x.includes('Wifi') || x.includes('Working')))   amenityBits.push('💻 WiFi');
                 if (a.some(x => x.includes('Food') || x.includes('Pastries')))  amenityBits.push('🥐 Food');
                 if (a.some(x => x.includes('Beans Online')))                     amenityBits.push('🛒 Online Beans');
-                if (a.some(x => x.includes('Decaf')))                            amenityBits.push('☕ Decaf');
+                if (a.some(x => x.includes('Espresso Options')))                 amenityBits.push('☕ Espresso Options');
+                if (a.some(x => x.includes('Decaf')))                            amenityBits.push('🌙 Decaf Espresso');
                 if (a.some(x => x.includes('Seating')))                          amenityBits.push('🪑 Seating');
                 if (amenityBits.length) lines.push(`<div class="card-detail-line" style="color:#888;">${amenityBits.join(' · ')}</div>`);
             }
@@ -2894,7 +2913,12 @@ function setSort(mode) {
         showUserLocation();
         return; // showUserLocation will call applyFilters once location is found
     }
-    if (mode === 'nearest') nearestUserInteracted = false;
+    if (mode === 'nearest') {
+        nearestUserInteracted = false;
+        // Clear neighborhood filter — nearest is a city-wide intent
+        const nbrSel = document.getElementById('filterNeighborhood');
+        if (nbrSel) nbrSel.value = '';
+    }
     currentSort = mode;
     document.getElementById('sortNearest').classList.toggle('active', mode === 'nearest');
     document.getElementById('sortAZ').classList.toggle('active', mode === 'az');

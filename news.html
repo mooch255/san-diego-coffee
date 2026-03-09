@@ -3,19 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roaster Highlights · San Diego Specialty Coffee</title>
+    <title>News &amp; Events · San Diego Specialty Coffee</title>
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sandiegocoffee.co/roaster-highlights.html">
-    <meta property="og:title" content="Roaster Highlights · San Diego Specialty Coffee">
-    <meta property="og:description" content="In-depth features on the roasters shaping San Diego's specialty coffee scene — from the r/SanDiegoCoffeeBeans community.">
+    <meta property="og:url" content="https://sandiegocoffee.co/news.html">
+    <meta property="og:title" content="News &amp; Events · San Diego Specialty Coffee">
+    <meta property="og:description" content="San Diego coffee news, events, and openings — curated by the r/SanDiegoCoffeeBeans community.">
     <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta property="og:image:alt" content="San Diego Specialty Coffee — News &amp; Events">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Roaster Highlights · San Diego Specialty Coffee">
+    <meta name="twitter:title" content="News &amp; Events · San Diego Specialty Coffee">
+    <meta name="twitter:description" content="San Diego coffee news, events, and openings — curated by the r/SanDiegoCoffeeBeans community.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
-    <meta name="description" content="In-depth features on the roasters shaping San Diego's specialty coffee scene — from the r/SanDiegoCoffeeBeans community.">
+    <meta name="description" content="San Diego coffee news, events, and openings — curated by the r/SanDiegoCoffeeBeans community.">
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "San Diego World of Coffee 2026",
+        "startDate": "2026-04-10",
+        "endDate": "2026-04-12",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "location": {
+          "@type": "Place",
+          "name": "San Diego Convention Center",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "San Diego",
+            "addressRegion": "CA",
+            "addressCountry": "US"
+          }
+        },
+        "description": "The Specialty Coffee Expo has rebranded as World of Coffee and is making its North American debut in San Diego. Three days of competitions, workshops, cupping rooms, and hundreds of exhibitors from across the global coffee industry.",
+        "url": "https://usa.worldofcoffee.org/world-of-coffee-san-diego-2026",
+        "image": "https://sandiegocoffee.co/images/news/news_001.webp",
+        "organizer": {
+          "@type": "Organization",
+          "name": "World of Coffee",
+          "url": "https://usa.worldofcoffee.org"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": "Playground Art Coffee Debuts in North Park This Month",
+        "datePublished": "2026-03-26",
+        "url": "https://whatnow.com/san-diego/restaurants/playground-art-coffee-to-debut-in-north-park/",
+        "image": "https://sandiegocoffee.co/images/news/news_003.jpg",
+        "description": "A new cafe concept blending specialty coffee and art is coming to North Park. Playground Art Coffee opens March 26th with a three day grand opening celebration serving Torque Coffee.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "San Diego Specialty Coffee",
+          "url": "https://sandiegocoffee.co"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "r/SanDiegoCoffeeBeans Community",
+          "url": "https://reddit.com/r/SanDiegoCoffeeBeans"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": "Necessity Coffee Opens Second Location in San Marcos",
+        "datePublished": "2026-03-07",
+        "url": "https://whatnow.com/san-diego/restaurants/necessity-coffee-planning-san-marcos-location/",
+        "image": "https://sandiegocoffee.co/images/news/news_002.png",
+        "description": "Necessity Coffee opened their second location on March 7th in San Marcos, joining their original spot as part of North City. The roaster is known for high quality sourcing and lighter roast profiles.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "San Diego Specialty Coffee",
+          "url": "https://sandiegocoffee.co"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "r/SanDiegoCoffeeBeans Community",
+          "url": "https://reddit.com/r/SanDiegoCoffeeBeans"
+        }
+      }
+    ]
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         :root {
             --espresso: #3D2817;
@@ -167,17 +238,8 @@
         }
 
         .nav-dropdown a:last-child { border-bottom: none; }
-
-        .nav-dropdown a:hover {
-            background: rgba(196,167,125,0.1);
-            color: var(--latte);
-        }
-
-        .nav-dropdown a.active {
-            color: var(--latte);
-            border-left: 3px solid var(--accent-red);
-            padding-left: calc(1.5rem - 3px);
-        }
+        .nav-dropdown a:hover { background: rgba(196,167,125,0.1); color: var(--latte); }
+        .nav-dropdown a.active { color: var(--latte); border-left: 3px solid var(--accent-red); padding-left: calc(1.5rem - 3px); }
 
         /* ── Layout ──────────────────────────────────────────────────── */
         .container {
@@ -192,7 +254,6 @@
         }
 
         .intro-card {
-            border-top: 3px solid var(--accent-red);
             background: var(--cream);
             border: 1px solid var(--light-tan);
             border-top: 3px solid var(--accent-red);
@@ -225,118 +286,136 @@
             max-width: 640px;
         }
 
-        /* ── Highlights Grid ─────────────────────────────────────────── */
+        /* ── News Grid ───────────────────────────────────────────────── */
         .grid-section {
             padding-bottom: 4rem;
         }
 
-        .highlights-grid {
+        .news-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
-        .highlight-card {
-            border: 1px solid var(--light-tan);
-            border-top: 3px solid var(--accent-red);
+        .news-card {
             background: var(--white);
-            text-decoration: none;
-            color: inherit;
+            border: 1.5px solid var(--light-tan);
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .highlight-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(61,40,23,0.12);
-        }
-
-        .highlight-card-image {
-            aspect-ratio: 16/9;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.22s ease;
             overflow: hidden;
-            background: linear-gradient(135deg, #2A1508 0%, #4A2C18 60%, #3A2010 100%);
-            flex-shrink: 0;
         }
 
-        .highlight-card-image img {
+        .news-card:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+        }
+
+        .news-card-image {
             width: 100%;
-            height: 100%;
+            height: 160px;
             object-fit: cover;
             display: block;
         }
 
-        .highlight-card-image-placeholder {
+        .news-card-placeholder {
             width: 100%;
-            height: 100%;
+            height: 160px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            opacity: 0.3;
+            gap: 0.4rem;
+            flex-shrink: 0;
         }
 
-        .highlight-card-body {
-            padding: 1.25rem 1.25rem 1.5rem;
+        .news-card-placeholder.type-event {
+            background: linear-gradient(145deg, #6B1C0A 0%, #B85C38 50%, #8B3A20 100%);
+        }
+
+        .news-card-placeholder.type-news {
+            background: linear-gradient(145deg, #5C4033 0%, #8B6552 50%, #6B4E3D 100%);
+        }
+
+        .news-card-placeholder.type-update {
+            background: linear-gradient(145deg, #1A3550 0%, #2E5980 50%, #1E4060 100%);
+        }
+
+        .news-card-placeholder-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .news-card-placeholder-label {
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .news-card-body {
+            padding: 1rem 1.1rem 0.9rem;
             flex: 1;
             display: flex;
             flex-direction: column;
         }
 
-        .highlight-card-roaster {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.05rem;
+        .news-card-badge {
+            display: inline-block;
+            font-size: 0.58rem;
             font-weight: 700;
-            color: var(--espresso);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.15rem 0.5rem;
+            margin-bottom: 0.5rem;
+            align-self: flex-start;
+        }
+
+        .news-card-badge.type-event { background: var(--accent-red); color: white; }
+        .news-card-badge.type-news { background: var(--light-tan); color: var(--coffee-brown); }
+        .news-card-badge.type-update { background: #d4e0ec; color: #2a4a68; }
+
+        .news-card-title {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            font-weight: 600;
             line-height: 1.3;
+            color: var(--espresso);
+            margin-bottom: 0.4rem;
+        }
+
+        .news-card-date {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--accent-red);
             margin-bottom: 0.3rem;
         }
 
-        .highlight-card-date {
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--latte);
-            margin-bottom: 0.75rem;
+        .news-card-venue {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 0.3rem;
         }
 
-        .highlight-card-excerpt {
-            font-size: 0.85rem;
-            line-height: 1.65;
-            color: var(--coffee-brown);
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .news-card-excerpt {
+            font-size: 0.74rem;
+            color: #777;
+            line-height: 1.5;
             flex: 1;
         }
 
-        .highlight-card-cta {
+        .news-card-footer {
+            margin-top: 0.75rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid var(--light-tan);
             font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+            font-weight: 600;
             color: var(--accent-red);
-            margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        /* Empty state */
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--coffee-brown);
-        }
-
-        .empty-state h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            margin-bottom: 0.75rem;
-            color: var(--espresso);
+            text-align: right;
         }
 
         /* ── Footer ──────────────────────────────────────────────────── */
@@ -353,12 +432,9 @@
         .footer-sep { opacity: 0.4; margin: 0 0.4rem; }
 
         /* ── Responsive ──────────────────────────────────────────────── */
-        @media (max-width: 900px) {
-            .highlights-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
+        @media (max-width: 900px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px) {
-            .highlights-grid { grid-template-columns: 1fr; }
+            .news-grid { grid-template-columns: 1fr; }
             .intro-card { padding: 1.5rem; }
             .container { padding: 0 1.25rem; }
             .intro-card h2 { font-size: 1.4rem; }
@@ -372,7 +448,7 @@
             <div>
                 <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
                 <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
-                <p class="header-subtitle">Roaster Highlights</p>
+                <p class="header-subtitle">News &amp; Events</p>
             </div>
             <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
                 <span class="nav-toggle-icon">≡</span>
@@ -383,8 +459,8 @@
     <nav class="nav-dropdown" id="navDropdown">
         <a href="index.html">Home</a>
         <a href="map.html">Explore Map</a>
-        <a href="roaster-highlights.html" class="active">Roaster Highlights</a>
-        <a href="news.html">News &amp; Events</a>
+        <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="news.html" class="active">News &amp; Events</a>
         <a href="submit.html">Add a Spot</a>
         <a href="about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
@@ -393,16 +469,16 @@
     <div class="intro-section">
         <div class="container">
             <div class="intro-card">
-                <div class="intro-eyebrow">For The Community</div>
-                <h2>Roaster Highlights</h2>
-                <p>An in-depth look at the roasters shaping San Diego's specialty coffee scene.</p>
+                <div class="intro-eyebrow">San Diego Coffee Scene</div>
+                <h2>News &amp; Events</h2>
+                <p>Openings, closures, events, and everything else worth knowing about in San Diego's specialty coffee community. Curated by the r/SanDiegoCoffeeBeans team.</p>
             </div>
         </div>
     </div>
 
     <div class="grid-section">
         <div class="container">
-            <div class="highlights-grid" id="highlightsGrid">
+            <div class="news-grid" id="newsGrid">
                 <!-- Populated by JS -->
             </div>
         </div>
@@ -416,7 +492,7 @@
         <a href="submit.html">Add a Spot</a>
     </footer>
 
-    <script src="highlights.js"></script>
+    <script src="news.js"></script>
     <script>
         // Nav dropdown
         (function() {
@@ -450,39 +526,69 @@
             document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
         })();
 
-        function formatDate(iso) {
-            const d = new Date(iso + 'T00:00:00');
-            return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        function formatNewsDate(dateStr, endDateStr) {
+            if (!dateStr) return '';
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const d = new Date(dateStr + 'T00:00:00');
+            if (isNaN(d)) return '';
+            const m = months[d.getMonth()];
+            const day = d.getDate();
+            const yr = d.getFullYear();
+            if (endDateStr) {
+                const e = new Date(endDateStr + 'T00:00:00');
+                if (!isNaN(e) && (e > d)) {
+                    if (e.getMonth() === d.getMonth() && e.getFullYear() === yr) {
+                        return `${m} ${day}–${e.getDate()}, ${yr}`;
+                    }
+                    return `${m} ${day} – ${months[e.getMonth()]} ${e.getDate()}, ${yr}`;
+                }
+            }
+            return `${m} ${day}, ${yr}`;
         }
 
-        const grid = document.getElementById('highlightsGrid');
+        const grid = document.getElementById('newsGrid');
+        const items = window.NEWS_ITEMS || [];
+        const typeIcons = { event: '📅', news: '📰', update: '🔧' };
+        const typeCTA   = { event: 'Learn More →', news: 'Read More →', update: 'See Update →' };
 
-        if (!window.highlights || window.highlights.length === 0) {
-            grid.innerHTML = '<div class="empty-state"><h3>Coming Soon</h3><p>Roaster highlights are on the way.</p></div>';
+        if (!items.length) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--coffee-brown);"><h3 style="font-family:Playfair Display,serif;font-size:1.4rem;margin-bottom:0.75rem;color:var(--espresso);">Coming Soon</h3><p>News and events are on the way.</p></div>';
         } else {
-            const sorted = [...window.highlights].sort((a, b) => new Date(b.date) - new Date(a.date));
+            grid.innerHTML = items.map(item => {
+                const typeClass = 'type-' + (item.type || 'news');
+                const badge = { event: 'EVENT', news: 'NEWS', update: 'SITE UPDATE' }[item.type] || 'NEWS';
+                const icon = typeIcons[item.type] || '📰';
+                const cta  = typeCTA[item.type] || 'Read More →';
+                const isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
+                const target = isExternal ? ' target="_blank" rel="noopener"' : '';
 
-            sorted.forEach(entry => {
-                const card = document.createElement('a');
-                card.href = 'highlight.html?id=' + encodeURIComponent(entry.id);
-                card.className = 'highlight-card';
+                let topHtml;
+                if (item.image) {
+                    const imgStyle = item.imageFit === 'contain' ? ' style="object-fit:contain;background:#fff;"' : '';
+                    topHtml = `<img class="news-card-image" src="${item.image}" alt="${item.title}"${imgStyle}>`;
+                } else {
+                    topHtml = `
+                        <div class="news-card-placeholder ${typeClass}">
+                            <div class="news-card-placeholder-icon">${icon}</div>
+                            <div class="news-card-placeholder-label">San Diego Coffee</div>
+                        </div>`;
+                }
 
-                const imageHtml = entry.image
-                    ? `<img src="${entry.image}" alt="${entry.roasterName}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'highlight-card-image-placeholder\\'>☕</div>'">`
-                    : '<div class="highlight-card-image-placeholder">☕</div>';
+                const dateStr = formatNewsDate(item.date, item.endDate);
 
-                card.innerHTML = `
-                    <div class="highlight-card-image">${imageHtml}</div>
-                    <div class="highlight-card-body">
-                        <div class="highlight-card-roaster">${entry.roasterName}</div>
-                        <div class="highlight-card-date">${formatDate(entry.date)}</div>
-                        <div class="highlight-card-excerpt">${entry.excerpt}</div>
-                        <div class="highlight-card-cta">Read more →</div>
+                return `
+                <a class="news-card" href="${item.url || '#'}"${target}>
+                    ${topHtml}
+                    <div class="news-card-body">
+                        <span class="news-card-badge ${typeClass}">${badge}</span>
+                        <div class="news-card-title">${item.title}</div>
+                        ${dateStr ? `<div class="news-card-date">${dateStr}</div>` : ''}
+                        ${item.venue ? `<div class="news-card-venue">📍 ${item.venue}</div>` : ''}
+                        ${item.excerpt ? `<div class="news-card-excerpt">${item.excerpt}</div>` : ''}
+                        <div class="news-card-footer">${cta}</div>
                     </div>
-                `;
-
-                grid.appendChild(card);
-            });
+                </a>`;
+            }).join('');
         }
     </script>
 

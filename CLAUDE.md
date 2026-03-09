@@ -103,6 +103,15 @@ Never update just one or two — all four must stay in sync.
 - Content is community-submitted but editorially reviewed
 - Reddit community is core to the project's identity
 
+## Critical: News & Events 2-File Update Pattern
+Whenever a **new item is added to `news.js`**, BOTH files must be updated:
+1. `news.js` — add the item to `window.NEWS_ITEMS`
+2. `news.html` — add a corresponding JSON-LD entry in the `<script type="application/ld+json">` block in `<head>`:
+   - Use `@type: "Event"` for events (include `startDate`, `endDate`, `location`, `eventStatus`, `eventAttendanceMode`, `organizer`)
+   - Use `@type: "NewsArticle"` for news items (include `headline`, `datePublished`, `url`, `image`, `description`, `publisher`, `author`)
+
+Never add to `news.js` without updating the structured data in `news.html`.
+
 ## Notes for Claude Code
 - When modifying location data fields, always follow the 4-file update pattern above
 - Prefer iterative, testable changes over large rewrites

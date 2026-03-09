@@ -11,7 +11,10 @@
       "Bash(for f in index.html map.html location.html submit.html roaster-highlights.html highlight.html)",
       "Bash(do echo \"=== $f ===\")",
       "Read(//c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "WebFetch(domain:usa.worldofcoffee.org)",
+      "Bash(curl:*)",
+      "WebFetch(domain:whatnow.com)"
     ]
   }
 }

@@ -93,14 +93,14 @@
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 2.5rem 1.5rem;
+            padding: 0.9rem 2.5rem;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
             align-items: center;
             gap: 0;
             position: relative;
             z-index: 1;
-            text-align: center;
         }
 
         .header-brand {
@@ -136,7 +136,7 @@
         /* ── Title: *San Diego* **Coffee Beans** — Playfair Display italic + bold serif */
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4.5vw, 3rem);
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
             font-weight: 400;
             line-height: 1;
             color: #EDE0CC;
@@ -166,17 +166,22 @@
             font-weight: 600;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            margin-top: 1.2rem;
+            margin-top: 0.8rem;
         }
 
         .header-desc { display: none; }
 
-        /* ── Nav row sits below the centered brand block */
+        /* ── Right-side actions group: CTA buttons + hamburger toggle */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
         .header-nav {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 1.1rem;
         }
 
         .nav-btn {
@@ -228,10 +233,8 @@
 
         /* ── Hamburger Nav ───────────────────────────────────────────── */
         .nav-toggle {
-            position: absolute;
-            top: 50%;
-            right: 1.5rem;
-            transform: translateY(-50%);
+            position: static;
+            transform: none;
             display: flex;
             align-items: center;
             gap: 0.45rem;
@@ -450,6 +453,7 @@
             line-height: 1.6;
             margin-bottom: 2rem;
             font-weight: 400;
+            pointer-events: all;
         }
 
         /* Live stats strip */
@@ -810,6 +814,149 @@
         @media (max-width: 900px) { .recent-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px) { .recent-grid { grid-template-columns: 1fr; } }
 
+        /* ── News & Events ───────────────────────────────────────────── */
+        .news-section {
+            background: var(--white);
+            padding: 2.5rem 0 2rem;
+            border-bottom: 1px solid var(--light-tan);
+        }
+        .news-header {
+            margin-bottom: 1.5rem;
+        }
+        .news-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: var(--espresso);
+            line-height: 1.2;
+        }
+        .news-subtitle {
+            font-size: 0.78rem;
+            color: #999;
+            margin-top: 0.25rem;
+            letter-spacing: 0.01em;
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+        .news-card {
+            background: var(--white);
+            border: 1.5px solid var(--light-tan);
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.22s ease;
+            overflow: hidden;
+        }
+        .news-card:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+        }
+        .news-card-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+        .news-card-placeholder {
+            width: 100%;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+        .news-card-placeholder.type-event {
+            background: linear-gradient(145deg, #6B1C0A 0%, #B85C38 50%, #8B3A20 100%);
+        }
+        .news-card-placeholder.type-news {
+            background: linear-gradient(145deg, #5C4033 0%, #8B6552 50%, #6B4E3D 100%);
+        }
+        .news-card-placeholder.type-update {
+            background: linear-gradient(145deg, #1A3550 0%, #2E5980 50%, #1E4060 100%);
+        }
+        .news-card-placeholder-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+        .news-card-placeholder-label {
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.5);
+        }
+        .news-card-body {
+            padding: 1rem 1.1rem 0.9rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .news-card-badge {
+            display: inline-block;
+            font-size: 0.58rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.15rem 0.5rem;
+            margin-bottom: 0.5rem;
+            align-self: flex-start;
+        }
+        .news-card-badge.type-event {
+            background: var(--accent-red);
+            color: white;
+        }
+        .news-card-badge.type-news {
+            background: var(--light-tan);
+            color: var(--coffee-brown);
+        }
+        .news-card-badge.type-update {
+            background: #d4e0ec;
+            color: #2a4a68;
+        }
+        .news-card-title {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--espresso);
+            margin-bottom: 0.4rem;
+        }
+        .news-card-date {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--accent-red);
+            margin-bottom: 0.3rem;
+        }
+        .news-card-venue {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 0.3rem;
+        }
+        .news-card-excerpt {
+            font-size: 0.74rem;
+            color: #777;
+            line-height: 1.5;
+            flex: 1;
+        }
+        .news-card-footer {
+            margin-top: 0.75rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid var(--light-tan);
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--accent-red);
+            text-align: right;
+        }
+        @media (max-width: 900px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .news-grid { grid-template-columns: 1fr; } }
+
         /* ── Minimal Footer ──────────────────────────────────────────── */
         footer {
             background: var(--espresso);
@@ -857,7 +1004,7 @@
 
             .logo { font-size: 1.35rem; }
 
-            .tagline { font-size: 0.55rem; margin-top: 0.2rem; }
+            .tagline { font-size: 0.55rem; margin-top: 0.5rem; }
 
             .nav-toggle {
                 position: static;
@@ -1136,22 +1283,26 @@
                 <div class="logo"><em>San Diego</em> <strong>Specialty Coffee</strong></div>
                 <div class="tagline">Curated by San Diego's Coffee Community</div>
             </div>
-            <nav class="header-nav">
-                <a href="map.html" class="nav-btn primary" id="navMapBtn">☕ Explore Map</a>
-                <a href="submit.html" class="nav-btn primary">＋ Add a Spot</a>
-            </nav>
-            <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
-                <span class="nav-toggle-icon">≡</span>
-                <span class="nav-toggle-label">Menu</span>
-            </button>
+            <div class="header-actions">
+                <nav class="header-nav">
+                    <a href="map.html" class="nav-btn primary" id="navMapBtn">☕ Explore Map</a>
+                    <a href="submit.html" class="nav-btn primary">＋ Add a Spot</a>
+                </nav>
+                <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                    <span class="nav-toggle-icon">≡</span>
+                    <span class="nav-toggle-label">Menu</span>
+                </button>
+            </div>
         </div>
     </div>
     <nav class="nav-dropdown" id="navDropdown">
         <a href="index.html" class="active">Home</a>
         <a href="map.html">Explore Map</a>
         <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="news.html">News &amp; Events</a>
         <a href="submit.html">Add a Spot</a>
         <a href="about.html">About</a>
+        <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
     </nav>
 
     <!-- Intro -->
@@ -1167,7 +1318,7 @@
 
         <div class="hero-content">
             <h2 class="hero-title">Built by the community. <br><em>For the coffee obsessed.</em></h2>
-            <p class="hero-subtitle">Crowd-sourced by the r/SanDiegoCoffeeBeans community — the most complete map of roasters and specialty cafes across San Diego County</p>
+            <p class="hero-subtitle">Crowd-sourced by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" style="color: var(--latte); text-decoration: underline; text-underline-offset: 2px;">r/SanDiegoCoffeeBeans</a> community — the most complete map of roasters and specialty cafes across San Diego County</p>
 
             <div class="hero-stats">
                 <a href="map.html" class="hero-stat" id="heroStatTotal">
@@ -1208,6 +1359,22 @@
 
     <div class="page-transition" id="pageTransition"></div>
 
+    <!-- News & Events -->
+    <section class="news-section" id="newsSection">
+        <div class="container">
+            <div class="news-header" style="display:flex;justify-content:space-between;align-items:flex-end;">
+                <div>
+                    <div class="news-title">News &amp; Events</div>
+                    <div class="news-subtitle">What's happening in San Diego coffee</div>
+                </div>
+                <a href="news.html" style="font-size:0.72rem;font-weight:700;color:var(--accent-red);text-decoration:none;letter-spacing:0.02em;white-space:nowrap;padding-bottom:0.2rem;">View All →</a>
+            </div>
+            <div class="news-grid" id="newsGrid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
     <!-- Recently Added -->
     <section class="recent-section">
         <div class="container">
@@ -1233,6 +1400,7 @@
     </footer>
 
     <script src="locations.js"></script>
+    <script src="news.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initPreviewMap" async defer></script>
     <script>
         // Nav dropdown
@@ -1450,13 +1618,14 @@
                     }
 
                     // Coffee details
-                    const hasAnyCustom = custom.description || custom.roastScale || custom.visitorExperience ||
+                    const hasAnyCustom = custom.description || custom.roastScale || custom.roastStyle || custom.visitorExperience ||
                                          custom.multipleLocations || custom.amenities?.length || custom.roastersServed?.length;
                     if (hasAnyCustom) {
                         html += `<hr class="info-window-divider">`;
 
-                        if (custom.description) {
-                            html += `<div class="info-window-description">"${custom.description}"</div>`;
+                        const infoDesc = custom.description || location.legacyData?.originalDescription || '';
+                        if (infoDesc) {
+                            html += `<div class="info-window-description">"${infoDesc}"</div>`;
                         }
 
                         const gridItems = [];
@@ -1468,6 +1637,7 @@
                                 const preview = custom.roastersServed.slice(0, 2).join(', ') + (custom.roastersServed.length > 2 ? ` +${custom.roastersServed.length - 2} more` : '');
                                 gridItems.push(['Roasters', preview]);
                             }
+                            if (custom.specialtyBarista) gridItems.push(['Specialty Barista', custom.specialtyBarista]);
                         }
                         if (custom.multipleLocations) gridItems.push(['Multiple Locations', custom.multipleLocations]);
 
@@ -1487,7 +1657,8 @@
                             if (a.some(x => x.includes('Wifi') || x.includes('Working')))   amenityBits.push('💻 WiFi');
                             if (a.some(x => x.includes('Food') || x.includes('Pastries')))  amenityBits.push('🥐 Food');
                             if (a.some(x => x.includes('Beans Online')))                     amenityBits.push('🛒 Online Beans');
-                            if (a.some(x => x.includes('Decaf')))                            amenityBits.push('☕ Decaf');
+                            if (a.some(x => x.includes('Espresso Options')))                 amenityBits.push('☕ Espresso Options');
+                            if (a.some(x => x.includes('Decaf')))                            amenityBits.push('🌙 Decaf Espresso');
                             if (a.some(x => x.includes('Seating')))                          amenityBits.push('🪑 Seating');
                             if (amenityBits.length) {
                                 html += `<div class="info-window-badges-row">`;
@@ -1522,6 +1693,75 @@
                     }, 50);
                 });
             });
+        }
+
+        // ── News & Events ─────────────────────────────────────────────────
+        function formatNewsDate(dateStr, endDateStr) {
+            if (!dateStr) return '';
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const d = new Date(dateStr + 'T00:00:00');
+            if (isNaN(d)) return '';
+            const m = months[d.getMonth()];
+            const day = d.getDate();
+            const yr = d.getFullYear();
+            if (endDateStr) {
+                const e = new Date(endDateStr + 'T00:00:00');
+                if (!isNaN(e) && (e > d)) {
+                    if (e.getMonth() === d.getMonth() && e.getFullYear() === yr) {
+                        return `${m} ${day}–${e.getDate()}, ${yr}`;
+                    }
+                    return `${m} ${day} – ${months[e.getMonth()]} ${e.getDate()}, ${yr}`;
+                }
+            }
+            return `${m} ${day}, ${yr}`;
+        }
+
+        function renderNews() {
+            const section = document.getElementById('newsSection');
+            const grid = document.getElementById('newsGrid');
+            if (!section || !grid) return;
+            const items = (window.NEWS_ITEMS || []).slice(0, 3);
+            if (!items.length) {
+                section.style.display = 'none';
+                return;
+            }
+            const typeIcons = { event: '📅', news: '📰', update: '🔧' };
+            const typeCTA   = { event: 'Learn More →', news: 'Read More →', update: 'See Update →' };
+            grid.innerHTML = items.map(item => {
+                const typeClass = 'type-' + (item.type || 'news');
+                const badge = { event: 'EVENT', news: 'NEWS', update: 'SITE UPDATE' }[item.type] || 'NEWS';
+                const icon = typeIcons[item.type] || '📰';
+                const cta  = typeCTA[item.type] || 'Read More →';
+                const isExternal = item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'));
+                const target = isExternal ? ' target="_blank" rel="noopener"' : '';
+
+                let topHtml;
+                if (item.image) {
+                    const imgStyle = item.imageFit === 'contain' ? ' style="object-fit:contain;background:#fff;"' : '';
+                    topHtml = `<img class="news-card-image" src="${item.image}" alt="${item.title}"${imgStyle}>`;
+                } else {
+                    topHtml = `
+                        <div class="news-card-placeholder ${typeClass}">
+                            <div class="news-card-placeholder-icon">${icon}</div>
+                            <div class="news-card-placeholder-label">San Diego Coffee</div>
+                        </div>`;
+                }
+
+                const dateStr = formatNewsDate(item.date, item.endDate);
+
+                return `
+                <a class="news-card" href="${item.url || '#'}"${target}>
+                    ${topHtml}
+                    <div class="news-card-body">
+                        <span class="news-card-badge ${typeClass}">${badge}</span>
+                        <div class="news-card-title">${item.title}</div>
+                        ${dateStr ? `<div class="news-card-date">${dateStr}</div>` : ''}
+                        ${item.venue ? `<div class="news-card-venue">📍 ${item.venue}</div>` : ''}
+                        ${item.excerpt ? `<div class="news-card-excerpt">${item.excerpt}</div>` : ''}
+                        <div class="news-card-footer">${cta}</div>
+                    </div>
+                </a>`;
+            }).join('');
         }
 
         // ── Recently Added ────────────────────────────────────────────────
@@ -1618,6 +1858,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            renderNews();
             renderRecentLocations();
         });
     </script>

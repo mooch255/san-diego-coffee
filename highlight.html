@@ -14,6 +14,7 @@
     <meta name="twitter:description" content="">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
     <script type="application/ld+json" id="ld-schema"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -420,9 +421,9 @@
     <nav class="nav-dropdown" id="navDropdown">
         <a href="index.html">Home</a>
         <a href="map.html">Explore Map</a>
+        <a href="submit.html">Add a Spot</a>
         <a href="roaster-highlights.html" class="active">Roaster Highlights</a>
         <a href="news.html">News &amp; Events</a>
-        <a href="submit.html">Add a Spot</a>
         <a href="about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
     </nav>
@@ -527,6 +528,10 @@
             document.title = entry.roasterName + ' · San Diego Specialty Coffee';
             const ogTitle = document.querySelector('meta[property="og:title"]');
             if (ogTitle) ogTitle.content = entry.roasterName + ' · San Diego Specialty Coffee';
+            // Set canonical
+            let canonical = document.querySelector('link[rel="canonical"]');
+            if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+            canonical.href = `https://sandiegocoffee.co/highlight.html?id=${id}`;
             const ogDesc = document.querySelector('meta[property="og:description"]');
             if (ogDesc && entry.excerpt) ogDesc.content = entry.excerpt;
             const ogImage = document.querySelector('meta[property="og:image"]');

@@ -15,6 +15,8 @@
     <meta name="twitter:description" content="San Diego coffee news, events, and openings — curated by the r/SanDiegoCoffeeBeans community.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="San Diego coffee news, events, and openings — curated by the r/SanDiegoCoffeeBeans community.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+    <link rel="canonical" href="https://sandiegocoffee.co/news.html">
     <script type="application/ld+json">
     [
       {
@@ -459,9 +461,9 @@
     <nav class="nav-dropdown" id="navDropdown">
         <a href="index.html">Home</a>
         <a href="map.html">Explore Map</a>
+        <a href="submit.html">Add a Spot</a>
         <a href="roaster-highlights.html">Roaster Highlights</a>
         <a href="news.html" class="active">News &amp; Events</a>
-        <a href="submit.html">Add a Spot</a>
         <a href="about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
     </nav>
@@ -565,7 +567,11 @@
                 let topHtml;
                 if (item.image) {
                     const imgStyle = item.imageFit === 'contain' ? ' style="object-fit:contain;background:#fff;"' : '';
-                    topHtml = `<img class="news-card-image" src="${item.image}" alt="${item.title}"${imgStyle}>`;
+                    topHtml = `<img class="news-card-image" src="${item.image}" alt="${item.title}"${imgStyle} onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="news-card-placeholder ${typeClass}" style="display:none;">
+                            <div class="news-card-placeholder-icon">${icon}</div>
+                            <div class="news-card-placeholder-label">San Diego Coffee</div>
+                        </div>`;
                 } else {
                     topHtml = `
                         <div class="news-card-placeholder ${typeClass}">

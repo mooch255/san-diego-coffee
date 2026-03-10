@@ -9,10 +9,14 @@
     <meta property="og:title" content="Explore the Map · San Diego Specialty Coffee">
     <meta property="og:description" content="Browse 150+ specialty roasters and cafes across San Diego neighborhoods. Filter by type, roast style, and amenities.">
     <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta property="og:image:alt" content="San Diego Specialty Coffee">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Explore the Map · San Diego Specialty Coffee">
+    <meta name="twitter:description" content="Browse 150+ specialty roasters and cafes across San Diego neighborhoods. Filter by type, roast style, and amenities.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="Browse 150+ specialty roasters and cafes across San Diego neighborhoods. Filter by type, roast style, and amenities.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+    <link rel="canonical" href="https://sandiegocoffee.co/map.html">
 
     <!-- Marker Clusterer -->
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
@@ -1339,9 +1343,9 @@
     <nav class="nav-dropdown" id="navDropdown">
         <a href="index.html">Home</a>
         <a href="map.html" class="active">Explore Map</a>
+        <a href="submit.html">Add a Spot</a>
         <a href="roaster-highlights.html">Roaster Highlights</a>
         <a href="news.html">News &amp; Events</a>
-        <a href="submit.html">Add a Spot</a>
         <a href="about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
     </nav>
@@ -1427,11 +1431,11 @@
             <!-- Map Legend -->
             <div class="map-legend" id="mapLegend">
                 <div class="map-legend-item">
-                    <img src="http://maps.google.com/mapfiles/ms/icons/green-dot.png" width="16" height="16" alt="roaster">
+                    <img src="https://maps.google.com/mapfiles/ms/icons/green-dot.png" width="16" height="16" alt="roaster">
                     <span>Roaster</span>
                 </div>
                 <div class="map-legend-item">
-                    <img src="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" width="16" height="16" alt="cafe">
+                    <img src="https://maps.google.com/mapfiles/ms/icons/blue-dot.png" width="16" height="16" alt="cafe">
                     <span>Cafe</span>
                 </div>
             </div>
@@ -1654,9 +1658,9 @@ function loadLocations() {
 }
 
 function createMarker(location) {
-    const markerColor = location.basicInfo.type === 'roaster' ? 
-        'http://maps.google.com/mapfiles/ms/icons/green-dot.png' :
-        'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+    const markerColor = location.basicInfo.type === 'roaster' ?
+        'https://maps.google.com/mapfiles/ms/icons/green-dot.png' :
+        'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
     
     const marker = new google.maps.Marker({
         position: {
@@ -2415,7 +2419,7 @@ function displayGooglePlace(place, originalQuery) {
         position: place.geometry.location,
         map: map,
         icon: {
-            url: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+            url: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
         },
         title: place.name,
         zIndex: 1000
@@ -2449,8 +2453,8 @@ function showGooglePlaceInfo(place, marker) {
         hoursHtml += '<br><em>+ more...</em></div>';
     }
     
-    const photoHtml = place.photos && place.photos.length > 0 
-        ? `<img src="${place.photos[0].getUrl({maxWidth: 300, maxHeight: 200})}" style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 1rem; border-radius: 4px;">` 
+    const photoHtml = place.photos?.[0]
+        ? `<img src="${place.photos[0].getUrl({maxWidth: 300, maxHeight: 200})}" style="width: 100%; max-height: 200px; object-fit: cover; margin-top: 1rem; border-radius: 4px;">`
         : '';
     
     const content = `
@@ -2841,7 +2845,7 @@ function highlightMarker(locationId, on) {
     if (!marker) return;
     if (on) {
         marker._origIcon = marker.getIcon();
-        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
+        marker.setIcon('https://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
         marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
     } else {
         if (marker._origIcon) marker.setIcon(marker._origIcon);

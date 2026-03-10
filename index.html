@@ -9,10 +9,14 @@
     <meta property="og:title" content="San Diego Specialty Coffee Guide">
     <meta property="og:description" content="An interactive map of 150+ specialty roasters and cafes across San Diego.">
     <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta property="og:image:alt" content="San Diego Specialty Coffee">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="San Diego Specialty Coffee Guide">
+    <meta name="twitter:description" content="An interactive map of 150+ specialty roasters and cafes across San Diego. Built by the r/SanDiegoCoffeeBeans community.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="An interactive map of 150+ specialty roasters and cafes across San Diego — roast profiles, brew methods, hours, and more. Built by the r/SanDiegoCoffeeBeans community.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+    <link rel="canonical" href="https://sandiegocoffee.co/">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -1298,9 +1302,9 @@
     <nav class="nav-dropdown" id="navDropdown">
         <a href="index.html" class="active">Home</a>
         <a href="map.html">Explore Map</a>
+        <a href="submit.html">Add a Spot</a>
         <a href="roaster-highlights.html">Roaster Highlights</a>
         <a href="news.html">News &amp; Events</a>
-        <a href="submit.html">Add a Spot</a>
         <a href="about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
     </nav>
@@ -1318,7 +1322,7 @@
 
         <div class="hero-content">
             <h2 class="hero-title">Built by the community. <br><em>For the coffee obsessed.</em></h2>
-            <p class="hero-subtitle">Crowd-sourced by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" style="color: var(--latte); text-decoration: underline; text-underline-offset: 2px;">r/SanDiegoCoffeeBeans</a> community — the most complete map of roasters and specialty cafes across San Diego County</p>
+            <p class="hero-subtitle">Crowd-sourced by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" style="color: var(--latte); text-decoration: underline; text-underline-offset: 2px;">r/SanDiegoCoffeeBeans</a> community. The most complete map of roasters and specialty cafes across San Diego County.</p>
 
             <div class="hero-stats">
                 <a href="map.html" class="hero-stat" id="heroStatTotal">
@@ -1392,7 +1396,7 @@
 
     <!-- Footer -->
     <footer>
-        <span id="footerCount">148</span> locations and counting
+        <span id="footerCount">150+</span> locations and counting
         <span class="footer-sep">·</span>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
         <span class="footer-sep">·</span>
@@ -1578,8 +1582,8 @@
                     title: location.basicInfo.name,
                     icon: {
                         url: isRoaster
-                            ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-                            : 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                            ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                            : 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
                         scaledSize: new google.maps.Size(18, 18)
                     }
                 });

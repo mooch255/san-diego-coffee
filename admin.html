@@ -949,10 +949,21 @@
                 }).join('');
             }
 
-            // Filter out predictions that already match an existing location
-            const existingNames = new Set(existing.map(l => (l.basicInfo?.name || '').toLowerCase()));
+            // Filter out predictions already in our database, checked against ALL_LOCATIONS.
+            // Primary check: place_id match (most reliable).
+            // Fallback: same name + street address substring match (for locations missing a placeId).
+            const existingPlaceIds = new Set(ALL_LOCATIONS.map(l => l.googleData?.placeId).filter(Boolean));
             const newPredictions = predictions
-                .filter(p => !existingNames.has((p.structured_formatting?.main_text || '').toLowerCase()))
+                .filter(p => {
+                    if (existingPlaceIds.has(p.place_id)) return false;
+                    const predName = (p.structured_formatting?.main_text || '').toLowerCase();
+                    const predAddr = (p.structured_formatting?.secondary_text || '').toLowerCase();
+                    return !ALL_LOCATIONS.some(l => {
+                        const locName   = (l.basicInfo?.name || '').toLowerCase();
+                        const locStreet = (l.basicInfo?.address?.street || '').toLowerCase();
+                        return predName === locName && locStreet && predAddr.includes(locStreet);
+                    });
+                })
                 .slice(0, 5);
 
             if (newPredictions.length > 0) {

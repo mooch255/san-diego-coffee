@@ -1106,6 +1106,11 @@
             }
 
             .mobile-toggle { display: block; }
+
+            /* Lift Google Maps zoom controls above iPhone home indicator */
+            #map .gmnoprint {
+                margin-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)) !important;
+            }
         }
         .info-window {
             padding: 0.1rem 0.9rem 0.8rem 0.9rem;
@@ -2060,12 +2065,12 @@ function setupEventListeners() {
     (function buildNeighborhoodSelect() {
         const regionMap = {
             'North County Coastal':  ['Carlsbad','Cardiff-by-the-Sea','Encinitas','Oceanside','Solana Beach'],
-            'North County Inland':   ['Escondido','La Mesa','Poway','San Marcos','Vista'],
+            'North County Inland':   ['Escondido','Poway','San Marcos','Vista'],
             'North San Diego Inland': ['Carmel Mountain Ranch','Carmel Valley','Mira Mesa','Rancho Bernardo','Sorrento Valley'],
-            'Downtown & Uptown':     ["Banker's Hill",'Downtown','Golden Hill','Hillcrest','Mission Hills','Normal Heights','North Park','South Park'],
-            'Beach Communities':     ['Bay Park','Bird Rock','La Jolla','Ocean Beach','Pacific Beach','Point Loma'],
-            'Central & East SD':     ['Allied Gardens','Barrio Logan','City Heights','College Area','Del Cerro','El Cajon','Lemon Grove','Logan Heights','Mission Valley','Old Town'],
-            'South Bay':             ['Chula Vista','Coronado','Imperial Beach'],
+            'Downtown & Uptown':     ['Bankers Hill','Downtown','Golden Hill','Hillcrest','Mission Hills','Normal Heights','North Park','South Park'],
+            'Beach Communities':     ['Bay Park','Bird Rock','Coronado','La Jolla','Ocean Beach','Pacific Beach','Point Loma'],
+            'Central & East SD':     ['Allied Gardens','Barrio Logan','City Heights','College Area','Del Cerro','El Cajon','La Mesa','Lemon Grove','Logan Heights','Mission Valley','Old Town','Santee'],
+            'South Bay':             ['Chula Vista','Imperial Beach'],
         };
         // Collect neighborhoods that actually exist in the data + count per neighborhood
         // Exclude online-only roasters — they never appear in the panel when zoomed into a neighborhood

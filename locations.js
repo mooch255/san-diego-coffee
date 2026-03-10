@@ -1496,7 +1496,7 @@ window.COFFEE_LOCATIONS = [
       }
     ],
     "coffeeDetails": {
-      "neighborhood": "Banker's Hill",
+      "neighborhood": "Bankers Hill",
       "multipleLocations": "Yes"
     },
     "localImage": "/images/locations/loc_019.jpg"
@@ -11156,8 +11156,8 @@ window.COFFEE_LOCATIONS = [
         "street": "Online Only",
         "city": "San Diego",
         "zip": "92101",
-        "fullAddress": "East Village, San Diego, CA 92101, USA (Online Only)",
-        "neighborhood": "East Village"
+        "fullAddress": "Downtown, San Diego, CA 92101, USA (Online Only)",
+        "neighborhood": "Downtown"
       },
       "contact": {
         "phone": "",
@@ -12005,7 +12005,7 @@ window.COFFEE_LOCATIONS = [
       "address": {
         "street": "2221 Fern Street",
         "fullAddress": "2221 Fern St, San Diego, CA 92104, USA",
-        "neighborhood": "San Diego",
+        "neighborhood": "South Park",
         "city": "San Diego",
         "state": "CA",
         "zip": "92104",
@@ -12049,7 +12049,7 @@ window.COFFEE_LOCATIONS = [
       "needsEnrichment": false
     },
     "coffeeDetails": {
-      "neighborhood": "San Diego",
+      "neighborhood": "South Park",
       "yearEstablished": 2016,
       "multipleLocations": "Yes",
       "specialtyBarista": "Unknown",

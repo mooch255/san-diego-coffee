@@ -137,11 +137,15 @@ async function buildNewLocation(id, type, row) {
   const addr   = parseAddressComponents(place.addressComponents || []);
   const hood   = row.neighborhood || addr.city || '';
 
+  const amenitiesList = row.amenities ? row.amenities.split(',').map(a => a.trim()) : [];
+  const isOnlineOnly  = amenitiesList.includes('Online-only (no physical storefront)');
+
   return {
     id,
     basicInfo: {
       name: row.locationName || place.displayName?.text || '',
       type,
+      ...(isOnlineOnly && { onlineOnly: true }),
       address: {
         street:       addr.street,
         fullAddress:  place.formattedAddress  || '',
@@ -231,6 +235,11 @@ async function main() {
     updated++;
     if (sheetRow.locationName) loc.basicInfo.name = sheetRow.locationName;
     loc.coffeeDetails = buildCoffeeDetails(type, sheetRow);
+    // Sync onlineOnly flag from amenities checkbox
+    const amenitiesList = sheetRow.amenities ? sheetRow.amenities.split(',').map(a => a.trim()) : [];
+    if (amenitiesList.includes('Online-only (no physical storefront)')) {
+      loc.basicInfo.onlineOnly = true;
+    }
     return loc;
   });
 

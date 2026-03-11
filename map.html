@@ -330,6 +330,11 @@
             color: #1565c0;
         }
 
+        .autocomplete-type.online {
+            background: #ede8f5;
+            color: #7B4F9E;
+        }
+
         .autocomplete-new {
             border-left: 4px solid #2e7d32;
             background: #f1f8f4;
@@ -1870,7 +1875,7 @@ function setupAutocomplete() {
         
         matches.forEach((loc) => {
             const isOnlineLoc = loc.basicInfo?.onlineOnly || false;
-            const typeClass = loc.basicInfo.type === 'roaster' ? 'roaster' : 'cafe';
+            const typeClass = isOnlineLoc ? 'online' : loc.basicInfo.type === 'roaster' ? 'roaster' : 'cafe';
             const typeBase = isOnlineLoc ? '🌐 Online Roaster' : (loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe');
             const neighborhood = loc.coffeeDetails?.neighborhood || '';
             const typeLabel = neighborhood ? `${typeBase} · ${neighborhood}` : typeBase;

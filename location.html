@@ -1262,7 +1262,7 @@
         }
 
         function renderHero(loc, isRoaster, rating, info, contact, today, hours) {
-            const typeLabel = isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
+            const typeLabel = info.onlineOnly ? '🌐 Online Only Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
             const typeClass = isRoaster ? 'roaster' : 'cafe';
             const starsHtml = renderStars(rating.rating || 0);
             const reviewUrl = contact.googleMapsUrl || '#';

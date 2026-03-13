@@ -15,7 +15,8 @@
       "WebFetch(domain:usa.worldofcoffee.org)",
       "Bash(curl:*)",
       "WebFetch(domain:whatnow.com)",
-      "Bash(find \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/images/locations\" -type f -name \"*.jpg\" -o -name \"*.png\" -o -name \"*.webp\" 2>/dev/null | head -20)"
+      "Bash(find \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/images/locations\" -type f -name \"*.jpg\" -o -name \"*.png\" -o -name \"*.webp\" 2>/dev/null | head -20)",
+      "Bash(grep -o '\"id\": \"loc_[0-9]*\"' \"C:/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/locations.js\" | sort -t_ -k2 -n | tail -5)"
     ]
   }
 }

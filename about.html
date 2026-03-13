@@ -1009,7 +1009,7 @@
                 const linkEl = document.getElementById('linkOldestRoaster');
                 if (nameEl) nameEl.textContent = oldest.basicInfo.name;
                 if (labelEl) labelEl.textContent = 'Oldest Roaster – Est. ' + oldest.coffeeDetails.yearEstablished;
-                if (linkEl) linkEl.href = 'location.html?id=' + encodeURIComponent(oldest.id);
+                if (linkEl) linkEl.href = 'locations/' + encodeURIComponent(oldest.id);
             }
 
             // Subreddit age — spelled out months and days

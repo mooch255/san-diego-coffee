@@ -1121,25 +1121,50 @@
             if (!location) {
                 showError('Location not found.', 'This location may have been removed or the link is incorrect.');
             } else {
-                document.title = location.basicInfo.name + ' — San Diego Specialty Coffee';
+                // ── Page title & meta ──────────────────────────────────────────────
+                const locType   = location.basicInfo.type;
+                const hood      = location.coffeeDetails?.neighborhood || location.basicInfo.address?.city || '';
+                const typeLabel = locType === 'roaster' ? 'Specialty Coffee Roaster' : 'Specialty Café';
+                const hoodSuffix = hood ? ` in ${hood}, San Diego` : ', San Diego';
+                const pageTitle = `${location.basicInfo.name} — ${typeLabel}${hoodSuffix}`;
+
+                function buildMetaDesc(loc) {
+                    const cd = loc.coffeeDetails || {};
+                    if (cd.description) return cd.description.slice(0, 160);
+                    const n = loc.basicInfo.name;
+                    const h = cd.neighborhood || loc.basicInfo.address?.city || 'San Diego';
+                    if (loc.basicInfo.type === 'roaster') {
+                        const parts = [`${n} is a specialty coffee roaster in ${h}, San Diego.`];
+                        if (cd.roastScale) parts.push(`Known for ${cd.roastScale.toLowerCase()} roasts.`);
+                        if (cd.roastStyle) parts.push(cd.roastStyle + '.');
+                        return parts.join(' ').slice(0, 160);
+                    }
+                    const parts = [`${n} is a specialty coffee shop in ${h}, San Diego.`];
+                    if (cd.roastersServed?.length) parts.push(`Serving ${cd.roastersServed.slice(0, 2).join(' and ')}.`);
+                    if (cd.brewingOptions?.length) parts.push(`Brewing: ${cd.brewingOptions.slice(0, 3).join(', ')}.`);
+                    return parts.join(' ').slice(0, 160);
+                }
+                const metaDescription = buildMetaDesc(location);
+
+                document.title = pageTitle;
                 const ogTitle = document.querySelector('meta[property="og:title"]');
-                if (ogTitle) ogTitle.content = location.basicInfo.name + ' — San Diego Specialty Coffee';
-                // Set canonical
+                if (ogTitle) ogTitle.content = pageTitle;
+                // Set canonical to clean URL
                 let canonical = document.querySelector('link[rel="canonical"]');
                 if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-                canonical.href = `https://sandiegocoffee.co/location.html?id=${locationId}`;
+                canonical.href = `https://sandiegocoffee.co/locations/${locationId}`;
                 const ogDesc = document.querySelector('meta[property="og:description"]');
-                if (ogDesc && location.coffeeDetails?.description) ogDesc.content = location.coffeeDetails.description;
+                if (ogDesc) ogDesc.content = metaDescription;
                 const metaDesc = document.querySelector('meta[name="description"]');
-                if (metaDesc && location.coffeeDetails?.description) metaDesc.content = location.coffeeDetails.description;
+                if (metaDesc) metaDesc.content = metaDescription;
                 const ogUrl = document.querySelector('meta[property="og:url"]');
-                if (ogUrl) ogUrl.content = 'https://sandiegocoffee.co/location.html?id=' + location.id;
+                if (ogUrl) ogUrl.content = `https://sandiegocoffee.co/locations/${location.id}`;
                 const ogImage = document.querySelector('meta[property="og:image"]');
                 if (ogImage && location.localImage) ogImage.content = 'https://sandiegocoffee.co' + location.localImage;
                 const twTitle = document.querySelector('meta[name="twitter:title"]');
-                if (twTitle) twTitle.content = location.basicInfo.name + ' — San Diego Specialty Coffee';
+                if (twTitle) twTitle.content = pageTitle;
                 const twDesc = document.querySelector('meta[name="twitter:description"]');
-                if (twDesc && location.coffeeDetails?.description) twDesc.content = location.coffeeDetails.description;
+                if (twDesc) twDesc.content = metaDescription;
                 const twImage = document.querySelector('meta[name="twitter:image"]');
                 if (twImage && location.localImage) twImage.content = 'https://sandiegocoffee.co' + location.localImage;
 

@@ -8,7 +8,7 @@ window.highlights = [
     image: '/images/highlights/highlight_001.jpg',
     excerpt: 'Mark Gano is rethinking what decaf can be — sourcing directly from farms, air-freighting for freshness, and chasing complexity in a category most specialty roasters won\'t touch.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1qw495e/roaster_highlight_frequent_coffee_w_head_roaster/',
-    locationUrl: 'location.html?id=loc_147',
+    locationUrl: 'locations/loc_147',
     body: [
       { type: 'text', content: 'Frequent Coffee is doing something most specialty roasters won\'t touch: building an entire company around high-quality decaf and low-caffeine offerings. Based in Ocean Beach, head roaster Mark Gano sat down with us to talk sourcing, roasting, San Diego water, and why the best decaf he\'s ever made is currently stuck in customs.' },
       { type: 'qa',
@@ -67,7 +67,7 @@ window.highlights = [
     image: '/images/locations/loc_058.jpg',
     excerpt: 'Seth and Will built Visitor Coffee Roasters around a simple philosophy: tread lightly on the planet, roast lightly on the bean. From an Imperial Beach kitchen to a National City warehouse, they\'re doing it their way.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1re1eh1/roaster_highlight_visitor_coffee_roasters_w/',
-    locationUrl: 'location.html?id=loc_058',
+    locationUrl: 'locations/loc_058',
     body: [
       { type: 'text', content: 'Visitor Coffee Roasters is named for a philosophy as much as a brand — Seth and Will see themselves as visitors on Earth, and that mindset shapes everything from their sourcing to their packaging. Started in a small Imperial Beach kitchen in 2020, they\'ve grown into a National City warehouse operation with a quietly expanding footprint across San Diego\'s south bay. We sat down with both of them to talk Tartine, Tony Gwynn, and why fine-tuning your grind might matter more than your water source.' },
       { type: 'qa',
@@ -114,7 +114,7 @@ window.highlights = [
     image: '/images/highlights/highlight_003.jpg',
     excerpt: 'Michael Mazzotta and Olin Patterson are betting the specialty coffee world has been overlooking something extraordinary: a species with lower caffeine, tart fruit-forward complexity, and climate resilience that Arabica can\'t match.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1rjuhu5/coffee_species_highlight_excelsa_coffee_w/',
-    locationUrl: 'location.html?id=loc_120',
+    locationUrl: 'locations/loc_120',
     body: [
       { type: 'text', content: 'We\'re Michael Mazzotta and Olin Patterson, co-founders of Excelsa Coffee in San Diego. We started this because we kept asking a simple question: why does the whole specialty world orbit basically one species? We\'re betting on Excelsa, and we\'re still in the early innings refining roast approaches, sourcing, and what "great" even means for this cup. Here\'s a Q&A and we\'ll stick around for questions.\n\nYou can find us at <a href="https://excelsacoffee.com" target="_blank" rel="noopener">excelsacoffee.com</a>. Our Instagram is at <a href="https://www.instagram.com/drinkexcelsa" target="_blank" rel="noopener">@drinkexcelsa</a> where we share roast experiments, sourcing trips, and behind-the-scenes work. We also opened the USA\'s first Excelsa-exclusive café at 1855 Sunset Cliffs Blvd, San Diego 92107.' },
       { type: 'image', src: '/images/highlights/highlight_003f.jpg', caption: '' },

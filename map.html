@@ -1686,11 +1686,17 @@ function createMarker(location) {
     
     marker.addListener('click', () => {
         showInfoWindow(marker, location);
-        // Highlight the card
+        // Highlight the card and scroll panel to it
         document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
         const card = document.querySelector(`.location-card[data-id="${location.id}"]`);
-        if (card) card.classList.add('active');
-        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (card) {
+            card.classList.add('active');
+            const panelCards = document.getElementById('locationCards');
+            if (panelCards) panelCards.scrollTop = card.offsetTop - panelCards.offsetTop;
+        }
+        // Suppress idle re-render during pan so the highlighted card isn't wiped out
+        suppressIdleFilter = true;
+        setTimeout(() => { suppressIdleFilter = false; }, 600);
     });
 
     // Map → List: hovering a marker highlights its card
@@ -1751,7 +1757,7 @@ function createInfoWindowContent(location, custom) {
     const likeBtnColor = pinIsLiked ? '#B85C38' : '#6B4E3D';
     const likeBtnBorder = pinIsLiked ? '#B85C38' : '#C8B9AC';
     const likeBtnStyle = `cursor:pointer;background:transparent;border:1px solid ${likeBtnBorder};color:${likeBtnColor};padding:0.18rem 0.55rem;font-size:0.7rem;font-family:'Libre Franklin',sans-serif;font-weight:600;line-height:1.4;`;
-    const reviewsUrl = `location.html?id=${location.id}#reviews`;
+    const reviewsUrl = `locations/${location.id}#reviews`;
     const linkStyle = `font-size:0.7rem;color:#C4A77D;text-decoration:none;`;
     const likeCountHtml = pinLikes > 0 ? `<a id="map-like-count-${location.id}" href="${reviewsUrl}" style="${linkStyle}">${pinLikes} ${pinLikes === 1 ? 'like' : 'likes'}</a>` : `<span id="map-like-count-${location.id}" style="font-size:0.7rem;color:#C4A77D;"></span>`;
     const reviewCountHtml = pinReviews > 0 ? `<a href="${reviewsUrl}" style="${linkStyle}">· 💬 ${pinReviews} review${pinReviews > 1 ? 's' : ''}</a>` : '';
@@ -1811,11 +1817,11 @@ function createInfoWindowContent(location, custom) {
     }
 
     // ── Buttons ────────────────────────────────────────────────────────
-    const shareUrl = `${window.location.origin}/location.html?id=${encodeURIComponent(location.id)}`;
+    const shareUrl = `${window.location.origin}/locations/${encodeURIComponent(location.id)}`;
 
     // Each button is full-width stacked — no flex squishing, no clipping possible
     const w = 'display:block;width:100%;box-sizing:border-box;text-align:center;margin-bottom:0.3rem;';
-    const primaryBtn = `<a href="location.html?id=${location.id}" class="directions-btn" style="${w}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
+    const primaryBtn = `<a href="locations/${location.id}" class="directions-btn" style="${w}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
     const editBtn    = `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="${w}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;">&#9999;&#65039; Suggest Edit</a>`;
     const shareBtn   = `<button onclick="copyShareLink('${shareUrl}', this)" class="directions-btn" style="${w}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;cursor:pointer;">&#128279; Share Location</button>`;
 

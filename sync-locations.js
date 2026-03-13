@@ -389,7 +389,7 @@ async function main() {
 
   locations.forEach(loc => {
     const lastmod = safeDate(loc.coffeeDetails && loc.coffeeDetails.lastUpdated);
-    sitemapEntries.push(urlEntry(`${BASE_URL}/location.html?id=${loc.id}`, lastmod, 'monthly', '0.8'));
+    sitemapEntries.push(urlEntry(`${BASE_URL}/locations/${loc.id}`, lastmod, 'monthly', '0.8'));
   });
 
   let highlightCount = 0;

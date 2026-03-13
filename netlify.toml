@@ -1,6 +1,12 @@
 [build]
   functions = "netlify/functions"
 
+# Clean URLs for location pages — /locations/loc_123 serves location.html?id=loc_123
+[[redirects]]
+  from = "/locations/:id"
+  to   = "/location.html?id=:id"
+  status = 200
+
 [build.environment]
   SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI"
 

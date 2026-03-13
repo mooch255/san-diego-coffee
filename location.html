@@ -1236,7 +1236,7 @@
 
             document.getElementById('pageContent').innerHTML = `
                 ${renderHero(loc, isRoaster, rating, info, contact, today, hours)}
-                ${renderGallery(loc.localImage, placeId, info.name)}
+                ${renderGallery(loc.localImage, loc.localImage2, loc.localImage3, placeId, info.name)}
                 <div class="content-wrap">
                     <div class="left-col fade-up">
                         ${renderDescription(custom, loc.legacyData)}
@@ -1316,7 +1316,7 @@
                 return words.map(w => w[0]).join('').toUpperCase().slice(0, 4);
         }
 
-        function renderGallery(localImage, placeId, name) {
+        function renderGallery(localImage, localImage2, localImage3, placeId, name) {
             const mapsUrl = placeId ? `https://www.google.com/maps/place/?q=place_id:${placeId}` : '';
 
             if (!localImage) {
@@ -1330,13 +1330,34 @@
                 `;
             }
 
-            return `
-                <div class="gallery-section">
-                    <div class="gallery-hero">
-                        <img src="${localImage}" alt="${name}" loading="eager"
-                             onerror="this.parentElement.style.display='none'">
-                        ${mapsUrl ? `<a class="gallery-maps-link" href="${mapsUrl}" target="_blank" rel="noopener">More photos on Google Maps ↗</a>` : ''}
+            const imgs = [localImage, localImage2, localImage3].filter(Boolean);
+
+            if (imgs.length === 1) {
+                return `
+                    <div class="gallery-section">
+                        <div class="gallery-hero">
+                            <img src="${localImage}" alt="${name}" loading="eager"
+                                 onerror="this.parentElement.style.display='none'">
+                            ${mapsUrl ? `<a class="gallery-maps-link" href="${mapsUrl}" target="_blank" rel="noopener">More photos on Google Maps ↗</a>` : ''}
+                        </div>
                     </div>
+                `;
+            }
+
+            const labels = [name, `${name} — interior`, `${name} — detail`];
+            const photoHtml = imgs.map((src, i) => `
+                <div class="gallery-photo">
+                    <img src="${src}" alt="${labels[i]}" loading="${i === 0 ? 'eager' : 'lazy'}"
+                         onerror="this.parentElement.style.display='none'">
+                </div>
+            `).join('');
+
+            return `
+                <div class="gallery-section" style="position:relative;">
+                    <div class="gallery-track">
+                        ${photoHtml}
+                    </div>
+                    ${mapsUrl ? `<a class="gallery-maps-link" href="${mapsUrl}" target="_blank" rel="noopener">More photos on Google Maps ↗</a>` : ''}
                 </div>
             `;
         }

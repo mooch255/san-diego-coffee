@@ -14,7 +14,8 @@
       "Bash(done)",
       "WebFetch(domain:usa.worldofcoffee.org)",
       "Bash(curl:*)",
-      "WebFetch(domain:whatnow.com)"
+      "WebFetch(domain:whatnow.com)",
+      "Bash(find \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/images/locations\" -type f -name \"*.jpg\" -o -name \"*.png\" -o -name \"*.webp\" 2>/dev/null | head -20)"
     ]
   }
 }

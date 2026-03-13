@@ -120,6 +120,8 @@ function buildOnlineLocation(id, type, row) {
     hours:        { weekdayDescriptions: [], openNow: false },
     googlePhotos: [],
     localImage:   null,
+    localImage2:  null,
+    localImage3:  null,
     metadata: {
       status:          'active',
       importedFrom:    'admin',
@@ -178,6 +180,9 @@ async function buildNewLocation(id, type, row) {
       openNow: false,
     },
     googlePhotos: [],
+    localImage:   null,
+    localImage2:  null,
+    localImage3:  null,
     metadata: {
       status:         'active',
       importedFrom:   'admin',

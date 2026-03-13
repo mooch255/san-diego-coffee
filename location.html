@@ -1014,7 +1014,7 @@
         <div class="header-content">
             <div>
                 <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
-                <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+                <a href="/index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
                 <p class="header-subtitle">Location Details</p>
             </div>
             <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
@@ -1024,12 +1024,12 @@
         </div>
     </header>
     <nav class="nav-dropdown" id="navDropdown">
-        <a href="index.html">Home</a>
-        <a href="map.html" class="active">Explore Map</a>
-        <a href="submit.html">Add a Spot</a>
-        <a href="roaster-highlights.html">Roaster Highlights</a>
-        <a href="news.html">News &amp; Events</a>
-        <a href="about.html">About</a>
+        <a href="/index.html">Home</a>
+        <a href="/map.html" class="active">Explore Map</a>
+        <a href="/submit.html">Add a Spot</a>
+        <a href="/roaster-highlights.html">Roaster Highlights</a>
+        <a href="/news.html">News &amp; Events</a>
+        <a href="/about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
     </nav>
 
@@ -1052,7 +1052,7 @@
         <p style="margin-top:0.5rem; opacity:0.5; font-size:0.78rem;"><span id="footerCount">150+</span> locations and counting</p>
     </footer>
 
-    <script src="locations.js"></script>
+    <script src="/locations.js"></script>
     <script>
         // Footer count
         (function() {
@@ -1097,19 +1097,21 @@
 
         // ── Get location from URL ──────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
-        const locationId = params.get('id');
+        // Support both clean URLs (/locations/loc_123) and query string (?id=loc_123)
+        const pathMatch = window.location.pathname.match(/\/locations\/([^\/]+)$/);
+        const locationId = params.get('id') || (pathMatch && pathMatch[1]);
         const fromParam = params.get('from');
         const highlightId = params.get('highlightId');
 
         let backHref, backLabel, useHistoryBack = false;
         if (fromParam === 'home') {
-            backHref  = 'index.html';
+            backHref  = '/index.html';
             backLabel = '← Back to Homepage';
         } else if (fromParam === 'highlight' && highlightId) {
-            backHref  = `highlight.html?id=${highlightId}`;
+            backHref  = `/highlight.html?id=${highlightId}`;
             backLabel = '← Back to Roaster Highlight';
         } else {
-            backHref  = 'map.html';
+            backHref  = '/map.html';
             backLabel = '← Back to Map';
             useHistoryBack = true;
         }
@@ -1280,7 +1282,7 @@
 
             // Use history.back() for map navigation so filters/zoom are preserved
             if (useHistoryBack && window.history.length > 1 && document.referrer) {
-                document.querySelectorAll('a[href="map.html"]').forEach(el => {
+                document.querySelectorAll('a[href="/map.html"]').forEach(el => {
                     el.addEventListener('click', e => { e.preventDefault(); history.back(); });
                 });
             }
@@ -1546,7 +1548,7 @@
                     </div>
                     <div class="detail-rows">${rows}</div>
                 </div>
-                <a href="edit.html?id=${loc.id}&return=location.html?id=${loc.id}" class="suggest-edit-btn">
+                <a href="/edit.html?id=${loc.id}&return=/locations/${loc.id}" class="suggest-edit-btn">
                     ✏️ Suggest an Edit
                 </a>
             `;

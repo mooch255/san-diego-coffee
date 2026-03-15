@@ -16,7 +16,8 @@
       "Bash(curl:*)",
       "WebFetch(domain:whatnow.com)",
       "Bash(find \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/images/locations\" -type f -name \"*.jpg\" -o -name \"*.png\" -o -name \"*.webp\" 2>/dev/null | head -20)",
-      "Bash(grep -o '\"id\": \"loc_[0-9]*\"' \"C:/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/locations.js\" | sort -t_ -k2 -n | tail -5)"
+      "Bash(grep -o '\"id\": \"loc_[0-9]*\"' \"C:/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/locations.js\" | sort -t_ -k2 -n | tail -5)",
+      "Bash(cd \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub\" && node -e \"\nconst fs = require\\('fs'\\);\nconst src = fs.readFileSync\\('locations.js', 'utf8'\\).replace\\('window.COFFEE_LOCATIONS =', 'const locs ='\\);\neval\\(src\\);\nconst affected = locs.filter\\(loc => {\n  const c = loc.coffeeDetails || {};\n  const hasAnyCustom = c.description || c.roastScale || c.roastStyle ||\n    c.visitorExperience || c.multipleLocations ||\n    \\(c.amenities && c.amenities.length\\) || \\(c.roastersServed && c.roastersServed.length\\);\n  return !hasAnyCustom && loc.legacyData && loc.legacyData.originalDescription;\n}\\);\nconsole.log\\('Affected locations:', affected.length\\);\naffected.slice\\(0,20\\).forEach\\(l => console.log\\(l.id, '-', l.basicInfo.name\\)\\);\n\")"
     ]
   }
 }

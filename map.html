@@ -561,7 +561,7 @@
             width: 100%;
             padding: 0.5rem 0.85rem;
             border: 1.5px solid #c4b8ac;
-            font-size: 0.85rem;
+            font-size: 16px; /* must be ≥16px to prevent iOS auto-zoom on focus */
             background: var(--cream);
             font-family: 'Libre Franklin', sans-serif;
         }
@@ -1301,6 +1301,7 @@
             }
             .gm-style .gm-style-iw-d {
                 max-width: calc(100vw - 80px) !important;
+                max-height: 55vh !important; /* prevent card from going off-screen on short viewports */
                 overflow: auto !important;
             }
 
@@ -1567,6 +1568,15 @@ function initMap() {
     });
     
     infoWindow = new google.maps.InfoWindow();
+    // On mobile: ensure "Show List" button reappears when info window is closed
+    infoWindow.addListener('closeclick', () => {
+        if (window.innerWidth <= 768) {
+            const toggle = document.getElementById('mobileToggle');
+            const floatBtn = document.getElementById('mapFloatNearMe');
+            if (toggle) { toggle.style.display = 'block'; toggle.textContent = '☰ Show List'; }
+            if (floatBtn) { floatBtn.style.display = 'flex'; floatBtn.classList.remove('hidden'); }
+        }
+    });
     loadLocations();
     setupEventListeners();
     loadSheetData();
@@ -1766,7 +1776,8 @@ function createInfoWindowContent(location, custom) {
     // ── Coffee details from Sheet ──────────────────────────────────────
     const hasAnyCustom = custom.description || custom.roastScale || custom.roastStyle ||
                          custom.visitorExperience || custom.multipleLocations ||
-                         custom.amenities?.length || custom.roastersServed?.length;
+                         custom.amenities?.length || custom.roastersServed?.length ||
+                         location.legacyData?.originalDescription;
 
     if (hasAnyCustom) {
         html += `<hr class="info-window-divider">`;
@@ -1962,6 +1973,7 @@ function selectLocation(locationId) {
     const marker = markers.find(m => m.locationData.id === locationId);
     if (marker) {
         suppressIdleFilter = true;
+        holdPanelForCardClick = true; // keep panel unchanged until user manually pans/zooms
         map.setZoom(16);
         map.panTo(marker.getPosition());
         setTimeout(() => {
@@ -2124,16 +2136,19 @@ function setupEventListeners() {
     // Debounced so rapid zoom steps don't re-render on every tick
     let idleDebounce = null;
     google.maps.event.addListener(map, 'idle', () => {
-        if (suppressIdleFilter) return;
+        if (suppressIdleFilter || holdPanelForCardClick) return;
         clearTimeout(idleDebounce);
         idleDebounce = setTimeout(() => applyFilters(), 150);
     });
 
-    // When user manually pans or zooms while in nearest mode, revert to bounds-only list
+    // When user manually pans or zooms: release card-click panel hold + handle nearest mode
     google.maps.event.addListener(map, 'dragstart', () => {
+        holdPanelForCardClick = false;
         if (!suppressNearestInteraction && currentSort === 'nearest') nearestUserInteracted = true;
     });
     google.maps.event.addListener(map, 'zoom_changed', () => {
+        // Only treat as user interaction when not mid-programmatic zoom
+        if (!suppressIdleFilter) holdPanelForCardClick = false;
         if (!suppressNearestInteraction && currentSort === 'nearest') nearestUserInteracted = true;
     });
     
@@ -2544,7 +2559,7 @@ function applyFilters() {
     const nbrFilterActive = !!document.getElementById('filterNeighborhood')?.value;
     const showOnline = !nbrFilterActive
                        && (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
-                       && map.getZoom() < 12;
+                       && map.getZoom() <= 10;
     const onlineCount = showOnline ? allLocations.filter(loc => loc.basicInfo?.onlineOnly).length : 0;
     // Count always reflects what's actually in the map viewport
     updateVisibleCount(visibleMarkers.length + onlineCount);
@@ -2631,7 +2646,7 @@ function renderLocationCards(visibleMarkers, suppressOnline = false) {
     const showOnline = !suppressOnline
                        && !nbrFilter
                        && (!document.getElementById('filterOnlineOnly') || document.getElementById('filterOnlineOnly').checked)
-                       && map.getZoom() < 12;
+                       && map.getZoom() <= 10;
     const onlineLocations = showOnline && !openNowActive ? allLocations.filter(loc => loc.basicInfo?.onlineOnly) : [];
 
     // Combine: marker locations + online-only as plain location objects
@@ -2897,13 +2912,15 @@ function selectLocationCard(locationId) {
     const marker = markers.find(m => m.locationData?.id === locationId);
     if (marker) {
         suppressIdleFilter = true;
+        holdPanelForCardClick = true; // keep panel unchanged until user manually pans/zooms
         map.setZoom(16);
         map.panTo(marker.getPosition());
-        setTimeout(() => {
+        // Wait for map to fully settle so the info window auto-pan works correctly on mobile
+        google.maps.event.addListenerOnce(map, 'idle', () => {
             showInfoWindow(marker, marker.locationData);
-            // Re-enable idle filter once animation has settled
+            // Re-enable idle filter after info window has opened
             setTimeout(() => { suppressIdleFilter = false; }, 400);
-        }, 300);
+        });
     } else {
         // Online-only roasters have no map marker — show info window at map center
         const loc = (window.COFFEE_LOCATIONS || []).find(l => l.id === locationId);
@@ -3059,6 +3076,7 @@ window.gm_authFailure = function() {
 let openNowActive = false;
 let pendingScrollTop = false; // set by clear to scroll cards to top after render
 let suppressIdleFilter = false; // prevents idle re-render during card selection zoom
+let holdPanelForCardClick = false; // keeps left panel unchanged after a card click until user manually pans/zooms
 let neighborhoodZoomPending = false; // one-shot flag: zoom on select, not on every idle
 
 function parseTimeToMinutes(timeStr) {

@@ -86,8 +86,9 @@ async function main() {
   for (const loc of locations) {
     const name = loc.basicInfo?.name || loc.id;
 
-    // Track whether primary photo is already done
-    let primaryDone = !!loc.localImage;
+    // Track whether primary photo is already done (path set AND file exists on disk)
+    const primaryImagePath = path.join(IMAGES_DIR, `${loc.id}.jpg`);
+    let primaryDone = !!loc.localImage && fs.existsSync(primaryImagePath);
 
     if (primaryDone) {
       alreadyDone++;
@@ -157,8 +158,8 @@ async function main() {
 
     // ── Secondary photo 2 ──
     const photos = loc.googlePhotos;
-    if (photos?.[1]?.name && !loc.localImage2) {
-      const dest2 = path.join(IMAGES_DIR, `${loc.id}b.jpg`);
+    const dest2 = path.join(IMAGES_DIR, `${loc.id}b.jpg`);
+    if (photos?.[1]?.name && (!loc.localImage2 || !fs.existsSync(dest2))) {
       if (fs.existsSync(dest2)) {
         loc.localImage2 = `/images/locations/${loc.id}b.jpg`;
       } else if (primaryDone) {
@@ -177,8 +178,8 @@ async function main() {
     }
 
     // ── Secondary photo 3 ──
-    if (photos?.[2]?.name && !loc.localImage3) {
-      const dest3 = path.join(IMAGES_DIR, `${loc.id}c.jpg`);
+    const dest3 = path.join(IMAGES_DIR, `${loc.id}c.jpg`);
+    if (photos?.[2]?.name && (!loc.localImage3 || !fs.existsSync(dest3))) {
       if (fs.existsSync(dest3)) {
         loc.localImage3 = `/images/locations/${loc.id}c.jpg`;
       } else if (primaryDone) {

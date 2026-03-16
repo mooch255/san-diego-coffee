@@ -822,6 +822,30 @@
         @media (max-width: 768px) {
             .map-legend { display: none; }
         }
+
+        /* ── Bottom Sheet Handle (mobile only) ──────────────────────── */
+        .sheet-handle-bar {
+            display: none; /* shown via mobile media query */
+        }
+
+        @media (max-width: 768px) {
+            .sheet-handle-bar {
+                display: flex;
+                height: 28px;
+                align-items: center;
+                justify-content: center;
+                cursor: grab;
+                flex-shrink: 0;
+                touch-action: none;
+            }
+            .sheet-handle-bar::after {
+                content: '';
+                width: 36px;
+                height: 4px;
+                background: #c4b8ac;
+                border-radius: 2px;
+            }
+        }
         .map-legend-item {
             display: flex;
             align-items: center;
@@ -999,7 +1023,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Floating Near Me button — mobile only, inline with Show List toggle */
+        /* Floating Near Me button — mobile only, floats above the bottom sheet */
         .map-float-nearme {
             display: none;
         }
@@ -1010,10 +1034,9 @@
                 align-items: center;
                 justify-content: center;
                 position: fixed;
-                bottom: 1.5rem;
-                /* Sit to the left of the centered .mobile-toggle pill (~160px wide).
-                   Place the 44px circle just left of it with an 8px gap. */
-                left: calc(50% - 80px - 8px - 44px);
+                /* Sit above the peeking sheet edge (peek = 80px) */
+                bottom: calc(80px + 0.75rem + env(safe-area-inset-bottom, 0px));
+                right: 1rem;
                 z-index: 10200;
                 width: 44px;
                 height: 44px;
@@ -1033,7 +1056,6 @@
                 box-shadow: 0 1px 4px rgba(0,0,0,0.15);
             }
 
-            /* Hide it when list panel is open */
             .map-float-nearme.hidden {
                 display: none;
             }
@@ -1090,65 +1112,57 @@
                 height: calc(100vh - 60px);
             }
 
+            /* ── Bottom sheet layout ──────────────────────────────── */
             .list-panel {
                 width: 100%;
-                height: 100vh;
-                height: 100dvh; /* iOS Safari: use actual visible viewport height */
+                /* Stop just below the header's accent border so it stays visible */
+                height: calc(100dvh - 70px);
                 position: fixed;
-                top: 0;
+                bottom: 0;
                 left: 0;
+                top: auto;
                 z-index: 10000;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                overflow: hidden;
+                /* Peek state: only handle pill + search input visible */
+                transform: translateY(calc(100% - 80px));
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border-radius: 16px 16px 0 0;
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+                /* Safe area padding so handle isn't obscured by iPhone home indicator */
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+                /* Remove desktop right border so both rounded corners are visible */
+                border-right: none;
+                /* Override desktop min-width (400px) which pushes right edge off-screen */
+                min-width: 0;
             }
 
-            .list-panel.mobile-visible {
-                transform: translateX(0);
+            .list-panel.sheet-expanded {
+                transform: translateY(0);
             }
 
             .map-right {
                 width: 100%;
                 height: 100%;
             }
-
-            .mobile-toggle { display: block; }
-
-            /* Lift Google Maps zoom controls above iPhone home indicator */
-            #map .gmnoprint {
-                margin-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)) !important;
-            }
         }
         .info-window {
-            padding: 0.1rem 0.9rem 0.8rem 0.9rem;
-            min-width: 280px;
-            max-width: 340px;
+            padding: 0.1rem 0.9rem 0.7rem 0.9rem;
+            min-width: 320px;
+            max-width: 420px;
             box-sizing: border-box;
             overflow: visible;
         }
         .info-window-divider {
             border: none;
             border-top: 1px solid #e8e0d8;
-            margin: 0.5rem 0;
+            margin: 0.35rem 0;
         }
         .info-window-coffee-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.15rem 0;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.2rem 0.6rem;
             margin-bottom: 0.5rem;
             align-items: baseline;
             font-size: 0.73rem;
-        }
-        .info-window-coffee-grid .cg-item {
-            display: inline-flex;
-            align-items: baseline;
-            white-space: normal;
-            flex-wrap: wrap;
-        }
-        .info-window-coffee-grid .cg-sep {
-            margin: 0 0.45rem;
-            color: #d0c4b8;
-            font-size: 0.8rem;
         }
         .info-window-coffee-grid .cg-label {
             color: #a08070;
@@ -1156,7 +1170,7 @@
             text-transform: uppercase;
             font-size: 0.6rem;
             letter-spacing: 0.05em;
-            margin-right: 0.25rem;
+            white-space: nowrap;
         }
         .info-window-coffee-grid .cg-val {
             color: #3a2a1a;
@@ -1179,10 +1193,10 @@
             font-weight: 500;
         }
         .info-window-description {
-            font-size: 0.78rem;
+            font-size: 0.72rem;
             color: #555;
-            line-height: 1.4;
-            margin-bottom: 0.4rem;
+            line-height: 1.35;
+            margin-bottom: 0.3rem;
             font-style: italic;
         }
         .info-window-badge {
@@ -1207,8 +1221,8 @@
         .info-window-badges-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.3rem;
-            margin-bottom: 0.4rem;
+            gap: 0.25rem;
+            margin-bottom: 0.3rem;
         }
 
         .info-window h3 {
@@ -1297,14 +1311,16 @@
                 padding: 0.28rem 0.45rem;
             }
 
-            /* Google info window — allow content to show fully */
+            /* Google info window — allow content to show fully, no horizontal scroll */
             .gm-style .gm-style-iw-c {
                 max-width: calc(100vw - 60px) !important;
+                overflow: hidden !important;
             }
             .gm-style .gm-style-iw-d {
-                max-width: calc(100vw - 80px) !important;
-                max-height: 55vh !important; /* prevent card from going off-screen on short viewports */
-                overflow: auto !important;
+                max-width: calc(100vw - 60px) !important;
+                max-height: 55vh !important; /* prevent card going off-screen on short viewports */
+                overflow-x: hidden !important;
+                overflow-y: auto !important;
             }
 
             .search-container {
@@ -1368,6 +1384,8 @@
 
         <!-- Left Panel -->
         <div class="list-panel" id="listPanel">
+            <!-- Bottom sheet handle (mobile drag target) -->
+            <div class="sheet-handle-bar" id="sheetHandleBar"></div>
             <!-- Search + Controls -->
             <div class="list-panel-controls">
                 <div class="search-container">
@@ -1456,11 +1474,8 @@
 
     </div><!-- end .map-layout -->
 
-    <!-- Mobile Toggle Button -->
-    <!-- Floating Near Me — mobile map view only -->
+    <!-- Floating Near Me — mobile only -->
     <button class="map-float-nearme" id="mapFloatNearMe" aria-label="Near Me">📍</button>
-
-    <button class="mobile-toggle" id="mobileToggle">☰ Show List</button>
     <!-- Loading Indicator -->
     <div id="loading">
         <div class="spinner"></div>
@@ -1552,33 +1567,30 @@ function initMap() {
         }
     ];
     
+    const isMobile = window.innerWidth <= 768;
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 10,
         center: { lat: 32.9, lng: -117.2 },
-        mapTypeControl: true,
+        mapTypeControl: !isMobile,
         streetViewControl: false,
         gestureHandling: 'greedy',
-        fullscreenControl: true,
-        zoomControl: true,
+        fullscreenControl: !isMobile,
+        zoomControl: !isMobile,
         styles: mapStyles,
         mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
             position: google.maps.ControlPosition.TOP_RIGHT,
         },
-        // On mobile, pan/info windows clear the bottom Show List button row
-        padding: window.innerWidth <= 768 ? { bottom: 70 } : undefined,
+        // Keep Google attribution above the peeking sheet
+        padding: isMobile ? { bottom: 80 } : undefined,
     });
     
+    // Reinforce control removal on mobile — Maps API can re-enable them after init
+    if (isMobile) {
+        map.setOptions({ zoomControl: false, fullscreenControl: false, mapTypeControl: false });
+    }
+
     infoWindow = new google.maps.InfoWindow();
-    // On mobile: ensure "Show List" button reappears when info window is closed
-    infoWindow.addListener('closeclick', () => {
-        if (window.innerWidth <= 768) {
-            const toggle = document.getElementById('mobileToggle');
-            const floatBtn = document.getElementById('mapFloatNearMe');
-            if (toggle) { toggle.style.display = 'block'; toggle.textContent = '☰ Show List'; }
-            if (floatBtn) { floatBtn.style.display = 'flex'; floatBtn.classList.remove('hidden'); }
-        }
-    });
     loadLocations();
     setupEventListeners();
     loadSheetData();
@@ -1792,7 +1804,7 @@ function createInfoWindowContent(location, custom) {
         const gridItems = [];
         if (isRoaster) {
             if (custom.roastScale) gridItems.push(['Roast Scale', custom.roastScale + ' Roaster']);
-            if (custom.visitorExperience) gridItems.push(['Experience', custom.visitorExperience]);
+            if (custom.visitorExperience) gridItems.push(['Experience', custom.visitorExperience.split(' (')[0]]);
         } else {
             if (custom.roastersServed?.length) {
                 const preview = custom.roastersServed.slice(0, 2).join(', ') + (custom.roastersServed.length > 2 ? ` +${custom.roastersServed.length - 2} more` : '');
@@ -1803,10 +1815,10 @@ function createInfoWindowContent(location, custom) {
         if (custom.multipleLocations) gridItems.push(['Multiple Locations', custom.multipleLocations]);
 
         if (gridItems.length) {
-            html += `<div class="info-window-coffee-grid">`;
-            gridItems.forEach(([label, val], i) => {
-                if (i > 0) html += `<span class="cg-sep">·</span>`;
-                html += `<span class="cg-item"><span class="cg-label">${label}</span><span class="cg-val">${val}</span></span>`;
+            html += `<div style="display:grid;grid-template-columns:auto 1fr;gap:0.2rem 0.6rem;align-items:baseline;font-size:0.73rem;margin-bottom:0.5rem;">`;
+            gridItems.forEach(([label, val]) => {
+                html += `<span style="color:#a08070;font-weight:700;text-transform:uppercase;font-size:0.6rem;letter-spacing:0.05em;white-space:nowrap;">${label}</span>`;
+                html += `<span style="color:#3a2a1a;font-weight:500;">${val}</span>`;
             });
             html += `</div>`;
         }
@@ -1832,22 +1844,25 @@ function createInfoWindowContent(location, custom) {
     // ── Buttons ────────────────────────────────────────────────────────
     const shareUrl = `${window.location.origin}/locations/${encodeURIComponent(location.id)}`;
 
-    // Each button is full-width stacked — no flex squishing, no clipping possible
-    const w = 'display:block;width:100%;box-sizing:border-box;text-align:center;margin-bottom:0.3rem;';
-    const primaryBtn = `<a href="locations/${location.id}" class="directions-btn" style="${w}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
-    const editBtn    = `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="${w}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;">&#9999;&#65039; Suggest Edit</a>`;
-    const shareBtn   = `<button onclick="copyShareLink('${shareUrl}', this)" class="directions-btn" style="${w}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;cursor:pointer;">&#128279; Share Location</button>`;
+    // 2-column grid: View Details | Suggest Edit on row 1, Directions | Share on row 2
+    const bStyle = 'display:block;width:100%;box-sizing:border-box;text-align:center;';
+    const primaryBtn = `<a href="locations/${location.id}" class="directions-btn" style="${bStyle}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
+    const editBtn    = `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="${bStyle}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;">&#9999;&#65039; Suggest Edit</a>`;
+    const shareBtn   = `<button onclick="copyShareLink('${shareUrl}', this)" class="directions-btn" style="${bStyle}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;cursor:pointer;">&#128279; Share</button>`;
 
-    let dirBtn = '';
+    let row2 = '';
     if (hasUserLocation && !isOnline) {
         const lat = info.address.coordinates.lat;
         const lng = info.address.coordinates.lng;
         const userPos = userLocationMarker.getPosition();
         const directionsUrl = `https://www.google.com/maps/dir/${userPos.lat()},${userPos.lng()}/${lat},${lng}`;
-        dirBtn = `<a href="${directionsUrl}" target="_blank" class="directions-btn" style="${w}background:#2e7d32;color:white !important;">&#129517; Get Directions</a>`;
+        const dirBtn = `<a href="${directionsUrl}" target="_blank" class="directions-btn" style="${bStyle}background:#2e7d32;color:white !important;">&#129517; Directions</a>`;
+        row2 = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem;">${dirBtn}${shareBtn}</div>`;
+    } else {
+        row2 = shareBtn;
     }
 
-    html += `<div style="margin-top:0.6rem;">${primaryBtn}${editBtn}${dirBtn}${shareBtn}</div></div>`;
+    html += `<div style="margin-top:0.5rem;display:grid;grid-template-columns:1fr 1fr;gap:0.3rem 0.3rem;">${primaryBtn}${editBtn}</div><div style="margin-top:0.3rem;">${row2}</div></div>`;
     return html;
 }
 
@@ -2184,12 +2199,18 @@ function setupEventListeners() {
 
         if (isExpanding && controls) {
             const rect = controls.getBoundingClientRect();
-            panel.style.top = rect.bottom + 'px';
-            // On desktop: match the width and left of the list panel controls
             if (window.innerWidth > 768) {
+                // Desktop: position relative to viewport (no transform on parent)
+                panel.style.top = rect.bottom + 'px';
                 panel.style.left = rect.left + 'px';
                 panel.style.width = rect.width + 'px';
             } else {
+                // Mobile: #listPanel has a CSS transform, which makes position:fixed
+                // children use the panel as their containing block instead of the viewport.
+                // Calculate top relative to the panel's own top edge.
+                const listPanel = document.getElementById('listPanel');
+                const panelRect = listPanel.getBoundingClientRect();
+                panel.style.top = (rect.bottom - panelRect.top) + 'px';
                 panel.style.left = '0';
                 panel.style.width = '100%';
             }
@@ -2649,6 +2670,15 @@ function updateVisibleCount(count) {
     // Show "zoom out for more" nudge when very few results visible
     const nudge = document.getElementById('zoomNudge');
     if (nudge) nudge.style.display = (count > 0 && count < 10) ? 'inline' : 'none';
+
+    // On mobile: keep the peek placeholder in sync with the current count
+    if (window.innerWidth <= 768) {
+        const panel = document.getElementById('listPanel');
+        const si = document.getElementById('searchInput');
+        if (si && panel && !panel.classList.contains('sheet-expanded')) {
+            si.placeholder = `${count} locations in view · scroll up for more`;
+        }
+    }
 }
 
 // ── Location Cards ─────────────────────────────────────────────────────────
@@ -2910,17 +2940,17 @@ function selectLocationCard(locationId) {
         if (panelCards) panelCards.scrollTop = card.offsetTop - panelCards.offsetTop;
     }
 
-    // On mobile: close list panel and show map so the pin is visible
+    // On mobile: snap sheet to peek so the pin is visible on the map
     const panel = document.getElementById('listPanel');
-    const toggle = document.getElementById('mobileToggle');
-    const floatBtn = document.getElementById('mapFloatNearMe');
-    if (panel && panel.classList.contains('mobile-visible') && window.innerWidth <= 768) {
-        // Save scroll position before closing
-        const cards = document.getElementById('locationCards');
-        if (cards) panel.dataset.savedScroll = cards.scrollTop;
-        panel.classList.remove('mobile-visible');
-        if (toggle) toggle.textContent = '☰ Show List';
+    if (panel && panel.classList.contains('sheet-expanded') && window.innerWidth <= 768) {
+        panel.classList.remove('sheet-expanded');
+        const floatBtn = document.getElementById('mapFloatNearMe');
         if (floatBtn) floatBtn.classList.remove('hidden');
+        const si = document.getElementById('searchInput');
+        if (si) {
+            const count = document.getElementById('visibleCount')?.textContent || '—';
+            si.placeholder = `${count} locations in view · scroll up for more`;
+        }
     }
 
     // Zoom in and open info window on map
@@ -2989,28 +3019,137 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const toggle = document.getElementById('mobileToggle');
-    const panel = document.getElementById('listPanel');
     const floatBtn = document.getElementById('mapFloatNearMe');
-
-    if (toggle && panel) {
-        toggle.addEventListener('click', () => {
-            const isVisible = panel.classList.toggle('mobile-visible');
-            toggle.textContent = isVisible ? '🗺️ Show Map' : '☰ Show List';
-            if (floatBtn) floatBtn.classList.toggle('hidden', isVisible);
-
-            // Restore saved scroll position when re-opening list
-            if (isVisible) {
-                const savedScroll = parseInt(panel.dataset.savedScroll || '0', 10);
-                const cards = document.getElementById('locationCards');
-                if (cards) requestAnimationFrame(() => { cards.scrollTop = savedScroll; });
-            }
-        });
-    }
 
     if (floatBtn) {
         floatBtn.addEventListener('click', showUserLocation);
     }
+
+    // ── Bottom sheet touch gesture ─────────────────────────────────────────
+    (function() {
+        const panel = document.getElementById('listPanel');
+        const handleBar = document.getElementById('sheetHandleBar');
+        const controls = document.querySelector('.list-panel-controls');
+        const cards = document.getElementById('locationCards');
+        const floatBtn = document.getElementById('mapFloatNearMe');
+        if (!panel || !handleBar) return;
+
+        const PEEK_HEIGHT = 80;
+        const searchInput = document.getElementById('searchInput');
+        const PLACEHOLDER_EXPANDED = 'Search by name or zip code...';
+
+        function peekPlaceholder() {
+            const count = document.getElementById('visibleCount')?.textContent || '—';
+            return `${count} locations in view · scroll up for more`;
+        }
+        let touchStartY = 0;
+        let startTranslate = 0;
+        let isDragging = false;
+        let touchStartTime = 0;
+        let touchActive = false;
+        let wasDragging = false; // flag so a completed drag doesn't also fire a click
+
+        function getPeekTranslate() {
+            return panel.offsetHeight - PEEK_HEIGHT;
+        }
+
+        function isHandleArea(el) {
+            return handleBar.contains(el) || (controls && controls.contains(el));
+        }
+
+        function setExpanded(expand) {
+            if (expand) {
+                panel.classList.add('sheet-expanded');
+                if (floatBtn) floatBtn.classList.add('hidden');
+                if (searchInput) searchInput.placeholder = PLACEHOLDER_EXPANDED;
+            } else {
+                panel.classList.remove('sheet-expanded');
+                if (floatBtn) floatBtn.classList.remove('hidden');
+                if (searchInput) searchInput.placeholder = peekPlaceholder();
+            }
+        }
+
+        // Set initial peek placeholder (mobile only)
+        if (window.innerWidth <= 768 && searchInput) searchInput.placeholder = peekPlaceholder();
+
+        // Tap the handle bar when in peek state → expand the sheet
+        handleBar.addEventListener('click', () => {
+            if (wasDragging) return;
+            if (!panel.classList.contains('sheet-expanded')) {
+                setExpanded(true);
+            }
+        });
+
+        panel.addEventListener('touchstart', (e) => {
+            const fromHandleArea = isHandleArea(e.target);
+            const isExpanded = panel.classList.contains('sheet-expanded');
+            const scrollTop = cards ? cards.scrollTop : 0;
+
+            // Only intercept: handle/controls area, OR expanded sheet dragged down from top
+            if (!fromHandleArea && !(isExpanded && scrollTop === 0)) return;
+
+            touchActive = true;
+            isDragging = false;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            startTranslate = isExpanded ? 0 : getPeekTranslate();
+        }, { passive: true });
+
+        panel.addEventListener('touchmove', (e) => {
+            if (!touchActive) return;
+            const dy = e.touches[0].clientY - touchStartY;
+
+            if (!isDragging) {
+                const isExpanded = panel.classList.contains('sheet-expanded');
+                const scrollTop = cards ? cards.scrollTop : 0;
+                const threshold = 8;
+
+                if (isHandleArea(e.target) && Math.abs(dy) > threshold) {
+                    isDragging = true;
+                } else if (isExpanded && scrollTop === 0 && dy > threshold) {
+                    isDragging = true;
+                } else if (!isExpanded && dy < -threshold) {
+                    isDragging = true;
+                }
+
+                if (!isDragging) return;
+                panel.style.transition = 'none';
+            }
+
+            e.preventDefault();
+            const max = getPeekTranslate();
+            const clamped = Math.max(0, Math.min(startTranslate + dy, max));
+            panel.style.transform = `translateY(${clamped}px)`;
+        }, { passive: false });
+
+        panel.addEventListener('touchend', (e) => {
+            if (!touchActive) return;
+            touchActive = false;
+
+            if (!isDragging) return;
+            isDragging = false;
+            wasDragging = true;
+            setTimeout(() => { wasDragging = false; }, 50);
+
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            const dt = Math.max(1, Date.now() - touchStartTime);
+            const velocity = dy / dt; // px/ms; positive = moving down
+
+            const peekT = getPeekTranslate();
+            panel.style.transition = '';
+            panel.style.transform = '';
+
+            let goExpanded;
+            if (Math.abs(velocity) > 0.3) {
+                goExpanded = velocity < 0; // fast swipe up → expand
+            } else {
+                const current = startTranslate + dy;
+                goExpanded = current < peekT / 2;
+            }
+
+            setExpanded(goExpanded);
+        });
+    })();
 
     // Nav dropdown
     (function() {
@@ -3214,7 +3353,83 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
     </script>
-    
+
+    <!--
+    ╔══════════════════════════════════════════════════════════════════╗
+    ║  MOBILE LAYOUT BACKUP — pre-bottom-sheet (removed 2026-03)      ║
+    ╚══════════════════════════════════════════════════════════════════╝
+
+    CSS (inside @media max-width: 768px):
+
+        .list-panel {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10000;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        .list-panel.mobile-visible {
+            transform: translateX(0);
+        }
+        .map-right { width: 100%; height: 100%; }
+        .mobile-toggle { display: block; }
+        #map .gmnoprint {
+            margin-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)) !important;
+        }
+        .map-float-nearme {
+            bottom: 1.5rem;
+            left: calc(50% - 80px - 8px - 44px);
+        }
+
+    HTML (removed):
+        <button class="mobile-toggle" id="mobileToggle">☰ Show List</button>
+
+    JS (DOMContentLoaded):
+        const toggle = document.getElementById('mobileToggle');
+        if (toggle && panel) {
+            toggle.addEventListener('click', () => {
+                const isVisible = panel.classList.toggle('mobile-visible');
+                toggle.textContent = isVisible ? '🗺️ Show Map' : '☰ Show List';
+                if (floatBtn) floatBtn.classList.toggle('hidden', isVisible);
+                if (isVisible) {
+                    const savedScroll = parseInt(panel.dataset.savedScroll || '0', 10);
+                    const cards = document.getElementById('locationCards');
+                    if (cards) requestAnimationFrame(() => { cards.scrollTop = savedScroll; });
+                }
+            });
+        }
+
+    JS (selectLocationCard mobile block):
+        if (panel && panel.classList.contains('mobile-visible') && window.innerWidth <= 768) {
+            const cards = document.getElementById('locationCards');
+            if (cards) panel.dataset.savedScroll = cards.scrollTop;
+            panel.classList.remove('mobile-visible');
+            if (toggle) toggle.textContent = '☰ Show List';
+            if (floatBtn) floatBtn.classList.remove('hidden');
+        }
+
+    JS (infoWindow closeclick):
+        infoWindow.addListener('closeclick', () => {
+            if (window.innerWidth <= 768) {
+                const toggle = document.getElementById('mobileToggle');
+                const floatBtn = document.getElementById('mapFloatNearMe');
+                if (toggle) { toggle.style.display = 'block'; toggle.textContent = '☰ Show List'; }
+                if (floatBtn) { floatBtn.style.display = 'flex'; floatBtn.classList.remove('hidden'); }
+            }
+        });
+
+    Map options (mobile was 70px padding):
+        padding: window.innerWidth <= 768 ? { bottom: 70 } : undefined,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+    -->
+
     <!-- Google Maps API with Places library -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initMap" async defer></script>
 </body>

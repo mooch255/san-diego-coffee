@@ -5,4 +5,5 @@ node_modules
 .env
 *.backup
 wiki-output.md
+wiki-output.html
 wiki-snapshot.json

@@ -1026,7 +1026,7 @@
             currentMode = 'edit';
 
             const type = loc.basicInfo?.type || 'roaster';
-            const hood = loc.basicInfo?.address?.neighborhood || loc.basicInfo?.address?.city || '';
+            const hood = loc.coffeeDetails?.neighborhood || loc.basicInfo?.address?.neighborhood || loc.basicInfo?.address?.city || '';
 
             showLocationHeader('EDITING EXISTING LOCATION', loc.basicInfo?.name || '', `${hood ? hood + ' · ' : ''}${loc.id}`);
             prefillFields(loc.id, loc.basicInfo?.name || '', hood, loc.coffeeDetails || null, type);

@@ -4,3 +4,5 @@ node_modules
 .netlify
 .env
 *.backup
+wiki-output.md
+wiki-snapshot.json

@@ -555,10 +555,12 @@
         .list-panel-controls .search-container {
             position: relative;
             margin-bottom: 0.5rem;
+            min-width: 0;
         }
 
         .list-panel-controls #searchInput {
             width: 100%;
+            box-sizing: border-box;
             padding: 0.5rem 0.85rem;
             border: 1.5px solid #c4b8ac;
             font-size: 16px; /* must be ≥16px to prevent iOS auto-zoom on focus */
@@ -2089,11 +2091,11 @@ function setupEventListeners() {
         const regionMap = {
             'North County Coastal':  ['Carlsbad','Cardiff-by-the-Sea','Encinitas','Oceanside','Solana Beach'],
             'North County Inland':   ['Escondido','Poway','San Marcos','Vista'],
-            'North San Diego Inland': ['Carmel Mountain Ranch','Carmel Valley','Mira Mesa','Rancho Bernardo','Sorrento Valley'],
-            'Downtown & Uptown':     ['Bankers Hill','Downtown','Golden Hill','Hillcrest','Mission Hills','Normal Heights','North Park','South Park'],
+            'North San Diego Inland': ['Carmel Mountain Ranch','Carmel Valley','Mira Mesa','Rancho Bernardo','Scripps Ranch','Sorrento Valley'],
+            'Downtown & Uptown':     ['Bankers Hill','Downtown','Golden Hill','Hillcrest','Mission Hills','Normal Heights','North Park','San Diego','South Park','University Heights'],
             'Beach Communities':     ['Bay Park','Bird Rock','Coronado','La Jolla','Ocean Beach','Pacific Beach','Point Loma'],
             'Central & East SD':     ['Allied Gardens','Barrio Logan','City Heights','College Area','Del Cerro','El Cajon','La Mesa','Lemon Grove','Logan Heights','Mission Valley','Old Town','Santee'],
-            'South Bay':             ['Chula Vista','Imperial Beach'],
+            'South Bay':             ['Chula Vista','Imperial Beach','National City'],
         };
         // Collect neighborhoods that actually exist in the data + count per neighborhood
         // Exclude online-only roasters — they never appear in the panel when zoomed into a neighborhood
@@ -2104,6 +2106,7 @@ function setupEventListeners() {
             if (n) nbrCount[n] = (nbrCount[n] || 0) + 1;
         });
         const present = new Set(Object.keys(nbrCount));
+        const allMapped = new Set(Object.values(regionMap).flat());
         const sel = document.getElementById('filterNeighborhood');
         Object.entries(regionMap)
             .map(([region, hoods]) => [region, hoods.filter(h => present.has(h))])
@@ -2120,6 +2123,19 @@ function setupEventListeners() {
                 });
                 sel.appendChild(grp);
             });
+        // Safety net: catch any data neighborhoods not in regionMap so they're never silently dropped
+        const overflow = [...present].filter(n => !allMapped.has(n)).sort();
+        if (overflow.length > 0) {
+            const grp = document.createElement('optgroup');
+            grp.label = 'Other';
+            overflow.forEach(h => {
+                const opt = document.createElement('option');
+                opt.value = h;
+                opt.textContent = h + ' (' + (nbrCount[h] || 0) + ')';
+                grp.appendChild(opt);
+            });
+            sel.appendChild(grp);
+        }
     })();
 
     document.getElementById('filterNeighborhood').addEventListener('change', () => {

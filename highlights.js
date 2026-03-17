@@ -162,4 +162,58 @@ window.highlights = [
       { type: 'text', content: 'Thanks to Michael and Olin for joining us on the subreddit. Find their full lineup and learn more at <a href="https://excelsacoffee.com" target="_blank" rel="noopener">excelsacoffee.com</a>, or visit the USA\'s first Excelsa-exclusive café at 1855 Sunset Cliffs Blvd, San Diego 92107.' },
     ]
   },
+  {
+    id: 'highlight_004',
+    roasterName: 'Torque Coffee',
+    title: 'Roaster Highlight: Torque Coffee w/ Founder Andy Newbom',
+    date: '2026-03-17',
+    author: 'u/sdcoffeebeans',
+    image: '/images/highlights/highlight_004.jpg',
+    excerpt: 'Andy Newbom built Torque Coffee on a radical premise: give every coffee-producing origin a minimum 20% equity share of every coffee\'s retail price — and make it taste extraordinary while doing it.',
+    redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1rwdvza/roaster_highlight_torque_coffee_w_founder_andy/',
+    locationUrl: 'locations/loc_040',
+    body: [
+      { type: 'text', content: 'Torque Coffee has built a reputation as one of San Diego\'s most thoughtful and vocal specialty roasters — not just for the quality in the cup, but for what\'s behind it. Founder Andy Newbom sat down with us to talk about their mission to remake the global coffee supply chain, their obsessive approach to sourcing and forward contracts, and why roast level names are largely meaningless.' },
+      { type: 'qa',
+        question: 'Torque has become one of the more well-respected specialty roasters in San Diego. What was the original vision when you started the company, and how has that vision evolved over time? Do you ever see a future for a second shop?',
+        answer: 'Yes, it\'s a bit short and it\'s from our About Us page, but this is our WHY. We aim to break the entire coffee industry supply chain and remake it in equilibrium! Coffee That\'s Easy To Love & Shares The Love.\n\nWe\'re a bunch of misfits, malcontents, and magic makers on a mission to make coffee that\'s easy to love and shares the love. To show that amazing coffees, sourced with intention and focus, roasted exquisitely and blended culinarily, can achieve immense sweetness, clarity of terroir, and expressive complexity, while ensuring the craft of all the coffee producers shines brightly. We are fighting to remake the global supply chain in equilibrium by giving each coffee-producing origin a minimum 20% equity share in the full retail value of every coffee we sell. Beautiful coffee from some of the best coffee producers anywhere, who get an equitable 20% share of every coffee\'s retail price. Delivered in sustainable, biodegradable, recyclable, and compostable packaging.\n\nIT\'S WONDERFUL, RADICAL, EQUITABLE, AND SUSTAINABLE. IT\'S WHAT COFFEE SHOULD BE.\n\nRight now we are growing so fast we can\'t even think of a second shop. Our wholesale program is growing like fire. But long term, absolutely we will have another more walkable shop.'
+      },
+      { type: 'qa',
+        question: 'You\'ve been vocal about proportional pricing and paying producers fairly. For people who may not be familiar, can you explain what proportional pricing means and why it matters for the future of specialty coffee? Was this an idea that came from outside roaster inspiration or did you develop this on your own?',
+        answer: 'Proportional Pricing is our own program. We created it after seeing 20+ years of well-meaning but often flabby schemes. It\'s not the only answer, but it\'s a damn good one.\n\nThis walks through it better and clearer — we believe that all coffee should have a proportional pricing model, regardless of what the percentage is: <a href="https://torque.coffee/pages/proportional-pricing" target="_blank" rel="noopener">torque.coffee/pages/proportional-pricing</a>'
+      },
+      { type: 'image', src: '/images/highlights/highlight_004b.jpg', caption: '' },
+      { type: 'qa',
+        question: 'What does your sourcing process actually look like from year to year? How do you decide which producers to work with, and what signals tell you a coffee is worth bringing in?',
+        answer: 'We look for great coffee people. Great coffee people produce great coffee. Coffee is people more than it is a product. Of course we want the coffee to taste great, but just as importantly we want to work with coffee people that aim for excellence. That doesn\'t mean they achieve it each time, but it does mean they hit it more often than most. We want coffee producers, millers, exporters, and importers who strive for coffee perfection at whatever level they are at.\n\nOur coffee sourcing model is much more deep than wide. We have a lot of coffees, but in reality we only have coffees from 5–6 regions and generally just one producer in that country. So instead of buying from lots of producers but only buying a little, we buy from a few producers and buy a lot. We don\'t buy off the cupping table — that\'s for noobs who chase ephemeral trends. We try to buy from our plan. We buy from the same producers year after year after year.\n\nOne thing that is very different about Torque is that we simply do not buy spot coffee. Almost every coffee we buy was pre-contracted or forward contracted, and we negotiate pricing directly with producers quite often. Then we hire exporters and importers.\n\nSome coffees we get parchment samples of and do forward contracts then with the exporter or importer. Some we decide which importer to use based on logistics. We don\'t really buy spot coffee since everything is future forward-contracted. We typically agree to purchase quantities and prices before harvest is finished and then finalize details later. That gives us and producers stability and planning.\n\nWe are currently planning for coffee deliveries well into 2027.'
+      },
+      { type: 'qa',
+        question: 'Torque is known for clean, lighter roast profiles. When you\'re developing a roast profile for a new coffee, what are you trying to express in the cup? Also, do you have any plans in the near future for any Nordic-style light roasts?',
+        answer: 'We are definitely on the light end of the spectrum. But roast levels outside of specific color numbers (calibrated to a spec) are incredibly meaningless. We tend to say that we roast "pretty light to medium plus," but we are not convinced that a certain roast name is the end-all "best" roast profile for every coffee. Like what people call "white coffee" is far lighter and more ultra-light than anything from Nordic roasters. Our actual roast colors (digital refraction) are often lighter than some super light roasts. However, that\'s surface color and not the whole story. We are always open and exploring roasting profiles. We aren\'t scared of medium or medium-plus and we aren\'t scared of ultra-light.\n\nSo yeah, expect some more fun super light roast coffees this year as we push boundaries. But also look for some incredibly well-done medium-plus coffees that we do really well and are like candy bars in your mouth.'
+      },
+      { type: 'image', src: '/images/highlights/highlight_004c.jpg', caption: '' },
+      { type: 'qa',
+        question: 'Your roast profile cards are some of the most detailed we\'ve seen from a roaster. What has the public reception been like to these cards and flavor board (Classic/Modern vs Lively/Syrupy)? Is this a practice that is difficult to maintain seeing how complex some roasts can be?',
+        answer: 'So glad people like them. We are always trying to balance our desire to give too much information and share too much of our love for coffee and coffee people, with most people\'s desire to just read the "roast level." One thing we have learned is that constraints breed creativity. So by forcing ourselves to group and organize and rank and scale coffee, it really helps us be more creative. It also helps form our coffee buying plans because we know what we need and how we can use each coffee. We aren\'t just randomly getting samples and buying the top score. We don\'t care about cupping scores at all (although they are super useful, just not for buying).'
+      },
+      { type: 'qa',
+        question: 'Is there a coffee you\'ve roasted recently that really surprised you? Either because of the producer, the processing method, or how it developed in the roaster? Also, what are your current favorite roasts for espresso and/or filter?',
+        answer: 'My current favorite coffee is kind of a sleeper in that it\'s just outstanding in every way but not wild at all. Centenario from Edwin Martinez Finca Vista Hermosa in Guatemala is just a nearly perfect coffee. It exudes complexity, structure, and nuance. A coffee that recently just really POPPED is our Ethiopia Aricha Adorsi Yirgacheffe washed. It\'s a flagship coffee from Faysel Yonnis, but it\'s not a citrus bomb. Nanelle and Elias have been tweaking the roast profile slightly for the last week, and the last adjustment made it SHINE with bright sweetness. The change was 2°F and 10 seconds total time, but the result was spectacular.'
+      },
+      { type: 'image', src: '/images/highlights/highlight_004d.jpg', caption: '' },
+      { type: 'qa',
+        question: 'A lot of our community members are home brewers chasing great cups. What\'s one thing you think people often overlook when brewing high-quality light roast coffee? How much do you feel water quality when brewing at home can make or break a brew?',
+        answer: 'Our advice in making coffee is: spend all your budget on the grinder and the coffee. All the rest buy at the thrift store. Great water is cheap. Use Third Wave Water, Lotus Water, or others. Buy some RO water and add it and magic ensues. There is a reason our water system is $11,000 — it matters.'
+      },
+      { type: 'qa',
+        question: 'What is one thing that top coffee cities like Portland or Seattle do best that San Diego could improve on?',
+        answer: 'Their water is better. And they drink more coffee than milk.'
+      },
+      { type: 'qa',
+        question: 'Rapid Fire',
+        answer: '<strong>Favorite brew method at the moment?</strong> xBloom Studio\n\n<strong>Favorite coffee origin to drink personally?</strong> El Salvador\n\n<strong>Washed, natural, or anaerobic?</strong> Washed normally\n\n<strong>Flat or conical burrs?</strong> Flat\n\n<strong>One variable home brewers obsess over too much?</strong> Grind settings versus grind consistency\n\n<strong>Most overrated trend in specialty coffee?</strong> Trust fund bros building Instagram cafes\n\n<strong>Coffee rule you break regularly?</strong> Drinking coffee that got cold in the cup — great coffee is always great.\n\n<strong>Favorite roaster as well as multi-roaster cafe in San Diego apart from Torque?</strong> We love Bird Rock, Genteel, Provecho, Yipao, Cafeina, Scrimshaw, Moto, and everyone else! San Diego\'s coffee scene is going to be fire in 2026.'
+      },
+      { type: 'text', content: 'Thanks to Andy for joining us on the subreddit. Find the full Torque Coffee lineup and learn more about their Proportional Pricing program at <a href="https://torque.coffee" target="_blank" rel="noopener">torque.coffee</a>.' },
+    ]
+  },
 ];

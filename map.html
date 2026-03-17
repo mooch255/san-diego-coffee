@@ -2385,7 +2385,7 @@ function performSearch() {
             markerCluster.clearMarkers();
             markerCluster.addMarkers(zipMarkers);
             updateVisibleCount(zipMarkers.length);
-            renderLocationCards(zipMarkers);
+            renderLocationCards(zipMarkers, true); // online-only roasters have no zip — exclude them
 
             // Clear input so idle → applyFilters doesn't re-trigger performSearch loop
             document.getElementById('searchInput').value = '';
@@ -2398,11 +2398,23 @@ function performSearch() {
                 const bounds = new google.maps.LatLngBounds();
                 zipMarkers.forEach(m => bounds.extend(m.getPosition()));
                 map.fitBounds(bounds);
-                // Don't zoom in closer than 14 (single-pin case)
+                // Don't zoom in closer than 14 (single-pin case).
+                // IMPORTANT: if setZoom(14) is called after fitBounds overshoots, it
+                // fires a second idle event. suppressIdleFilter must stay true through
+                // that second idle, otherwise applyFilters() overwrites zip results
+                // (on mobile, map padding causes fitBounds to zoom past 14).
+                // Always use the nested addListenerOnce pattern here — never release
+                // suppressIdleFilter inside the same listener that calls setZoom().
                 const listener = google.maps.event.addListener(map, 'idle', () => {
-                    if (map.getZoom() > 14) map.setZoom(14);
                     google.maps.event.removeListener(listener);
-                    suppressIdleFilter = false;
+                    if (map.getZoom() > 14) {
+                        map.setZoom(14);
+                        google.maps.event.addListenerOnce(map, 'idle', () => {
+                            suppressIdleFilter = false;
+                        });
+                    } else {
+                        suppressIdleFilter = false;
+                    }
                 });
             } else {
                 // No matching markers — geocode and pan to the zip area
@@ -2620,10 +2632,20 @@ function applyFilters() {
             const bounds = new google.maps.LatLngBounds();
             visibleMarkers.forEach(m => bounds.extend(m.getPosition()));
             map.fitBounds(bounds);
+            // IMPORTANT: if setZoom(14) is called after fitBounds overshoots, it fires
+            // a second idle event. suppressIdleFilter must stay true through that second
+            // idle, otherwise applyFilters() overwrites the intended results (esp. on
+            // mobile where map padding causes tighter fitBounds zoom).
             const listener = google.maps.event.addListener(map, 'idle', () => {
-                if (map.getZoom() > 14) map.setZoom(14);
                 google.maps.event.removeListener(listener);
-                suppressIdleFilter = false;
+                if (map.getZoom() > 14) {
+                    map.setZoom(14);
+                    google.maps.event.addListenerOnce(map, 'idle', () => {
+                        suppressIdleFilter = false;
+                    });
+                } else {
+                    suppressIdleFilter = false;
+                }
             });
         }
     }
@@ -2950,6 +2972,7 @@ function selectLocationCard(locationId) {
         if (si) {
             const count = document.getElementById('visibleCount')?.textContent || '—';
             si.placeholder = `${count} locations in view · scroll up for more`;
+            si.readOnly = true;
         }
     }
 
@@ -3061,16 +3084,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (expand) {
                 panel.classList.add('sheet-expanded');
                 if (floatBtn) floatBtn.classList.add('hidden');
-                if (searchInput) searchInput.placeholder = PLACEHOLDER_EXPANDED;
+                if (window.innerWidth <= 768 && searchInput) {
+                    searchInput.placeholder = PLACEHOLDER_EXPANDED;
+                    searchInput.readOnly = false;
+                }
             } else {
                 panel.classList.remove('sheet-expanded');
                 if (floatBtn) floatBtn.classList.remove('hidden');
-                if (searchInput) searchInput.placeholder = peekPlaceholder();
+                if (window.innerWidth <= 768 && searchInput) {
+                    searchInput.placeholder = peekPlaceholder();
+                    searchInput.readOnly = true;
+                }
             }
         }
 
-        // Set initial peek placeholder (mobile only)
-        if (window.innerWidth <= 768 && searchInput) searchInput.placeholder = peekPlaceholder();
+        // Set initial peek state (mobile only) — read-only until sheet is expanded
+        if (window.innerWidth <= 768 && searchInput) {
+            searchInput.placeholder = peekPlaceholder();
+            searchInput.readOnly = true;
+        }
 
         // Tap the handle bar when in peek state → expand the sheet
         handleBar.addEventListener('click', () => {
@@ -3079,6 +3111,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 setExpanded(true);
             }
         });
+
+        // Tapping the search input in peek state → expand sheet, then focus for keyboard
+        if (searchInput) {
+            searchInput.addEventListener('touchstart', (e) => {
+                if (!panel.classList.contains('sheet-expanded')) {
+                    e.preventDefault(); // block keyboard from opening immediately
+                    setExpanded(true);
+                    // Focus after the CSS transition so keyboard appears once sheet is open
+                    setTimeout(() => searchInput.focus(), 320);
+                }
+            }, { passive: false });
+        }
 
         panel.addEventListener('touchstart', (e) => {
             const fromHandleArea = isHandleArea(e.target);

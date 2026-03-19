@@ -651,6 +651,37 @@
             border-left: 3px solid var(--accent-red);
         }
 
+        /* ── Highlight Callout ───────────────────────────────────────────── */
+        .highlight-callout {
+            background: #fff8f0;
+            border: 1px solid #e8d5c0;
+            border-left: 3px solid var(--accent-red);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .highlight-callout-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-red);
+            margin-bottom: 0.35rem;
+        }
+        .highlight-callout-text {
+            font-size: 0.9rem;
+            color: var(--coffee-brown);
+            line-height: 1.5;
+            margin-bottom: 0.6rem;
+        }
+        .highlight-callout-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-red);
+            text-decoration: none;
+        }
+        .highlight-callout-link:hover { text-decoration: underline; }
+
         /* ── Right Column — Coffee Details Card ─────────────────────────── */
         .details-card {
             background: var(--white);
@@ -1054,6 +1085,7 @@
     </footer>
 
     <script src="/locations.js"></script>
+    <script src="/highlights.js"></script>
     <script>
         // Footer count
         (function() {
@@ -1252,6 +1284,26 @@
             }
         }
 
+        // ── Highlight callout ──────────────────────────────────────────────
+        function findHighlightForLocation(locationId) {
+            return (window.highlights || []).find(h => {
+                const m = h.locationUrl?.match(/id=([^&]+)/);
+                return m && m[1] === locationId;
+            });
+        }
+
+        function renderHighlightCallout(locationId) {
+            const h = findHighlightForLocation(locationId);
+            if (!h) return '';
+            return `
+                <div class="highlight-callout">
+                    <div class="highlight-callout-label">🎙️ Roaster Deep Dive</div>
+                    <div class="highlight-callout-text">${h.excerpt}</div>
+                    <a href="/highlight.html?id=${h.id}&from=location&locationId=${locationId}" class="highlight-callout-link">Read the Interview →</a>
+                </div>
+            `;
+        }
+
         // ── Render ─────────────────────────────────────────────────────────
         function renderPage(loc, custom) {
             custom = custom || {};
@@ -1268,6 +1320,7 @@
                 ${renderGallery(loc.localImage, loc.localImage2, loc.localImage3, placeId, info.name)}
                 <div class="content-wrap">
                     <div class="left-col fade-up">
+                        ${renderHighlightCallout(loc.id)}
                         ${renderDescription(custom, loc.legacyData)}
                         ${renderDetailsCard(isRoaster, custom, loc)}
                         ${renderContact(contact, info, custom)}

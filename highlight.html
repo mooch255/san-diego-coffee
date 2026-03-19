@@ -513,6 +513,8 @@
 
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
+        const fromParam = params.get('from');
+        const fromLocationId = params.get('locationId');
         const entry = window.highlights && window.highlights.find(h => h.id === id);
         const container = document.getElementById('pageContent');
 
@@ -581,9 +583,16 @@
                 ? `<div class="hero-image"><img src="${entry.image}" alt="${entry.roasterName}"></div>`
                 : `<div class="hero-image"><div class="hero-image-placeholder">☕</div></div>`;
 
+            const backHref  = fromParam === 'map'      ? '/map.html'
+                            : fromParam === 'location' ? `/location.html?id=${fromLocationId}`
+                            : 'roaster-highlights.html';
+            const backLabel = fromParam === 'map'      ? '← Back to Map'
+                            : fromParam === 'location' ? '← Back to Location'
+                            : '← All Highlights';
+
             container.innerHTML = `
                 <div class="article-wrap">
-                    <a href="roaster-highlights.html" class="back-link">← All Highlights</a>
+                    <a href="${backHref}" class="back-link">${backLabel}</a>
                     ${heroHtml}
                     <div class="post-header">
                         <div class="post-eyebrow">Roaster Highlight</div>

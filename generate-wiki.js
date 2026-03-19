@@ -29,16 +29,45 @@ const REGION_MAP = {
   'Downtown & Uptown':      ['Bankers Hill', 'Downtown', 'Golden Hill', 'Hillcrest', 'Mission Hills', 'Normal Heights', 'North Park', 'San Diego', 'South Park', 'University Heights'],
   'Beach Communities':      ['Bay Park', 'Bird Rock', 'Coronado', 'La Jolla', 'Ocean Beach', 'Pacific Beach', 'Point Loma'],
   'Central & East SD':      ['Allied Gardens', 'Barrio Logan', 'City Heights', 'College Area', 'Del Cerro', 'El Cajon', 'La Mesa', 'Lemon Grove', 'Logan Heights', 'Mission Valley', 'Old Town', 'Santee'],
-  'South Bay':              ['Chula Vista', 'Imperial Beach', 'National City'],
+  'South Bay':              ['Chula Vista', 'Imperial Beach', 'National City', 'Otay Ranch'],
 };
 
 const ALL_MAPPED = new Set(Object.values(REGION_MAP).flat());
 
-function getRegion(neighborhood) {
-  if (!neighborhood) return 'Other San Diego';
-  for (const [region, hoods] of Object.entries(REGION_MAP)) {
-    if (hoods.includes(neighborhood)) return region;
+// City → region (handles locations in distinct SD-county cities not in REGION_MAP)
+const CITY_REGION = {
+  'Carlsbad': 'North County Coastal', 'Encinitas': 'North County Coastal',
+  'Oceanside': 'North County Coastal', 'Solana Beach': 'North County Coastal',
+  'Del Mar': 'North County Coastal', 'Cardiff-by-the-Sea': 'North County Coastal',
+  'San Marcos': 'North County Inland', 'Vista': 'North County Inland',
+  'Escondido': 'North County Inland', 'Poway': 'North County Inland',
+  'Coronado': 'Beach Communities',
+  'National City': 'South Bay', 'Chula Vista': 'South Bay', 'Imperial Beach': 'South Bay',
+  'El Cajon': 'Central & East SD', 'La Mesa': 'Central & East SD',
+  'Santee': 'Central & East SD', 'Lemon Grove': 'Central & East SD',
+  'Spring Valley': 'Central & East SD',
+};
+
+// Coordinate bounding-box fallback — priority-ordered, first match wins
+function getRegionByCoords(lat, lng) {
+  if (lat < 32.683)                            return 'South Bay';
+  if (lat > 32.95 && lng < -117.25)            return 'North County Coastal';
+  if (lat > 32.95)                             return 'North County Inland';
+  if (lat > 32.845 && lng > -117.23)           return 'North San Diego Inland';
+  if (lng < -117.205)                          return 'Beach Communities';
+  if (lng > -117.10)                           return 'Central & East SD';
+  return 'Downtown & Uptown';
+}
+
+// 3-tier lookup: neighborhood string → city name → coordinates
+function getRegion(neighborhood, city, coords) {
+  if (neighborhood) {
+    for (const [region, hoods] of Object.entries(REGION_MAP)) {
+      if (hoods.includes(neighborhood)) return region;
+    }
   }
+  if (city && CITY_REGION[city]) return CITY_REGION[city];
+  if (coords?.lat != null && coords?.lng != null) return getRegionByCoords(coords.lat, coords.lng);
   return 'Other San Diego';
 }
 
@@ -121,6 +150,15 @@ function normalizeBrandName(name) {
 // ─── Stats ────────────────────────────────────────────────────────────────────
 const physical = locations.filter(l => !l.basicInfo?.onlineOnly);
 const onlineOnly = locations.filter(l => l.basicInfo?.onlineOnly);
+
+// ─── Roaster Highlights (manually maintained — update when new highlights added) ─
+const HIGHLIGHTS = [
+  { name: 'Frequent Coffee',         url: 'https://sandiegocoffee.co/highlight.html?id=highlight_frequent-coffee' },
+  { name: 'Visitor Coffee Roasters', url: 'https://sandiegocoffee.co/highlight.html?id=highlight_visitor-coffee-roasters' },
+  { name: 'Excelsa Coffee',          url: 'https://sandiegocoffee.co/highlight.html?id=highlight_excelsa-coffee' },
+  { name: 'Torque Coffee',           url: 'https://sandiegocoffee.co/highlight.html?id=highlight_torque-coffee' },
+  { name: 'Big Step Coffee',         url: 'https://sandiegocoffee.co/highlight.html?id=highlight_big-step-coffee' },
+];
 const physicalRoasters = physical.filter(l => l.basicInfo?.type === 'roaster');
 const physicalCafes = physical.filter(l => l.basicInfo?.type === 'cafe');
 
@@ -142,7 +180,8 @@ const AMENITY_SHORT = {
   'Sells Beans Online':          'Sells Beans Online',
   'Outdoor Seating':             'Outdoor Seating',
   'Drive-Through Available':     'Drive-Through',
-  'Decaf Espresso Available':    'Decaf Espresso',
+  'Decaf Espresso Available':                        'Decaf Espresso',
+  'Espresso Options (Choice between different beans)': 'Espresso Options',
   'Subscription Available':      'Subscription',
   'Wholesale Available':         'Wholesale',
 };
@@ -236,12 +275,12 @@ function getRegionData() {
   for (const r of REGION_ORDER) regions[r] = { name: r, roasters: [], cafes: [] };
 
   for (const loc of physicalRoasters) {
-    const r = getRegion(loc.coffeeDetails?.neighborhood);
+    const r = getRegion(loc.coffeeDetails?.neighborhood, loc.basicInfo?.address?.city, loc.basicInfo?.address?.coordinates);
     if (!regions[r]) regions[r] = { name: r, roasters: [], cafes: [] };
     regions[r].roasters.push(loc);
   }
   for (const loc of physicalCafes) {
-    const r = getRegion(loc.coffeeDetails?.neighborhood);
+    const r = getRegion(loc.coffeeDetails?.neighborhood, loc.basicInfo?.address?.city, loc.basicInfo?.address?.coordinates);
     if (!regions[r]) regions[r] = { name: r, roasters: [], cafes: [] };
     regions[r].cafes.push(loc);
   }
@@ -286,28 +325,135 @@ function buildWhatsNew() {
   return lines.join('\n');
 }
 
-// ─── Build online-only table ──────────────────────────────────────────────────
-function buildOnlineTable() {
-  const sorted = onlineOnly.sort((a, b) =>
+// ─── Build Roaster Highlights section ────────────────────────────────────────
+function buildHighlightsSection() {
+  const links = HIGHLIGHTS.map(h => `[${h.name}](${h.url})`).join(' · ');
+  return [
+    `## 🎙️ Roaster Deep Dives`,
+    '',
+    `We've interviewed founders and roasters across San Diego — get the full story behind the coffee:`,
+    '',
+    links,
+  ].join('\n');
+}
+
+function buildHighlightsSectionHtml() {
+  const links = HIGHLIGHTS.map(h => `<a href="${esc(h.url)}">${esc(h.name)}</a>`).join(' · ');
+  return [
+    `<h2>🎙️ Roaster Deep Dives</h2>`,
+    `<p>We've interviewed founders and roasters across San Diego — get the full story behind the coffee:</p>`,
+    `<p>${links}</p>`,
+  ].join('\n');
+}
+
+// ─── Quick Find helpers ───────────────────────────────────────────────────────
+function getAmenityLocations(amenityKey) {
+  const seen = new Set();
+  const result = [];
+  for (const loc of [...physical].sort((a, b) => (a.basicInfo?.name || '').localeCompare(b.basicInfo?.name || ''))) {
+    const amenities = loc.coffeeDetails?.amenities || [];
+    if (!amenities.includes(amenityKey)) continue;
+    const brand = normalizeBrandName(loc.basicInfo?.name || '');
+    if (seen.has(brand)) continue;
+    seen.add(brand);
+    result.push(loc);
+  }
+  return result;
+}
+
+function buildQuickFind() {
+  function row(emoji, label, locs, overrideCell) {
+    if (overrideCell) return `| ${emoji} ${label} | ${overrideCell} |`;
+    const cell = locs.map(l => `[${l.basicInfo?.name}](https://sandiegocoffee.co/location.html?id=${l.id})`).join(', ');
+    return `| ${emoji} ${label} | ${cell || '—'} |`;
+  }
+  const lines = [
+    `## 🔍 Quick Find`,
+    '',
+    '| Looking for... | Where to go |',
+    '|---|---|',
+    row('🐕', 'Dog Friendly',          getAmenityLocations('Dog Friendly')),
+    row('🍩', 'Food & Pastries',        getAmenityLocations('Offers Food / Pastries')),
+    row('📶', 'Wifi / Work-Friendly',   getAmenityLocations('Good for Working (Wifi)')),
+  ];
+  return lines.join('\n');
+}
+
+function buildQuickFindHtml() {
+  function row(emoji, label, locs, overrideCell) {
+    const cell = overrideCell
+      ? overrideCell
+      : locs.map(l => `<a href="https://sandiegocoffee.co/location.html?id=${l.id}">${esc(l.basicInfo?.name)}</a>`).join(', ') || '—';
+    return `<tr><td>${emoji} ${esc(label)}</td><td>${cell}</td></tr>`;
+  }
+  const beansAnchor = slugify('🛍️ Beans for Sale');
+  return [
+    `<h2>🔍 Quick Find</h2>`,
+    `<table><thead><tr><th>Looking for...</th><th>Where to go</th></tr></thead><tbody>`,
+    row('🐕', 'Dog Friendly',        getAmenityLocations('Dog Friendly')),
+    row('🍩', 'Food & Pastries',     getAmenityLocations('Offers Food / Pastries')),
+    row('📶', 'Wifi / Work-Friendly',getAmenityLocations('Good for Working (Wifi)')),
+    `</tbody></table>`,
+  ].join('\n');
+}
+
+// ─── Build Beans for Sale section (online-only + physical-ships) ─────────────
+function buildBeansForSaleSection() {
+  const lines = [];
+
+  // Subsection 1: Online-Only Roasters
+  lines.push('### Online-Only Roasters');
+  lines.push('');
+  const sortedOnline = [...onlineOnly].sort((a, b) =>
     (a.basicInfo?.name || '').localeCompare(b.basicInfo?.name || '')
   );
-
-  const lines = [];
   lines.push('| Name | Roast Style | Website |');
   lines.push('|------|------------|---------|');
-
-  for (const loc of sorted) {
+  for (const loc of sortedOnline) {
     const cd = loc.coffeeDetails || {};
     const name = loc.basicInfo?.name || '';
-    const id = loc.id;
-    const url = `https://sandiegocoffee.co/location.html?id=${id}`;
+    const url = `https://sandiegocoffee.co/location.html?id=${loc.id}`;
     const roastStyle = cd.roastStyle || '—';
     const website = loc.basicInfo?.contact?.website || cd.onlineWebsite || '';
     const websiteDisplay = website
       ? `[${website.replace(/^https?:\/\//, '').replace(/\/$/, '')}](${website})`
       : '—';
-
     lines.push(`| [${name}](${url}) | ${roastStyle} | ${websiteDisplay} |`);
+  }
+
+  lines.push('');
+
+  // Subsection 2: Physical roasters/cafes that also ship beans
+  const seen = new Set();
+  const physicalBeans = [...physical]
+    .filter(l => (l.coffeeDetails?.amenities || []).includes('Sells Beans Online'))
+    .sort((a, b) => (a.basicInfo?.name || '').localeCompare(b.basicInfo?.name || ''))
+    .filter(l => {
+      const brand = normalizeBrandName(l.basicInfo?.name || '');
+      if (seen.has(brand)) return false;
+      seen.add(brand);
+      return true;
+    });
+
+  lines.push('### Roasters with Cafes — Also Ships Beans');
+  lines.push('');
+  if (physicalBeans.length > 0) {
+    const REGION_ORDER = [...Object.keys(REGION_MAP), 'Other San Diego'];
+    const byRegion = {};
+    for (const loc of physicalBeans) {
+      const r = getRegion(loc.coffeeDetails?.neighborhood, loc.basicInfo?.address?.city, loc.basicInfo?.address?.coordinates);
+      if (!byRegion[r]) byRegion[r] = [];
+      byRegion[r].push(loc);
+    }
+    for (const region of REGION_ORDER) {
+      const locs = byRegion[region];
+      if (!locs || locs.length === 0) continue;
+      const links = locs.map(l => `[${l.basicInfo?.name}](https://sandiegocoffee.co/location.html?id=${l.id})`).join(' · ');
+      lines.push(`**${headingText(region)}:** ${links}`);
+      lines.push('');
+    }
+  } else {
+    lines.push('*No physical locations with online bean sales found.*');
   }
 
   return lines.join('\n');
@@ -393,13 +539,16 @@ function buildWhatsNewHtml() {
   return lines.join('\n');
 }
 
-function buildOnlineHtml() {
-  const sorted = [...onlineOnly].sort((a, b) =>
+function buildBeansForSaleHtml() {
+  const lines = [];
+
+  // Subsection 1: Online-Only Roasters
+  lines.push('<h3>Online-Only Roasters</h3>');
+  lines.push('<table><thead><tr><th>Name</th><th>Roast Style</th><th>Website</th></tr></thead><tbody>');
+  const sortedOnline = [...onlineOnly].sort((a, b) =>
     (a.basicInfo?.name || '').localeCompare(b.basicInfo?.name || '')
   );
-  const lines = [];
-  lines.push('<table><thead><tr><th>Name</th><th>Roast Style</th><th>Website</th></tr></thead><tbody>');
-  for (const loc of sorted) {
+  for (const loc of sortedOnline) {
     const cd = loc.coffeeDetails || {};
     const name = loc.basicInfo?.name || '';
     const url = `https://sandiegocoffee.co/location.html?id=${loc.id}`;
@@ -411,6 +560,38 @@ function buildOnlineHtml() {
     lines.push(`<tr><td><a href="${url}">${esc(name)}</a></td><td>${esc(roastStyle)}</td><td>${websiteCell}</td></tr>`);
   }
   lines.push('</tbody></table>');
+
+  // Subsection 2: Physical-ships
+  const seen = new Set();
+  const physicalBeans = [...physical]
+    .filter(l => (l.coffeeDetails?.amenities || []).includes('Sells Beans Online'))
+    .sort((a, b) => (a.basicInfo?.name || '').localeCompare(b.basicInfo?.name || ''))
+    .filter(l => {
+      const brand = normalizeBrandName(l.basicInfo?.name || '');
+      if (seen.has(brand)) return false;
+      seen.add(brand);
+      return true;
+    });
+
+  lines.push('<h3>Roasters with Cafes — Also Ships Beans</h3>');
+  if (physicalBeans.length > 0) {
+    const REGION_ORDER = [...Object.keys(REGION_MAP), 'Other San Diego'];
+    const byRegion = {};
+    for (const loc of physicalBeans) {
+      const r = getRegion(loc.coffeeDetails?.neighborhood, loc.basicInfo?.address?.city, loc.basicInfo?.address?.coordinates);
+      if (!byRegion[r]) byRegion[r] = [];
+      byRegion[r].push(loc);
+    }
+    for (const region of REGION_ORDER) {
+      const locs = byRegion[region];
+      if (!locs || locs.length === 0) continue;
+      const links = locs.map(l => `<a href="https://sandiegocoffee.co/location.html?id=${l.id}">${esc(l.basicInfo?.name)}</a>`).join(' · ');
+      lines.push(`<p><strong>${esc(headingText(region))}:</strong> ${links}</p>`);
+    }
+  } else {
+    lines.push('<p><em>No physical locations with online bean sales found.</em></p>');
+  }
+
   return lines.join('\n');
 }
 
@@ -453,6 +634,8 @@ function buildHtml() {
 
   h.push(buildWhatsNewHtml());
 
+  h.push(buildHighlightsSectionHtml());
+
   h.push(`<h2>📊 By the Numbers</h2>
 <table>
 <thead><tr>
@@ -484,12 +667,28 @@ function buildHtml() {
   <li><strong>Tasting Room</strong> — limited hours, manufacturing facility</li>
   <li><strong>Production Only</strong> — no public access</li>
   <li><strong>Public Cuppings / Events Only</strong> — open for scheduled events only</li>
+</ul>
+<p><strong>Coffee Details</strong></p>
+<ul>
+  <li><strong>Decaf Espresso</strong> — serves a decaf espresso option</li>
+  <li><strong>Espresso Options</strong> — offers a choice between different espresso beans</li>
 </ul>`);
+
+  h.push(buildQuickFindHtml());
+
+  // Beans for Sale
+  const beansSlug = slugify('🛍️ Beans for Sale');
+  const hasBeansSection = onlineOnly.length > 0 || physical.some(l => (l.coffeeDetails?.amenities || []).includes('Sells Beans Online'));
+  if (hasBeansSection) {
+    h.push(`<hr><h2 id="${beansSlug}">🛍️ Beans for Sale</h2>`);
+    h.push(`<p>Whether you're looking for online-only roasters or a local roaster that ships direct — this is your starting point.</p>`);
+    h.push(buildBeansForSaleHtml());
+  }
 
   // Browse by Area TOC
   const rd = getRegionData();
-  h.push(`<h2>📍 Browse by Area</h2>`);
-  h.push(`<p>${rd.map(r => `<a href="#${slugify(r.name)}">${esc(r.name)}</a>`).join(' · ')}${onlineOnly.length > 0 ? ` · <a href="#${slugify('Online Only Roasters')}">Online Only</a>` : ''}</p>`);
+  h.push(`<hr><h2>📍 Browse by Area</h2>`);
+  h.push(`<p>${rd.map(r => `<a href="#${slugify(r.name)}">${esc(r.name)}</a>`).join(' · ')}</p>`);
 
   // Region sections
   for (const region of rd) {
@@ -499,12 +698,6 @@ function buildHtml() {
     for (const loc of region.roasters) h.push(renderRoasterHtml(loc));
     if (hasBoth) h.push(`<p><strong>Multi-Roaster Cafes</strong></p>`);
     for (const loc of region.cafes) h.push(renderCafeHtml(loc));
-  }
-
-  if (onlineOnly.length > 0) {
-    h.push(`<hr><h2 id="${slugify('Online Only Roasters')}">Online Only Roasters</h2>`);
-    h.push(`<p>San Diego-based roasters operating primarily or exclusively online. Order direct from their websites.</p>`);
-    h.push(buildOnlineHtml());
   }
 
   h.push(`<hr><h2>➕ Add a Spot</h2>
@@ -534,6 +727,12 @@ wikiLines.push(buildWhatsNew());
 wikiLines.push('---');
 wikiLines.push('');
 
+// Roaster Deep Dives
+wikiLines.push(buildHighlightsSection());
+wikiLines.push('');
+wikiLines.push('---');
+wikiLines.push('');
+
 // Stats
 wikiLines.push('## 📊 By the Numbers');
 wikiLines.push('');
@@ -546,7 +745,7 @@ wikiLines.push('');
 // How to Read
 wikiLines.push('## 📖 How to Read This Directory');
 wikiLines.push('');
-wikiLines.push('Each entry links to its full profile on sandiegocoffee.co, which includes photos, hours, contact info, and a direct Google Maps link.');
+wikiLines.push('Each entry links to its full profile on [sandiegocoffee.co](https://sandiegocoffee.co), which includes photos, hours, contact info, and a direct Google Maps link.');
 wikiLines.push('');
 wikiLines.push('**Roast Scale**');
 wikiLines.push('- **Micro-Batch** — very small-batch roasting, often single-origin focused');
@@ -558,15 +757,37 @@ wikiLines.push('- **Tasting Room** — limited hours, manufacturing facility');
 wikiLines.push('- **Production Only** — no public access');
 wikiLines.push('- **Public Cuppings / Events Only** — open for scheduled events only');
 wikiLines.push('');
+wikiLines.push('**Coffee Details**');
+wikiLines.push('- **Decaf Espresso** — serves a decaf espresso option');
+wikiLines.push('- **Espresso Options** — offers a choice between different espresso beans');
+wikiLines.push('');
 wikiLines.push('---');
 wikiLines.push('');
+
+// Quick Find
+wikiLines.push(buildQuickFind());
+wikiLines.push('');
+wikiLines.push('---');
+wikiLines.push('');
+
+// Beans for Sale
+if (onlineOnly.length > 0 || physical.some(l => (l.coffeeDetails?.amenities || []).includes('Sells Beans Online'))) {
+  wikiLines.push('## Beans for Sale');
+  wikiLines.push('');
+  wikiLines.push('Whether you\'re looking for online-only roasters or a local roaster that ships direct — this is your starting point.');
+  wikiLines.push('');
+  wikiLines.push(buildBeansForSaleSection());
+  wikiLines.push('');
+  wikiLines.push('---');
+  wikiLines.push('');
+}
 
 // Browse by Area — TOC
 const regionData = getRegionData();
 wikiLines.push('## 📍 Browse by Area');
 wikiLines.push('');
-wikiLines.push(regionData.map(r => `[${r.name}](#${slugify(r.name)})`).join(' · '));
-if (onlineOnly.length > 0) wikiLines.push(`\n[Online Only Roasters](#${slugify('Online Only Roasters')})`);
+const tocParts = regionData.map(r => `[${r.name}](#${slugify(r.name)})`);
+wikiLines.push(tocParts.join(' · '));
 wikiLines.push('');
 wikiLines.push('---');
 wikiLines.push('');
@@ -580,18 +801,6 @@ for (const region of regionData) {
   for (const loc of region.roasters) { wikiLines.push(renderRoaster(loc)); wikiLines.push(''); }
   if (hasBoth) { wikiLines.push('**Multi-Roaster Cafes**\n'); }
   for (const loc of region.cafes) { wikiLines.push(renderCafe(loc)); wikiLines.push(''); }
-  wikiLines.push('---');
-  wikiLines.push('');
-}
-
-// Online-Only Roasters
-if (onlineOnly.length > 0) {
-  wikiLines.push('## Online Only Roasters');
-  wikiLines.push('');
-  wikiLines.push('San Diego-based roasters operating primarily or exclusively online. Order direct from their websites.');
-  wikiLines.push('');
-  wikiLines.push(buildOnlineTable());
-  wikiLines.push('');
   wikiLines.push('---');
   wikiLines.push('');
 }

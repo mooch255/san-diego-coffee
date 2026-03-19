@@ -14,7 +14,8 @@
     <meta name="twitter:description" content="">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
     <script type="application/ld+json" id="ld-schema"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1211,7 +1212,8 @@
                         '@context': 'https://schema.org',
                         '@type': type,
                         name: loc.basicInfo.name,
-                        url: contact.website || ('https://sandiegocoffee.co/location.html?id=' + loc.id),
+                        url: contact.website || ('https://sandiegocoffee.co/locations/' + loc.id),
+                        description: metaDescription || undefined,
                         image: loc.localImage ? 'https://sandiegocoffee.co' + loc.localImage : undefined,
                         telephone: contact.phone || undefined,
                         address: {
@@ -1509,8 +1511,11 @@
                     ? `<span class="detail-val bool-no">No</span>`
                     : `<span class="detail-val unknown">Unknown</span>`;
 
+            const AMENITY_LABELS = {
+                'Espresso Options (Choice between different beans)': 'Espresso Options',
+            };
             const tags = (arr) => arr && arr.length
-                ? `<div class="tag-list">${arr.map(t => `<span class="tag">${t}</span>`).join('')}</div>`
+                ? `<div class="tag-list">${arr.map(t => `<span class="tag">${AMENITY_LABELS[t] || t}</span>`).join('')}</div>`
                 : `<span class="detail-val unknown">Unknown</span>`;
 
             let rows = '';

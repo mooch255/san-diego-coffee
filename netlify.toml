@@ -7,6 +7,22 @@
   to   = "/location.html?id=:id"
   status = 200
 
+# Serve favicon.svg for legacy favicon and Apple touch icon requests
+[[redirects]]
+  from = "/favicon.ico"
+  to   = "/favicon.svg"
+  status = 200
+
+[[redirects]]
+  from = "/apple-touch-icon.png"
+  to   = "/favicon.svg"
+  status = 200
+
+[[redirects]]
+  from = "/apple-touch-icon-precomposed.png"
+  to   = "/favicon.svg"
+  status = 200
+
 [build.environment]
   SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI"
 

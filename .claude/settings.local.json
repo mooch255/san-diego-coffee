@@ -17,7 +17,28 @@
       "WebFetch(domain:whatnow.com)",
       "Bash(find \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/images/locations\" -type f -name \"*.jpg\" -o -name \"*.png\" -o -name \"*.webp\" 2>/dev/null | head -20)",
       "Bash(grep -o '\"id\": \"loc_[0-9]*\"' \"C:/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub/locations.js\" | sort -t_ -k2 -n | tail -5)",
-      "Bash(cd \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub\" && node -e \"\nconst fs = require\\('fs'\\);\nconst src = fs.readFileSync\\('locations.js', 'utf8'\\).replace\\('window.COFFEE_LOCATIONS =', 'const locs ='\\);\neval\\(src\\);\nconst affected = locs.filter\\(loc => {\n  const c = loc.coffeeDetails || {};\n  const hasAnyCustom = c.description || c.roastScale || c.roastStyle ||\n    c.visitorExperience || c.multipleLocations ||\n    \\(c.amenities && c.amenities.length\\) || \\(c.roastersServed && c.roastersServed.length\\);\n  return !hasAnyCustom && loc.legacyData && loc.legacyData.originalDescription;\n}\\);\nconsole.log\\('Affected locations:', affected.length\\);\naffected.slice\\(0,20\\).forEach\\(l => console.log\\(l.id, '-', l.basicInfo.name\\)\\);\n\")"
+      "Bash(cd \"/c/Users/antho/Desktop/rSanDiegoCoffee Beans Website/GitHub\" && node -e \"\nconst fs = require\\('fs'\\);\nconst src = fs.readFileSync\\('locations.js', 'utf8'\\).replace\\('window.COFFEE_LOCATIONS =', 'const locs ='\\);\neval\\(src\\);\nconst affected = locs.filter\\(loc => {\n  const c = loc.coffeeDetails || {};\n  const hasAnyCustom = c.description || c.roastScale || c.roastStyle ||\n    c.visitorExperience || c.multipleLocations ||\n    \\(c.amenities && c.amenities.length\\) || \\(c.roastersServed && c.roastersServed.length\\);\n  return !hasAnyCustom && loc.legacyData && loc.legacyData.originalDescription;\n}\\);\nconsole.log\\('Affected locations:', affected.length\\);\naffected.slice\\(0,20\\).forEach\\(l => console.log\\(l.id, '-', l.basicInfo.name\\)\\);\n\")",
+      "WebFetch(domain:loftycoffee.com)",
+      "WebFetch(domain:mostracoffee.com)",
+      "WebFetch(domain:birdrockcoffee.com)",
+      "WebFetch(domain:ironsmithcoffee.com)",
+      "WebFetch(domain:steadystateroasting.com)",
+      "WebFetch(domain:babacoffee.com)",
+      "WebFetch(domain:jauntcoffee.com)",
+      "WebFetch(domain:www.bumpcoffee.co)",
+      "WebFetch(domain:www.lacostacoffee.com)",
+      "WebFetch(domain:www.origencoffeeroasters.com)",
+      "WebFetch(domain:www.steadystateroasting.com)",
+      "WebFetch(domain:www.snakebite.coffee)",
+      "WebFetch(domain:talitha.com)",
+      "WebFetch(domain:ryanbroscoffee.com)",
+      "WebFetch(domain:heavehocoffeeco.com)",
+      "WebFetch(domain:goldchildcoffee.com)",
+      "WebFetch(domain:www.compacoffeeroasters.com)",
+      "WebFetch(domain:ultreyacoffee.com)",
+      "WebFetch(domain:www.tridentcoffee.com)",
+      "WebFetch(domain:jamescoffeeco.com)",
+      "Skill(update-config)"
     ]
   }
 }

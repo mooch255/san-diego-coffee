@@ -15,7 +15,8 @@
     <meta name="twitter:description" content="Browse 150+ specialty roasters and cafes across San Diego neighborhoods. Filter by type, roast style, and amenities.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="Browse 150+ specialty roasters and cafes across San Diego neighborhoods. Filter by type, roast style, and amenities.">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☕</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
     <link rel="canonical" href="https://sandiegocoffee.co/map.html">
 
     <!-- Marker Clusterer -->
@@ -2110,8 +2111,34 @@ function setupEventListeners() {
             'Downtown & Uptown':     ['Bankers Hill','Downtown','Golden Hill','Hillcrest','Mission Hills','Normal Heights','North Park','San Diego','South Park','University Heights'],
             'Beach Communities':     ['Bay Park','Bird Rock','Coronado','La Jolla','Ocean Beach','Pacific Beach','Point Loma'],
             'Central & East SD':     ['Allied Gardens','Barrio Logan','City Heights','College Area','Del Cerro','El Cajon','La Mesa','Lemon Grove','Logan Heights','Mission Valley','Old Town','Santee'],
-            'South Bay':             ['Chula Vista','Imperial Beach','National City'],
+            'South Bay':             ['Chula Vista','Imperial Beach','National City','Otay Ranch'],
         };
+
+        // City → region fallback for locations outside San Diego city proper
+        const cityRegionMap = {
+            'Carlsbad': 'North County Coastal', 'Encinitas': 'North County Coastal',
+            'Oceanside': 'North County Coastal', 'Solana Beach': 'North County Coastal',
+            'Del Mar': 'North County Coastal', 'Cardiff-by-the-Sea': 'North County Coastal',
+            'San Marcos': 'North County Inland', 'Vista': 'North County Inland',
+            'Escondido': 'North County Inland', 'Poway': 'North County Inland',
+            'Coronado': 'Beach Communities',
+            'National City': 'South Bay', 'Chula Vista': 'South Bay', 'Imperial Beach': 'South Bay',
+            'El Cajon': 'Central & East SD', 'La Mesa': 'Central & East SD',
+            'Santee': 'Central & East SD', 'Lemon Grove': 'Central & East SD',
+            'Spring Valley': 'Central & East SD',
+        };
+
+        // Coordinate bounding-box fallback — priority-ordered, first match wins
+        function detectRegionByCoords(lat, lng) {
+            if (lat < 32.683)                   return 'South Bay';
+            if (lat > 32.95 && lng < -117.25)   return 'North County Coastal';
+            if (lat > 32.95)                    return 'North County Inland';
+            if (lat > 32.845 && lng > -117.23)  return 'North San Diego Inland';
+            if (lng < -117.205)                 return 'Beach Communities';
+            if (lng > -117.10)                  return 'Central & East SD';
+            return 'Downtown & Uptown';
+        }
+
         // Collect neighborhoods that actually exist in the data + count per neighborhood
         // Exclude online-only roasters — they never appear in the panel when zoomed into a neighborhood
         const nbrCount = {};
@@ -2122,15 +2149,34 @@ function setupEventListeners() {
         });
         const present = new Set(Object.keys(nbrCount));
         const allMapped = new Set(Object.values(regionMap).flat());
+
+        // Build final region → neighborhoods map, auto-detecting unmapped neighborhoods
+        const finalGroups = {};
+        Object.entries(regionMap).forEach(([region, hoods]) => {
+            finalGroups[region] = hoods.filter(h => present.has(h));
+        });
+        allLocations.forEach(l => {
+            if (l.basicInfo?.onlineOnly) return;
+            const n = l.coffeeDetails?.neighborhood;
+            if (!n || !present.has(n) || allMapped.has(n)) return;
+            const city = l.basicInfo?.address?.city;
+            const coords = l.basicInfo?.address?.coordinates;
+            const region = (city && cityRegionMap[city])
+                || (coords?.lat != null ? detectRegionByCoords(coords.lat, coords.lng) : null);
+            if (region) {
+                if (!finalGroups[region]) finalGroups[region] = [];
+                if (!finalGroups[region].includes(n)) finalGroups[region].push(n);
+            }
+        });
+
         const sel = document.getElementById('filterNeighborhood');
-        Object.entries(regionMap)
-            .map(([region, hoods]) => [region, hoods.filter(h => present.has(h))])
-            .filter(([, inData]) => inData.length > 0)
+        Object.entries(finalGroups)
+            .filter(([, hoods]) => hoods.length > 0)
             .sort(([, a], [, b]) => b.length - a.length)
-            .forEach(([region, inData]) => {
+            .forEach(([region, hoods]) => {
                 const grp = document.createElement('optgroup');
                 grp.label = region;
-                inData.forEach(h => {
+                hoods.sort().forEach(h => {
                     const opt = document.createElement('option');
                     opt.value = h;
                     opt.textContent = h + ' (' + (nbrCount[h] || 0) + ')';
@@ -2138,8 +2184,10 @@ function setupEventListeners() {
                 });
                 sel.appendChild(grp);
             });
-        // Safety net: catch any data neighborhoods not in regionMap so they're never silently dropped
-        const overflow = [...present].filter(n => !allMapped.has(n)).sort();
+
+        // True overflow: neighborhoods that couldn't be auto-detected at all
+        const allAssigned = new Set(Object.values(finalGroups).flat());
+        const overflow = [...present].filter(n => !allAssigned.has(n)).sort();
         if (overflow.length > 0) {
             const grp = document.createElement('optgroup');
             grp.label = 'Other';

@@ -78,6 +78,14 @@ const TRACKED_FIELDS = [
   'brewingOptions', 'yearEstablished',
 ];
 
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function locUrl(loc) {
+  return `https://sandiegocoffee.co/locations/${slugify(loc.basicInfo?.name || loc.id)}`;
+}
+
 function snapshotOf(loc) {
   const cd = loc.coffeeDetails || {};
   return {
@@ -195,8 +203,7 @@ function fmtAmenities(amenities) {
 function renderRoaster(loc) {
   const cd = loc.coffeeDetails || {};
   const name = loc.basicInfo?.name || '(Unknown)';
-  const id = loc.id;
-  const url = `https://sandiegocoffee.co/location.html?id=${id}`;
+  const url = locUrl(loc);
   const neighborhood = cd.neighborhood || '';
   const year = cd.yearEstablished ? `Est. ${cd.yearEstablished}` : '';
   const roastScale = cd.roastScale || '';
@@ -222,8 +229,7 @@ function renderRoaster(loc) {
 function renderCafe(loc) {
   const cd = loc.coffeeDetails || {};
   const name = loc.basicInfo?.name || '(Unknown)';
-  const id = loc.id;
-  const url = `https://sandiegocoffee.co/location.html?id=${id}`;
+  const url = locUrl(loc);
   const neighborhood = cd.neighborhood || '';
   const year = cd.yearEstablished ? `Est. ${cd.yearEstablished}` : '';
   const specialtyBarista = cd.specialtyBarista === 'Yes' ? 'Specialty Barista: Yes' : '';
@@ -364,7 +370,7 @@ function getAmenityLocations(amenityKey) {
 function buildQuickFind() {
   function row(emoji, label, locs, overrideCell) {
     if (overrideCell) return `| ${emoji} ${label} | ${overrideCell} |`;
-    const cell = locs.map(l => `[${l.basicInfo?.name}](https://sandiegocoffee.co/location.html?id=${l.id})`).join(', ');
+    const cell = locs.map(l => `[${l.basicInfo?.name}](https://sandiegocoffee.co/locations/${slugify(l.basicInfo?.name || l.id)})`).join(', ');
     return `| ${emoji} ${label} | ${cell || '—'} |`;
   }
   const lines = [
@@ -383,7 +389,7 @@ function buildQuickFindHtml() {
   function row(emoji, label, locs, overrideCell) {
     const cell = overrideCell
       ? overrideCell
-      : locs.map(l => `<a href="https://sandiegocoffee.co/location.html?id=${l.id}">${esc(l.basicInfo?.name)}</a>`).join(', ') || '—';
+      : locs.map(l => `<a href="https://sandiegocoffee.co/locations/${slugify(l.basicInfo?.name || l.id)}">${esc(l.basicInfo?.name)}</a>`).join(', ') || '—';
     return `<tr><td>${emoji} ${esc(label)}</td><td>${cell}</td></tr>`;
   }
   const beansAnchor = slugify('🛍️ Beans for Sale');
@@ -412,7 +418,7 @@ function buildBeansForSaleSection() {
   for (const loc of sortedOnline) {
     const cd = loc.coffeeDetails || {};
     const name = loc.basicInfo?.name || '';
-    const url = `https://sandiegocoffee.co/location.html?id=${loc.id}`;
+    const url = `https://sandiegocoffee.co/locations/${slugify(loc.basicInfo?.name || loc.id)}`;
     const roastStyle = cd.roastStyle || '—';
     const website = loc.basicInfo?.contact?.website || cd.onlineWebsite || '';
     const websiteDisplay = website
@@ -448,7 +454,7 @@ function buildBeansForSaleSection() {
     for (const region of REGION_ORDER) {
       const locs = byRegion[region];
       if (!locs || locs.length === 0) continue;
-      const links = locs.map(l => `[${l.basicInfo?.name}](https://sandiegocoffee.co/location.html?id=${l.id})`).join(' · ');
+      const links = locs.map(l => `[${l.basicInfo?.name}](https://sandiegocoffee.co/locations/${slugify(l.basicInfo?.name || l.id)})`).join(' · ');
       lines.push(`**${headingText(region)}:** ${links}`);
       lines.push('');
     }
@@ -467,7 +473,7 @@ function esc(str) {
 function renderRoasterHtml(loc) {
   const cd = loc.coffeeDetails || {};
   const name = loc.basicInfo?.name || '(Unknown)';
-  const url = `https://sandiegocoffee.co/location.html?id=${loc.id}`;
+  const url = `https://sandiegocoffee.co/locations/${slugify(loc.basicInfo?.name || loc.id)}`;
   const metaParts = [];
   if (cd.neighborhood) metaParts.push(esc(cd.neighborhood));
   if (cd.yearEstablished) metaParts.push(`Est. ${cd.yearEstablished}`);
@@ -487,7 +493,7 @@ function renderRoasterHtml(loc) {
 function renderCafeHtml(loc) {
   const cd = loc.coffeeDetails || {};
   const name = loc.basicInfo?.name || '(Unknown)';
-  const url = `https://sandiegocoffee.co/location.html?id=${loc.id}`;
+  const url = `https://sandiegocoffee.co/locations/${slugify(loc.basicInfo?.name || loc.id)}`;
   const metaParts = [];
   if (cd.neighborhood) metaParts.push(esc(cd.neighborhood));
   if (cd.yearEstablished) metaParts.push(`Est. ${cd.yearEstablished}`);
@@ -551,7 +557,7 @@ function buildBeansForSaleHtml() {
   for (const loc of sortedOnline) {
     const cd = loc.coffeeDetails || {};
     const name = loc.basicInfo?.name || '';
-    const url = `https://sandiegocoffee.co/location.html?id=${loc.id}`;
+    const url = `https://sandiegocoffee.co/locations/${slugify(loc.basicInfo?.name || loc.id)}`;
     const roastStyle = cd.roastStyle || '—';
     const website = loc.basicInfo?.contact?.website || cd.onlineWebsite || '';
     const websiteCell = website
@@ -585,7 +591,7 @@ function buildBeansForSaleHtml() {
     for (const region of REGION_ORDER) {
       const locs = byRegion[region];
       if (!locs || locs.length === 0) continue;
-      const links = locs.map(l => `<a href="https://sandiegocoffee.co/location.html?id=${l.id}">${esc(l.basicInfo?.name)}</a>`).join(' · ');
+      const links = locs.map(l => `<a href="https://sandiegocoffee.co/locations/${slugify(l.basicInfo?.name || l.id)}">${esc(l.basicInfo?.name)}</a>`).join(' · ');
       lines.push(`<p><strong>${esc(headingText(region))}:</strong> ${links}</p>`);
     }
   } else {

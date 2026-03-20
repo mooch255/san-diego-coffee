@@ -1502,8 +1502,18 @@ let communityData = { likes: {}, reviews: {} };
 // Build highlight lookup: locationId → highlight entry
 const highlightByLocation = {};
 (window.highlights || []).forEach(h => {
-    const m = h.locationUrl?.match(/id=([^&]+)/);
-    if (m) highlightByLocation[m[1]] = h;
+    // Support old ?id=loc_xxx format and new /locations/slug format
+    const idMatch = h.locationUrl?.match(/[?&]id=([^&]+)/);
+    if (idMatch) {
+        highlightByLocation[idMatch[1]] = h;
+    } else {
+        const slugMatch = h.locationUrl?.match(/\/locations\/([^/?#]+)/);
+        if (slugMatch) {
+            const slug = slugMatch[1];
+            const loc = (window.COFFEE_LOCATIONS || []).find(l => slugify(l.basicInfo.name) === slug);
+            if (loc) highlightByLocation[loc.id] = h;
+        }
+    }
 });
 function loadSheetData() {
     (window.COFFEE_LOCATIONS || []).forEach(loc => {
@@ -1751,6 +1761,10 @@ function showInfoWindow(marker, location) {
     infoWindow.open(map, marker);
 }
 
+function slugify(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 function createInfoWindowContent(location, custom) {
     custom = custom || {};
     const info = location.basicInfo;
@@ -1791,7 +1805,7 @@ function createInfoWindowContent(location, custom) {
     const likeBtnColor = pinIsLiked ? '#B85C38' : '#6B4E3D';
     const likeBtnBorder = pinIsLiked ? '#B85C38' : '#C8B9AC';
     const likeBtnStyle = `cursor:pointer;background:transparent;border:1px solid ${likeBtnBorder};color:${likeBtnColor};padding:0.18rem 0.55rem;font-size:0.7rem;font-family:'Libre Franklin',sans-serif;font-weight:600;line-height:1.4;`;
-    const reviewsUrl = `locations/${location.id}#reviews`;
+    const reviewsUrl = `locations/${slugify(location.basicInfo.name)}#reviews`;
     const linkStyle = `font-size:0.7rem;color:#C4A77D;text-decoration:none;`;
     const likeCountHtml = pinLikes > 0 ? `<a id="map-like-count-${location.id}" href="${reviewsUrl}" style="${linkStyle}">${pinLikes} ${pinLikes === 1 ? 'like' : 'likes'}</a>` : `<span id="map-like-count-${location.id}" style="font-size:0.7rem;color:#C4A77D;"></span>`;
     const reviewCountHtml = pinReviews > 0 ? `<a href="${reviewsUrl}" style="${linkStyle}">· 💬 ${pinReviews} review${pinReviews > 1 ? 's' : ''}</a>` : '';
@@ -1833,16 +1847,18 @@ function createInfoWindowContent(location, custom) {
             html += `</div>`;
         }
 
-        if (custom.amenities?.length) {
-            const a = custom.amenities;
+        if (custom.amenities?.length || custom.brewingOptions?.length) {
+            const a = custom.amenities || [];
+            const br = custom.brewingOptions || [];
             const amenityBits = [];
-            if (a.some(x => x.includes('Dog')))                             amenityBits.push('🐾 Dog Friendly');
-            if (a.some(x => x.includes('Wifi') || x.includes('Working')))   amenityBits.push('💻 WiFi');
-            if (a.some(x => x.includes('Food') || x.includes('Pastries')))  amenityBits.push('🥐 Food');
-            if (a.some(x => x.includes('Beans Online')))                     amenityBits.push('🛒 Online Beans');
-            if (a.some(x => x.includes('Espresso Options')))                 amenityBits.push('☕ Espresso Options');
-            if (a.some(x => x.includes('Decaf')))                            amenityBits.push('🌙 Decaf Espresso');
-            if (a.some(x => x.includes('Seating')))                          amenityBits.push('🪑 Seating');
+            if (a.some(x => x.includes('Dog')))                                                          amenityBits.push('🐾 Dog Friendly');
+            if (a.some(x => x.includes('Wifi') || x.includes('Working')))                               amenityBits.push('💻 WiFi');
+            if (a.some(x => x.includes('Food') || x.includes('Pastries')))                              amenityBits.push('🥐 Food');
+            if (a.some(x => x.includes('Beans Online')))                                                 amenityBits.push('🛒 Online Beans');
+            if (a.some(x => x.includes('Espresso Options')) || br.some(x => x.includes('Espresso Bean'))) amenityBits.push('☕ Espresso Options');
+            if (a.some(x => x.includes('Decaf'))             || br.some(x => x.includes('Decaf')))      amenityBits.push('🌙 Decaf Espresso');
+            if (a.some(x => x.includes('Seating')))                                                      amenityBits.push('🪑 Seating');
+            if (a.some(x => x.includes('Pour Over'))         || br.some(x => x.includes('Pour Over')))  amenityBits.push('🫖 Pour Over');
             if (amenityBits.length) {
                 html += `<div class="info-window-badges-row">`;
                 amenityBits.forEach(b => { html += `<span class="info-window-badge yes">${b}</span>`; });
@@ -1860,11 +1876,12 @@ function createInfoWindowContent(location, custom) {
     }
 
     // ── Buttons ────────────────────────────────────────────────────────
-    const shareUrl = `${window.location.origin}/locations/${encodeURIComponent(location.id)}`;
+    const locSlug = slugify(location.basicInfo.name);
+    const shareUrl = `${window.location.origin}/locations/${locSlug}`;
 
     // 2-column grid: View Details | Suggest Edit on row 1, Directions | Share on row 2
     const bStyle = 'display:block;width:100%;box-sizing:border-box;text-align:center;';
-    const primaryBtn = `<a href="locations/${location.id}" class="directions-btn" style="${bStyle}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
+    const primaryBtn = `<a href="locations/${locSlug}" class="directions-btn" style="${bStyle}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
     const editBtn    = `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="${bStyle}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;">&#9999;&#65039; Suggest Edit</a>`;
     const shareBtn   = `<button onclick="copyShareLink('${shareUrl}', this)" class="directions-btn" style="${bStyle}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;cursor:pointer;">&#128279; Share</button>`;
 
@@ -2868,16 +2885,18 @@ function renderCard(loc) {
             }
 
             // Amenities inline
-            if (custom.amenities && custom.amenities.length) {
-                const a = custom.amenities;
+            if ((custom.amenities && custom.amenities.length) || (custom.brewingOptions && custom.brewingOptions.length)) {
+                const a = custom.amenities || [];
+                const br = custom.brewingOptions || [];
                 const amenityBits = [];
-                if (a.some(x => x.includes('Dog')))                             amenityBits.push('🐾 Dog Friendly');
-                if (a.some(x => x.includes('Wifi') || x.includes('Working')))   amenityBits.push('💻 WiFi');
-                if (a.some(x => x.includes('Food') || x.includes('Pastries')))  amenityBits.push('🥐 Food');
-                if (a.some(x => x.includes('Beans Online')))                     amenityBits.push('🛒 Online Beans');
-                if (a.some(x => x.includes('Espresso Options')))                 amenityBits.push('☕ Espresso Options');
-                if (a.some(x => x.includes('Decaf')))                            amenityBits.push('🌙 Decaf Espresso');
-                if (a.some(x => x.includes('Seating')))                          amenityBits.push('🪑 Seating');
+                if (a.some(x => x.includes('Dog')))                                                          amenityBits.push('🐾 Dog Friendly');
+                if (a.some(x => x.includes('Wifi') || x.includes('Working')))                               amenityBits.push('💻 WiFi');
+                if (a.some(x => x.includes('Food') || x.includes('Pastries')))                              amenityBits.push('🥐 Food');
+                if (a.some(x => x.includes('Beans Online')))                                                 amenityBits.push('🛒 Online Beans');
+                if (a.some(x => x.includes('Espresso Options')) || br.some(x => x.includes('Espresso Bean'))) amenityBits.push('☕ Espresso Options');
+                if (a.some(x => x.includes('Decaf'))             || br.some(x => x.includes('Decaf')))      amenityBits.push('🌙 Decaf Espresso');
+                if (a.some(x => x.includes('Seating')))                                                      amenityBits.push('🪑 Seating');
+                if (a.some(x => x.includes('Pour Over'))         || br.some(x => x.includes('Pour Over')))  amenityBits.push('🫖 Pour Over');
                 if (amenityBits.length) lines.push(`<div class="card-detail-line" style="color:#888;">${amenityBits.join(' · ')}</div>`);
             }
 

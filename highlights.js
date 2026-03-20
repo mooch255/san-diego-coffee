@@ -8,7 +8,7 @@ window.highlights = [
     image: '/images/highlights/highlight_frequent-coffee.jpg',
     excerpt: 'Mark Gano is rethinking what decaf can be — sourcing directly from farms, air-freighting for freshness, and chasing complexity in a category most specialty roasters won\'t touch.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1qw495e/roaster_highlight_frequent_coffee_w_head_roaster/',
-    locationUrl: 'location.html?id=loc_147',
+    locationUrl: '/locations/frequent-coffee',
     body: [
       { type: 'text', content: 'Frequent Coffee is doing something most specialty roasters won\'t touch: building an entire company around high-quality decaf and low-caffeine offerings. Based in Ocean Beach, head roaster Mark Gano sat down with us to talk sourcing, roasting, San Diego water, and why the best decaf he\'s ever made is currently stuck in customs.' },
       { type: 'qa',
@@ -67,7 +67,7 @@ window.highlights = [
     image: '/images/locations/loc_058.jpg',
     excerpt: 'Seth and Will built Visitor Coffee Roasters around a simple philosophy: tread lightly on the planet, roast lightly on the bean. From an Imperial Beach kitchen to a National City warehouse, they\'re doing it their way.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1re1eh1/roaster_highlight_visitor_coffee_roasters_w/',
-    locationUrl: 'location.html?id=loc_058',
+    locationUrl: '/locations/visitor-coffee-roaster',
     body: [
       { type: 'text', content: 'Visitor Coffee Roasters is named for a philosophy as much as a brand — Seth and Will see themselves as visitors on Earth, and that mindset shapes everything from their sourcing to their packaging. Started in a small Imperial Beach kitchen in 2020, they\'ve grown into a National City warehouse operation with a quietly expanding footprint across San Diego\'s south bay. We sat down with both of them to talk Tartine, Tony Gwynn, and why fine-tuning your grind might matter more than your water source.' },
       { type: 'qa',
@@ -78,6 +78,7 @@ window.highlights = [
         question: 'VCR beans are sold primarily online and through a coffee subscription format. Do you have any plans in the near future to wholesale or open up a coffee shop of your own?',
         answer: 'True, most of our sales started online but we\'ve been slowly growing our presence in some local spots around town. We sell our bags at Boney\'s in Coronado under their 92118 label. We sell retail bags, bulk beans, and our coffee is served at the deli in the newly opened SunCoast Co-op in Imperial Beach. You can also find our coffee being served at Dame Mas Cafeina in Chula Vista and Millport in Imperial Beach, as well as a Tijuana Estuary Blend benefiting their conservation efforts — available at their Imperial Beach visitor center and gift shop.\n\nEventually we\'d love to open our own little cafe.'
       },
+      { type: 'image', src: '/images/highlights/highlight_visitor-coffee-roasters-b.jpg', caption: '' },
       { type: 'qa',
         question: 'Your name and brand message talk about being "Visitors" on Earth and having minimal environmental impact — how does that philosophy influence your sourcing decisions, roasting methods, or packaging?',
         answer: 'We source most of our coffee through InterAmerican Coffee and Royal Coffee Importers. Almost all of the beans we offer are organic, but our company technically isn\'t certified organic yet, which is why we\'re not able to add that to our labels just yet. We used to use an all-electric roaster until we needed to increase our output, so we currently use a gas-powered SF-6. Our 12oz bags are made from a recyclable material — big thanks to Roastar.'
@@ -90,6 +91,7 @@ window.highlights = [
         question: 'Can you fill us in on the evolution of roasting equipment and roasting spaces over the years? What advice do you have for someone wanting to dip their toes into home roasting?',
         answer: 'We moved up from a smaller electric roaster to a gas-powered San Franciscan Roaster, and we\'ll probably need to scale up again soon. We started out in a small kitchen in Imperial Beach back in 2020, realized we were outgrowing it pretty quickly, and moved into a warehouse in National City in 2023 — and we\'ve been here ever since.'
       },
+      { type: 'image', src: '/images/highlights/highlight_visitor-coffee-roasters-c.jpg', caption: '' },
       { type: 'qa',
         question: 'San Diego tap water is pretty hard. How much does that factor into your roasting decisions, considering most locals probably brew at home? And do you think having "ideal" coffee water is essential to getting the best out of a given bean?',
         answer: 'Water doesn\'t really factor into roasting — there isn\'t any water involved in the process. Unfortunately, we can\'t really control what water people use at home, so that\'s not something we worry about too much.\n\nHaving a quality water source definitely makes a difference when you\'re brewing. For us, it really comes down to the combination of grind and brew process when assessing each roast. Fine-tuning the grind level can be make or break for different beans, especially with drip or pourover. There are lots of ways to mess around with the process and find what works best for you.'
@@ -114,7 +116,7 @@ window.highlights = [
     image: '/images/highlights/highlight_excelsa-coffee.jpg',
     excerpt: 'Michael Mazzotta and Olin Patterson are betting the specialty coffee world has been overlooking something extraordinary: a species with lower caffeine, tart fruit-forward complexity, and climate resilience that Arabica can\'t match.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1rjuhu5/coffee_species_highlight_excelsa_coffee_w/',
-    locationUrl: 'location.html?id=loc_120',
+    locationUrl: '/locations/excelsa-coffee',
     body: [
       { type: 'text', content: 'We\'re Michael Mazzotta and Olin Patterson, co-founders of Excelsa Coffee in San Diego. We started this because we kept asking a simple question: why does the whole specialty world orbit basically one species? We\'re betting on Excelsa, and we\'re still in the early innings refining roast approaches, sourcing, and what "great" even means for this cup. Here\'s a Q&A and we\'ll stick around for questions.\n\nYou can find us at <a href="https://excelsacoffee.com" target="_blank" rel="noopener">excelsacoffee.com</a>. Our Instagram is at <a href="https://www.instagram.com/drinkexcelsa" target="_blank" rel="noopener">@drinkexcelsa</a> where we share roast experiments, sourcing trips, and behind-the-scenes work. We also opened the USA\'s first Excelsa-exclusive café at 1855 Sunset Cliffs Blvd, San Diego 92107.' },
       { type: 'image', src: '/images/highlights/highlight_excelsa-coffeef.jpg', caption: '' },
@@ -171,7 +173,7 @@ window.highlights = [
     image: '/images/highlights/highlight_torque-coffee.jpg',
     excerpt: 'Andy Newbom built Torque Coffee on a radical premise: give every coffee-producing origin a minimum 20% equity share of every coffee\'s retail price — and make it taste extraordinary while doing it.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1rwdvza/roaster_highlight_torque_coffee_w_founder_andy/',
-    locationUrl: 'location.html?id=loc_040',
+    locationUrl: '/locations/torque-coffee',
     body: [
       { type: 'text', content: 'Torque Coffee has built a reputation as one of San Diego\'s most thoughtful and vocal specialty roasters — not just for the quality in the cup, but for what\'s behind it. Founder Andy Newbom sat down with us to talk about their mission to remake the global coffee supply chain, their obsessive approach to sourcing and forward contracts, and why roast level names are largely meaningless.' },
       { type: 'qa',
@@ -225,7 +227,7 @@ window.highlights = [
     image: '/images/highlights/highlight_big-step-coffee.jpg',
     excerpt: 'After catching the specialty coffee bug in Portland, Kyle Hayslip moved back to San Diego and launched Big Step Coffee — an online roaster built around sourcing great beans and letting them speak for themselves.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1ryag02/roaster_highlight_big_step_coffee_w_founder_kyle/',
-    locationUrl: 'location.html?id=loc_155',
+    locationUrl: '/locations/big-step-coffee',
     body: [
       { type: 'text', content: 'Kyle Hayslip\'s path to coffee wasn\'t traditional — Marines, corporate career, a deep dive into the industry while living in Portland, then back to San Diego to launch Big Step Coffee. Now going into his third year, Kyle roasts out of the California Roasting Collective in San Marcos, sourcing primarily washed coffees and chasing what he calls the "perfect cup." We sat down with him to talk about the name, the collective, subscriptions, and water.' },
       { type: 'qa',

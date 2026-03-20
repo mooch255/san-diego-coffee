@@ -26,6 +26,10 @@ function safeDate(str) {
   return isNaN(d.getTime()) ? today() : d.toISOString().slice(0, 10);
 }
 
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
 function loadLocations() {
   var raw = fs.readFileSync(LOCATIONS_FILE, 'utf8');
   var m = raw.match(/window\.COFFEE_LOCATIONS\s*=\s*(\[[\s\S]*?\]);\s*$/m);
@@ -82,7 +86,7 @@ staticPages.forEach(function(p) {
 // Location pages
 locations.forEach(function(loc) {
   var lastmod = safeDate(loc.coffeeDetails && loc.coffeeDetails.lastUpdated);
-  var url = BASE_URL + '/location.html?id=' + loc.id;
+  var url = BASE_URL + '/locations/' + slugify(loc.basicInfo.name);
   entries.push(urlEntry(url, lastmod, 'monthly', '0.8'));
 });
 

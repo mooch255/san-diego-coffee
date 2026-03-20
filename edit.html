@@ -532,7 +532,8 @@
     // ── Get location from URL ──────────────────────────────────────────
     const params     = new URLSearchParams(window.location.search);
     const locationId = params.get('id');
-    const returnUrl  = params.get('return') || 'location.html?id=' + locationId;
+    function slugify(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+    const returnUrl  = params.get('return') || '/locations/' + locationId;
 
     if (!locationId) {
         document.getElementById('errorState').style.display = 'block';
@@ -562,17 +563,23 @@
             : buildCafeForm(custom);
 
         // Wire checkboxes AFTER form is in the DOM
-        const currentAmenities = custom.amenities || [];
-        document.querySelectorAll('.checkbox-item').forEach(item => {
+        const currentAmenities    = custom.amenities || [];
+        const currentBrewingOpts  = custom.brewingOptions || [];
+        document.querySelectorAll('#amenitiesGrid .checkbox-item').forEach(item => {
             const val = item.querySelector('input').value;
             if (currentAmenities.includes(val)) {
                 item.classList.add('checked');
                 item.querySelector('input').checked = true;
             }
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                toggleCheck(item);
-            });
+            item.addEventListener('click', function(e) { e.preventDefault(); toggleCheck(item); });
+        });
+        document.querySelectorAll('#brewingGrid .checkbox-item').forEach(item => {
+            const val = item.querySelector('input').value;
+            if (currentBrewingOpts.includes(val)) {
+                item.classList.add('checked');
+                item.querySelector('input').checked = true;
+            }
+            item.addEventListener('click', function(e) { e.preventDefault(); toggleCheck(item); });
         });
     }
 
@@ -657,6 +664,7 @@
                 <label class="checkbox-item"><input type="checkbox" value="Sells Beans Online"><span class="checkbox-box">✓</span>Sells Beans Online</label>
                 <label class="checkbox-item"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
                 <label class="checkbox-item"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
+                <label class="checkbox-item"><input type="checkbox" value="Pour Over Available"><span class="checkbox-box">✓</span>Pour Over Available</label>
                 <label class="checkbox-item"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
             </div>
         </div>
@@ -719,15 +727,25 @@
         </div>
 
         <div class="form-card">
+            <div class="section-label">Brewing Options</div>
+            <div class="current-val" style="margin-bottom:0.75rem;">Currently: <span>${cur(c.brewingOptions)}</span></div>
+            <div class="checkbox-grid" id="brewingGrid">
+                <label class="checkbox-item"><input type="checkbox" value="Pour Over Available"><span class="checkbox-box">✓</span>Pour Over Available</label>
+                <label class="checkbox-item"><input type="checkbox" value="Batch Brew Single Origins"><span class="checkbox-box">✓</span>Batch Brew Single Origins</label>
+                <label class="checkbox-item"><input type="checkbox" value="Espresso Bean Options"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
+                <label class="checkbox-item"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
+                <label class="checkbox-item"><input type="checkbox" value="Cold Brew"><span class="checkbox-box">✓</span>Cold Brew</label>
+            </div>
+        </div>
+
+        <div class="form-card">
             <div class="section-label">Features &amp; Amenities</div>
             <div class="current-val" style="margin-bottom:0.75rem;">Currently: <span>${cur(c.amenities)}</span></div>
             <div class="checkbox-grid" id="amenitiesGrid">
                 <label class="checkbox-item"><input type="checkbox" value="Offers Food / Pastries"><span class="checkbox-box">✓</span>Offers Food / Pastries</label>
                 <label class="checkbox-item"><input type="checkbox" value="Good for Working (Wifi)"><span class="checkbox-box">✓</span>Good for Working (WiFi)</label>
                 <label class="checkbox-item"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
-                <label class="checkbox-item"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
                 <label class="checkbox-item"><input type="checkbox" value="Community Events"><span class="checkbox-box">✓</span>Community Events</label>
-                <label class="checkbox-item"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
             </div>
         </div>
 
@@ -754,7 +772,12 @@
     }
 
     function getCheckedAmenities() {
-        return Array.from(document.querySelectorAll('.checkbox-item.checked'))
+        return Array.from(document.querySelectorAll('#amenitiesGrid .checkbox-item.checked'))
+            .map(el => el.querySelector('input').value);
+    }
+
+    function getCheckedBrewingOptions() {
+        return Array.from(document.querySelectorAll('#brewingGrid .checkbox-item.checked'))
             .map(el => el.querySelector('input').value);
     }
 
@@ -795,6 +818,7 @@
             payload.specialtyBarista  = getVal('f-specialtyBarista');
             payload.multipleLocations = getVal('f-multipleLocations');
             payload.roastersServed    = getVal('f-roastersServed');
+            payload.brewingOptions    = getCheckedBrewingOptions().join(', ');
         }
 
         try {

@@ -1571,6 +1571,10 @@
             const infoWindow = new google.maps.InfoWindow();
             const locations = window.COFFEE_LOCATIONS || [];
 
+            function slugify(name) {
+                return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            }
+
             locations.forEach(location => {
                 if (!location.basicInfo.address?.coordinates) return;
                 const isRoaster = location.basicInfo.type === 'roaster';
@@ -1655,16 +1659,18 @@
                             html += `</div>`;
                         }
 
-                        if (custom.amenities?.length) {
-                            const a = custom.amenities;
+                        if (custom.amenities?.length || custom.brewingOptions?.length) {
+                            const a = custom.amenities || [];
+                            const br = custom.brewingOptions || [];
                             const amenityBits = [];
-                            if (a.some(x => x.includes('Dog')))                             amenityBits.push('🐾 Dog Friendly');
-                            if (a.some(x => x.includes('Wifi') || x.includes('Working')))   amenityBits.push('💻 WiFi');
-                            if (a.some(x => x.includes('Food') || x.includes('Pastries')))  amenityBits.push('🥐 Food');
-                            if (a.some(x => x.includes('Beans Online')))                     amenityBits.push('🛒 Online Beans');
-                            if (a.some(x => x.includes('Espresso Options')))                 amenityBits.push('☕ Espresso Options');
-                            if (a.some(x => x.includes('Decaf')))                            amenityBits.push('🌙 Decaf Espresso');
-                            if (a.some(x => x.includes('Seating')))                          amenityBits.push('🪑 Seating');
+                            if (a.some(x => x.includes('Dog')))                                                          amenityBits.push('🐾 Dog Friendly');
+                            if (a.some(x => x.includes('Wifi') || x.includes('Working')))                               amenityBits.push('💻 WiFi');
+                            if (a.some(x => x.includes('Food') || x.includes('Pastries')))                              amenityBits.push('🥐 Food');
+                            if (a.some(x => x.includes('Beans Online')))                                                 amenityBits.push('🛒 Online Beans');
+                            if (a.some(x => x.includes('Espresso Options')) || br.some(x => x.includes('Espresso Bean'))) amenityBits.push('☕ Espresso Options');
+                            if (a.some(x => x.includes('Decaf'))             || br.some(x => x.includes('Decaf')))      amenityBits.push('🌙 Decaf Espresso');
+                            if (a.some(x => x.includes('Seating')))                                                      amenityBits.push('🪑 Seating');
+                            if (a.some(x => x.includes('Pour Over'))         || br.some(x => x.includes('Pour Over')))  amenityBits.push('🫖 Pour Over');
                             if (amenityBits.length) {
                                 html += `<div class="info-window-badges-row">`;
                                 amenityBits.forEach(b => { html += `<span class="info-window-badge yes">${b}</span>`; });
@@ -1676,7 +1682,7 @@
                     // Buttons
                     const shareUrl = `${window.location.origin}/map.html?location=${encodeURIComponent(location.id)}`;
                     html += `<div style="margin-top:0.6rem;">`;
-                    html += `<a href="location.html?id=${location.id}" class="info-window-btn" style="background:#6F4E37; color:white;">📋 View Details</a>`;
+                    html += `<a href="/locations/${slugify(location.basicInfo.name)}?from=home" class="info-window-btn" style="background:#6F4E37; color:white;">📋 View Details</a>`;
                     html += `<a href="map.html" id="popupMapLink" class="info-window-btn" style="background:white; color:#6B4E3D; border-color:#6B4E3D;">Explore Full Map →</a>`;
                     html += `<button onclick="copyShareLink('${shareUrl}', this)" class="info-window-btn" style="background:transparent; color:#6B4E3D; border-color:#C8B9AC;">🔗 Share Location</button>`;
                     html += `</div></div>`;

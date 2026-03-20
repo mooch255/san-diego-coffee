@@ -632,6 +632,7 @@
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Sells Beans Online"><span class="checkbox-box">✓</span>Sells Beans Online</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Pour Over Available"><span class="checkbox-box">✓</span>Pour Over Available</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
                     </div>
                 </div>
@@ -727,9 +728,9 @@
                     <div class="section-label">Brewing Options</div>
                     <div class="field-hint" style="margin-bottom:0.75rem;">Select all that apply</div>
                     <div class="checkbox-grid" id="c-brewing">
-                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Manual Pour Over"><span class="checkbox-box">✓</span>Manual Pour Over</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Pour Over Available"><span class="checkbox-box">✓</span>Pour Over Available</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Batch Brew Single Origins"><span class="checkbox-box">✓</span>Batch Brew Single Origins</label>
-                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Espresso: Single Origin Option"><span class="checkbox-box">✓</span>Espresso: Single Origin Option</label>
+                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Espresso Bean Options"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Decaf Espresso Available"><span class="checkbox-box">✓</span>Decaf Espresso Available</label>
                     </div>
                 </div>
@@ -741,7 +742,6 @@
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Offers Food / Pastries"><span class="checkbox-box">✓</span>Offers Food / Pastries</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Good for Working (Wifi)"><span class="checkbox-box">✓</span>Good for Working (WiFi)</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Dog Friendly"><span class="checkbox-box">✓</span>Dog Friendly</label>
-                        <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Espresso Options (Choice between different beans)"><span class="checkbox-box">✓</span>Espresso Bean Options</label>
                         <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="Community Events"><span class="checkbox-box">✓</span>Community Events</label>
                     </div>
                 </div>
@@ -1236,12 +1236,11 @@
             const group = document.getElementById(groupId);
             if (!group) return;
             group.querySelectorAll('.checkbox-item').forEach(item => {
-                const val = item.querySelector('input')?.value || '';
-                if (values.includes(val)) {
-                    item.classList.add('checked');
-                } else {
-                    item.classList.remove('checked');
-                }
+                const input = item.querySelector('input');
+                const val = input?.value || '';
+                const checked = values.includes(val);
+                item.classList.toggle('checked', checked);
+                if (input) input.checked = checked;
             });
         }
 

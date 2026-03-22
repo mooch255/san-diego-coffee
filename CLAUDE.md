@@ -1,7 +1,7 @@
 # sandiegocoffee.co — Claude Code Context
 
 ## Project Overview
-A specialty coffee directory and interactive map for the [r/SanDiegoCoffeeBeans](https://reddit.com/r/SanDiegoCoffeeBeans) Reddit community. Hosted at **sandiegocoffee.co** on Netlify with GitHub-based auto-deploy. Features 148+ coffee locations across San Diego neighborhoods, targeting "coffee data nerds" who want detailed roast profiles, brew methods, and visitor info — not just basic listings.
+A specialty coffee directory and interactive map for the [r/SanDiegoCoffeeBeans](https://reddit.com/r/SanDiegoCoffeeBeans) Reddit community. Hosted at **sandiegocoffee.co** on Netlify with GitHub-based auto-deploy. Features 151+ coffee locations across San Diego neighborhoods, targeting "coffee data nerds" who want detailed roast profiles, brew methods, and visitor info — not just basic listings.
 
 ## Tech Stack
 - **Frontend:** Plain HTML, CSS, JavaScript (no React/frameworks)
@@ -36,7 +36,7 @@ A specialty coffee directory and interactive map for the [r/SanDiegoCoffeeBeans]
 
 ## Photos
 - Location photos are **self-hosted** in `/images/locations/{id}.jpg` — no live Places API calls on page load
-- Each location has a single hero photo stored as `loc.localImage` in `locations.js`
+- Each location has a primary hero photo stored as `loc.localImage` in `locations.js`; some locations also have `loc.localImage2` and `loc.localImage3` for additional photos (`{id}b.jpg`, `{id}c.jpg`)
 - `migrate-photos.js` handles downloading photos — safe to re-run, skips already-migrated locations
 - For new locations added via admin, `migrate-photos.js` auto-fetches the photo reference from Places API using `placeId` if `googlePhotos` is empty
 - Location pages show the hero image + a "More photos on Google Maps ↗" link using the stored `placeId`
@@ -68,6 +68,7 @@ Never update just one or two — all four must stay in sync.
 - Online-only roaster support (no physical location required)
 - Admin tools for real-time data management
 - Community submission forms
+- News & Events page with structured data (JSON-LD)
 - Reddit post integration from subreddit
 
 ## Environment Variables
@@ -118,6 +119,6 @@ Never add to `news.js` without updating the structured data in `news.html`.
 - Check `netlify dev` compatibility before suggesting any build tool changes
 - The Google Sheets sync is the source of truth for location data — don't hardcode location info into HTML
 - Serverless functions live in the `netlify/functions/` directory
-- `locations.js` contains a `localImage` field per location pointing to `/images/locations/{id}.jpg` — do not replace this with live Places API photo URLs
+- `locations.js` contains `localImage` (and optionally `localImage2`, `localImage3`) fields per location pointing to `/images/locations/{id}.jpg` — do not replace these with live Places API photo URLs
 - `sync-locations.js` both updates existing locations AND inserts new ones — new insertion requires `GOOGLE_PLACES_API_KEY` in `.env` and a `placeId` column in the Roasters/Cafes sheets
 - Admin search fires on Enter key only (not on keystroke) to avoid excessive Places API calls

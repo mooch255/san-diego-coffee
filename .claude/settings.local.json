@@ -38,7 +38,17 @@
       "WebFetch(domain:ultreyacoffee.com)",
       "WebFetch(domain:www.tridentcoffee.com)",
       "WebFetch(domain:jamescoffeeco.com)",
-      "Skill(update-config)"
+      "Skill(update-config)",
+      "Bash(node -e \":*)",
+      "Bash(__NEW_LINE_bae77642f5b38cde__ echo:*)",
+      "WebSearch",
+      "Bash(cd:*)",
+      "Bash(python3 -c \":*)",
+      "Bash(sed -i '5742,5750s/\"\"multipleLocations\"\": \"\"Yes\"\"/\"\"roastStyle\"\": \"\"Medium Roast\"\",\\\\n      \"\"multipleLocations\"\": \"\"Yes\"\"/' locations.js)",
+      "Bash(sed -i '5836,5843s/\"\"multipleLocations\"\": \"\"Yes\"\"/\"\"roastStyle\"\": \"\"Medium Roast\"\",\\\\n      \"\"multipleLocations\"\": \"\"Yes\"\"/' locations.js)",
+      "Bash(sed -i '5930,5936s/\"\"multipleLocations\"\": \"\"Yes\"\"/\"\"roastStyle\"\": \"\"Medium Roast\"\",\\\\n      \"\"multipleLocations\"\": \"\"Yes\"\"/' locations.js)",
+      "Bash(sed -i '6023,6029s/\"\"multipleLocations\"\": \"\"Yes\"\"/\"\"roastStyle\"\": \"\"Medium Roast\"\",\\\\n      \"\"multipleLocations\"\": \"\"Yes\"\"/' locations.js)",
+      "Bash(sed -i '6116,6122s/\"\"multipleLocations\"\": \"\"Yes\"\"/\"\"roastStyle\"\": \"\"Medium Roast\"\",\\\\n      \"\"multipleLocations\"\": \"\"Yes\"\"/' locations.js)"
     ]
   }
 }

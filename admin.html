@@ -1388,6 +1388,12 @@
                     showAlert(`✓ ${action} "${payload.locationName}" in the ${currentType === 'roaster' ? 'Roasters' : 'Cafes'} sheet!`, 'success');
                     btn.textContent = `✓ ${action}!`;
 
+                    // If a new location was added, register its ID in memory so getNextId()
+                    // returns the correct next value if another location is added this session.
+                    if (currentMode === 'add' && data.action !== 'updated') {
+                        ALL_LOCATIONS.push({ id: payload.id });
+                    }
+
                     // For online-only locations, sync-locations.js handles insertion automatically
                     if (selectedLocation?.isOnlineOnly) {
                         showAlert('✓ Saved! Run node sync-locations.js to auto-insert into locations.js.', 'info');

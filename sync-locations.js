@@ -78,6 +78,7 @@ function buildCoffeeDetails(type, row) {
   return {
     neighborhood:      row.neighborhood      || '',
     yearEstablished:   row.yearEstablished   || '',
+    visitorExperience: row.visitorExperience || 'Full Cafe (Open daily with seating)',
     multipleLocations: row.multipleLocations || '',
     specialtyBarista:  row.specialtyBarista  || '',
     roastersServed:    row.roastersServed    ? row.roastersServed.split(',').map(r => r.trim()).filter(Boolean) : [],

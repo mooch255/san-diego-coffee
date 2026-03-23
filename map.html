@@ -464,6 +464,39 @@
             font-weight: 400;
         }
 
+        /* Active filter chips */
+        .active-filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 12px 4px;
+        }
+        .active-filter-chips:empty { display: none; }
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f5ece4;
+            border: 1px solid #d4a574;
+            color: #3d2b1f;
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 0.78rem;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .filter-chip-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #8b4513;
+            padding: 0;
+            line-height: 1;
+            margin-left: 2px;
+        }
+        .filter-chip-remove:hover { color: #c0392b; }
+
         .neighborhood-select {
             width: 100%;
             padding: 0.35rem 0.5rem;
@@ -1473,6 +1506,9 @@
                 </div>
             </div>
 
+            <!-- Active filter chips -->
+            <div id="activeFilterChips" class="active-filter-chips"></div>
+
             <!-- Count header -->
             <div class="list-panel-header">
                 <span><span id="visibleCount">—</span>&thinsp;locations in view
@@ -1945,6 +1981,7 @@ function setupAutocomplete() {
 
         if (query.length < 2) {
             dropdown.classList.remove('show');
+            if (!query && window.renderActiveFilterChips) renderActiveFilterChips();
             return;
         }
         
@@ -2035,6 +2072,7 @@ function setupAutocomplete() {
                 dropdown.classList.remove('show');
                 autocompleteIndex = -1;
                 performSearch();
+                if (window.renderActiveFilterChips) renderActiveFilterChips();
             }
         } else if (e.key === 'Escape') {
             dropdown.classList.remove('show');
@@ -2815,6 +2853,7 @@ function applyFilters() {
     renderLocationCards(cardMarkers);
     // Update filter counts to reflect current visibility (respects Open Now)
     updateAllFilterCounts(openNowActive ? visibleMarkers : null);
+    updateDropdownCounts();
 
     // Auto-zoom to fit neighborhood — only fires once when the user picks from the dropdown,
     // not on every subsequent idle event (so the user can freely zoom out after).
@@ -2893,6 +2932,100 @@ function shouldShowMarker(marker, ignoreBounds = false) {
     if (openNowActive && !isLocationOpenNow(location)) return false;
 
     return true;
+}
+
+// Update dropdown option counts based on currently active filters (faceted search).
+// Each dropdown's counts reflect all OTHER active filters, but not its own selection.
+function updateDropdownCounts() {
+    const nbrFilter = document.getElementById('filterNeighborhood')?.value || '';
+    const roastFilter = document.getElementById('filterRoastStyle')?.value || '';
+    const visitorFilter = document.getElementById('filterVisitorExp')?.value || '';
+    const showRoasters = document.getElementById('filterRoasters').checked;
+    const showCafes = document.getElementById('filterCafes').checked;
+    const showOnlineEl = document.getElementById('filterOnlineOnly');
+    const showOnline = !showOnlineEl || showOnlineEl.checked;
+
+    // Does a marker pass all active filters except the one named by 'skip'?
+    function passes(marker, skip) {
+        const loc = marker.locationData;
+        if (marker.locationType === 'roaster' && !showRoasters) return false;
+        if (marker.locationType === 'cafe' && !showCafes) return false;
+        if (skip !== 'neighborhood' && nbrFilter) {
+            const nbr = loc.coffeeDetails?.neighborhood;
+            if (nbrFilter.startsWith('__region__')) {
+                const region = nbrFilter.slice(10);
+                if (!((window.neighborhoodRegionMap || {})[region] || []).includes(nbr)) return false;
+            } else {
+                if (nbr !== nbrFilter) return false;
+            }
+        }
+        if (skip !== 'roast' && roastFilter && loc.coffeeDetails?.roastStyle !== roastFilter) return false;
+        if (skip !== 'visitor' && visitorFilter && loc.coffeeDetails?.visitorExperience !== visitorFilter) return false;
+        if (openNowActive && !isLocationOpenNow(loc)) return false;
+        return true;
+    }
+
+    // Roast Style counts
+    const roastCountMap = {};
+    markers.forEach(m => {
+        if (!passes(m, 'roast')) return;
+        const v = m.locationData.coffeeDetails?.roastStyle;
+        if (v) roastCountMap[v] = (roastCountMap[v] || 0) + 1;
+    });
+    // Include online-only roasters when applicable (they never have visitorExperience)
+    if (showOnline && !nbrFilter) {
+        (window.COFFEE_LOCATIONS || []).forEach(loc => {
+            if (!loc.basicInfo?.onlineOnly) return;
+            if (visitorFilter) return;
+            if (openNowActive && !isLocationOpenNow(loc)) return;
+            const v = loc.coffeeDetails?.roastStyle;
+            if (v) roastCountMap[v] = (roastCountMap[v] || 0) + 1;
+        });
+    }
+    const roastSel = document.getElementById('filterRoastStyle');
+    Array.from(roastSel.options).forEach(opt => {
+        if (!opt.value) return;
+        opt.textContent = opt.value + ' (' + (roastCountMap[opt.value] || 0) + ')';
+    });
+
+    // Visitor Experience counts
+    const expLabels = {
+        'Full Cafe (Open daily with seating)': 'Full Cafe',
+        'Tasting Room (Limited hours / manufacturing)': 'Tasting Room',
+        'Production Only (No public access)': 'Production Only'
+    };
+    const visitorCountMap = {};
+    markers.forEach(m => {
+        if (!passes(m, 'visitor')) return;
+        const v = m.locationData.coffeeDetails?.visitorExperience;
+        if (v) visitorCountMap[v] = (visitorCountMap[v] || 0) + 1;
+    });
+    const visitorSel = document.getElementById('filterVisitorExp');
+    Array.from(visitorSel.options).forEach(opt => {
+        if (!opt.value) return;
+        opt.textContent = (expLabels[opt.value] || opt.value) + ' (' + (visitorCountMap[opt.value] || 0) + ')';
+    });
+
+    // Neighborhood counts
+    const nbrCountMap = {};
+    markers.forEach(m => {
+        if (!passes(m, 'neighborhood')) return;
+        const v = m.locationData.coffeeDetails?.neighborhood;
+        if (v) nbrCountMap[v] = (nbrCountMap[v] || 0) + 1;
+    });
+    const nbrSel = document.getElementById('filterNeighborhood');
+    Array.from(nbrSel.options).forEach(opt => {
+        if (!opt.value) return;
+        if (opt.value.startsWith('__region__')) {
+            const region = opt.value.slice(10);
+            const hoods = (window.neighborhoodRegionMap || {})[region] || [];
+            const total = hoods.reduce((sum, h) => sum + (nbrCountMap[h] || 0), 0);
+            opt.textContent = region + ' (' + total + ')';
+        } else {
+            const prefix = opt.textContent.startsWith('\u00A0') ? '\u00A0\u00A0\u00A0\u00A0' : '';
+            opt.textContent = prefix + opt.value + ' (' + (nbrCountMap[opt.value] || 0) + ')';
+        }
+    });
 }
 
 function updateVisibleCount(count) {
@@ -3457,6 +3590,60 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
     })();
 
+    // Active filter chips — show individually removable pills for each active filter
+    function renderActiveFilterChips() {
+        const container = document.getElementById('activeFilterChips');
+        if (!container) return;
+        container.innerHTML = '';
+        const chips = [];
+        const searchVal = document.getElementById('searchInput')?.value.trim();
+        if (searchVal)
+            chips.push({ label: searchVal, reset: () => {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('autocompleteDropdown').classList.remove('show');
+                applyFilters();
+            }});
+        if (!document.getElementById('filterRoasters').checked)
+            chips.push({ label: 'No Roasters', reset: () => { document.getElementById('filterRoasters').checked = true; } });
+        if (!document.getElementById('filterCafes').checked)
+            chips.push({ label: 'No Cafes', reset: () => { document.getElementById('filterCafes').checked = true; } });
+        const onlineEl = document.getElementById('filterOnlineOnly');
+        if (onlineEl && !onlineEl.checked)
+            chips.push({ label: 'No Online Roasters', reset: () => { onlineEl.checked = true; } });
+        const neighborhood = document.getElementById('filterNeighborhood').value;
+        if (neighborhood)
+            chips.push({ label: neighborhood, reset: () => { document.getElementById('filterNeighborhood').value = ''; } });
+        const roastStyle = document.getElementById('filterRoastStyle').value;
+        if (roastStyle)
+            chips.push({ label: roastStyle, reset: () => { document.getElementById('filterRoastStyle').value = ''; } });
+        const visitorExp = document.getElementById('filterVisitorExp').value;
+        if (visitorExp)
+            chips.push({ label: visitorExp, reset: () => { document.getElementById('filterVisitorExp').value = ''; } });
+        if (openNowActive)
+            chips.push({ label: 'Open Now', reset: () => {
+                openNowActive = false;
+                const onBtn = document.getElementById('openNowBtn');
+                if (onBtn) { onBtn.style.background = ''; onBtn.style.color = ''; onBtn.style.borderColor = ''; onBtn.textContent = '🕐 Open Now'; }
+            }});
+        chips.forEach(({ label, reset }) => {
+            const chip = document.createElement('span');
+            chip.className = 'filter-chip';
+            chip.appendChild(document.createTextNode(label));
+            const btn = document.createElement('button');
+            btn.className = 'filter-chip-remove';
+            btn.setAttribute('aria-label', 'Remove ' + label + ' filter');
+            btn.textContent = '✕';
+            btn.addEventListener('click', () => {
+                reset();
+                applyFilters();
+                updateFilterDot();
+                renderActiveFilterChips();
+            });
+            chip.appendChild(btn);
+            container.appendChild(chip);
+        });
+    }
+
     // Active filter dot — show when any filter is non-default
     function updateFilterDot() {
         const filterBtn = document.getElementById('toggleFilters');
@@ -3478,13 +3665,16 @@ document.addEventListener('DOMContentLoaded', () => {
         filterBtn.classList.toggle('filters-active', anyNonDefault);
     }
 
-    // Attach dot-updater to all filter inputs
+    // Attach dot-updater and chip-renderer to all filter inputs
     ['filterRoasters','filterCafes','filterOnlineOnly','filterNeighborhood','filterRoastStyle','filterVisitorExp'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.addEventListener('change', updateFilterDot);
+        if (el) el.addEventListener('change', () => { updateFilterDot(); renderActiveFilterChips(); });
     });
-    document.getElementById('openNowBtn')?.addEventListener('click', () => setTimeout(updateFilterDot, 50));
-    document.getElementById('clearBtn')?.addEventListener('click', () => setTimeout(updateFilterDot, 50));
+    document.getElementById('openNowBtn')?.addEventListener('click', () => setTimeout(() => { updateFilterDot(); renderActiveFilterChips(); }, 50));
+    document.getElementById('clearBtn')?.addEventListener('click', () => setTimeout(() => { updateFilterDot(); renderActiveFilterChips(); }, 50));
+
+    // Expose to global scope so initMap-context callers can reach it
+    window.renderActiveFilterChips = renderActiveFilterChips;
 
     // Location hint on sort nearest button (shown until location is granted)
     const sortNearestBtn = document.getElementById('sortNearest');

@@ -15,32 +15,32 @@
   ul { margin: 0.5em 0; padding-left: 1.5em; }
   p { margin: 0.4em 0; }
 </style>
+<script src="locations.js"></script>
+<script src="wiki_data.js"></script>
 </head>
 <body>
 
 <h1>☕ San Diego Specialty Coffee Wiki</h1>
 
-<p><em>Last updated: March 20, 2026 — 151 locations · 83 roasters · 13 multi-roaster cafés · 8 online-only roasters · 47 neighborhoods</em></p>
+<p><em id="stats-subtitle">Last updated: March 22, 2026 — 158 locations · 83 roasters · 13 multi-roaster cafés · 10 online-only roasters · 50 neighborhoods</em></p>
 
-<blockquote><p>📝 <strong>Spot an error or know a roaster we're missing?</strong> Submit via the <a href="https://sandiegocoffee.co/submit">Add a Spot</a> form — all submissions are reviewed by the mod team.</p></blockquote>
+<blockquote><p>📝 <strong>Spot an error or know a roaster we're missing?</strong> Submit via the <a href="https://sandiegocoffee.co/submit">Add a Spot</a> form. All submissions are reviewed by the mod team.</p></blockquote>
 
 <p>Welcome to the community wiki for San Diego's specialty coffee scene.</p>
 
 <p>This wiki is the community-driven companion to <a href="https://sandiegocoffee.co">sandiegocoffee.co</a>, which has full profiles, photos, hours, maps, and Google Maps integration for every location.</p>
 
-<p>🗺️ <a href="https://sandiegocoffee.co/map">Interactive Map — All 151 Locations</a></p>
+<p>🗺️ <a href="https://sandiegocoffee.co/map" id="map-link-count">Interactive Map — All 158 Locations</a></p>
 
 <p>🎙️ Roaster Deep Dives: <a href="https://sandiegocoffee.co/highlight.html?id=highlight_frequent-coffee">Frequent Coffee</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_visitor-coffee-roasters">Visitor Coffee Roasters</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_excelsa-coffee">Excelsa Coffee</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_torque-coffee">Torque Coffee</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_big-step-coffee">Big Step Coffee</a></p>
 
-<p><strong>Jump to:</strong> <a href="#new-to-sd-coffee">New to SD Coffee</a> · <a href="#directory">Directory</a> · <a href="#beans-by-mail">Beans by Mail</a> · <a href="#community-favorites">Community Favorites</a> · <a href="#changelog">Changelog</a> · <a href="#faq">FAQ &amp; Posting Guidelines</a></p>
+<p><strong>Jump to:</strong> <a href="#wiki_new_to_san_diego_coffee">New to SD Coffee</a> · <a href="#wiki_directory">Directory</a> · <a href="#wiki_beans_by_mail">Beans by Mail</a> · <a href="#wiki_community_favorites">Community Favorites</a> · <a href="#wiki_changelog">Changelog</a> · <a href="#wiki_faq_and_posting_guidelines">FAQ and Posting Guidelines</a></p>
 
 <hr>
 
-<h2 id="new-to-sd-coffee">☕ New to San Diego Coffee?</h2>
+<h2 id="new-to-sd-coffee">New to San Diego Coffee?</h2>
 
 <p>Whether you just moved here, you're visiting for the week, or you're finally ready to explore beyond chain coffee — this is your starting point.</p>
-
-<p>For full profiles with photos, hours, and Google Maps for every location, visit <a href="https://sandiegocoffee.co">sandiegocoffee.co</a>. This page is the quick-start version.</p>
 
 <hr>
 
@@ -60,7 +60,7 @@
 
 <p><strong>Central &amp; East</strong> — <a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a> (City Heights) · <a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a> (Barrio Logan) · <a href="https://sandiegocoffee.co/locations/provecho-coffee-co">Provecho! Coffee Co.</a> (Logan Heights)</p>
 
-<blockquote><p><em>Want the community's current top picks? See the <a href="#community-favorites">Community Favorites</a> page.</em></p></blockquote>
+<blockquote><p><em>Want the community's current top picks? See the <a href="#wiki_community_favorites">Community Favorites</a> page.</em></p></blockquote>
 
 <hr>
 
@@ -70,15 +70,15 @@
 
 <p><strong>Light roast culture is strong.</strong> Many of SD's best-regarded specialty roasters lean light-to-medium, showcasing single origins. But the scene covers the full spectrum — you'll find excellent medium and dark roast options too.</p>
 
-<p><strong>Many roasters are small.</strong> A good chunk of SD's 83 roasters are micro-batch operations. Some don't have cafes at all — they sell at farmers markets, online, or through tasting rooms with limited hours. Check hours before you go.</p>
+<p><strong>Many roasters are small.</strong> A good chunk of SD's <span data-stat="roasters">83</span> roasters are micro-batch operations. Some don't have cafes at all — they sell at farmers markets, online, or through tasting rooms with limited hours. Check hours before you go.</p>
 
-<p><strong>Online-only roasters are a thing.</strong> Eight SD-based roasters operate exclusively online. See <a href="#beans-by-mail">Beans by Mail</a> for the full list.</p>
+<p><strong>Online-only roasters are a thing.</strong> <span id="online-count-inline"></span> SD-based roasters operate exclusively online. See <a href="#wiki_beans_by_mail">Beans by Mail</a> for the full list.</p>
 
 <hr>
 
 <h3>Buying Beans to Brew at Home</h3>
 
-<p>Most SD roasters sell bags either in-store or online. The <a href="#beans-by-mail">Beans by Mail</a> page covers the full list of who ships. A few standout entry points:</p>
+<p>Most SD roasters sell bags either in-store or online. The <a href="#wiki_beans_by_mail">Beans by Mail</a> page covers the full list of who ships. A few standout entry points:</p>
 
 <ul>
   <li><strong>Exploring light roasts?</strong> — <a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a>, <a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a>, <a href="https://sandiegocoffee.co/locations/steady-state-roasting">Steady State Roasting</a>, <a href="https://sandiegocoffee.co/locations/yipao-coffee">Yipao Coffee</a></li>
@@ -89,23 +89,13 @@
 
 <hr>
 
-<h2 id="directory">📖 Directory</h2>
-
-<h3>🆕 What's New Since Last Update</h3>
-
-<p><em>No changes since last update.</em></p>
-
-<h3>🎙️ Roaster Deep Dives</h3>
-
-<p>We've interviewed founders and roasters across San Diego — get the full story behind the coffee:</p>
-
-<p><a href="https://sandiegocoffee.co/highlight.html?id=highlight_frequent-coffee">Frequent Coffee</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_visitor-coffee-roasters">Visitor Coffee Roasters</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_excelsa-coffee">Excelsa Coffee</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_torque-coffee">Torque Coffee</a> · <a href="https://sandiegocoffee.co/highlight.html?id=highlight_big-step-coffee">Big Step Coffee</a></p>
+<h2 id="directory">Directory</h2>
 
 <h3>📊 By the Numbers</h3>
 
 <table>
   <tr><th>Total Locations</th><th>Roasters</th><th>Multi-Roaster Cafes</th><th>Online-Only</th><th>Neighborhoods</th></tr>
-  <tr><td>151</td><td>83</td><td>13</td><td>8</td><td>47</td></tr>
+  <tr><td data-stat="total">158</td><td data-stat="roasters">83</td><td data-stat="cafes">13</td><td data-stat="online">10</td><td data-stat="neighborhoods">50</td></tr>
 </table>
 
 <h3>📖 How to Read This Directory</h3>
@@ -126,49 +116,21 @@
   <li><strong>Public Cuppings / Events Only</strong> — open for scheduled events only</li>
 </ul>
 
-<p><strong>Coffee Details</strong></p>
-<ul>
-  <li>☕ <strong>Pour Over Available</strong> — offers pour over as a brew method</li>
-  <li>🌙 <strong>Decaf Espresso</strong> — serves a decaf espresso option</li>
-  <li>✌️ <strong>Espresso Options</strong> — offers a choice between different espresso beans</li>
-</ul>
-
-<p><strong>Amenities</strong></p>
-<ul>
-  <li>🐕 <strong>Dog Friendly</strong> — dogs welcome on patio or inside</li>
-  <li>🍩 <strong>Food &amp; Pastries</strong> — food menu or pastries available</li>
-  <li>📶 <strong>Wifi</strong> — wifi available, good for working</li>
-</ul>
+<p><strong>Amenities &amp; Features</strong></p>
+<table>
+  <tr><td>🍩 Food &amp; Pastries</td><td>Food menu or pastries available</td></tr>
+  <tr><td>📶 Wifi</td><td>Good for working</td></tr>
+  <tr><td>🐕 Dog Friendly</td><td>Dogs welcome on patio or inside</td></tr>
+  <tr><td>📦 Sells Beans Online</td><td>Ships direct to your door</td></tr>
+  <tr><td>🌙 Decaf Espresso</td><td>Dedicated decaf espresso option</td></tr>
+  <tr><td>✌️ Espresso Options</td><td>Choice between different espresso beans</td></tr>
+  <tr><td>☕ Pour Over</td><td>Pour over available as a brew method</td></tr>
+  <tr><td>🌱 Certified Organic</td><td>Certified organic operation</td></tr>
+</table>
 
 <h3 id="quick-find">🔍 Quick Find</h3>
 
-<table>
-  <tr><th>Looking for...</th><th>Where to go</th></tr>
-  <tr>
-    <td>🐕 Dog Friendly</td>
-    <td><a href="https://sandiegocoffee.co/locations/acento-coffee-roasters">Acento Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/arc-kin">Arc &amp; Kin</a>, <a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a>, <a href="https://sandiegocoffee.co/locations/coffee-n-talk">Coffee 'N' Talk</a>, <a href="https://sandiegocoffee.co/locations/coffee-cycle-roasting">Coffee Cycle Roasting</a>, <a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a>, <a href="https://sandiegocoffee.co/locations/dreamwave-coffee">Dreamwave Coffee</a>, <a href="https://sandiegocoffee.co/locations/elixir-espresso-wine-bar">Elixir Espresso &amp; Wine Bar</a>, <a href="https://sandiegocoffee.co/locations/elixir-espresso-bar">Elixir Espresso Bar</a>, <a href="https://sandiegocoffee.co/locations/friends-of-friends">Friends of Friends</a>, <a href="https://sandiegocoffee.co/locations/kind-corner">Kind Corner</a>, <a href="https://sandiegocoffee.co/locations/manzanita-roasting-company">Manzanita Roasting Company</a>, <a href="https://sandiegocoffee.co/locations/mnemonic-coffee">Mnemonic Coffee</a>, <a href="https://sandiegocoffee.co/locations/moniker-coffee-co">Moniker Coffee Co.</a>, <a href="https://sandiegocoffee.co/locations/muri-coffee-dessert">Muri Coffee &amp; Dessert</a>, <a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a>, <a href="https://sandiegocoffee.co/locations/pannikin-coffee-tea">Pannikin Coffee &amp; Tea</a>, <a href="https://sandiegocoffee.co/locations/provecho-coffee-co">Provecho! Coffee Co.</a>, <a href="https://sandiegocoffee.co/locations/revolution-roasters">Revolution Roasters</a>, <a href="https://sandiegocoffee.co/locations/rikka-fika">Rikka Fika</a>, <a href="https://sandiegocoffee.co/locations/saigon-coffee">Saigon Coffee</a>, <a href="https://sandiegocoffee.co/locations/vigilante-coffee">Vigilante Coffee</a>, <a href="https://sandiegocoffee.co/locations/yaqui-coffee-house">Yaqui Coffee House</a></td>
-  </tr>
-  <tr>
-    <td>🍩 Food &amp; Pastries</td>
-    <td><a href="https://sandiegocoffee.co/locations/acento-coffee-roasters">Acento Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/arc-kin">Arc &amp; Kin</a>, <a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a>, <a href="https://sandiegocoffee.co/locations/caff-calabria">Caffè Calabria</a>, <a href="https://sandiegocoffee.co/locations/coffee-n-talk">Coffee 'N' Talk</a>, <a href="https://sandiegocoffee.co/locations/coffee-cycle-roasting">Coffee Cycle Roasting</a>, <a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a>, <a href="https://sandiegocoffee.co/locations/divo-diva-cafe">Divo Diva Cafe</a>, <a href="https://sandiegocoffee.co/locations/dreamwave-coffee">Dreamwave Coffee</a>, <a href="https://sandiegocoffee.co/locations/elixir-espresso-wine-bar">Elixir Espresso &amp; Wine Bar</a>, <a href="https://sandiegocoffee.co/locations/elixir-espresso-bar">Elixir Espresso Bar</a>, <a href="https://sandiegocoffee.co/locations/friends-of-friends">Friends of Friends</a>, <a href="https://sandiegocoffee.co/locations/kind-corner">Kind Corner</a>, <a href="https://sandiegocoffee.co/locations/little-while">Little While</a>, <a href="https://sandiegocoffee.co/locations/longplay-hifi">Longplay HiFi</a>, <a href="https://sandiegocoffee.co/locations/manor-coffee">Manor Coffee</a>, <a href="https://sandiegocoffee.co/locations/manzanita-roasting-company">Manzanita Roasting Company</a>, <a href="https://sandiegocoffee.co/locations/mnemonic-coffee">Mnemonic Coffee</a>, <a href="https://sandiegocoffee.co/locations/moniker-coffee-co">Moniker Coffee Co.</a>, <a href="https://sandiegocoffee.co/locations/muri-coffee-dessert">Muri Coffee &amp; Dessert</a>, <a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a>, <a href="https://sandiegocoffee.co/locations/pannikin-coffee-tea">Pannikin Coffee &amp; Tea</a>, <a href="https://sandiegocoffee.co/locations/revolution-roasters">Revolution Roasters</a>, <a href="https://sandiegocoffee.co/locations/rikka-fika">Rikka Fika</a>, <a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a>, <a href="https://sandiegocoffee.co/locations/vigilante-coffee">Vigilante Coffee</a>, <a href="https://sandiegocoffee.co/locations/yaqui-coffee-house">Yaqui Coffee House</a></td>
-  </tr>
-  <tr>
-    <td>📶 Wifi / Work-Friendly</td>
-    <td><a href="https://sandiegocoffee.co/locations/acento-coffee-roasters">Acento Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/arc-kin">Arc &amp; Kin</a>, <a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a>, <a href="https://sandiegocoffee.co/locations/caff-calabria">Caffè Calabria</a>, <a href="https://sandiegocoffee.co/locations/coffee-n-talk">Coffee 'N' Talk</a>, <a href="https://sandiegocoffee.co/locations/coffee-cycle-roasting">Coffee Cycle Roasting</a>, <a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a>, <a href="https://sandiegocoffee.co/locations/divo-diva-cafe">Divo Diva Cafe</a>, <a href="https://sandiegocoffee.co/locations/dreamwave-coffee">Dreamwave Coffee</a>, <a href="https://sandiegocoffee.co/locations/elixir-espresso-wine-bar">Elixir Espresso &amp; Wine Bar</a>, <a href="https://sandiegocoffee.co/locations/elixir-espresso-bar">Elixir Espresso Bar</a>, <a href="https://sandiegocoffee.co/locations/friends-of-friends">Friends of Friends</a>, <a href="https://sandiegocoffee.co/locations/little-while">Little While</a>, <a href="https://sandiegocoffee.co/locations/manor-coffee">Manor Coffee</a>, <a href="https://sandiegocoffee.co/locations/manzanita-roasting-company">Manzanita Roasting Company</a>, <a href="https://sandiegocoffee.co/locations/mnemonic-coffee">Mnemonic Coffee</a>, <a href="https://sandiegocoffee.co/locations/moniker-coffee-co">Moniker Coffee Co.</a>, <a href="https://sandiegocoffee.co/locations/muri-coffee-dessert">Muri Coffee &amp; Dessert</a>, <a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a>, <a href="https://sandiegocoffee.co/locations/pannikin-coffee-tea">Pannikin Coffee &amp; Tea</a>, <a href="https://sandiegocoffee.co/locations/provecho-coffee-co">Provecho! Coffee Co.</a>, <a href="https://sandiegocoffee.co/locations/revolution-roasters">Revolution Roasters</a>, <a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a>, <a href="https://sandiegocoffee.co/locations/vigilante-coffee">Vigilante Coffee</a>, <a href="https://sandiegocoffee.co/locations/yaqui-coffee-house">Yaqui Coffee House</a></td>
-  </tr>
-  <tr>
-    <td>☕ Pour Over</td>
-    <td><a href="https://sandiegocoffee.co/locations/little-while">Little While</a>, <a href="https://sandiegocoffee.co/locations/rikka-fika">Rikka Fika</a>, <a href="https://sandiegocoffee.co/locations/steady-state-roasting">Steady State Roasting</a></td>
-  </tr>
-  <tr>
-    <td>🌙 Decaf Espresso</td>
-    <td><a href="https://sandiegocoffee.co/locations/acento-coffee-roasters">Acento Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/baba-coffee">Baba Coffee</a>, <a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a>, <a href="https://sandiegocoffee.co/locations/friends-of-friends">Friends of Friends</a>, <a href="https://sandiegocoffee.co/locations/little-while">Little While</a>, <a href="https://sandiegocoffee.co/locations/manzanita-roasting-company">Manzanita Roasting Company</a>, <a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a>, <a href="https://sandiegocoffee.co/locations/pannikin-coffee-tea">Pannikin Coffee &amp; Tea</a>, <a href="https://sandiegocoffee.co/locations/rikka-fika">Rikka Fika</a>, <a href="https://sandiegocoffee.co/locations/steady-state-roasting">Steady State Roasting</a>, <a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a>, <a href="https://sandiegocoffee.co/locations/zumbar-coffee-tea">Zumbar Coffee &amp; Tea</a></td>
-  </tr>
-  <tr>
-    <td>✌️ Espresso Options</td>
-    <td><a href="https://sandiegocoffee.co/locations/acento-coffee-roasters">Acento Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a>, <a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a>, <a href="https://sandiegocoffee.co/locations/little-while">Little While</a>, <a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a>, <a href="https://sandiegocoffee.co/locations/rikka-fika">Rikka Fika</a>, <a href="https://sandiegocoffee.co/locations/steady-state-roasting">Steady State Roasting</a>, <a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a>, <a href="https://sandiegocoffee.co/locations/zumbar-coffee-tea">Zumbar Coffee &amp; Tea</a></td>
-  </tr>
-</table>
+<div id="quick-find-table"></div>
 
 
 <hr>
@@ -177,732 +139,29 @@
 
 <table>
   <tr>
-    <td><a href="#north-county-coastal">North County Coastal</a></td>
-    <td><a href="#north-county-inland">North County Inland</a></td>
+    <td><a href="#wiki_north_county_coastal">North County Coastal</a></td>
+    <td><a href="#wiki_north_county_inland">North County Inland</a></td>
   </tr>
   <tr>
-    <td><a href="#north-san-diego-inland">North San Diego Inland</a></td>
-    <td><a href="#downtown-uptown">Downtown &amp; Uptown</a></td>
+    <td><a href="#wiki_north_san_diego_inland">North San Diego Inland</a></td>
+    <td><a href="#wiki_downtown_and_uptown">Downtown and Uptown</a></td>
   </tr>
   <tr>
-    <td><a href="#beach-communities">Beach Communities</a></td>
-    <td><a href="#central-east-sd">Central &amp; East SD</a></td>
+    <td><a href="#wiki_beach_communities">Beach Communities</a></td>
+    <td><a href="#wiki_central_and_east_sd">Central and East SD</a></td>
   </tr>
   <tr>
-    <td><a href="#south-bay">South Bay</a></td>
+    <td><a href="#wiki_south_bay">South Bay</a></td>
     <td></td>
   </tr>
 </table>
 
 <hr>
 
-<h3 id="north-county-coastal">North County Coastal</h3>
+<!-- Directory sections rendered dynamically from locations.js + wiki_data.js -->
+<div id="directory-content"></div>
 
-<p><strong>Roasters</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/revolution-roasters">Revolution Roasters</a></strong><br>
-<em>Oceanside · Est. 2009 · Production · Full Cafe</em></p>
-<blockquote><p>Fun coffee shop in South Oceanside with a variety of freshly roasted beans. They offer a food menu as well and are very pet-friendly.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/steady-state-roasting">Steady State Roasting</a></strong><br>
-<em>Carlsbad · Est. 2015 · Production · Full Cafe</em></p>
-<blockquote><p>Roasts at California Roasting Collective in San Marcos and sources high quality beans from various regions. While they have single origins and blends covering all roast profiles, they tend to focus more on lighter roasted coffees. You will often find unique varieties like "Pink Bourbon" or "Co-Ferments".</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · 🐕 Dog Friendly · ☕ Pour Over · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/baba-coffee">Baba Coffee</a></strong><br>
-<em>Carlsbad · Est. 2016 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Beautiful cafe in downtown Carlsbad that offers a full food menu and live music upstairs on the weekends. They roast their own coffee and lean more towards medium/dark roasts. They have a "Hair of the Dog Menu" with boozy coffee drinks (hot and cold).</p></blockquote>
-<p><strong>Amenities:</strong> 🌙 Decaf Espresso · 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/interim-coffee">Interim Coffee</a></strong><br>
-<em>Carlsbad</em></p>
-<blockquote><p>Roasted in Oceanside, CA</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a></strong><br>
-<em>Encinitas · Est. 2022 · Production · Full Cafe</em></p>
-<blockquote><p>Specialty coffee roaster that offers unique, lighter roasts. Any bean on the shelf can be ordered as espresso.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · 🐕 Dog Friendly · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lofty-coffee-co">Lofty Coffee Co.</a></strong><br>
-<em>Encinitas</em></p>
-<blockquote><p>Production Roaster (Encinitas) with shops in Encinitas, Carlsbad, Solana Beach, and Little Italy</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lofty-coffee-co">Lofty Coffee Co.</a></strong><br>
-<em>Solana Beach</em></p>
-<blockquote><p>Production Roaster (Encinitas) with shops in Encinitas, Carlsbad, Solana Beach, and Little Italy</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lofty-coffee-co">Lofty Coffee Co.</a></strong><br>
-<em>Carlsbad</em></p>
-<blockquote><p>Production Roaster (Encinitas) with shops in Encinitas, Carlsbad, Solana Beach, and Little Italy</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lofty-coffee-co">Lofty Coffee Co.</a></strong><br>
-<em>Carlsbad</em></p>
-<blockquote><p>Production Roaster (Encinitas) with shops in Encinitas, Carlsbad, Solana Beach, and Little Italy</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/bump-coffee">Bump Coffee</a></strong><br>
-<em>Encinitas</em></p>
-<blockquote><p>Roaster (Carlsbad) with shops in Encinitas and Cardiff</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/bump-coffee">Bump Coffee</a></strong><br>
-<em>Cardiff-by-the-Sea</em></p>
-<blockquote><p>Roaster (Carlsbad) with shops in Encinitas and Cardiff</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/ironsmith-coffee-roasters">Ironsmith Coffee Roasters</a></strong><br>
-<em>Encinitas</em></p>
-<blockquote><p>Roaster (San Marcos) that also operates a small roaster in house in Encinitas</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/la-costa-coffee-roasting">La Costa Coffee Roasting</a></strong><br>
-<em>Carlsbad</em></p>
-<blockquote><p>Roaster located in Carlsbad</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/origen-coffee-roasters">Origen Coffee Roasters</a></strong><br>
-<em>Carlsbad</em></p>
-<blockquote><p>Roaster (Carlsbad) with small coffee cart in Carlsbad, They also sell online and at the Vista farmers market</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a></strong><br>
-<em>Carlsbad · Est. 2002 · Production · Full Cafe</em></p>
-<blockquote><p>Bird Rock Roasters cafe located in Bressi Ranch. They have a mid-size food menu and offer a single origin espresso option as well.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dreamwave-coffee">Dreamwave Coffee</a></strong><br>
-<em>Carlsbad · Est. 2025 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Coffee shop in a retail center in North Carlsbad off El Camino Real that roasts their own beans.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/achilles-coffee-roasters">Achilles Coffee Roasters</a></strong><br>
-<em>Solana Beach</em></p>
-<blockquote><p>Roaster (San Diego) with locations in Solana Beach, Del Mar, and Downtown SD</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/seven-seas-roasting-co">Seven Seas Roasting Co.</a></strong><br>
-<em>Solana Beach</em></p>
-<blockquote><p>Roaster (South Park) who roasts on site at their South Park shop. Also has a location in Solana Beach</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/parakeet-cafe">Parakeet Cafe</a></strong><br>
-<em>Carlsbad</em></p>
-<blockquote><p>Roaster (San Diego) with locations in La Jolla, UTC, Coronado, Little Italy, Del Mar, and Carlsbad</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/pannikin-coffee-tea">Pannikin Coffee &amp; Tea</a></strong><br>
-<em>Encinitas · Est. 1968 · Production · Full Cafe</em></p>
-<blockquote><p>One of San Diego's oldest roasters, Pannikin has been part of the local coffee scene since 1968, when founder Bob SinClair started roasting from a peanut roaster in a cottage above La Jolla Cove. Now in Leucadia with an additional location in Oceanside, the family-owned operation still roasts in-house daily alongside a full tea program that's been a staple of North County coffee culture for over 50 years.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/pannikin-coffee-tea">Pannikin Coffee &amp; Tea</a></strong><br>
-<em>Oceanside · Est. 1968 · Production · Full Cafe</em></p>
-<blockquote><p>One of San Diego's oldest roasters, Pannikin has been part of the local coffee scene since 1968, when founder Bob SinClair started roasting from a peanut roaster in a cottage above La Jolla Cove. Now in Leucadia with an additional location in Oceanside, the family-owned operation still roasts in-house daily alongside a full tea program that's been a staple of North County coffee culture for over 50 years.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/crossings-coffee-roasters">Crossings Coffee Roasters</a></strong><br>
-<em>Encinitas</em></p>
-<blockquote><p>Roaster (Encinitas) that roasts in house and is located inside New Wave Bagel in Encinitas</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/vigilante-coffee">Vigilante Coffee</a></strong><br>
-<em>Oceanside · Est. 2022 · Production · Full Cafe</em></p>
-<blockquote><p>This is Vigilante's first location in a large space next in Oceanside next to South O Brewing. They roast out of the Oceanside cafe on a 12kg Loring. Very friendly people and very dog friendly.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/libra-coffee-roasters">Libra Coffee Roasters</a></strong><br>
-<em>Oceanside · Est. 2024 · Micro-Batch · Production Only</em></p>
-<blockquote><p>Ukranian owned mom and pop roaster that specializes in balanced roasts with a "pinch of wilderness."</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong>Multi-Roaster Cafes</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a></strong><br>
-<em>Oceanside · Est. 2016</em></p>
-<blockquote><p>North Park cafe founded in 2016 by Jen Byard, now with five locations across San Diego. Known for craft coffee in thoughtfully designed spaces, a seasonal drink menu, and a strong neighborhood presence that's made it one of the more recognizable names in the local scene.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly · 📅 Community Events</p>
-
-<hr>
-
-<h3 id="north-county-inland">North County Inland</h3>
-
-<p><strong>Roasters</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/manzanita-roasting-company">Manzanita Roasting Company</a></strong><br>
-<em>Rancho Bernardo · Est. 2015 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Husband and wife owned roaster in Rancho Bernardo, established in 2015 on the historic Bernardo Winery. They roast on a California-made Loring, cutting energy consumption and emissions by 80% compared to conventional roasters — and all chaff and coffee waste gets composted back into the winery's soil. They skip certifications entirely, instead sourcing small lots directly from farmers who use organic practices, prioritizing traceability and fair compensation over paperwork. Cafe locations in Rancho Bernardo and Escondido.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/manzanita-roasting-company">Manzanita Roasting Company</a></strong><br>
-<em>Escondido · Est. 2015 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Husband and wife owned roaster in Rancho Bernardo, established in 2015 on the historic Bernardo Winery. They roast on a California-made Loring, cutting energy consumption and emissions by 80% compared to conventional roasters — and all chaff and coffee waste gets composted back into the winery's soil. They skip certifications entirely, instead sourcing small lots directly from farmers who use organic practices, prioritizing traceability and fair compensation over paperwork. Cafe locations in Rancho Bernardo and Escondido.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/ryan-bros-coffee">Ryan Bros Coffee</a></strong><br>
-<em>San Marcos</em></p>
-<blockquote><p>Roaster (Barrio Logan) with in house roasting at their shop in Barrio Logan with other locations in City Heights and San Marcos. They have an extensive selection of nitro cold brew on tap.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/james-coffee-co">James Coffee Co.</a></strong><br>
-<em>Vista</em></p>
-<blockquote><p>Roaster (Escondido) with locations in Bankers Hill, Vista, North Park, Sabre Springs, and Escondido</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/safari-coffee-roasters">Safari Coffee Roasters</a></strong><br>
-<em>Escondido</em></p>
-<blockquote><p>Roaster (Escondido) that roasts in house at their Escondido location</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/idego-coffee">Idego Coffee</a></strong><br>
-<em>Poway</em></p>
-<blockquote><p>Roaster (Poway) that roasts in house at their Poway location</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/the-king-s-craft-coffee-co">The King's Craft Coffee Co.</a></strong><br>
-<em>Poway</em></p>
-<blockquote><p>Roaster (Poway) that roasts in house at their Poway shop</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/cosmic-bloom-coffee">Cosmic Bloom Coffee</a></strong><br>
-<em>Vista</em></p>
-<blockquote><p>Roaster (Vista) that has a shop on Main St in Vista</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/james-coffee-co">James Coffee Co.</a></strong><br>
-<em>Escondido</em></p>
-<blockquote><p>Roaster (Escondido) with locations in Bankers Hill, Vista, North Park, Sabre Springs, and Escondido</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/vigilante-coffee">Vigilante Coffee</a></strong><br>
-<em>Vista · Est. 2022 · Production · Full Cafe</em></p>
-<blockquote><p>Second San Diego location located in Vista. They roast out of the Oceanside cafe on a 12kg Loring.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/memli-coffee-lab">Memli Coffee Lab</a></strong><br>
-<em>San Marcos · Est. 2019 · Micro-Batch · Tasting Room</em></p>
-<blockquote><p>Boutique roastery in San Marcos run by Mehmet, a two-time U.S. Cup Tasters Champion. He sources rare micro-lots with full traceability from green coffee grade to purchasing price, and roasts them lightly to preserve each origin's character. The lab hosts a range of workshops covering tasting, brewing, and sensory analysis, alongside reservation-only brew bar sessions and an omakase-style coffee and chocolate pairing experience.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<hr>
-
-<h3 id="north-san-diego-inland">North San Diego Inland</h3>
-
-<p><strong>Roasters</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mostra-coffee">Mostra Coffee</a></strong><br>
-<em>Carmel Mountain Ranch</em></p>
-<blockquote><p>Roaster (Carmel Mountain) with locations in Carmel Mountain, 4S Ranch, Bankers Hill, Hillcrest, and Torrey Hills</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mostra-coffee">Mostra Coffee</a></strong><br>
-<em>Rancho Bernardo</em></p>
-<blockquote><p>Roaster (Carmel Mountain) with locations in Carmel Mountain, 4S Ranch, Bankers Hill, Hillcrest, and Torrey Hills</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mostra-coffee">Mostra Coffee</a></strong><br>
-<em>Carmel Valley</em></p>
-<blockquote><p>Roaster (Carmel Mountain) with locations in Carmel Mountain, 4S Ranch, Bankers Hill, Hillcrest, and Torrey Hills</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/jaunt-coffee-roasters">Jaunt Coffee Roasters</a></strong><br>
-<em>Mira Mesa</em></p>
-<blockquote><p>Roaster (San Diego) located in Miramar</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/zumbar-coffee-tea">Zumbar Coffee &amp; Tea</a></strong><br>
-<em>Sorrento Valley · Est. 2003 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>One of San Diego's longer-running specialty roasters, founded in 2003 and operating out of Sorrento Valley. Roasts their own beans and sells them online, with espresso bean options available at the cafe. A no-frills spot with no blended drinks or oversized menus.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · 🐕 Dog Friendly · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/compa-coffee-roasters">COMPA Coffee Roasters</a></strong><br>
-<em>Rancho Bernardo</em></p>
-<blockquote><p>Roaster (Rancho Bernardo) that roasts in house at their shop in RB</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/james-coffee-co">James Coffee Co.</a></strong><br>
-<em>Carmel Mountain Ranch</em></p>
-<blockquote><p>Roaster (Escondido) with locations in Bankers Hill, Vista, North Park, Sabre Springs, and Escondido</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/achilles-coffee-roasters">Achilles Coffee Roasters</a></strong><br>
-<em>Carmel Valley</em></p>
-<blockquote><p>Roaster (San Diego) with locations in Solana Beach, Del Mar, and Downtown SD</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/parakeet-cafe">Parakeet Cafe</a></strong><br>
-<em>Carmel Valley</em></p>
-<blockquote><p>Roaster (San Diego) with locations in La Jolla, UTC, Coronado, Little Italy, Del Mar, and Carlsbad</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/parakeet-cafe">Parakeet Cafe</a></strong><br>
-<em>Sorrento Valley</em></p>
-<blockquote><p>Roaster (San Diego) with locations in La Jolla, UTC, Coronado, Little Italy, Del Mar, and Carlsbad</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/inflection-point-coffee">Inflection Point Coffee</a></strong><br>
-<em>Mira Mesa</em></p>
-<blockquote><p>Roaster (San Diego) that sells online and at Farmers Markets: La Jolla, Leucadia, Mission Valley</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong>Multi-Roaster Cafes</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/arc-kin">Arc &amp; Kin</a></strong><br>
-<em>Scripps Ranch · Est. 2025</em></p>
-<blockquote><p>Small cafe in Scripps Ranch that uses Genteel coffee beans.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly</p>
-
-<hr>
-
-<h3 id="downtown-uptown">Downtown &amp; Uptown</h3>
-
-<p><strong>Roasters</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lofty-coffee-co">Lofty Coffee Co.</a></strong><br>
-<em>Downtown</em></p>
-<blockquote><p>Production Roaster (Encinitas) with shops in Encinitas, Carlsbad, Solana Beach, and Little Italy</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mostra-coffee">Mostra Coffee</a></strong><br>
-<em>Bankers Hill</em></p>
-<blockquote><p>Roaster (Carmel Mountain) with locations in Carmel Mountain, 4S Ranch, Bankers Hill, Hillcrest, and Torrey Hills</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mostra-coffee">Mostra Coffee</a></strong><br>
-<em>Downtown</em></p>
-<blockquote><p>Roaster (Carmel Mountain) with locations in Carmel Mountain, 4S Ranch, Bankers Hill, Hillcrest, and Torrey Hills</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mostra-coffee">Mostra Coffee</a></strong><br>
-<em>Hillcrest</em></p>
-<blockquote><p>Roaster (Carmel Mountain) with locations in Carmel Mountain, 4S Ranch, Bankers Hill, Hillcrest, and Torrey Hills</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/goldchild-coffee-roasters">Goldchild Coffee Roasters</a></strong><br>
-<em>Downtown</em></p>
-<blockquote><p>Roaster (San DIego) that roasts in house at their Downtown location</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/james-coffee-co">James Coffee Co.</a></strong><br>
-<em>Hillcrest</em></p>
-<blockquote><p>Roaster (Escondido) with locations in Bankers Hill, Vista, North Park, Sabre Springs, and Escondido</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/james-coffee-co">James Coffee Co.</a></strong><br>
-<em>North Park</em></p>
-<blockquote><p>Roaster (Escondido) with locations in Bankers Hill, Vista, North Park, Sabre Springs, and Escondido</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/achilles-coffee-roasters">Achilles Coffee Roasters</a></strong><br>
-<em>Downtown</em></p>
-<blockquote><p>Roaster (San Diego) with locations in Solana Beach, Del Mar, and Downtown SD</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/achilles-coffee-roasters">Achilles Coffee Roasters</a></strong><br>
-<em>Downtown</em></p>
-<blockquote><p>Roaster (San Diego) with locations in Solana Beach, Del Mar, and Downtown SD</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/achilles-coffee-roasters">Achilles Coffee Roasters</a></strong><br>
-<em>Downtown</em></p>
-<blockquote><p>Roaster (San Diego) with locations in Solana Beach, Del Mar, and Downtown SD</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a></strong><br>
-<em>Normal Heights</em></p>
-<blockquote><p>Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a></strong><br>
-<em>North Park</em></p>
-<blockquote><p>Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a></strong><br>
-<em>South Park</em></p>
-<blockquote><p>Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a></strong><br>
-<em>Golden Hill</em></p>
-<blockquote><p>Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/coffee-tea-collective">Coffee &amp; Tea Collective</a></strong><br>
-<em>North Park</em></p>
-<blockquote><p>Roaster (North Park) that roasts on site at their North Park location</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/little-while">Little While</a></strong><br>
-<em>North Park · Est. 2025 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Shop in North Park that is dedicated to details and quality of espresso (single origin available) as well as slow bar pour over selections. Roasts their own beans and offers very unique drinks and pastries.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🌙 Decaf Espresso · 🐕 Dog Friendly · ☕ Pour Over · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/seven-seas-roasting-co">Seven Seas Roasting Co.</a></strong><br>
-<em>South Park</em></p>
-<blockquote><p>Roaster (South Park) who roasts on site at their South Park shop. Also has a location in Solana Beach</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/genteel-coffee-roasters">Genteel Coffee Roasters</a></strong><br>
-<em>North Park</em></p>
-<blockquote><p>Roaster (North Park) with a location in North Park</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/parabola-coffee-roasting-co">Parabola Coffee Roasting Co.</a></strong><br>
-<em>Normal Heights</em></p>
-<blockquote><p>Roaster (North Park) who roasts on site at their North Park location</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/holsem-coffee">Holsem Coffee</a></strong><br>
-<em>North Park</em></p>
-<blockquote><p>Roaster (North Park) with a location in North Park</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/fuzz-coffee-and-records">Fuzz Coffee and Records</a></strong><br>
-<em>Normal Heights</em></p>
-<blockquote><p>Roaster (North Park) with a location in North Park</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/caff-calabria">Caffè Calabria</a></strong><br>
-<em>North Park · Est. 1991 · Production · Full Cafe</em></p>
-<blockquote><p>Roaster with a cafe in North Park that specializes in Italian-style darker roasts.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lestat-s-hillcrest">Lestat's Hillcrest</a></strong><br>
-<em>Hillcrest</em></p>
-<blockquote><p>Roaster (Hillcrest) roasts in house at their Hillcrest shop with other locations in University Heights and Normal Heights</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lestat-s-on-park">Lestat's on Park</a></strong><br>
-<em>Normal Heights</em></p>
-<blockquote><p>Roaster (Hillcrest) roasts in house at their Hillcrest shop with other locations in University Heights and Normal Heights</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/lestat-s">Lestat's</a></strong><br>
-<em>Normal Heights</em></p>
-<blockquote><p>Roaster (Hillcrest) roasts in house at their Hillcrest shop with other locations in University Heights and Normal Heights</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mixed-grounds-coffee">Mixed Grounds Coffee</a></strong><br>
-<em>Normal Heights</em></p>
-<blockquote><p>Roaster (San Diego) with a location in North Park</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/inspired-coffee-roasters-north-park">Inspired Coffee Roasters - North Park</a></strong><br>
-<em>North Park</em></p>
-<blockquote><p>Roaster (North Park) that roasts in house at their North Park location.  Limited release specialty coffee roasted at a medium to light level.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/heartwork-coffee">Heartwork Coffee</a></strong><br>
-<em>Mission Hills</em></p>
-<blockquote><p>Roaster (Chula Vista) with a shop in Mission Hills</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/shepherds-coffee-company">Shepherds Coffee Company</a></strong><br>
-<em>Golden Hill</em></p>
-<blockquote><p>Roaster (Logan Heights) that roasts in house at their Logan Heights location</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/rikka-fika">Rikka Fika</a></strong><br>
-<em>Downtown · Est. 2023 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Rikka Fika is a cafe that was previously well known for their matcha and sourcing of many roasters (domestic and international). As of 2026, they started roasting on a small scale focusing on light roasts.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📦 Sells Beans Online · 🌙 Decaf Espresso · 🐕 Dog Friendly · ☕ Pour Over · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/coffee-n-talk">Coffee 'N' Talk</a></strong><br>
-<em>Downtown · Est. 2018 · Production · Full Cafe</em></p>
-<blockquote><p>Roaster with production at their Santee location with other spots near Downtown. Most of their roasts tend to lean towards the darker side.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/coffee-n-talk">Coffee 'N' Talk</a></strong><br>
-<em>Downtown · Est. 2018 · Production · Full Cafe</em></p>
-<blockquote><p>Roaster with production at their Santee location with other spots near Downtown. Most of their roasts tend to lean towards the darker side.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/yipao-coffee">Yipao Coffee</a></strong><br>
-<em>University Heights · Est. 2017 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Well renowned roaster that roasts in house at their Pacific Beach cafe with another location in University Heights. Owners are originally from Colombia. Their coffee is sourced directly from the producers and they focus more on lighter roasted coffees.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong>Multi-Roaster Cafes</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/mnemonic-coffee">Mnemonic Coffee</a></strong><br>
-<em>Bankers Hill · Est. 2023</em></p>
-<blockquote><p>Mnemonic Coffee is a specialty coffee shop in San Diego known for its minimalist design and creative drink menu. The café focuses on high quality coffee, thoughtful presentation, and a more experimental approach to the coffee experience.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a></strong><br>
-<em>North Park · Est. 2016</em></p>
-<blockquote><p>North Park cafe founded in 2016 by Jen Byard, now with five locations across San Diego. Known for craft coffee in thoughtfully designed spaces, a seasonal drink menu, and a strong neighborhood presence that's made it one of the more recognizable names in the local scene.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly · 📅 Community Events</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a></strong><br>
-<em>Bankers Hill · Est. 2016</em></p>
-<blockquote><p>North Park cafe founded in 2016 by Jen Byard, now with five locations across San Diego. Known for craft coffee in thoughtfully designed spaces, a seasonal drink menu, and a strong neighborhood presence that's made it one of the more recognizable names in the local scene.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly · 📅 Community Events</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a></strong><br>
-<em>North Park · Est. 2016</em></p>
-<blockquote><p>North Park cafe founded in 2016 by Jen Byard, now with five locations across San Diego. Known for craft coffee in thoughtfully designed spaces, a seasonal drink menu, and a strong neighborhood presence that's made it one of the more recognizable names in the local scene.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly · 📅 Community Events</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/communal-coffee">Communal Coffee</a></strong><br>
-<em>San Diego · Est. 2016</em></p>
-<blockquote><p>North Park cafe founded in 2016 by Jen Byard, now with five locations across San Diego. Known for craft coffee in thoughtfully designed spaces, a seasonal drink menu, and a strong neighborhood presence that's made it one of the more recognizable names in the local scene.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly · 📅 Community Events</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/saigon-coffee">Saigon Coffee</a></strong><br>
-<em>North Park · Est. 2012</em></p>
-<blockquote><p>Specializes in traditional Vietnamese coffees.</p></blockquote>
-<p><strong>Amenities:</strong> 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/muri-coffee-dessert">Muri Coffee &amp; Dessert</a></strong><br>
-<em>North Park · Est. 2024</em></p>
-<blockquote><p>Cafe that specializes in Kurdish style coffee and tea founded by two former UCSD students.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/divo-diva-cafe">Divo Diva Cafe</a></strong><br>
-<em>Hillcrest</em></p>
-<blockquote><p>A cozy European cafe in Hillcrest that serves Italian-style coffee.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📅 Community Events</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/manor-coffee">Manor Coffee</a></strong><br>
-<em>Hillcrest · Est. 2026</em></p>
-<blockquote><p>Manor Bar is a gothic-themed cafe in Hillcrest that uses Torque coffee for their pour over and espresso alongside other national roasters (including co-ferments). They also have some fun, Japanese-inspired coffee drinks on the menu.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/kind-corner">Kind Corner</a></strong><br>
-<em>Downtown · Est. 2023</em></p>
-<blockquote><p>Woman owned cafe in Cortez Hill that offers decaf espresso and manual pour over using a V60. They also offer light bites.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 🐕 Dog Friendly</p>
-
-<hr>
-
-<h3 id="beach-communities">Beach Communities</h3>
-
-<p><strong>Roasters</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/coffee-cycle-roasting">Coffee Cycle Roasting</a></strong><br>
-<em>Ocean Beach · Est. 2021 · Production · Full Cafe</em></p>
-<blockquote><p>Roaster with locations in PB and OB. Chris O'Brien (head roaster) is well regarded as a staple in the SD coffee scene. He was a barista at Bird Rock for 7 years before starting his mobile cart and then brick and mortar. Excellent sourcing and attention to detail.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/coffee-cycle-roasting">Coffee Cycle Roasting</a></strong><br>
-<em>Pacific Beach · Est. 2021 · Production · Full Cafe</em></p>
-<blockquote><p>Roaster with locations in PB and OB. Chris O'Brien (head roaster) is well regarded as a staple in the SD coffee scene. He was a barista at Bird Rock for 7 years before starting his mobile cart and then brick and mortar. Excellent sourcing and attention to detail.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a></strong><br>
-<em>Bird Rock</em></p>
-<blockquote><p>Roaster (San Diego) with large production facility on Morena Blvd and locations in La Jolla, Carlsbad, Encinitas, Little Italy, and Downtown San Diego</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a></strong><br>
-<em>La Jolla</em></p>
-<blockquote><p>Roaster (San Diego) with large production facility on Morena Blvd and locations in La Jolla, Carlsbad, Encinitas, Little Italy, and Downtown San Diego</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a></strong><br>
-<em>Bay Park</em></p>
-<blockquote><p>Roaster (San Diego) with large production facility on Morena Blvd and locations in La Jolla, Carlsbad, Encinitas, Little Italy, and Downtown San Diego</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a></strong><br>
-<em>Point Loma</em></p>
-<blockquote><p>Roaster (San Diego) with large production facility on Morena Blvd and locations in La Jolla, Carlsbad, Encinitas, Little Italy, and Downtown San Diego</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/acento-coffee-roasters">Acento Coffee Roasters</a></strong><br>
-<em>Point Loma · Est. 2020 · Production · Full Cafe</em></p>
-<blockquote><p>Acento is a cafe located in Point Loma with a roasting facility onsite. Luis is the head roaster who is well regarded among the San Diego coffee scene. They offer any of their beans on espresso and focus on light to medium light roasts.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · 🐕 Dog Friendly · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/heave-ho-coffee-co">Heave Ho Coffee Co</a></strong><br>
-<em>Coronado</em></p>
-<blockquote><p>Roaster (Chula Vista) that roasts in their Chula Vista shop with a location in Coronado as well</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/ultreya-coffee-and-tea">Ultreya Coffee and Tea</a></strong><br>
-<em>Ocean Beach</em></p>
-<blockquote><p>Roaster (San Diego) that roasts out of their College Area shop with another location in Ocean Beach. They are woman owned.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/trident-coffee">Trident Coffee</a></strong><br>
-<em>Coronado</em></p>
-<blockquote><p>Roaster (Imperial Beach) with shops in Imperial Beach, Coronado, and Pacific Beach</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/trident-coffee">Trident Coffee</a></strong><br>
-<em>Pacific Beach</em></p>
-<blockquote><p>Roaster (Imperial Beach) with shops in Imperial Beach, Coronado, and Pacific Beach</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/modern-times-beer">Modern Times Beer</a></strong><br>
-<em>Point Loma</em></p>
-<blockquote><p>Roaster (San Diego) with a location in Rosecrans area</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/elixir-espresso-wine-bar">Elixir Espresso &amp; Wine Bar</a></strong><br>
-<em>La Jolla · Est. 2010 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Roasts under the name Screaming Goat Espresso, locations in La Jolla and Pacific Beach. They offer a medium roast and a decaf option for sale.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/elixir-espresso-bar">Elixir Espresso Bar</a></strong><br>
-<em>Pacific Beach · Est. 2010 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Roasts under the name Screaming Goat Espresso, locations in La Jolla and Pacific Beach. They offer a medium roast and a decaf option for sale.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/parakeet-cafe">Parakeet Cafe</a></strong><br>
-<em>La Jolla</em></p>
-<blockquote><p>Roaster (San Diego) with locations in La Jolla, UTC, Coronado, Little Italy, Del Mar, and Carlsbad</p></blockquote>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/the-flower-pot-cafe-and-bakery">The Flower Pot Cafe and Bakery</a></strong><br>
-<em>La Jolla</em></p>
-<blockquote><p>Roaster (La Jolla) with a location in La Jolla</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/yipao-coffee">Yipao Coffee</a></strong><br>
-<em>Pacific Beach · Est. 2017 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Well renowned roaster that roasts in house at their Pacific Beach cafe on a yellow Diedrich with another location in University Heights. Owners are originally from Colombia. Their coffee is sourced directly from the producers and they focus more on lighter roasted coffees.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/ob-beans-coffee-roasters">OB Beans Coffee Roasters</a></strong><br>
-<em>Ocean Beach</em></p>
-<blockquote><p>Roaster (Ocean Beach) that roasts on site in OB on a 10kg Mill City roaster</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong>Multi-Roaster Cafes</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/moniker-coffee-co">Moniker Coffee Co.</a></strong><br>
-<em>Point Loma · Est. 2016</em></p>
-<blockquote><p>Beautiful cafe in Liberty Station with attention to detail with their space, coffee, pastries, etc.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly</p>
-
-<hr>
-
-<h3 id="central-east-sd">Central &amp; East SD</h3>
-
-<p><strong>Roasters</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a></strong><br>
-<em>City Heights · Est. 2022 · Production · Full Cafe</em></p>
-<blockquote><p>Torque Coffee is a roaster/cafe located in City Heights. They pay attention to the details (proportional pricing, excellent roast guides, espresso options at cafe, great food options) and have been involved in the coffee scene for a long while.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/snakebite-coffee">Snakebite Coffee</a></strong><br>
-<em>Del Cerro</em></p>
-<blockquote><p>Roaster (San Diego). Beans can be found online or at The Bean at JCC La Jolla</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a></strong><br>
-<em>Barrio Logan · Est. 1990 · Production · Full Cafe</em></p>
-<blockquote><p>One of San Diego's longest-running roasters, Cafe Moto has been in the family since the late 1960s and officially launched in 1990. Now roasting in Barrio Logan on a 1931 Jabez Burns roaster powered entirely by solar panels, all coffee is Fair Trade, organic, and kosher certified.</p></blockquote>
-<p><strong>Amenities:</strong> 🌱 Certified Organic · 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · 🐕 Dog Friendly · ✌️ Espresso Options</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/talitha-coffee-roasters-roastery-only">Talitha Coffee Roasters (Roastery Only)</a></strong><br>
-<em>Barrio Logan</em></p>
-<blockquote><p>Roaster (Barrio Logan) with shops in Bankers Hill, Morena, and Liberty Station</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/ryan-bros-coffee">Ryan Bros Coffee</a></strong><br>
-<em>Barrio Logan</em></p>
-<blockquote><p>Roaster (Barrio Logan) with in house roasting at their shop in Barrio Logan with other locations in City Heights and San Marcos. They have an extensive selection of nitro cold brew on tap.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/ryan-bros-coffee">Ryan Bros Coffee</a></strong><br>
-<em>City Heights</em></p>
-<blockquote><p>Roaster (Barrio Logan) with in house roasting at their shop in Barrio Logan with other locations in City Heights and San Marcos. They have an extensive selection of nitro cold brew on tap.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/provecho-coffee-co">Provecho! Coffee Co.</a></strong><br>
-<em>Logan Heights · Est. 2022 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Provecho Coffee has a beautiful cafe in Logan Heights and sources beans from all over but likes to highlight Mexican origins. Skilled baristas at their cafe.</p></blockquote>
-<p><strong>Amenities:</strong> 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/ultreya-coffee-and-tea">Ultreya Coffee and Tea</a></strong><br>
-<em>College Area</em></p>
-<blockquote><p>Roaster (San Diego) that roasts out of their College Area shop with another location in Ocean Beach. They are woman owned.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a></strong><br>
-<em>La Mesa</em></p>
-<blockquote><p>Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/the-king-s-craft-coffee-co">The King's Craft Coffee Co.</a></strong><br>
-<em>Mission Valley</em></p>
-<blockquote><p>Roaster (Poway) that roasts in house at their Poway shop</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/brew-coffee-spot">Brew Coffee Spot</a></strong><br>
-<em>La Mesa</em></p>
-<blockquote><p>Roaster (La Mesa) that roasts in house at their La Mesa shop</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a></strong><br>
-<em>Allied Gardens</em></p>
-<blockquote><p>Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/cafeina-cafe">Cafeina Cafe</a></strong><br>
-<em>City Heights</em></p>
-<blockquote><p>Roaster (San Diego) with a shop in City Heights. Currently they only offer one roast (no whole bean option, only pre-ground)</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/scrimshaw-coffee">Scrimshaw Coffee</a></strong><br>
-<em>College Area</em></p>
-<blockquote><p>Roaster (College Area) that roasts in house at their College Area shop under the name Field Trip Coffee Roasters</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/flor-and-seed-coffee-roasters">Flor and Seed Coffee Roasters</a></strong><br>
-<em>Old Town</em></p>
-<blockquote><p>Roaster (Old Town) that roasts in house at their Old Town location. Mexican owned, sources beans from Mexico.</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/coffee-n-talk">Coffee 'N' Talk</a></strong><br>
-<em>Santee · Est. 2018 · Production · Full Cafe</em></p>
-<blockquote><p>Roaster with production at their Santee location with other spots near Downtown. Most of their roasts tend to lean towards the darker side.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🐕 Dog Friendly</p>
-
-<p><strong>Multi-Roaster Cafes</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/longplay-hifi">Longplay HiFi</a></strong><br>
-<em>Barrio Logan · Est. 2020</em></p>
-<blockquote><p>This is a Japanese-inspired cafe, listening lounge, and bar that is very intentional about the menu. The pace is intentionally slow, meant to provide a warm and welcoming environment where being present comes first. Provecho coffee is currently offered as a pour over and there are a few other unique coffee-based drinks on the menu.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries</p>
-
-<hr>
-
-<h3 id="south-bay">South Bay</h3>
-
-<p><strong>Roasters</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/heave-ho-coffee-co">Heave Ho Coffee Co</a></strong><br>
-<em>Chula Vista</em></p>
-<blockquote><p>Roaster (Chula Vista) that roasts in their Chula Vista shop with a location in Coronado as well</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/trident-coffee">Trident Coffee</a></strong><br>
-<em>Imperial Beach</em></p>
-<blockquote><p>Roaster (Imperial Beach) with shops in Imperial Beach, Coronado, and Pacific Beach</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a></strong><br>
-<em>Chula Vista</em></p>
-<blockquote><p>Roaster (San Diego) with locations in North Park, South Park, Golden Hill, Normal Heights, La Mesa, Chula Vista, Mission Gorge, and Hillcrest</p></blockquote>
-<p><strong>Amenities:</strong> 📦 Sells Beans Online</p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/friends-of-friends">Friends of Friends</a></strong><br>
-<em>National City · Est. 2024 · Micro-Batch · Full Cafe</em></p>
-<blockquote><p>Unique multi purpose space in National City that combines coffee, food, music, and drinks all into one space. They roast in National City and offer a single origin option on espresso. They also offer Soup (Oxo Rapid Brew) cups which is rad!</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 📦 Sells Beans Online · 🌙 Decaf Espresso · 🐕 Dog Friendly</p>
-
-<p><strong>Multi-Roaster Cafes</strong></p>
-
-<p><strong><a href="https://sandiegocoffee.co/locations/yaqui-coffee-house">Yaqui Coffee House</a></strong><br>
-<em>Otay Ranch · Est. 2024</em></p>
-<blockquote><p>Sonoran inspired cafe in Otay Ranch that serves and sells Acento coffee. They offer multiple single origin options for their manual pour over.</p></blockquote>
-<p><strong>Amenities:</strong> 🍩 Food & Pastries · 📶 Wifi · 🐕 Dog Friendly</p>
-
-<hr>
-
-<h2 id="beans-by-mail">📦 Beans by Mail</h2>
+<h2 id="beans-by-mail">Beans by Mail</h2>
 
 <p>Want San Diego-roasted beans delivered to your door? Whether you're local and prefer the convenience or you've moved away and miss the good stuff — here's the complete list.</p>
 
@@ -916,14 +175,7 @@
 
 <table>
   <tr><th>Roaster</th><th>Roast Style</th><th>Based In</th><th>Website</th></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/big-step-coffee">Big Step Coffee</a></td><td>Light</td><td>San Diego</td><td><a href="https://bigstepcoffee.com/">bigstepcoffee.com</a></td></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/common-good-coffee">Common Good Coffee</a></td><td>Full Range</td><td>San Diego</td><td><a href="http://www.commongoodcoffee.com/">commongoodcoffee.com</a></td></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/excelsa-coffee">Excelsa Coffee</a></td><td>Full Range</td><td>San Diego</td><td><a href="https://excelsacoffee.com/">excelsacoffee.com</a></td></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/frequent-coffee">Frequent Coffee</a></td><td>Full Range</td><td>San Diego</td><td><a href="https://frequentcoffee.com/">frequentcoffee.com</a></td></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/leleka-coffee-roasters">Leleka Coffee Roasters</a></td><td>Full Range</td><td>San Diego</td><td><a href="https://leleka.coffee/">leleka.coffee</a></td></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/mindwater-coffee-company">MindWater Coffee Company</a></td><td>Full Range</td><td>San Diego</td><td><a href="https://mindwatercoffee.com/">mindwatercoffee.com</a></td></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/visitor-coffee-roaster">Visitor Coffee Roaster</a></td><td>Light</td><td>San Diego</td><td><a href="http://sdcoffeeroasters.com/">sdcoffeeroasters.com</a></td></tr>
-  <tr><td><a href="https://sandiegocoffee.co/locations/wipeout-coffee">Wipeout Coffee</a></td><td>Full Range</td><td>San Diego</td><td><a href="https://www.wipeoutcoffee.com/">wipeoutcoffee.com</a></td></tr>
+  <tbody id="online-only-tbody"></tbody>
 </table>
 
 <hr>
@@ -932,19 +184,7 @@
 
 <p>These roasters have physical locations in San Diego <em>and</em> sell beans online. Organized by area so you can also visit in person.</p>
 
-<p><strong>North County Coastal:</strong> <a href="https://sandiegocoffee.co/locations/baba-coffee">Baba Coffee</a> · <a href="https://sandiegocoffee.co/locations/bird-rock-coffee-roasters">Bird Rock Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/bump-coffee">Bump Coffee</a> · <a href="https://sandiegocoffee.co/locations/crossings-coffee-roasters">Crossings Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/dreamwave-coffee">Dreamwave Coffee</a> · <a href="https://sandiegocoffee.co/locations/interim-coffee">Interim Coffee</a> · <a href="https://sandiegocoffee.co/locations/ironsmith-coffee-roasters">Ironsmith Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/la-costa-coffee-roasting">La Costa Coffee Roasting</a> · <a href="https://sandiegocoffee.co/locations/libra-coffee-roasters">Libra Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/lofty-coffee-co">Lofty Coffee Co.</a> · <a href="https://sandiegocoffee.co/locations/necessity-coffee">Necessity Coffee</a> · <a href="https://sandiegocoffee.co/locations/origen-coffee-roasters">Origen Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/pannikin-coffee-tea">Pannikin Coffee &amp; Tea</a> · <a href="https://sandiegocoffee.co/locations/revolution-roasters">Revolution Roasters</a> · <a href="https://sandiegocoffee.co/locations/steady-state-roasting">Steady State Roasting</a> · <a href="https://sandiegocoffee.co/locations/vigilante-coffee">Vigilante Coffee</a></p>
-
-<p><strong>North County Inland:</strong> <a href="https://sandiegocoffee.co/locations/cosmic-bloom-coffee">Cosmic Bloom Coffee</a> · <a href="https://sandiegocoffee.co/locations/idego-coffee">Idego Coffee</a> · <a href="https://sandiegocoffee.co/locations/memli-coffee-lab">Memli Coffee Lab</a> · <a href="https://sandiegocoffee.co/locations/safari-coffee-roasters">Safari Coffee Roasters</a></p>
-
-<p><strong>North San Diego Inland:</strong> <a href="https://sandiegocoffee.co/locations/achilles-coffee-roasters">Achilles Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/compa-coffee-roasters">COMPA Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/inflection-point-coffee">Inflection Point Coffee</a> · <a href="https://sandiegocoffee.co/locations/jaunt-coffee-roasters">Jaunt Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/manzanita-roasting-company">Manzanita Roasting Company</a> · <a href="https://sandiegocoffee.co/locations/mostra-coffee">Mostra Coffee</a></p>
-
-<p><strong>Downtown &amp; Uptown:</strong> <a href="https://sandiegocoffee.co/locations/caff-calabria">Caffè Calabria</a> · <a href="https://sandiegocoffee.co/locations/coffee-tea-collective">Coffee &amp; Tea Collective</a> · <a href="https://sandiegocoffee.co/locations/dark-horse-coffee-roasters">Dark Horse Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/fuzz-coffee-and-records">Fuzz Coffee and Records</a> · <a href="https://sandiegocoffee.co/locations/genteel-coffee-roasters">Genteel Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/goldchild-coffee-roasters">Goldchild Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/heartwork-coffee">Heartwork Coffee</a> · <a href="https://sandiegocoffee.co/locations/holsem-coffee">Holsem Coffee</a> · <a href="https://sandiegocoffee.co/locations/inspired-coffee-roasters-north-park">Inspired Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/james-coffee-co">James Coffee Co.</a> · <a href="https://sandiegocoffee.co/locations/lestat-s">Lestat's</a> · <a href="https://sandiegocoffee.co/locations/mixed-grounds-coffee">Mixed Grounds Coffee</a> · <a href="https://sandiegocoffee.co/locations/parabola-coffee-roasting-co">Parabola Coffee Roasting Co.</a> · <a href="https://sandiegocoffee.co/locations/rikka-fika">Rikka Fika</a> · <a href="https://sandiegocoffee.co/locations/seven-seas-roasting-co">Seven Seas Roasting Co.</a> · <a href="https://sandiegocoffee.co/locations/shepherds-coffee-company">Shepherds Coffee Company</a></p>
-
-<p><strong>Beach Communities:</strong> <a href="https://sandiegocoffee.co/locations/acento-coffee-roasters">Acento Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/coffee-cycle-roasting">Coffee Cycle Roasting</a> · <a href="https://sandiegocoffee.co/locations/elixir-espresso-wine-bar">Elixir Espresso &amp; Wine Bar</a> · <a href="https://sandiegocoffee.co/locations/elixir-espresso-bar">Elixir Espresso Bar</a> · <a href="https://sandiegocoffee.co/locations/modern-times-beer">Modern Times Beer</a> · <a href="https://sandiegocoffee.co/locations/ob-beans-coffee-roasters">OB Beans Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/the-flower-pot-cafe-and-bakery">The Flower Pot Cafe and Bakery</a> · <a href="https://sandiegocoffee.co/locations/yipao-coffee">Yipao Coffee</a></p>
-
-<p><strong>Central &amp; East SD:</strong> <a href="https://sandiegocoffee.co/locations/brew-coffee-spot">Brew Coffee Spot</a> · <a href="https://sandiegocoffee.co/locations/cafe-moto">Cafe Moto</a> · <a href="https://sandiegocoffee.co/locations/cafeina-cafe">Cafeina Cafe</a> · <a href="https://sandiegocoffee.co/locations/coffee-n-talk">Coffee 'N' Talk</a> · <a href="https://sandiegocoffee.co/locations/flor-and-seed-coffee-roasters">Flor and Seed Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/provecho-coffee-co">Provecho! Coffee Co.</a> · <a href="https://sandiegocoffee.co/locations/ryan-bros-coffee">Ryan Bros Coffee</a> · <a href="https://sandiegocoffee.co/locations/scrimshaw-coffee">Scrimshaw Coffee</a> · <a href="https://sandiegocoffee.co/locations/snakebite-coffee">Snakebite Coffee</a> · <a href="https://sandiegocoffee.co/locations/talitha-coffee-roasters-roastery-only">Talitha Coffee Roasters</a> · <a href="https://sandiegocoffee.co/locations/the-king-s-craft-coffee-co">The King's Craft Coffee Co.</a> · <a href="https://sandiegocoffee.co/locations/torque-coffee">Torque Coffee</a> · <a href="https://sandiegocoffee.co/locations/ultreya-coffee-and-tea">Ultreya Coffee and Tea</a></p>
-
-<p><strong>South Bay:</strong> <a href="https://sandiegocoffee.co/locations/friends-of-friends">Friends of Friends</a> · <a href="https://sandiegocoffee.co/locations/heave-ho-coffee-co">Heave Ho Coffee Co</a> · <a href="https://sandiegocoffee.co/locations/trident-coffee">Trident Coffee</a></p>
+<div id="ships-beans-content"></div>
 
 <hr>
 
@@ -960,11 +200,11 @@
 
 <hr>
 
-<h2 id="community-favorites">🏆 Community Favorites</h2>
+<h2 id="community-favorites">Community Favorites</h2>
 
 <p>The sub's top picks, voted on by r/SanDiegoCoffeeBeans members. Updated quarterly after community voting threads.</p>
 
-<blockquote><p><strong>Status:</strong> <em>Awaiting first community vote. Watch for the inaugural voting thread — coming soon!</em></p></blockquote>
+<blockquote><p><strong>Status:</strong> <em>Awaiting first community vote. Watch for the inaugural voting thread, coming soon!</em></p></blockquote>
 
 <hr>
 
@@ -976,32 +216,9 @@
 
 <h3>Categories</h3>
 
-<h4>☀️ Best Light Roast</h4>
-<p><em>Pending first vote</em></p>
+<p>Voting covers 7 categories: ☀️ Best Light Roast · 🌑 Best Medium/Dark Roast · ☕ Best Espresso Experience · 🏠 Best Vibes/Atmosphere · 💻 Best Work Spot · 🆕 Best Newcomer · 💎 Most Underrated</p>
 
-<h4>🌑 Best Medium/Dark Roast</h4>
-<p><em>Pending first vote</em></p>
-
-<h4>☕ Best Espresso Experience</h4>
-<p><em>Pending first vote</em></p>
-
-<h4>🏠 Best Vibes / Atmosphere</h4>
-<p><em>Pending first vote</em></p>
-
-<h4>💻 Best Spot to Work From</h4>
-<p><em>Pending first vote</em></p>
-
-<h4>🆕 Best Newcomer (opened in last 12 months)</h4>
-<p><em>Pending first vote</em></p>
-
-<h4>💎 Most Underrated / Hidden Gem</h4>
-<p><em>Pending first vote</em></p>
-
-<hr>
-
-<h3>Past Voting Threads</h3>
-
-<p><em>No voting threads yet. This section will link to each quarterly thread for full context on nominations and discussion.</em></p>
+<blockquote><p><em>No results yet — inaugural vote coming soon. Watch the sub for the thread.</em></p></blockquote>
 
 <hr>
 
@@ -1019,7 +236,7 @@
 
 <hr>
 
-<h2 id="changelog">📋 Changelog</h2>
+<h2 id="changelog">Changelog</h2>
 
 <p>The running log of what's changed in San Diego's specialty coffee scene. New openings, closings, moves, expansions, and notable updates.</p>
 
@@ -1034,7 +251,10 @@
 <h4>March 2026</h4>
 
 <ul>
-  <li>Wiki launched! Directory reflects 151 total locations: 83 roasters, 13 multi-roaster cafés, 8 online-only.</li>
+  <li>📝 Updated descriptions for 18 roasters: Bird Rock, Mostra, James Coffee Co., Dark Horse, Lofty Coffee, Holsem, Lestat's, Coffee &amp; Tea Collective, Parabola, Genteel, Fuzz Coffee and Records, Goldchild, Achilles, Heartwork, Shepherds, Mixed Grounds, Trident, Modern Times Beer.</li>
+  <li>🆕 Added missing entries: Excelsa Coffee, Local Krave, Sands Coffee Roaster, Coffee Hub (Now Juno's), Talitha Coffee Roasters (Liberty Station, Clairemont, Bankers Hill), Daymar Artisan Coffee Roasters, The Simple Coffee House, The Template, Bay Park Coffee, San Diego Coffee Company.</li>
+  <li>Wiki updated to reflect <span data-stat="total"></span> total locations across all sections.</li>
+  <li>Wiki launched! Directory reflects <span data-stat="total"></span> total locations: <span data-stat="roasters"></span> roasters, <span data-stat="cafes"></span> multi-roaster cafés, <span data-stat="online"></span> online-only.</li>
 </ul>
 
 <hr>
@@ -1050,13 +270,7 @@
 
 <hr>
 
-<h3>Recently Closed</h3>
-
-<p><em>Nothing to report.</em></p>
-
-<hr>
-
-<h2 id="faq">❓ FAQ &amp; Posting Guidelines</h2>
+<h2 id="faq">FAQ and Posting Guidelines</h2>
 
 <hr>
 
@@ -1066,7 +280,7 @@
 
 <p>The community hub for San Diego County's specialty coffee scene — roasters, cafés, beans, brewing, events, and everything in between. Whether you're deep into specialty coffee or just getting started, you're welcome here.</p>
 
-<p><a href="https://sandiegocoffee.co">sandiegocoffee.co</a> is the polished reference site — full profiles, photos, hours, maps, and Google Maps integration for 151 locations. This subreddit is for <em>discussion</em>: recommendations, reviews, opinions, news, questions, and community interaction. The <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/wiki/index">wiki</a> bridges the two.</p>
+<p><a href="https://sandiegocoffee.co">sandiegocoffee.co</a> is the polished reference site — full profiles, photos, hours, maps, and Google Maps integration for <span data-stat="total">158</span> locations. This subreddit is for <em>discussion</em>: recommendations, reviews, opinions, news, questions, and community interaction. The <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/wiki/index">wiki</a> bridges the two.</p>
 
 <hr>
 
@@ -1098,7 +312,7 @@
 <h3>Common Questions</h3>
 
 <p><strong>How many roasters are in San Diego?</strong></p>
-<p>As of March 2026: <strong>83 roasters</strong>, plus <strong>13 multi-roaster cafés</strong> and <strong>8 online-only roasters</strong>, totaling <strong>151 tracked locations</strong> across <strong>47 neighborhoods</strong>.</p>
+<p id="faq-stats">As of March 2026: <strong>83 roasters</strong>, plus <strong>13 multi-roaster cafés</strong> and <strong>10 online-only roasters</strong>, totaling <strong>158 tracked locations</strong> across <strong>50 neighborhoods</strong>.</p>
 
 <p><strong>Where can I find coffee near [specific area]?</strong></p>
 <p>Two options: browse the Directory by area above or use the <a href="https://sandiegocoffee.co/map">Interactive Map</a> on sandiegocoffee.co. You can also just ask in a post — the community is happy to give personalized recs.</p>
@@ -1139,6 +353,293 @@
 <hr>
 
 <p><em>Last updated: March 2026 · <a href="https://sandiegocoffee.co">sandiegocoffee.co</a> · <a href="https://sandiegocoffee.co/submit">Add a Spot</a></em></p>
+
+<script>
+(function () {
+  // ── Amenity value → display string mapping ──────────────────────────────────
+  var AMENITY_MAP = {
+    'Offers Food / Pastries': '🍩 Food & Pastries',
+    'Good for Working (Wifi)': '📶 Wifi',
+    'Sells Beans Online': '📦 Sells Beans Online',
+    'Dog Friendly': '🐕 Dog Friendly',
+    'Decaf Espresso Available': '🌙 Decaf Espresso',
+    'Espresso Bean Options': '✌️ Espresso Options',
+    'Espresso Options (Choice between different beans)': '✌️ Espresso Options',
+    'Pour Over Available': '☕ Pour Over',
+    'Certified Organic': '🌱 Certified Organic',
+    'Community Events': '📅 Community Events'
+  };
+
+  var SECTIONS = [
+    { id: 'north-county-coastal',   label: 'North County Coastal' },
+    { id: 'north-county-inland',    label: 'North County Inland' },
+    { id: 'north-san-diego-inland', label: 'North San Diego Inland' },
+    { id: 'downtown-uptown',        label: 'Downtown and Uptown' },
+    { id: 'beach-communities',      label: 'Beach Communities' },
+    { id: 'central-east-sd',        label: 'Central and East SD' },
+    { id: 'south-bay',              label: 'South Bay' }
+  ];
+
+  // Fallback: auto-assign section from neighborhood when not in wiki_data.js
+  var NEIGHBORHOOD_SECTION = {
+    'Oceanside': 'north-county-coastal', 'Carlsbad': 'north-county-coastal',
+    'Encinitas': 'north-county-coastal', 'Cardiff-by-the-Sea': 'north-county-coastal',
+    'Solana Beach': 'north-county-coastal',
+    'Vista': 'north-county-inland', 'San Marcos': 'north-county-inland',
+    'Escondido': 'north-county-inland', 'Poway': 'north-county-inland',
+    'Carmel Mountain Ranch': 'north-san-diego-inland', 'Rancho Bernardo': 'north-san-diego-inland',
+    'Carmel Valley': 'north-san-diego-inland', 'Mira Mesa': 'north-san-diego-inland',
+    'Sorrento Valley': 'north-san-diego-inland', 'Scripps Ranch': 'north-san-diego-inland',
+    'Downtown': 'downtown-uptown', 'Bankers Hill': 'downtown-uptown',
+    'North Park': 'downtown-uptown', 'South Park': 'downtown-uptown',
+    'Normal Heights': 'downtown-uptown', 'Hillcrest': 'downtown-uptown',
+    'Golden Hill': 'downtown-uptown', 'University Heights': 'downtown-uptown',
+    'Mission Hills': 'downtown-uptown', 'Little Italy': 'downtown-uptown',
+    'Allied Gardens': 'downtown-uptown', 'Mission Valley': 'downtown-uptown',
+    'Old Town': 'downtown-uptown',
+    'Point Loma': 'beach-communities', 'Liberty Station': 'beach-communities',
+    'Ocean Beach': 'beach-communities', 'Pacific Beach': 'beach-communities',
+    'La Jolla': 'beach-communities', 'Bird Rock': 'beach-communities',
+    'Clairemont': 'beach-communities', 'Bay Park': 'beach-communities',
+    'Coronado': 'beach-communities',
+    'City Heights': 'central-east-sd', 'Barrio Logan': 'central-east-sd',
+    'Logan Heights': 'central-east-sd', 'College Area': 'central-east-sd',
+    'Del Cerro': 'central-east-sd', 'El Cajon': 'central-east-sd',
+    'Santee': 'central-east-sd', 'La Mesa': 'central-east-sd',
+    'Chula Vista': 'south-bay', 'National City': 'south-bay',
+    'Imperial Beach': 'south-bay', 'Otay Ranch': 'south-bay'
+  };
+
+  function getSection(loc) {
+    var entry = window.WIKI_DATA[loc.id];
+    if (entry) return entry.section;
+    var nb = loc.coffeeDetails && loc.coffeeDetails.neighborhood;
+    return nb ? NEIGHBORHOOD_SECTION[nb] : null;
+  }
+
+  // ── Stats computation ───────────────────────────────────────────────────────
+  function normalizeBrand(name) {
+    name = name.replace(/\s*[-\u2013\u2014@]\s*.+$/, '');
+    name = name.replace(/\s*\(.*?\)\s*$/, '');
+    name = name.replace(/\s+roaster\s*$/i, '');
+    name = name.replace(/\s+(north|south|east|west|downtown|gaslamp|hillcrest|north park|south park|la jolla|mission hills|liberty station|little italy|ocean beach|pacific beach|point loma|kensington|normal heights|university heights|clairemont|mission valley|del mar|encinitas|carlsbad|solana beach|chula vista|el cajon|santee|lakeside|poway|rancho bernardo|san marcos|city heights|coronado|imperial beach|vista|escondido|oceanside|on park)\s*$/i, '');
+    return name.replace(/\.\s*$/, '').trim().toLowerCase();
+  }
+
+  var allLocs = window.COFFEE_LOCATIONS;
+  var roasterLocs = allLocs.filter(function (l) { return l.basicInfo.type === 'roaster'; });
+  var cafeLocs    = allLocs.filter(function (l) { return l.basicInfo.type !== 'roaster'; });
+
+  var totalCount   = allLocs.length;
+  var roasterBrands = new Set(roasterLocs.map(function (l) { return normalizeBrand(l.basicInfo.name); }));
+  var cafeBrands    = new Set(cafeLocs.map(function (l)    { return normalizeBrand(l.basicInfo.name); }));
+  var roasterCount  = roasterBrands.size;
+  var cafeCount     = cafeBrands.size;
+  var onlineCount   = roasterLocs.filter(function (l) { return l.basicInfo.onlineOnly; }).length;
+  var nbSet         = new Set(allLocs.map(function (l) { return l.coffeeDetails && l.coffeeDetails.neighborhood; }).filter(Boolean));
+  var nbCount       = nbSet.size;
+
+  // ── Update stats in DOM ─────────────────────────────────────────────────────
+  function updateStats() {
+    var statMap = { total: totalCount, roasters: roasterCount, cafes: cafeCount, online: onlineCount, neighborhoods: nbCount };
+    document.querySelectorAll('[data-stat]').forEach(function (el) {
+      var val = statMap[el.dataset.stat];
+      if (val !== undefined) el.textContent = val;
+    });
+
+    var subtitleEl = document.getElementById('stats-subtitle');
+    if (subtitleEl) {
+      subtitleEl.textContent = 'Last updated: March 22, 2026 \u2014 ' + totalCount + ' locations \u00b7 ' + roasterCount + ' roasters \u00b7 ' + cafeCount + ' multi-roaster caf\u00e9s \u00b7 ' + onlineCount + ' online-only roasters \u00b7 ' + nbCount + ' neighborhoods';
+    }
+
+    var mapLinkEl = document.getElementById('map-link-count');
+    if (mapLinkEl) mapLinkEl.textContent = 'Interactive Map \u2014 All ' + totalCount + ' Locations';
+
+    var faqStatsEl = document.getElementById('faq-stats');
+    if (faqStatsEl) {
+      faqStatsEl.innerHTML = 'As of March 2026: <strong>' + roasterCount + ' roasters</strong>, plus <strong>' + cafeCount + ' multi-roaster caf\u00e9s</strong> and <strong>' + onlineCount + ' online-only roasters</strong>, totaling <strong>' + totalCount + ' tracked locations</strong> across <strong>' + nbCount + ' neighborhoods</strong>.';
+    }
+
+    var inlineOnlineEl = document.getElementById('online-count-inline');
+    if (inlineOnlineEl) inlineOnlineEl.textContent = onlineCount;
+  }
+
+  // ── Render a single location entry ─────────────────────────────────────────
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderEntry(loc) {
+    var bi = loc.basicInfo;
+    var cd = loc.coffeeDetails || {};
+
+    var parts = [];
+    if (cd.neighborhood)      parts.push(cd.neighborhood);
+    if (cd.yearEstablished)   parts.push('Est. ' + cd.yearEstablished);
+    if (cd.roastScale)        parts.push(cd.roastScale);
+    if (cd.visitorExperience) parts.push(cd.visitorExperience.replace(/\s*\(.*?\)\s*$/, ''));
+    var subtitle = parts.join(' \u00b7 ');
+
+    var url      = 'https://sandiegocoffee.co/location.html?id=' + loc.id;
+    var nameHtml = '<a href="' + url + '">' + escHtml(bi.name) + '</a>';
+
+    var amenities = (cd.amenities || []).map(function (a) { return AMENITY_MAP[a]; }).filter(Boolean);
+    var uniqueAmenities = amenities.filter(function (v, i, arr) { return arr.indexOf(v) === i; });
+
+    var html = '<p><strong>' + nameHtml + '</strong><br>\n<em>' + escHtml(subtitle) + '</em></p>\n';
+    var desc = cd.description || (loc.legacyData && loc.legacyData.originalDescription) || '';
+    if (desc) {
+      html += '<blockquote><p>' + escHtml(desc) + '</p></blockquote>\n';
+    }
+    if (uniqueAmenities.length) {
+      html += '<p><strong>Amenities:</strong> ' + uniqueAmenities.join(' \u00b7 ') + '</p>\n';
+    }
+    return html;
+  }
+
+  // ── Render directory sections ───────────────────────────────────────────────
+  function renderDirectory() {
+    var html = '';
+
+    SECTIONS.forEach(function (section) {
+      var sectionLocs = allLocs.filter(function (l) {
+        return !l.basicInfo.onlineOnly && getSection(l) === section.id;
+      });
+      var roasters = sectionLocs.filter(function (l) { return l.basicInfo.type === 'roaster'; });
+      var cafes    = sectionLocs.filter(function (l) { return l.basicInfo.type !== 'roaster'; });
+
+      html += '\n<h3 id="' + section.id + '">' + section.label + '</h3>\n\n';
+
+      if (roasters.length) {
+        html += '<p><strong>Roasters</strong></p>\n\n';
+        roasters.forEach(function (loc) { html += renderEntry(loc) + '\n'; });
+      }
+      if (cafes.length) {
+        html += '<p><strong>Multi-Roaster Cafes</strong></p>\n\n';
+        cafes.forEach(function (loc) { html += renderEntry(loc) + '\n'; });
+      }
+
+      html += '<hr>\n';
+    });
+
+    document.getElementById('directory-content').innerHTML = html;
+  }
+
+  // ── Render online-only table ────────────────────────────────────────────────
+  function renderOnlineOnly() {
+    var onlineLocs = allLocs.filter(function (l) { return l.basicInfo.onlineOnly; });
+    onlineLocs.sort(function (a, b) { return a.basicInfo.name.localeCompare(b.basicInfo.name); });
+
+    var rows = onlineLocs.map(function (loc) {
+      var bi  = loc.basicInfo;
+      var cd  = loc.coffeeDetails || {};
+      var url = 'https://sandiegocoffee.co/location.html?id=' + loc.id;
+      var website = (bi.contact && bi.contact.website) || cd.onlineWebsite || '';
+      var websiteHost = '';
+      if (website) {
+        try { websiteHost = new URL(website).hostname; } catch (e) { websiteHost = website; }
+      }
+      return '  <tr><td><a href="' + url + '">' + escHtml(bi.name) + '</a></td>' +
+             '<td>' + escHtml(cd.roastStyle || '') + '</td>' +
+             '<td>' + escHtml(cd.neighborhood || 'San Diego') + '</td>' +
+             '<td>' + (website ? '<a href="' + escHtml(website) + '">' + escHtml(websiteHost) + '</a>' : '') + '</td></tr>';
+    }).join('\n');
+
+    var tbody = document.getElementById('online-only-tbody');
+    if (tbody) tbody.innerHTML = rows;
+  }
+
+  // ── Render "Roasters with Cafes — Also Ships Beans" section ────────────────
+  function renderShipsBeans() {
+    var shippingRoasters = allLocs.filter(function (l) {
+      if (l.basicInfo.type !== 'roaster') return false;
+      if (l.basicInfo.onlineOnly) return false;
+      if (!getSection(l)) return false;
+      var amenities = (l.coffeeDetails && l.coffeeDetails.amenities) || [];
+      return amenities.indexOf('Sells Beans Online') !== -1;
+    });
+
+    var html = '';
+    SECTIONS.forEach(function (section) {
+      var secLocs = shippingRoasters.filter(function (l) { return getSection(l) === section.id; });
+      if (!secLocs.length) return;
+
+      // Deduplicate by normalized brand name, keep first occurrence's id/name
+      var seen = {};
+      var unique = [];
+      secLocs.forEach(function (l) {
+        var brand = normalizeBrand(l.basicInfo.name);
+        if (!seen[brand]) {
+          seen[brand] = true;
+          unique.push(l);
+        }
+      });
+
+      // Sort alphabetically by name
+      unique.sort(function (a, b) { return a.basicInfo.name.localeCompare(b.basicInfo.name); });
+
+      var label = section.label.replace(/&amp;/g, '&');
+      var links = unique.map(function (l) {
+        var url = 'https://sandiegocoffee.co/location.html?id=' + l.id;
+        return '<a href="' + url + '">' + escHtml(l.basicInfo.name) + '</a>';
+      }).join(' \u00b7 ');
+
+      html += '<p><strong>' + escHtml(label) + ':</strong> ' + links + '</p>\n';
+    });
+
+    var el = document.getElementById('ships-beans-content');
+    if (el) el.innerHTML = html;
+  }
+
+  // ── Run ─────────────────────────────────────────────────────────────────────
+  // ── Render Quick Find table ─────────────────────────────────────────────────
+  function renderQuickFind() {
+    var rows = [
+      { label: '🐕 Dog Friendly',       amenity: 'Dog Friendly' },
+      { label: '🍩 Food &amp; Pastries', amenity: 'Offers Food / Pastries' },
+      { label: '📶 Wifi / Work-Friendly',amenity: 'Good for Working (Wifi)' },
+      { label: '🌙 Decaf Espresso',      amenity: 'Decaf Espresso Available' },
+      { label: '✌️ Espresso Options',    amenity: 'Espresso Bean Options', amenity2: 'Espresso Options (Choice between different beans)' },
+      { label: '☕ Pour Over',           amenity: 'Pour Over Available' },
+    ];
+
+    // Deduplicate by brand name per row
+    var html = '<table><tr><th>Looking for...</th><th>Where to go</th></tr>';
+    rows.forEach(function (row) {
+      var seen = {};
+      var matches = allLocs.filter(function (l) {
+        if (l.basicInfo.onlineOnly) return false;
+        var amenities = (l.coffeeDetails && l.coffeeDetails.amenities) || [];
+        return amenities.indexOf(row.amenity) !== -1 || (row.amenity2 && amenities.indexOf(row.amenity2) !== -1);
+      });
+      var unique = [];
+      matches.forEach(function (l) {
+        var brand = normalizeBrand(l.basicInfo.name);
+        if (!seen[brand]) { seen[brand] = true; unique.push(l); }
+      });
+      unique.sort(function (a, b) { return a.basicInfo.name.localeCompare(b.basicInfo.name); });
+      var links = unique.map(function (l) {
+        return '<a href="https://sandiegocoffee.co/location.html?id=' + l.id + '">' + escHtml(l.basicInfo.name) + '</a>';
+      }).join(', ');
+      html += '<tr><td>' + row.label + '</td><td>' + links + '</td></tr>';
+    });
+    html += '</table>';
+
+    var el = document.getElementById('quick-find-table');
+    if (el) el.innerHTML = html;
+  }
+
+  renderDirectory();
+  renderOnlineOnly();
+  renderShipsBeans();
+  renderQuickFind();
+  updateStats();
+})();
+</script>
 
 </body>
 </html>

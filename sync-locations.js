@@ -422,6 +422,9 @@ async function main() {
   console.log('   git add locations.js images/locations/ sitemap.xml');
   console.log('   git commit -m "Sync and add new locations"');
   console.log('   git push\n');
+  console.log('📋 To update the Reddit wiki:');
+  console.log('   python build_wiki.py');
+  console.log('   Then open wiki_output.html, copy, and paste into Reddit.\n');
 }
 
 main().catch(err => {

@@ -263,4 +263,70 @@ window.highlights = [
       { type: 'text', content: 'Thanks to Kyle for joining us on the subreddit. Find the full Big Step Coffee lineup and learn more at <a href="https://bigstepcoffee.com" target="_blank" rel="noopener">bigstepcoffee.com</a> or follow on Instagram <a href="https://instagram.com/bigstepcoffee" target="_blank" rel="noopener">@bigstepcoffee</a>.' },
     ]
   },
+  {
+    id: 'highlight_mindwater-coffee-company',
+    roasterName: 'Mindwater Coffee Company',
+    title: 'Roaster Highlight: Mindwater Coffee Company w/ Founders Jeff & Juan',
+    date: '2026-03-24',
+    author: 'u/sdcoffeebeans',
+    image: '/images/highlights/highlight_mindwater-coffee-company.jpg',
+    excerpt: 'Jeff and Juan built Mindwater around two very different coffee cultures — Swedish fika and Colombian terroir — launching out of the California Roasting Collective with a mission to make specialty coffee welcoming to everyone.',
+    redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1s25c24/roaster_highlight_mindwater_coffee_company/',
+    locationUrl: '/locations/mindwater-coffee-company',
+    body: [
+      { type: 'text', content: 'Jeff and Juan founded Mindwater Coffee Company in 2025, bringing together two worlds: Jeff\'s love of Swedish coffee culture and the tradition of fika, and Juan\'s Colombian heritage, where some of the world\'s most beautiful coffees are grown. Roasting out of the California Roasting Collective in San Marcos, they sat down with us to talk about the brand\'s origins, packaging, water, and what it means to build an inclusive space in San Diego\'s coffee scene.' },
+      { type: 'qa',
+        question: 'Mindwater has a pretty unique identity built around both Colombian roots and Swedish fika. How did those two worlds come together, and when did it click that this should become a coffee brand rather than just a personal passion?',
+        answer: 'Before we started roasting, Jeff spent years learning about all the best ways to brew coffee and got deeper into trying beans of new and unique origins. Juan, who was born in Colombia, has always loved sharing the food, culture, and traditions he grew up with (coffee included, of course).\n\nWe met during the pandemic while living in Colorado, and after a few years together—and a lot of coffee dates—it just kind of clicked. Why not build something that brings both of our worlds together? That\'s how Mindwater was born. We actually launched with a single origin from Huila, Colombia, as a way to stay close to Juan\'s roots from day one.'
+      },
+      { type: 'qa',
+        question: 'A lot of roasters talk about "community," but Mindwater seems to make that a central part of the brand. What has surprised you most about the coffee community in San Diego?',
+        answer: 'Honestly, the San Diego coffee scene has blown us away. From the moment we started learning how to roast to actually selling our coffee, people have been incredibly welcoming, supportive, and just genuinely excited to connect.\n\nWe\'ve also been surprised (in the best way) by how many roasters are out here, all doing their own thing with totally different stories and approaches. As we\'ve grown, that sense of community has been huge for us—not just for support, but for learning, experimenting, and improving our roasts.'
+      },
+      { type: 'image', src: '/images/highlights/highlight_mindwater-coffee-company-b.jpg', caption: '' },
+      { type: 'qa',
+        question: 'You recently released a Mexican coffee that featured updated packaging. What inspired the new design, and what information or details do you think matter most on a coffee bag to improve the customer experience?',
+        answer: 'For us, the experience starts the second someone receives their coffee; not just when they brew it. Since we\'re mostly e-commerce, we noticed our old bags weren\'t holding up well during shipping (no one wants a crumpled first impression).\n\nSo we upgraded to sturdier packaging that feels as good as it looks. The warm pastel colors and our signature Mindwater wave are all about creating a sense of calm, kind of like a visual reminder to fika, the Swedish tradition of slowing down and enjoying coffee with others.\n\nWe also make sure every bag clearly shares the important stuff: origin, process, roast level, and tasting notes, so customers know exactly what they\'re getting and can connect more with what\'s in their cup.'
+      },
+      { type: 'qa',
+        question: 'San Diego tap water is pretty hard. How much does that factor into your roasting decisions, considering most locals probably brew at home? And do you think having "ideal" coffee water is essential to getting the best out of a given bean?',
+        answer: 'We want our coffee to be accessible and intriguing to everyone, regardless of their familiarity with coffee or how fancy their at-home setup is. Although water is definitely an important part of a good brew, we make sure our coffee tastes amazing in real-life conditions, not just in a lab. We welcome all types of coffee enthusiasts, so geeking out over water chemistry is definitely our thing, but it\'s totally not a requirement to enjoy what we\'re making.'
+      },
+      { type: 'image', src: '/images/highlights/highlight_mindwater-coffee-company-c.jpg', caption: '' },
+      { type: 'qa',
+        question: 'What have you learned from your time roasting at the California Roasting Collective in San Marcos? Has being around other roasters with different approaches pushed you to experiment beyond your normal roasting style?',
+        answer: 'From the first day Jeff started to practice roasting out of CRC, he knew it was a special place that brought together coffee enthusiasts from around the county. Most importantly, it made roasting accessible when it would otherwise be very costly and difficult to create our own roasting operation. CRC gives us a place to practice, meet other roasters, and even source some of our coffee, so we\'d say that it has definitely improved our roasting style.'
+      },
+      { type: 'qa',
+        question: 'As a Latin and LGBTQ-owned coffee company in San Diego, has building Mindwater shaped the kind of space or culture you want to create in the local coffee scene? And which other local coffee businesses do you think are helping move that culture forward for the better?',
+        answer: 'We are incredibly proud to be a Latin and LGBTQ coffee roaster. We hope to inspire others in the community to explore businesses of their own (whether coffee or something else!). Finding community, or building one, is not something that happens overnight, but we are so lucky to have support from our friends, family, and Mindwater fans near and far. As we continue to grow, we want to make sure that we\'re creating a space for others to come together, Fika, and connect over coffee, kind of like how Juan\'s family would gather every morning.\n\nTo continue to push through, we\'ve gained inspiration from a few of our favorite coffee brands, including Bonito in Seattle, Yipao (also Colombian-owned), and Provecho, locally here in San Diego. They\'re all doing an incredible job of shaping their communities, and we\'d love to build something just as meaningful when we open a space of our own.'
+      },
+      { type: 'text', content: '<strong>Stir the Pot</strong>' },
+      { type: 'qa',
+        question: 'Best home grinder under $500 that can handle both espresso and filter?',
+        answer: 'The Zwilling Enfinigy — it can handle everything!'
+      },
+      { type: 'qa',
+        question: 'Most underrated coffee shop in San Diego County?',
+        answer: 'Huge shoutout to Kind Coffee on Cortez Hill, as they have some killer pour-over options.'
+      },
+      { type: 'qa',
+        question: 'If you could only brew coffee one way for the rest of your life, what would it be?',
+        answer: 'Aeropress (including the espresso attachment unless that technically breaks the rules of this question).'
+      },
+      { type: 'qa',
+        question: 'Best coffee city in the U.S. besides San Diego?',
+        answer: 'San Francisco, hands down, but we may be biased as we used to live there.'
+      },
+      { type: 'qa',
+        question: 'What\'s the most overrated piece of coffee gear right now?',
+        answer: 'The misting tools for espresso machines… we have more coffee gear than we want to admit, but that one\'s a little much.'
+      },
+      { type: 'qa',
+        question: 'What\'s one coffee trend you\'ve been enjoying lately?',
+        answer: 'At-home homemade coffee syrups, which we hope to explore in the near future.'
+      },
+      { type: 'text', content: 'Thanks to Jeff and Juan for joining us on the subreddit. Find Mindwater\'s current offerings and follow their journey at <a href="https://mindwatercoffee.com" target="_blank" rel="noopener">mindwatercoffee.com</a> or on Instagram <a href="https://instagram.com/mindwatercoffee" target="_blank" rel="noopener">@mindwatercoffee</a>.' },
+    ]
+  },
 ];

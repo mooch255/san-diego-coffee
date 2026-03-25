@@ -159,7 +159,10 @@ async function main() {
     // ── Secondary photo 2 ──
     const photos = loc.googlePhotos;
     const dest2 = path.join(IMAGES_DIR, `${loc.id}b.jpg`);
-    if (photos?.[1]?.name && (!loc.localImage2 || !fs.existsSync(dest2))) {
+    if (!loc.localImage2 && fs.existsSync(dest2)) {
+      // File manually dropped in — register it without API call
+      loc.localImage2 = `/images/locations/${loc.id}b.jpg`;
+    } else if (photos?.[1]?.name && (!loc.localImage2 || !fs.existsSync(dest2))) {
       if (fs.existsSync(dest2)) {
         loc.localImage2 = `/images/locations/${loc.id}b.jpg`;
       } else if (primaryDone) {
@@ -179,7 +182,10 @@ async function main() {
 
     // ── Secondary photo 3 ──
     const dest3 = path.join(IMAGES_DIR, `${loc.id}c.jpg`);
-    if (photos?.[2]?.name && (!loc.localImage3 || !fs.existsSync(dest3))) {
+    if (!loc.localImage3 && fs.existsSync(dest3)) {
+      // File manually dropped in — register it without API call
+      loc.localImage3 = `/images/locations/${loc.id}c.jpg`;
+    } else if (photos?.[2]?.name && (!loc.localImage3 || !fs.existsSync(dest3))) {
       if (fs.existsSync(dest3)) {
         loc.localImage3 = `/images/locations/${loc.id}c.jpg`;
       } else if (primaryDone) {

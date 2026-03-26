@@ -400,14 +400,14 @@
         }
 
         .map-tap-overlay-inner {
-            background: rgba(0,0,0,0.35);
-            color: rgba(255,255,255,0.75);
+            background: rgba(184, 92, 56, 0.82);
+            color: rgba(255,255,255,0.92);
             padding: 0.45rem 0.9rem;
             font-family: 'Libre Franklin', sans-serif;
             font-size: 0.7rem;
             font-weight: 500;
             letter-spacing: 0.04em;
-            border: 1px solid rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
             pointer-events: none;
         }
 
@@ -1289,6 +1289,20 @@
             cursor: pointer;
         }
         .info-window-btn:hover { text-decoration: none; }
+        .info-window-teaser { width: 220px; }
+        .info-window-teaser h3 { margin-bottom: 0.25rem; }
+        .iw-teaser-meta { font-size: 0.75rem; color: #888; margin-bottom: 0.65rem; }
+        .iw-sep { margin: 0 0.4rem; color: #ccc; }
+        .iw-hood { color: #666; }
+        .iw-cta-btn {
+            background: #6F4E37 !important;
+            color: white !important;
+            border-color: #6F4E37 !important;
+            padding: 0.45rem 0.75rem !important;
+            font-size: 0.8rem !important;
+            margin-bottom: 0 !important;
+        }
+        .iw-cta-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -1333,7 +1347,7 @@
             <div id="previewMap"></div>
             <div class="hero-overlay"></div>
             <div class="map-tap-overlay" id="mapTapOverlay">
-                <div class="map-tap-overlay-inner">Tap to interact with map</div>
+                <div class="map-tap-overlay-inner">☕ Discover San Diego's coffee scene →</div>
             </div>
         </div>
 
@@ -1365,17 +1379,13 @@
         </div>
 
         <div class="hero-teaser-bar">
-            <span class="hero-teaser-text">Click any pin to preview a location</span>
+            <span class="hero-teaser-text">Click any pin · Full details on the map</span>
             <div class="hero-legend">
                 <span><span class="hero-legend-dot" style="background:#0F9D58;"></span>Roaster</span>
                 <span><span class="hero-legend-dot" style="background:#0288D1;"></span>Multi-Roaster Cafe</span>
             </div>
         </div>
 
-        <!-- Mobile-only CTA: rendered below the map, hidden on desktop -->
-        <a href="map.html" class="hero-mobile-cta" id="mobileMapBtn">
-            Discover Our Community Map <span class="hero-cta-arrow">→</span>
-        </a>
     </section>
 
     <div class="page-transition" id="pageTransition"></div>
@@ -1573,14 +1583,17 @@
                 styles: mapStyles
             });
 
-            // Tap-to-activate on mobile: overlay fades out and enables greedy panning
+            // Mobile tap overlay: navigates to full map page
             const tapOverlay = document.getElementById('mapTapOverlay');
             if (tapOverlay) {
                 tapOverlay.addEventListener('click', function() {
-                    tapOverlay.style.opacity = '0';
-                    tapOverlay.style.pointerEvents = 'none';
-                    previewMap.setOptions({ gestureHandling: 'greedy' });
-                    setTimeout(() => { tapOverlay.style.display = 'none'; }, 300);
+                    const transition = document.getElementById('pageTransition');
+                    if (transition) {
+                        transition.classList.add('active');
+                        setTimeout(() => { window.location.href = 'map.html'; }, 320);
+                    } else {
+                        window.location.href = 'map.html';
+                    }
                 });
             }
 
@@ -1611,102 +1624,22 @@
 
                 marker.addListener('click', () => {
                     const info = location.basicInfo;
-                    const custom = location.coffeeDetails || {};
-                    const hours = location.hours || {};
-                    const contact = info.contact || {};
                     const isOnline = info.onlineOnly || false;
                     const typeLabel = isOnline ? '🌐 Online Roaster' : (isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe');
+                    const neighborhood = location.coffeeDetails?.neighborhood || '';
 
-                    // Today's hours — weekdayDescriptions is Mon-indexed, getDay() is Sun=0
-                    const jsDay = new Date().getDay();
-                    const monIdx = jsDay === 0 ? 6 : jsDay - 1;
-                    const todayEntry = hours.weekdayDescriptions ? hours.weekdayDescriptions[monIdx] : '';
-                    const todayHours = todayEntry ? todayEntry.replace(/^\w+:\s*/, '') : '';
-
-                    let html = `<div class="info-window"><h3>${info.name}</h3>`;
-
-                    // Line 1: type badge + address (clickable Google Maps link)
-                    const mapsUrl = contact.googleMapsUrl || (info.address?.fullAddress ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(info.address.fullAddress)}` : null);
-                    const addrText = isOnline ? 'Online Only' : (info.address?.street || info.address?.fullAddress || '');
-                    const addrLink = mapsUrl && addrText ? `<a href="${mapsUrl}" target="_blank" style="color:#5a8fc2; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${addrText}</a>` : addrText;
-                    html += `<div class="info-window-section" style="font-size:0.73rem; color:#666; margin-bottom:0.15rem;">`;
-                    html += `<span style="font-weight:600; color:#8B6552; margin-right:0.4rem;">${typeLabel}</span>`;
-                    if (addrText) html += `<span style="color:#bbb;">·</span> <span style="margin-left:0.3rem;">${addrLink}</span>`;
+                    let html = `<div class="info-window info-window-teaser">`;
+                    html += `<h3>${info.name}</h3>`;
+                    html += `<div class="iw-teaser-meta">`;
+                    html += `<span class="iw-type">${typeLabel}</span>`;
+                    if (neighborhood) html += `<span class="iw-sep">·</span><span class="iw-hood">${neighborhood}</span>`;
                     html += `</div>`;
-
-                    // Line 2: hours + website
-                    const line2Parts = [];
-                    if (todayHours) line2Parts.push(`<span>🕐 ${todayHours}</span>`);
-                    if (contact.website) line2Parts.push(`<a href="${contact.website}" target="_blank" style="color:#5a8fc2; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">🌐 Website</a>`);
-                    if (line2Parts.length) {
-                        html += `<div class="info-window-section" style="font-size:0.72rem; color:#777; margin-bottom:0.25rem;">${line2Parts.join(' <span style="color:#ddd; margin:0 0.3rem;">·</span> ')}</div>`;
-                    }
-
-                    // Coffee details
-                    const hasAnyCustom = custom.description || custom.roastScale || custom.roastStyle || custom.visitorExperience ||
-                                         custom.multipleLocations || custom.amenities?.length || custom.roastersServed?.length;
-                    if (hasAnyCustom) {
-                        html += `<hr class="info-window-divider">`;
-
-                        const infoDesc = custom.description || location.legacyData?.originalDescription || '';
-                        if (infoDesc) {
-                            html += `<div class="info-window-description">"${infoDesc}"</div>`;
-                        }
-
-                        const gridItems = [];
-                        if (isRoaster) {
-                            if (custom.roastScale) gridItems.push(['Roast Scale', custom.roastScale + ' Roaster']);
-                            if (custom.visitorExperience) gridItems.push(['Experience', custom.visitorExperience]);
-                        } else {
-                            if (custom.roastersServed?.length) {
-                                const preview = custom.roastersServed.slice(0, 2).join(', ') + (custom.roastersServed.length > 2 ? ` +${custom.roastersServed.length - 2} more` : '');
-                                gridItems.push(['Roasters', preview]);
-                            }
-                            if (custom.specialtyBarista) gridItems.push(['Specialty Barista', custom.specialtyBarista]);
-                        }
-                        if (custom.multipleLocations) gridItems.push(['Multiple Locations', custom.multipleLocations]);
-
-                        if (gridItems.length) {
-                            html += `<div class="info-window-coffee-grid">`;
-                            gridItems.forEach(([label, val], i) => {
-                                if (i > 0) html += `<span class="cg-sep">·</span>`;
-                                html += `<span class="cg-item"><span class="cg-label">${label}</span><span class="cg-val">${val}</span></span>`;
-                            });
-                            html += `</div>`;
-                        }
-
-                        if (custom.amenities?.length || custom.brewingOptions?.length) {
-                            const a = custom.amenities || [];
-                            const br = custom.brewingOptions || [];
-                            const amenityBits = [];
-                            if (a.some(x => x.includes('Dog')))                                                          amenityBits.push('🐾 Dog Friendly');
-                            if (a.some(x => x.includes('Wifi') || x.includes('Working')))                               amenityBits.push('💻 WiFi');
-                            if (a.some(x => x.includes('Food') || x.includes('Pastries')))                              amenityBits.push('🥐 Food');
-                            if (a.some(x => x.includes('Beans Online')))                                                 amenityBits.push('🛒 Online Beans');
-                            if (a.some(x => x.includes('Espresso Options')) || br.some(x => x.includes('Espresso Bean'))) amenityBits.push('☕ Espresso Options');
-                            if (a.some(x => x.includes('Decaf'))             || br.some(x => x.includes('Decaf')))      amenityBits.push('🌙 Decaf Espresso');
-                            if (a.some(x => x.includes('Seating')))                                                      amenityBits.push('🪑 Seating');
-                            if (a.some(x => x.includes('Pour Over'))         || br.some(x => x.includes('Pour Over')))  amenityBits.push('🫖 Pour Over');
-                            if (amenityBits.length) {
-                                html += `<div class="info-window-badges-row">`;
-                                amenityBits.forEach(b => { html += `<span class="info-window-badge yes">${b}</span>`; });
-                                html += `</div>`;
-                            }
-                        }
-                    }
-
-                    // Buttons
-                    const shareUrl = `${window.location.origin}/map.html?location=${encodeURIComponent(location.id)}`;
-                    html += `<div style="margin-top:0.6rem;">`;
-                    html += `<a href="/locations/${slugify(location.basicInfo.name)}?from=home" class="info-window-btn" style="background:#6F4E37; color:white;">📋 View Details</a>`;
-                    html += `<a href="map.html" id="popupMapLink" class="info-window-btn" style="background:white; color:#6B4E3D; border-color:#6B4E3D;">Explore Full Map →</a>`;
-                    html += `<button onclick="copyShareLink('${shareUrl}', this)" class="info-window-btn" style="background:transparent; color:#6B4E3D; border-color:#C8B9AC;">🔗 Share Location</button>`;
-                    html += `</div></div>`;
+                    html += `<a href="map.html" id="popupMapLink" class="info-window-btn iw-cta-btn">Explore on full map →</a>`;
+                    html += `</div>`;
 
                     infoWindow.setContent(html);
                     infoWindow.open(previewMap, marker);
 
-                    // Wire up transition after content renders
                     setTimeout(() => {
                         const link = document.getElementById('popupMapLink');
                         if (link) {

@@ -113,9 +113,9 @@ Whenever a **new item is added to `news.js`**, BOTH files must be updated:
 
 Never add to `news.js` without updating the structured data in `news.html`.
 
-## Google Analytics
-- Tag ID: `G-W1SW2S30PY` — added to all pages March 24, 2026
-- **Always add the GA tag immediately after `<head>` on any new HTML page created for the site:**
+## Analytics & Tracking
+**Always add both snippets immediately after `<head>` on any new HTML page:**
+
 ```html
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-W1SW2S30PY"></script>
@@ -124,6 +124,14 @@ Never add to `news.js` without updating the structured data in `news.html`.
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-W1SW2S30PY');
+</script>
+<!-- Microsoft Clarity -->
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "w12ykvsrtj");
 </script>
 ```
 

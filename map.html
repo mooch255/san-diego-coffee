@@ -188,7 +188,7 @@
             border-bottom: 1px solid rgba(196,167,125,0.25);
             border-top: 2px solid var(--accent-red);
             min-width: 210px;
-            z-index: 9999;
+            z-index: 10500;
             box-shadow: -4px 8px 32px rgba(0,0,0,0.45);
         }
 
@@ -429,17 +429,9 @@
         }
 
         .filters-panel.expanded {
-            max-height: 210px;
+            max-height: 320px;
             padding: 0;
             overflow-y: auto;
-        }
-
-        .filters-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
         }
 
         .filters-section {
@@ -447,6 +439,39 @@
             flex-direction: column;
             gap: 0.9rem;
         }
+
+        .filters-amenity-row {
+            padding: 0.5rem 0.85rem 0.75rem;
+            border-top: 2px solid rgba(107, 78, 61, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .filters-amenity-row h3 {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #888;
+            flex-shrink: 0;
+            margin: 0;
+        }
+        .amenity-toggles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .amenity-toggle {
+            padding: 0.3rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'Libre Franklin', sans-serif;
+            border: 1.5px solid #c8b9ac;
+            border-radius: 20px;
+            background: white;
+            color: #6B4E3D;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .amenity-toggle:hover { background: #f5ede6; border-color: #6B4E3D; }
+        .amenity-toggle.active { background: #6F4E37; color: white; border-color: #6F4E37; }
 
         .filters-section h3 {
             font-family: 'Crimson Pro', serif;
@@ -877,19 +902,33 @@
         @media (max-width: 768px) {
             .sheet-handle-bar {
                 display: flex;
-                height: 28px;
+                flex-direction: column;
+                height: 48px;
                 align-items: center;
                 justify-content: center;
+                gap: 5px;
                 cursor: grab;
                 flex-shrink: 0;
                 touch-action: none;
+                background: var(--warm-white);
+                border-radius: 16px 16px 0 0;
             }
-            .sheet-handle-bar::after {
+            .sheet-handle-bar::before {
                 content: '';
                 width: 36px;
                 height: 4px;
                 background: #c4b8ac;
                 border-radius: 2px;
+                flex-shrink: 0;
+            }
+            .sheet-peek-hint {
+                font-family: 'Libre Franklin', sans-serif;
+                font-size: 0.7rem;
+                font-weight: 700;
+                color: #6F4E37;
+                letter-spacing: 0.03em;
+                text-transform: uppercase;
+                pointer-events: none;
             }
         }
         .map-legend-item {
@@ -1099,8 +1138,8 @@
                 align-items: center;
                 justify-content: center;
                 position: fixed;
-                /* Sit above the peeking sheet edge (peek = 80px) */
-                bottom: calc(80px + 0.75rem + env(safe-area-inset-bottom, 0px));
+                /* Sit above the peeking sheet edge (peek = 98px) */
+                bottom: calc(98px + 0.75rem + env(safe-area-inset-bottom, 0px));
                 right: 1rem;
                 z-index: 10200;
                 width: 44px;
@@ -1188,7 +1227,7 @@
                 top: auto;
                 z-index: 10000;
                 /* Peek state: only handle pill + search input visible */
-                transform: translateY(calc(100% - 80px));
+                transform: translateY(calc(100% - 98px));
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 border-radius: 16px 16px 0 0;
                 box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
@@ -1457,7 +1496,9 @@
         <!-- Left Panel -->
         <div class="list-panel" id="listPanel">
             <!-- Bottom sheet handle (mobile drag target) -->
-            <div class="sheet-handle-bar" id="sheetHandleBar"></div>
+            <div class="sheet-handle-bar" id="sheetHandleBar">
+                <span class="sheet-peek-hint" id="sheetPeekHint">↑ &nbsp;Swipe Up To Browse</span>
+            </div>
             <!-- Search + Controls -->
             <div class="list-panel-controls">
                 <div class="search-container">
@@ -1518,6 +1559,16 @@
                                 <option value="">All Neighborhoods</option>
                             </select>
                         </div>
+                    </div>
+                </div>
+                <div class="filters-amenity-row">
+                    <h3>Amenities</h3>
+                    <div class="amenity-toggles">
+                        <button class="amenity-toggle" data-amenity="wifi">💻 WiFi</button>
+                        <button class="amenity-toggle" data-amenity="dog">🐾 Dog Friendly</button>
+                        <button class="amenity-toggle" data-amenity="pourover">🫖 Pour Over</button>
+                        <button class="amenity-toggle" data-amenity="espresso">☕ Espresso Options</button>
+                        <button class="amenity-toggle" data-amenity="food">🥐 Food / Pastries</button>
                     </div>
                 </div>
             </div>
@@ -1734,13 +1785,39 @@ function initMap() {
         setTimeout(() => {
             const loc = allLocations.find(l => l.id === locationParam);
             const marker = markers.find(m => m.locationData?.id === locationParam);
-            if (marker && loc) {
-                map.setZoom(16);
-                map.panTo(marker.getPosition());
-                setTimeout(() => showInfoWindow(marker, loc), 300);
-                selectLocationCard(locationParam);
+
+            if (loc) {
+                pinnedLocationId = locationParam;
+
+                if (marker) {
+                    // Physical location — zoom map and open info window
+                    map.setZoom(16);
+                    map.panTo(marker.getPosition());
+                    setTimeout(() => showInfoWindow(marker, loc), 300);
+                    // Once the map settles at the new zoom/pan, force the count to reflect
+                    // the actual in-viewport markers (bypasses any stale flag state)
+                    google.maps.event.addListenerOnce(map, 'idle', () => {
+                        holdPanelForCardClick = false;
+                        suppressIdleFilter = false;
+                        setTimeout(() => applyFilters(), 200);
+                    });
+                }
+                // Card highlight + scroll handled by renderLocationCards via pinnedLocationId
+                // Also apply immediately in case cards are already rendered
+                const card = document.querySelector(`.location-card[data-id="${locationParam}"]`);
+                const panelCards = document.getElementById('locationCards');
+                if (card && panelCards) {
+                    document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    const cardTop = card.getBoundingClientRect().top;
+                    const panelTop = panelCards.getBoundingClientRect().top;
+                    panelCards.scrollTop += cardTop - panelTop;
+                }
             }
         }, 800);
+
+        // Clear the pin once the user manually interacts with the map or filters
+        google.maps.event.addListenerOnce(map, 'dragstart', () => { pinnedLocationId = null; });
     }
 }
 
@@ -2120,7 +2197,13 @@ function selectLocation(locationId) {
         map.panTo(marker.getPosition());
         setTimeout(() => {
             showInfoWindow(marker, location);
-            setTimeout(() => { suppressIdleFilter = false; }, 500);
+            setTimeout(() => {
+                suppressIdleFilter = false;
+                // Update count to reflect the zoomed-in viewport (idle won't re-fire since
+                // the map has already settled, so we compute it directly here)
+                const vis = markers.filter(m => shouldShowMarker(m, false));
+                updateVisibleCount(vis.length);
+            }, 500);
         }, 300);
     }
 
@@ -2203,6 +2286,8 @@ function setupEventListeners() {
         if (roastFilter) roastFilter.value = '';
         const visitorFilter = document.getElementById('filterVisitorExp');
         if (visitorFilter) visitorFilter.value = '';
+        activeAmenities.clear();
+        document.querySelectorAll('.amenity-toggle').forEach(btn => btn.classList.remove('active'));
 
         // Reset nearest sort back to A-Z
         currentSort = 'az';
@@ -2856,6 +2941,10 @@ function applyFilters() {
         if (!loc.basicInfo?.onlineOnly) return false;
         if (onlineRoastFilter && loc.coffeeDetails?.roastStyle !== onlineRoastFilter) return false;
         if (onlineVisitorFilter) return false;
+        if (openNowActive) return false;
+        for (const key of activeAmenities) {
+            if (!locationHasAmenity(loc, key)) return false;
+        }
         return true;
     }).length : 0;
     // Count always reflects what's actually in the map viewport
@@ -2900,6 +2989,19 @@ function applyFilters() {
     }
 }
 
+function locationHasAmenity(loc, key) {
+    const a = loc.coffeeDetails?.amenities || [];
+    const br = loc.coffeeDetails?.brewingOptions || [];
+    switch (key) {
+        case 'wifi':     return a.some(x => x.includes('Wifi') || x.includes('Working'));
+        case 'dog':      return a.some(x => x.includes('Dog'));
+        case 'pourover': return a.some(x => x.includes('Pour Over')) || br.some(x => x.includes('Pour Over'));
+        case 'espresso': return a.some(x => x.includes('Espresso Options')) || br.some(x => x.includes('Espresso Bean'));
+        case 'food':     return a.some(x => x.includes('Food') || x.includes('Pastries'));
+    }
+    return false;
+}
+
 function shouldShowMarker(marker, ignoreBounds = false) {
     const location = marker.locationData;
 
@@ -2934,6 +3036,11 @@ function shouldShowMarker(marker, ignoreBounds = false) {
     if (visitorFilter) {
         const visitorExp = marker.locationData?.coffeeDetails?.visitorExperience;
         if (visitorExp !== visitorFilter) return false;
+    }
+
+    // Amenity filters
+    for (const key of activeAmenities) {
+        if (!locationHasAmenity(location, key)) return false;
     }
 
     // Bounds filter — list reflects what's visible on the map
@@ -2977,6 +3084,9 @@ function updateDropdownCounts() {
         }
         if (skip !== 'roast' && roastFilter && loc.coffeeDetails?.roastStyle !== roastFilter) return false;
         if (skip !== 'visitor' && visitorFilter && loc.coffeeDetails?.visitorExperience !== visitorFilter) return false;
+        for (const key of activeAmenities) {
+            if (!locationHasAmenity(loc, key)) return false;
+        }
         if (openNowActive && !isLocationOpenNow(loc)) return false;
         return true;
     }
@@ -3058,12 +3168,12 @@ function updateVisibleCount(count) {
     const nudge = document.getElementById('zoomNudge');
     if (nudge) nudge.style.display = (count > 0 && count < 10) ? 'inline' : 'none';
 
-    // On mobile: keep the peek placeholder in sync with the current count
+    // On mobile: keep the search bar peek placeholder in sync
     if (window.innerWidth <= 768) {
         const panel = document.getElementById('listPanel');
         const si = document.getElementById('searchInput');
         if (si && panel && !panel.classList.contains('sheet-expanded')) {
-            si.placeholder = `${count} locations in view · scroll up for more`;
+            si.placeholder = `${count} Locations in View — Scroll Up for More`;
         }
     }
 }
@@ -3088,6 +3198,10 @@ function renderLocationCards(visibleMarkers, suppressOnline = false) {
         if (activeRoastFilter && loc.coffeeDetails?.roastStyle !== activeRoastFilter) return false;
         // Hide online-only roasters when any visitor experience filter is active (they have no physical presence)
         if (activeVisitorFilter) return false;
+        // Apply amenity filters
+        for (const key of activeAmenities) {
+            if (!locationHasAmenity(loc, key)) return false;
+        }
         return true;
     }) : [];
 
@@ -3124,6 +3238,17 @@ function renderLocationCards(visibleMarkers, suppressOnline = false) {
     if (pendingScrollTop) {
         container.scrollTop = 0;
         pendingScrollTop = false;
+    }
+
+    // Re-apply pinned card highlight + scroll after every render (idle re-renders wipe it)
+    if (pinnedLocationId) {
+        const card = container.querySelector(`.location-card[data-id="${pinnedLocationId}"]`);
+        if (card) {
+            card.classList.add('active');
+            const cardTop = card.getBoundingClientRect().top;
+            const panelTop = container.getBoundingClientRect().top;
+            container.scrollTop += cardTop - panelTop;
+        }
     }
 }
 
@@ -3347,10 +3472,11 @@ function selectLocationCard(locationId) {
         if (floatBtn) floatBtn.classList.remove('hidden');
         const si = document.getElementById('searchInput');
         if (si) {
-            const count = document.getElementById('visibleCount')?.textContent || '—';
-            si.placeholder = `${count} locations in view · scroll up for more`;
+            si.placeholder = peekPlaceholder ? peekPlaceholder() : 'Search by name or zip code...';
             si.readOnly = true;
         }
+        const hint = document.getElementById('sheetPeekHint');
+        if (hint) hint.textContent = '↑  Swipe Up To Browse';
     }
 
     // Zoom in and open info window on map
@@ -3364,8 +3490,12 @@ function selectLocationCard(locationId) {
         // Wait for map to fully settle so the info window auto-pan works correctly on mobile
         google.maps.event.addListenerOnce(map, 'idle', () => {
             showInfoWindow(marker, marker.locationData);
-            // Re-enable idle filter after info window has opened
-            setTimeout(() => { suppressIdleFilter = false; }, 400);
+            // Re-enable idle filter after info window has opened, then update count
+            setTimeout(() => {
+                suppressIdleFilter = false;
+                const vis = markers.filter(m => shouldShowMarker(m, false));
+                updateVisibleCount(vis.length);
+            }, 400);
         });
     } else {
         // Online-only roasters have no map marker — show info window at map center
@@ -3434,13 +3564,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const floatBtn = document.getElementById('mapFloatNearMe');
         if (!panel || !handleBar) return;
 
-        const PEEK_HEIGHT = 80;
+        const PEEK_HEIGHT = 98;
         const searchInput = document.getElementById('searchInput');
         const PLACEHOLDER_EXPANDED = 'Search by name or zip code...';
 
         function peekPlaceholder() {
             const count = document.getElementById('visibleCount')?.textContent || '—';
-            return `${count} locations in view · scroll up for more`;
+            return `${count} Locations in View — Scroll Up for More`;
         }
         let touchStartY = 0;
         let startTranslate = 0;
@@ -3458,9 +3588,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function setExpanded(expand) {
+            const hint = document.getElementById('sheetPeekHint');
             if (expand) {
                 panel.classList.add('sheet-expanded');
                 if (floatBtn) floatBtn.classList.add('hidden');
+                if (hint) hint.textContent = '↓  Scroll Down for Map View';
                 if (window.innerWidth <= 768 && searchInput) {
                     searchInput.placeholder = PLACEHOLDER_EXPANDED;
                     searchInput.readOnly = false;
@@ -3468,6 +3600,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 panel.classList.remove('sheet-expanded');
                 if (floatBtn) floatBtn.classList.remove('hidden');
+                if (hint) hint.textContent = '↑  Swipe Up To Browse';
                 if (window.innerWidth <= 768 && searchInput) {
                     searchInput.placeholder = peekPlaceholder();
                     searchInput.readOnly = true;
@@ -3633,8 +3766,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (roastStyle)
             chips.push({ label: roastStyle, reset: () => { document.getElementById('filterRoastStyle').value = ''; } });
         const visitorExp = document.getElementById('filterVisitorExp').value;
-        if (visitorExp)
-            chips.push({ label: visitorExp, reset: () => { document.getElementById('filterVisitorExp').value = ''; } });
+        if (visitorExp) {
+            const visitorShort = { 'Full Cafe (Open daily with seating)': 'Full Cafe', 'Tasting Room (Limited hours / manufacturing)': 'Tasting Room', 'Production Only (No public access)': 'Production Only' };
+            chips.push({ label: visitorShort[visitorExp] || visitorExp, reset: () => { document.getElementById('filterVisitorExp').value = ''; } });
+        }
+        const amenityLabels = { wifi: '💻 WiFi', dog: '🐾 Dog Friendly', pourover: '🫖 Pour Over', espresso: '☕ Espresso Options', food: '🥐 Food / Pastries' };
+        activeAmenities.forEach(key => {
+            chips.push({ label: amenityLabels[key], reset: () => {
+                activeAmenities.delete(key);
+                const btn = document.querySelector(`.amenity-toggle[data-amenity="${key}"]`);
+                if (btn) btn.classList.remove('active');
+            }});
+        });
         if (openNowActive)
             chips.push({ label: 'Open Now', reset: () => {
                 openNowActive = false;
@@ -3677,6 +3820,7 @@ document.addEventListener('DOMContentLoaded', () => {
                               (neighbourhood && neighbourhood.value !== '') ||
                               (roastStyle && roastStyle.value !== '') ||
                               (visitorExp && visitorExp.value !== '') ||
+                              activeAmenities.size > 0 ||
                               openNow;
         filterBtn.classList.toggle('filters-active', anyNonDefault);
     }
@@ -3685,6 +3829,21 @@ document.addEventListener('DOMContentLoaded', () => {
     ['filterRoasters','filterCafes','filterOnlineOnly','filterNeighborhood','filterRoastStyle','filterVisitorExp'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', () => { updateFilterDot(); renderActiveFilterChips(); });
+    });
+    document.querySelectorAll('.amenity-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const key = btn.dataset.amenity;
+            if (activeAmenities.has(key)) {
+                activeAmenities.delete(key);
+                btn.classList.remove('active');
+            } else {
+                activeAmenities.add(key);
+                btn.classList.add('active');
+            }
+            applyFilters();
+            updateFilterDot();
+            renderActiveFilterChips();
+        });
     });
     document.getElementById('openNowBtn')?.addEventListener('click', () => setTimeout(() => { updateFilterDot(); renderActiveFilterChips(); }, 50));
     document.getElementById('clearBtn')?.addEventListener('click', () => setTimeout(() => { updateFilterDot(); renderActiveFilterChips(); }, 50));
@@ -3711,8 +3870,10 @@ window.gm_authFailure = function() {
 
 // ── Open Now Filter ─────────────────────────────────────────────────────────
 let openNowActive = false;
+let activeAmenities = new Set(); // keys: 'wifi', 'dog', 'pourover', 'espresso'
 let pendingScrollTop = false; // set by clear to scroll cards to top after render
 let suppressIdleFilter = false; // prevents idle re-render during card selection zoom
+let pinnedLocationId = null; // when set, renderLocationCards scrolls & highlights this card
 let holdPanelForCardClick = false; // keeps left panel unchanged after a card click until user manually pans/zooms
 let neighborhoodZoomPending = false; // one-shot flag: zoom on select, not on every idle
 

@@ -33,6 +33,13 @@
     <meta name="description" content="An interactive map of 150+ specialty roasters and cafes across San Diego — roast profiles, brew methods, hours, and more. Built by the r/SanDiegoCoffeeBeans community.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
+
+    <!-- Prefetch map page resources while user browses homepage -->
+    <link rel="prefetch" href="/map.html">
+    <link rel="prefetch" href="/locations.js">
+    <link rel="prefetch" href="/highlights.js">
+    <link rel="preconnect" href="https://maps.googleapis.com">
+    <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
     <link rel="canonical" href="https://sandiegocoffee.co/">
     <script type="application/ld+json">
     {
@@ -1634,7 +1641,7 @@
                     html += `<span class="iw-type">${typeLabel}</span>`;
                     if (neighborhood) html += `<span class="iw-sep">·</span><span class="iw-hood">${neighborhood}</span>`;
                     html += `</div>`;
-                    html += `<a href="map.html" id="popupMapLink" class="info-window-btn iw-cta-btn">Explore on full map →</a>`;
+                    html += `<a href="map.html?location=${encodeURIComponent(location.id)}" id="popupMapLink" class="info-window-btn iw-cta-btn">Explore on full map →</a>`;
                     html += `</div>`;
 
                     infoWindow.setContent(html);
@@ -1647,7 +1654,7 @@
                                 e.preventDefault();
                                 const overlay = document.getElementById('pageTransition');
                                 overlay.classList.add('active');
-                                setTimeout(() => { window.location.href = 'map.html'; }, 320);
+                                setTimeout(() => { window.location.href = `map.html?location=${encodeURIComponent(location.id)}`; }, 320);
                             });
                         }
                     }, 50);

@@ -1177,6 +1177,13 @@
             const location = (window.COFFEE_LOCATIONS || []).find(l =>
                 l.id === locationId || slugify(l.basicInfo.name) === locationId
             );
+            // Redirect legacy loc_xxx URLs to canonical slug URL
+            if (location && locationId.startsWith('loc_')) {
+                const slug = slugify(location.basicInfo.name);
+                const newUrl = `/locations/${slug}`;
+                window.history.replaceState(null, '', newUrl);
+            }
+
             if (!location) {
                 showError('Location not found.', 'This location may have been removed or the link is incorrect.');
             } else {

@@ -794,6 +794,43 @@
             border-radius: 2px;
         }
 
+        .sibling-links {
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .detail-row:has(.sibling-links) {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .sibling-links {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                width: 100%;
+            }
+        }
+
+        .sibling-link {
+            display: inline-block;
+            background: var(--cream);
+            border: 1px solid var(--light-tan);
+            color: var(--coffee-brown);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
+            border-radius: 2px;
+            text-decoration: none;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            white-space: normal;
+            word-break: break-word;
+        }
+        .sibling-link:hover {
+            border-color: var(--latte);
+            color: var(--espresso);
+            background: var(--white);
+        }
+
         .bool-yes {
             color: var(--green);
             font-weight: 700;
@@ -1156,6 +1193,7 @@
         const locationId = params.get('id') || pathSegment;
         const fromParam = params.get('from');
         const highlightId = params.get('highlightId');
+        const fromLocationId = params.get('locationId');
 
         let backHref, backLabel, useHistoryBack = false;
         if (fromParam === 'home') {
@@ -1164,10 +1202,14 @@
         } else if (fromParam === 'highlight' && highlightId) {
             backHref  = `/highlight.html?id=${highlightId}`;
             backLabel = '← Back to Roaster Highlight';
+        } else if (fromParam === 'location' && fromLocationId) {
+            const fromLoc = (window.COFFEE_LOCATIONS || []).find(l => l.id === fromLocationId);
+            backHref  = `location.html?id=${fromLocationId}`;
+            backLabel = `← Back to ${fromLoc ? fromLoc.basicInfo.name : 'Location'}`;
         } else {
-            backHref  = '/map.html';
+            backHref  = `/map.html${locationId ? `?location=${locationId}` : ''}`;
             backLabel = '← Back to Map';
-            useHistoryBack = true;
+            useHistoryBack = false;
         }
 
         if (!locationId) {
@@ -1372,7 +1414,8 @@
             `;
 
             // Use history.back() for map navigation so filters/zoom are preserved
-            if (useHistoryBack && window.history.length > 1 && document.referrer) {
+            // Only do this when the user actually came from the map (not from another location page)
+            if (useHistoryBack && window.history.length > 1 && document.referrer && document.referrer.includes('map.html')) {
                 document.querySelectorAll('a[href="/map.html"]').forEach(el => {
                     el.addEventListener('click', e => { e.preventDefault(); history.back(); });
                 });
@@ -1618,6 +1661,7 @@
                     ${detailRow('Roast Scale', u(custom.roastScale))}
                     ${detailRow('Visitor Experience', isOnlineOnly ? onlineOnlyVal : u(custom.visitorExperience))}
                     ${detailRow('Multiple Locations', u(custom.multipleLocations))}
+                    ${siblingLinks(loc)}
                     ${detailRow('Year Established', u(custom.yearEstablished))}
                     ${custom.amenities && custom.amenities.length ? detailRow('Amenities', tags(custom.amenities)) : ''}
                     ${custom.notes ? detailRow('Notes', u(custom.notes)) : ''}
@@ -1627,6 +1671,7 @@
                     ${detailRow('Neighborhood', isOnlineOnly ? onlineOnlyVal : u(custom.neighborhood))}
                     ${detailRow('Specialty Barista Service', u(custom.specialtyBarista))}
                     ${detailRow('Multiple Locations', u(custom.multipleLocations))}
+                    ${siblingLinks(loc)}
                     ${detailRow('Year Established', u(custom.yearEstablished))}
                     ${custom.roastersServed && custom.roastersServed.length ? detailRow('Roasters Served', tags(custom.roastersServed)) : ''}
                     ${custom.brewingOptions && custom.brewingOptions.length ? detailRow('Brewing Options', tags(custom.brewingOptions)) : ''}
@@ -1657,6 +1702,21 @@
                     ${valHtml}
                 </div>
             `;
+        }
+
+        function siblingLinks(loc) {
+            if (loc.coffeeDetails?.multipleLocations !== 'Yes') return '';
+            const siblings = (window.COFFEE_LOCATIONS || []).filter(l =>
+                l.basicInfo.name === loc.basicInfo.name && l.id !== loc.id
+            );
+            if (!siblings.length) return '';
+            const links = siblings.map(s => {
+                const hood = s.coffeeDetails?.neighborhood
+                          || s.basicInfo.address?.fullAddress?.split(',')[0]
+                          || s.id;
+                return `<a href="location.html?id=${s.id}&from=location&locationId=${loc.id}" class="sibling-link">${hood}&nbsp;↗</a>`;
+            }).join('');
+            return detailRow('Other Locations', `<div class="tag-list sibling-links">${links}</div>`);
         }
 
         function renderActions(contact, placeId) {

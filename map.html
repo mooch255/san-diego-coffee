@@ -734,6 +734,7 @@
             border-bottom: 1px solid #E0DBD3;
             background: var(--white);
             cursor: pointer;
+            cursor: pointer;
             transition: background 0.15s;
             text-decoration: none;
             color: inherit;
@@ -1071,6 +1072,39 @@
             }
         }
 
+        /* "See X Results" CTA — only visible on mobile inside the open filter panel */
+        .filters-see-results-row {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .filters-see-results-row {
+                display: block;
+                padding: 0.5rem 1rem;
+                border-top: 1px solid #E0DBD3;
+                background: var(--white);
+            }
+
+            .filters-see-results-row button {
+                width: 100%;
+                padding: 0.5rem 1rem;
+                background: var(--espresso, #3b2a1a);
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                font-size: 0.82rem;
+                font-weight: 700;
+                font-family: inherit;
+                cursor: pointer;
+                letter-spacing: 0.01em;
+                transition: opacity 0.15s;
+            }
+
+            .filters-see-results-row button:active {
+                opacity: 0.85;
+            }
+        }
+
         .filters-section h3 {
             font-size: 0.72rem;
             font-weight: 700;
@@ -1132,6 +1166,11 @@
             display: none;
         }
 
+        /* Floating Clear Filters button — mobile only, bottom-left above sheet */
+        .map-float-clearfilters {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .map-float-nearme {
                 display: flex;
@@ -1161,6 +1200,38 @@
             }
 
             .map-float-nearme.hidden {
+                display: none;
+            }
+
+            .map-float-clearfilters {
+                display: flex;
+                align-items: center;
+                gap: 0.35rem;
+                position: fixed;
+                bottom: calc(98px + 0.75rem + env(safe-area-inset-bottom, 0px));
+                left: 1rem;
+                z-index: 10200;
+                height: 36px;
+                padding: 0 0.75rem;
+                border-radius: 50px;
+                background: var(--espresso, #3b2a1a);
+                color: #fff;
+                border: none;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                font-size: 0.78rem;
+                font-weight: 700;
+                font-family: inherit;
+                cursor: pointer;
+                transition: opacity 0.2s, transform 0.2s;
+                letter-spacing: 0.01em;
+            }
+
+            .map-float-clearfilters:active {
+                transform: scale(0.92);
+                box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            }
+
+            .map-float-clearfilters.hidden {
                 display: none;
             }
         }
@@ -1571,6 +1642,9 @@
                         <button class="amenity-toggle" data-amenity="food">🥐 Food / Pastries</button>
                     </div>
                 </div>
+                <div class="filters-see-results-row">
+                    <button id="seeResultsBtn">See <span id="seeResultsCount">—</span> Results →</button>
+                </div>
             </div>
 
             <!-- Active filter chips -->
@@ -1613,6 +1687,8 @@
 
     <!-- Floating Near Me — mobile only -->
     <button class="map-float-nearme" id="mapFloatNearMe" aria-label="Near Me">📍</button>
+    <!-- Floating Clear Filters — mobile only, shown when filters are active -->
+    <button class="map-float-clearfilters hidden" id="mapFloatClearFilters" aria-label="Clear all filters">✕ Clear Filters</button>
     <!-- Loading Indicator -->
     <div id="loading">
         <div class="spinner"></div>
@@ -2550,6 +2626,16 @@ function setupEventListeners() {
     
     document.getElementById('showMyLocation').addEventListener('click', showUserLocation);
 
+    document.getElementById('seeResultsBtn')?.addEventListener('click', () => {
+        const panel = document.getElementById('filtersPanel');
+        if (panel) {
+            panel.classList.remove('expanded', 'overlay-open');
+            panel.style.top = '';
+            panel.style.left = '';
+            panel.style.width = '';
+        }
+    });
+
     // Close filter panel when clicking outside it
     document.addEventListener('click', (e) => {
         const panel = document.getElementById('filtersPanel');
@@ -3164,6 +3250,8 @@ function updateVisibleCount(count) {
         el.classList.add('flash');
         setTimeout(() => el.classList.remove('flash'), 450);
     }
+    const src = document.getElementById('seeResultsCount');
+    if (src) src.textContent = count;
     // Show "zoom out for more" nudge when very few results visible
     const nudge = document.getElementById('zoomNudge');
     if (nudge) nudge.style.display = (count > 0 && count < 10) ? 'inline' : 'none';
@@ -3213,7 +3301,12 @@ function renderLocationCards(visibleMarkers, suppressOnline = false) {
 
     // Sort the unified list
     if (currentSort === 'az') {
-        combined.sort((a, b) => a.loc.basicInfo.name.localeCompare(b.loc.basicInfo.name));
+        combined.sort((a, b) => {
+            const na = a.loc.basicInfo.name, nb = b.loc.basicInfo.name;
+            const aNum = /^\d/.test(na), bNum = /^\d/.test(nb);
+            if (aNum !== bNum) return aNum ? 1 : -1;
+            return na.localeCompare(nb);
+        });
     } else if (currentSort === 'nearest' && userLatLng) {
         combined.sort((a, b) => {
             const ca = a.loc.basicInfo.address?.coordinates;
@@ -3472,7 +3565,8 @@ function selectLocationCard(locationId) {
         if (floatBtn) floatBtn.classList.remove('hidden');
         const si = document.getElementById('searchInput');
         if (si) {
-            si.placeholder = peekPlaceholder ? peekPlaceholder() : 'Search by name or zip code...';
+            const count = document.getElementById('visibleCount')?.textContent || '—';
+            si.placeholder = `${count} Locations in View — Scroll Up for More`;
             si.readOnly = true;
         }
         const hint = document.getElementById('sheetPeekHint');
@@ -3487,16 +3581,20 @@ function selectLocationCard(locationId) {
         holdPanelForCardClick = true; // keep panel unchanged until user manually pans/zooms
         map.setZoom(16);
         map.panTo(marker.getPosition());
-        // Wait for map to fully settle so the info window auto-pan works correctly on mobile
-        google.maps.event.addListenerOnce(map, 'idle', () => {
-            showInfoWindow(marker, marker.locationData);
-            // Re-enable idle filter after info window has opened, then update count
+        // Use setTimeout instead of waiting for map.idle — idle doesn't reliably re-fire
+        // when the map is already settled at the target zoom/position (especially on mobile).
+        // Use setPosition+open(map) instead of open(map, marker) so the info window works
+        // regardless of whether the marker is currently hidden inside a cluster (map: null).
+        setTimeout(() => {
+            infoWindow.setContent(createInfoWindowContent(marker.locationData, sheetDataByLocation[marker.locationData.id] || {}));
+            infoWindow.setPosition(marker.getPosition());
+            infoWindow.open(map);
             setTimeout(() => {
                 suppressIdleFilter = false;
                 const vis = markers.filter(m => shouldShowMarker(m, false));
                 updateVisibleCount(vis.length);
             }, 400);
-        });
+        }, 300);
     } else {
         // Online-only roasters have no map marker — show info window at map center
         const loc = (window.COFFEE_LOCATIONS || []).find(l => l.id === locationId);
@@ -3823,7 +3921,13 @@ document.addEventListener('DOMContentLoaded', () => {
                               activeAmenities.size > 0 ||
                               openNow;
         filterBtn.classList.toggle('filters-active', anyNonDefault);
+        const floatClear = document.getElementById('mapFloatClearFilters');
+        if (floatClear) floatClear.classList.toggle('hidden', !anyNonDefault);
     }
+
+    document.getElementById('mapFloatClearFilters')?.addEventListener('click', () => {
+        document.getElementById('clearBtn')?.click();
+    });
 
     // Attach dot-updater and chip-renderer to all filter inputs
     ['filterRoasters','filterCafes','filterOnlineOnly','filterNeighborhood','filterRoastStyle','filterVisitorExp'].forEach(id => {

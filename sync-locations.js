@@ -70,9 +70,10 @@ function buildCoffeeDetails(type, row) {
       amenities:         row.amenities ? row.amenities.split(',').map(a => a.trim()).filter(Boolean) : [],
       notes:             row.notes             || '',
       description:       row.description       || '',
-      onlineWebsite:     row.onlineWebsite     || '',
-      onlineInstagram:   row.onlineInstagram   || '',
-      lastUpdated:       row.timestamp         || '',
+      onlineWebsite:        row.onlineWebsite        || '',
+      onlineInstagram:      row.onlineInstagram      || '',
+      instagramReviewUrl:   row.instagramReviewUrl   || '',
+      lastUpdated:          row.timestamp            || '',
     };
   }
   return {
@@ -84,9 +85,10 @@ function buildCoffeeDetails(type, row) {
     roastersServed:    row.roastersServed    ? row.roastersServed.split(',').map(r => r.trim()).filter(Boolean) : [],
     brewingOptions:    row.brewingOptions    ? row.brewingOptions.split(',').map(b => b.trim()).filter(Boolean) : [],
     amenities:         row.amenities         ? row.amenities.split(',').map(a => a.trim()).filter(Boolean) : [],
-    notes:             row.notes             || '',
-    description:       row.description       || '',
-    lastUpdated:       row.timestamp         || '',
+    notes:               row.notes               || '',
+    description:         row.description         || '',
+    instagramReviewUrl:  row.instagramReviewUrl  || '',
+    lastUpdated:         row.timestamp           || '',
   };
 }
 

@@ -19,20 +19,21 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location — San Diego Specialty Coffee</title>
+    <title>San Diego Specialty Coffee — Location Details</title>
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sandiegocoffee.co/location.html">
-    <meta property="og:title" content="Location — San Diego Specialty Coffee">
-    <meta property="og:description" content="">
+    <meta property="og:title" content="San Diego Specialty Coffee — Location Details">
+    <meta property="og:description" content="Explore specialty coffee roasters and cafes across San Diego — roast profiles, brew methods, hours, and more.">
     <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Location — San Diego Specialty Coffee">
-    <meta name="twitter:description" content="">
+    <meta name="twitter:title" content="San Diego Specialty Coffee — Location Details">
+    <meta name="twitter:description" content="Explore specialty coffee roasters and cafes across San Diego — roast profiles, brew methods, hours, and more.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
-    <meta name="description" content="">
+    <meta name="description" content="Explore specialty coffee roasters and cafes across San Diego — roast profiles, brew methods, hours, and more.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <script type="application/ld+json" id="ld-schema"></script>
+    <script type="application/ld+json" id="ld-breadcrumb"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,600;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
@@ -524,6 +525,9 @@
             gap: 2.5rem;
             align-items: start;
         }
+        .content-wrap.has-ig-review {
+            grid-template-columns: 1fr 520px;
+        }
 
         /* ── Left Column ────────────────────────────────────────────────── */
 
@@ -697,6 +701,27 @@
             text-decoration: none;
         }
         .highlight-callout-link:hover { text-decoration: underline; }
+
+        /* ── SDCoffeeGuide Review Embed ──────────────────────────────────── */
+        .ig-review-mobile  { display: none; }
+        .ig-review-desktop { display: block; }
+
+        @media (max-width: 900px) {
+            .ig-review-mobile  { display: block; }
+            .ig-review-desktop { display: none; }
+        }
+
+        .ig-review-wrap {
+            margin-bottom: 1.5rem;
+        }
+        .ig-review-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #E8720C;
+            margin-bottom: 0.65rem;
+        }
 
         /* ── Right Column — Coffee Details Card ─────────────────────────── */
         .details-card {
@@ -924,7 +949,8 @@
 
         /* ── Responsive ─────────────────────────────────────────────────── */
         @media (max-width: 900px) {
-            .content-wrap {
+            .content-wrap,
+            .content-wrap.has-ig-review {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
@@ -1080,6 +1106,95 @@
         }
 
         .review-form { margin-top: 1rem; }
+
+        /* ── Explore Nearby ─────────────────────────────── */
+        .nearby-section {
+            max-width: 900px;
+            margin: 0 auto 2.5rem;
+            padding: 0 1.5rem;
+        }
+        .nearby-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border-top: 1px solid var(--light-tan);
+            padding-top: 1.5rem;
+        }
+        .nearby-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--espresso);
+        }
+        .nearby-see-all {
+            font-size: 0.82rem;
+            color: var(--accent-red);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .nearby-see-all:hover { text-decoration: underline; }
+        .nearby-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        .nearby-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--white);
+            border: 1px solid var(--light-tan);
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--espresso);
+            transition: box-shadow 0.15s, transform 0.15s;
+        }
+        .nearby-card:hover { box-shadow: 0 4px 12px rgba(61,40,23,0.1); transform: translateY(-2px); }
+        .nearby-img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            background: var(--light-tan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nearby-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .nearby-initials {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--coffee-brown);
+            opacity: 0.5;
+        }
+        .nearby-info { padding: 0.75rem; }
+        .nearby-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--espresso);
+            margin-bottom: 0.35rem;
+            line-height: 1.3;
+        }
+        .nearby-meta { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+        .nearby-type {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .nearby-type.roaster { background: #E8F5E9; color: var(--roaster-color); }
+        .nearby-type.cafe    { background: #E3F2FD; color: var(--cafe-color); }
+        .nearby-hood { font-size: 0.75rem; color: var(--coffee-brown); opacity: 0.8; }
+        @media (max-width: 600px) {
+            .nearby-grid { grid-template-columns: repeat(2, 1fr); }
+            .nearby-section { padding: 0 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -1226,6 +1341,12 @@
                 window.history.replaceState(null, '', newUrl);
             }
 
+            // Ensure back-to-map link always uses loc_XXX id — map.html's ?location= handler
+            // matches by id only, and locationId may be a slug when arriving via /locations/slug
+            if (location && backHref.startsWith('/map.html')) {
+                backHref = `/map.html?location=${location.id}`;
+            }
+
             if (!location) {
                 showError('Location not found.', 'This location may have been removed or the link is incorrect.');
             } else {
@@ -1316,6 +1437,7 @@
                     var schema = {
                         '@context': 'https://schema.org',
                         '@type': type,
+                        '@id': 'https://sandiegocoffee.co/locations/' + slugify(loc.basicInfo.name),
                         name: loc.basicInfo.name,
                         url: contact.website || ('https://sandiegocoffee.co/locations/' + loc.id),
                         description: metaDescription || undefined,
@@ -1351,6 +1473,22 @@
                     if (tag) tag.textContent = JSON.stringify(schema);
                 })(location);
 
+                // ── JSON-LD BreadcrumbList ─────────────────────────────────
+                (function injectBreadcrumb(loc) {
+                    var slug = slugify(loc.basicInfo.name);
+                    var breadcrumb = {
+                        '@context': 'https://schema.org',
+                        '@type': 'BreadcrumbList',
+                        itemListElement: [
+                            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sandiegocoffee.co/' },
+                            { '@type': 'ListItem', position: 2, name: 'Explore Map', item: 'https://sandiegocoffee.co/map.html' },
+                            { '@type': 'ListItem', position: 3, name: loc.basicInfo.name, item: 'https://sandiegocoffee.co/locations/' + slug }
+                        ]
+                    };
+                    var tag = document.getElementById('ld-breadcrumb');
+                    if (tag) tag.textContent = JSON.stringify(breadcrumb);
+                })(location);
+
                 // coffeeDetails is always populated by sync-locations.js — no live Sheets fetch needed
                 renderPage(location, location.coffeeDetails || {});
                 loadCommunityData(location.id);
@@ -1382,6 +1520,37 @@
             `;
         }
 
+        function renderInstagramReview(custom, variant) {
+            const url = custom && custom.instagramReviewUrl;
+            if (!url) return '';
+            if (variant === 'desktop') {
+                return `
+                    <div class="ig-review-desktop ig-review-wrap" id="ig-review">
+                        <div class="ig-review-label">📸 @sdcoffeeguide Review</div>
+                        <blockquote class="instagram-media"
+                            data-instgrm-captioned
+                            data-instgrm-permalink="${url}"
+                            data-instgrm-version="14"
+                            style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;min-width:326px;max-width:540px;padding:0;width:calc(100% - 2px);">
+                            <a href="${url}" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
+                        </blockquote>
+                    </div>
+                `;
+            }
+            return `
+                <div class="ig-review-mobile ig-review-wrap" id="ig-review-mobile">
+                    <div class="ig-review-label">📸 @sdcoffeeguide Review</div>
+                    <blockquote class="instagram-media"
+                        data-instgrm-captioned
+                        data-instgrm-permalink="${url}"
+                        data-instgrm-version="14"
+                        style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;min-width:326px;max-width:540px;padding:0;width:calc(100% - 2px);">
+                        <a href="${url}" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
+                    </blockquote>
+                </div>
+            `;
+        }
+
         // ── Render ─────────────────────────────────────────────────────────
         function renderPage(loc, custom) {
             custom = custom || {};
@@ -1396,22 +1565,46 @@
             document.getElementById('pageContent').innerHTML = `
                 ${renderHero(loc, isRoaster, rating, info, contact, today, hours)}
                 ${renderGallery(loc.localImage, loc.localImage2, loc.localImage3, placeId, info.name)}
-                <div class="content-wrap">
+                <div class="content-wrap${custom.instagramReviewUrl ? ' has-ig-review' : ''}">
                     <div class="left-col fade-up">
                         ${renderHighlightCallout(loc.id)}
                         ${renderDescription(custom, loc.legacyData)}
                         ${renderDetailsCard(isRoaster, custom, loc)}
+                        ${renderInstagramReview(custom, 'mobile')}
                         ${renderContact(contact, info, custom)}
+                        ${custom.instagramReviewUrl ? renderHours(hours, today) : ''}
+                        ${custom.instagramReviewUrl ? '<div id="community-like-section"></div><div id="community-reviews-section"></div>' : ''}
+                        <div style="margin-top:1rem;">
+                            <a href="${backHref}" class="action-btn secondary">${backLabel}</a>
+                        </div>
                     </div>
                     <div class="right-col fade-up">
-                        ${renderHours(hours, today)}
-                        <div id="community-like-section"></div>
-                        <div id="community-reviews-section"></div>
+                        ${renderInstagramReview(custom, 'desktop')}
+                        ${!custom.instagramReviewUrl ? renderHours(hours, today) : ''}
+                        ${!custom.instagramReviewUrl ? '<div id="community-like-section"></div><div id="community-reviews-section"></div>' : ''}
                     </div>
                 </div>
-                ${renderActions(contact, placeId)}
+                ${renderNearby(loc)}
                 ${renderMapEmbed(placeId)}
             `;
+
+            // Load Instagram embed script lazily — only when a review exists
+            if (custom && custom.instagramReviewUrl) {
+                const igScript = document.createElement('script');
+                igScript.src = '//www.instagram.com/embed.js';
+                igScript.async = true;
+                document.body.appendChild(igScript);
+            }
+
+            // Auto-scroll to review section if arriving via #ig-review link
+            if (window.location.hash === '#ig-review' && custom && custom.instagramReviewUrl) {
+                setTimeout(() => {
+                    const el = window.innerWidth > 900
+                        ? document.getElementById('ig-review')
+                        : document.getElementById('ig-review-mobile');
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 400);
+            }
 
             // Use history.back() for map navigation so filters/zoom are preserved
             // Only do this when the user actually came from the map (not from another location page)
@@ -1717,6 +1910,67 @@
                 return `<a href="location.html?id=${s.id}&from=location&locationId=${loc.id}" class="sibling-link">${hood}&nbsp;↗</a>`;
             }).join('');
             return detailRow('Other Locations', `<div class="tag-list sibling-links">${links}</div>`);
+        }
+
+        function renderNearby(loc) {
+            const all = window.COFFEE_LOCATIONS || [];
+            const curHood = loc.coffeeDetails?.neighborhood;
+            const curLat = loc.basicInfo.address?.coordinates?.lat;
+            const curLng = loc.basicInfo.address?.coordinates?.lng;
+            const candidates = all.filter(l => l.id !== loc.id && l.metadata?.status !== 'inactive');
+
+            function haversine(lat1, lng1, lat2, lng2) {
+                const R = 3958.8;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLng = (lng2 - lng1) * Math.PI / 180;
+                const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            }
+
+            function distTo(l) {
+                const lat = l.basicInfo.address?.coordinates?.lat;
+                const lng = l.basicInfo.address?.coordinates?.lng;
+                return (curLat && curLng && lat && lng) ? haversine(curLat, curLng, lat, lng) : 9999;
+            }
+
+            let sameHood = curHood ? candidates.filter(l => l.coffeeDetails?.neighborhood === curHood) : [];
+            let others = candidates.filter(l => !curHood || l.coffeeDetails?.neighborhood !== curHood);
+            others.sort((a, b) => distTo(a) - distTo(b));
+
+            const picks = [...sameHood, ...others].slice(0, 3);
+            if (!picks.length) return '';
+
+            const label = curHood ? `More in ${curHood}` : 'Explore Nearby';
+            const cardsHtml = picks.map(l => {
+                const n = l.basicInfo.name;
+                const typeClass = l.basicInfo.type === 'roaster' ? 'roaster' : 'cafe';
+                const typeLabel = l.basicInfo.type === 'roaster' ? 'Roaster' : 'Cafe';
+                const hood = l.coffeeDetails?.neighborhood || '';
+                const initials = getLocationInitials(n);
+                const imgHtml = l.localImage
+                    ? `<img src="${l.localImage}" alt="${n}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'nearby-initials\\'>${initials}</div>'">`
+                    : `<div class="nearby-initials">${initials}</div>`;
+                return `
+                    <a href="/location.html?id=${l.id}&from=location&locationId=${loc.id}" class="nearby-card">
+                        <div class="nearby-img">${imgHtml}</div>
+                        <div class="nearby-info">
+                            <div class="nearby-name">${n}</div>
+                            <div class="nearby-meta">
+                                <span class="nearby-type ${typeClass}">${typeLabel}</span>
+                                ${hood ? `<span class="nearby-hood">${hood}</span>` : ''}
+                            </div>
+                        </div>
+                    </a>`;
+            }).join('');
+
+            return `
+                <div class="nearby-section">
+                    <div class="nearby-header">
+                        <h2>${label}</h2>
+                        <a href="/map.html" class="nearby-see-all">See all on map →</a>
+                    </div>
+                    <div class="nearby-grid">${cardsHtml}</div>
+                </div>`;
         }
 
         function renderActions(contact, placeId) {

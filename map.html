@@ -1834,14 +1834,41 @@ function initMap() {
     const searchQuery = urlParams.get('search');
     const filterParam = urlParams.get('filter');
     
-    // Apply filter from URL
-    if (filterParam === 'roasters') {
+    // Apply filter from URL (?filter= or ?type= aliases)
+    const typeParam = urlParams.get('type');
+    const resolvedFilter = typeParam === 'roaster' ? 'roasters'
+                         : typeParam === 'cafe'    ? 'cafes'
+                         : filterParam;
+
+    if (resolvedFilter === 'roasters') {
         document.getElementById('filterCafes').checked = false;
+        const onlineFilter = document.getElementById('filterOnlineOnly');
+        if (onlineFilter) onlineFilter.checked = false;
         applyFilters();
-    } else if (filterParam === 'cafes') {
+        document.title = 'Specialty Coffee Roasters in San Diego — Map & Directory';
+        const metaD = document.querySelector('meta[name="description"]');
+        if (metaD) metaD.content = 'Browse all specialty coffee roasters across San Diego neighborhoods — roast profiles, brew methods, visitor info, and hours.';
+        const ogD = document.querySelector('meta[property="og:description"]');
+        if (ogD) ogD.content = 'Browse all specialty coffee roasters across San Diego neighborhoods — roast profiles, brew methods, visitor info, and hours.';
+        const ogT = document.querySelector('meta[property="og:title"]');
+        if (ogT) ogT.content = 'Specialty Coffee Roasters in San Diego — Map & Directory';
+        const can = document.querySelector('link[rel="canonical"]');
+        if (can) can.href = 'https://sandiegocoffee.co/map.html?type=roaster';
+    } else if (resolvedFilter === 'cafes') {
         document.getElementById('filterRoasters').checked = false;
+        const onlineFilter = document.getElementById('filterOnlineOnly');
+        if (onlineFilter) onlineFilter.checked = false;
         applyFilters();
-    } else if (filterParam === 'online') {
+        document.title = 'Specialty Coffee Cafes in San Diego — Map & Directory';
+        const metaD = document.querySelector('meta[name="description"]');
+        if (metaD) metaD.content = 'Browse specialty coffee cafes across San Diego — barista service, roasters served, brewing options, and hours.';
+        const ogD = document.querySelector('meta[property="og:description"]');
+        if (ogD) ogD.content = 'Browse specialty coffee cafes across San Diego — barista service, roasters served, brewing options, and hours.';
+        const ogT = document.querySelector('meta[property="og:title"]');
+        if (ogT) ogT.content = 'Specialty Coffee Cafes in San Diego — Map & Directory';
+        const can = document.querySelector('link[rel="canonical"]');
+        if (can) can.href = 'https://sandiegocoffee.co/map.html?type=cafe';
+    } else if (resolvedFilter === 'online') {
         document.getElementById('filterRoasters').checked = false;
         document.getElementById('filterCafes').checked = false;
         applyFilters();
@@ -2112,6 +2139,14 @@ function createInfoWindowContent(location, custom) {
         html += `</div>`;
     }
 
+    // ── SDCoffeeGuide Review badge ─────────────────────────────────────
+    if (location.coffeeDetails?.instagramReviewUrl) {
+        const locSlugIg = slugify(location.basicInfo.name);
+        html += `<div style="margin-top:0.5rem;padding:0.4rem 0.6rem;background:#fff3e8;border:1px solid #f0d0a0;border-left:3px solid #E8720C;border-radius:4px;font-size:0.72rem;">`;
+        html += `<span style="font-weight:700;color:#E8720C;text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">📸 SDCoffeeGuide Review &nbsp;·&nbsp;</span><a href="/locations/${locSlugIg}" style="color:#E8720C;font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See Details</a>`;
+        html += `</div>`;
+    }
+
     // ── Buttons ────────────────────────────────────────────────────────
     const locSlug = slugify(location.basicInfo.name);
     const shareUrl = `${window.location.origin}/locations/${locSlug}`;
@@ -2188,12 +2223,14 @@ function setupAutocomplete() {
             const typeLabel = neighborhood ? `${typeBase} · ${neighborhood}` : typeBase;
             const typeBase2 = isOnlineLoc ? '🌐 Online Roaster' : (loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe');
             const hasHighlight = !!highlightByLocation[loc.id];
+            const hasIgReview = !!loc.coffeeDetails?.instagramReviewUrl;
             const neighborhoodSpan = neighborhood ? (hasHighlight ? `<span class="ac-neighborhood"> · ${neighborhood}</span>` : ` · ${neighborhood}`) : '';
             const hlBadge = hasHighlight ? `<span style="display:inline-block;font-size:0.68rem;padding:0.15rem 0.4rem;border-radius:4px;background:#fde8e8;color:#8B1A1A;font-weight:700;white-space:nowrap;flex-shrink:0;">🎙️ <span class="ac-featured">Featured </span>Interview</span>` : '';
+            const igBadge = hasIgReview ? `<span style="display:inline-block;font-size:0.68rem;padding:0.15rem 0.4rem;border-radius:4px;background:#fff3e8;color:#E8720C;font-weight:700;white-space:nowrap;flex-shrink:0;margin-left:0.25rem;">📸 SDCoffeeGuide</span>` : '';
             html += `
                 <div class="autocomplete-item" data-type="existing" data-id="${loc.id}" style="cursor: pointer;">
                     <span class="autocomplete-name">${loc.basicInfo.name}</span>
-                    <span class="autocomplete-type ${typeClass}">${typeBase2}${neighborhoodSpan}</span>${hlBadge}
+                    <span class="autocomplete-type ${typeClass}">${typeBase2}${neighborhoodSpan}</span>${hlBadge}${igBadge}
                 </div>`;
         });
         
@@ -3440,6 +3477,7 @@ function renderCard(loc) {
                 ${distHtml}
                 ${communityHtml}
                 ${highlightByLocation[loc.id] ? `<div style="font-size:0.7rem; font-weight:700; color:var(--accent-red,#8B1A1A); margin-bottom:0.25rem;">🎙️ Featured Interview</div>` : ''}
+                ${loc.coffeeDetails?.instagramReviewUrl ? `<div style="font-size:0.7rem; font-weight:700; color:#E8720C; margin-bottom:0.25rem;">📸 SDCoffeeGuide Review</div>` : ''}
                 ${detailLines}
 
             </div>

@@ -51,8 +51,9 @@ exports.handler = async function (event) {
       amenities:         data.amenities         || '',
       notes:             data.notes             || '',
       description:       data.description       || '',
-      onlineWebsite:     data.onlineWebsite     || '',
-      onlineInstagram:   data.onlineInstagram   || '',
+      onlineWebsite:        data.onlineWebsite        || '',
+      onlineInstagram:      data.onlineInstagram      || '',
+      instagramReviewUrl:   data.instagramReviewUrl   || '',
     };
 
   } else if (locationType === 'cafe') {
@@ -69,8 +70,9 @@ exports.handler = async function (event) {
       roastersServed:    data.roastersServed    || '',
       brewingOptions:    data.brewingOptions    || '',
       amenities:         data.amenities         || '',
-      notes:             data.notes             || '',
-      description:       data.description       || '',
+      notes:               data.notes               || '',
+      description:         data.description         || '',
+      instagramReviewUrl:  data.instagramReviewUrl  || '',
     };
 
   } else {

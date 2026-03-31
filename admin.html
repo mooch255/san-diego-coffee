@@ -673,6 +673,15 @@
                 </div>
 
                 <div class="form-section">
+                    <div class="section-label">📸 SDCoffeeGuide Review</div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <label>SDCoffeeGuide Review URL</label>
+                        <div class="field-hint">Link to the specific Instagram post by @sdcoffeeguide reviewing this location. Leave blank if no review exists.</div>
+                        <input type="text" id="r-instagramReviewUrl" placeholder="e.g. https://www.instagram.com/p/ABC123/">
+                    </div>
+                </div>
+
+                <div class="form-section">
                     <div class="section-label">Admin Notes</div>
                     <div class="field-group" style="margin-bottom:0;">
                         <textarea id="r-notes" placeholder="Internal notes for your reference…"></textarea>
@@ -766,6 +775,15 @@
                     <div class="section-label">About This Location <span style="font-size:0.75rem;font-weight:400;color:#999;">(shown on location page)</span></div>
                     <div class="field-group">
                         <textarea id="c-description" placeholder="Write a short description of this cafe — what makes them unique, their roaster selection, vibe, etc." rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">📸 SDCoffeeGuide Review</div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <label>SDCoffeeGuide Review URL</label>
+                        <div class="field-hint">Link to the specific Instagram post by @sdcoffeeguide reviewing this location. Leave blank if no review exists.</div>
+                        <input type="text" id="c-instagramReviewUrl" placeholder="e.g. https://www.instagram.com/p/ABC123/">
                     </div>
                 </div>
 
@@ -1222,8 +1240,9 @@
                 setVal('r-multipleLocations', d.multipleLocations);
                 setVal('r-notes',           d.notes);
                 setVal('r-description',     d.description);
-                setVal('r-onlineWebsite',   d.onlineWebsite   || '');
-                setVal('r-onlineInstagram', d.onlineInstagram || '');
+                setVal('r-onlineWebsite',       d.onlineWebsite       || '');
+                setVal('r-onlineInstagram',     d.onlineInstagram     || '');
+                setVal('r-instagramReviewUrl',  d.instagramReviewUrl  || '');
                 if (d.amenities && d.amenities.length) {
                     setCheckboxes('r-amenities', d.amenities);
                 }
@@ -1232,8 +1251,9 @@
                 setVal('c-multipleLocations', d.multipleLocations);
                 setVal('c-specialtyBarista', d.specialtyBarista);
                 setVal('c-roastersServed',   Array.isArray(d.roastersServed) ? d.roastersServed.join(', ') : d.roastersServed);
-                setVal('c-notes',            d.notes);
-                setVal('c-description',      d.description);
+                setVal('c-notes',               d.notes);
+                setVal('c-description',         d.description);
+                setVal('c-instagramReviewUrl',  d.instagramReviewUrl  || '');
                 if (d.brewingOptions && d.brewingOptions.length) {
                     setCheckboxes('c-brewing', d.brewingOptions);
                 }
@@ -1372,8 +1392,9 @@
                     amenities:         getChecked('r-amenities'),
                     notes:             document.getElementById('r-notes').value.trim(),
                     description:       document.getElementById('r-description').value.trim(),
-                    onlineWebsite:     document.getElementById('r-onlineWebsite').value.trim(),
-                    onlineInstagram:   document.getElementById('r-onlineInstagram').value.trim(),
+                    onlineWebsite:        document.getElementById('r-onlineWebsite').value.trim(),
+                    onlineInstagram:      document.getElementById('r-onlineInstagram').value.trim(),
+                    instagramReviewUrl:   document.getElementById('r-instagramReviewUrl').value.trim(),
                 };
             } else {
                 payload = {
@@ -1386,8 +1407,9 @@
                     roastersServed:    document.getElementById('c-roastersServed').value.trim(),
                     brewingOptions:    getChecked('c-brewing'),
                     amenities:         getChecked('c-amenities'),
-                    notes:             document.getElementById('c-notes').value.trim(),
-                    description:       document.getElementById('c-description').value.trim(),
+                    notes:               document.getElementById('c-notes').value.trim(),
+                    description:         document.getElementById('c-description').value.trim(),
+                    instagramReviewUrl:  document.getElementById('c-instagramReviewUrl').value.trim(),
                 };
             }
 

@@ -87,7 +87,18 @@
            BANNER-STYLE HEADER — mirrors the subreddit banner exactly
            ══════════════════════════════════════════════════════════════ */
         .header {
-            background: linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.022) 39px, rgba(255,255,255,0.022) 40px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent, transparent 39px,
+                    rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px
+                ),
+                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
             color: var(--white);
             border-top: 3px solid var(--accent-red);
             border-bottom: 3px solid var(--accent-red);
@@ -103,15 +114,6 @@
             background:
                 radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.42) 0%, transparent 65%),
                 radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.42) 0%, transparent 65%);
-            pointer-events: none;
-        }
-
-        /* Warm roasting glow — draws the eye to the logo */
-        .header::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 80% 160% at 50% 115%, rgba(184,92,56,0.22) 0%, transparent 55%);
             pointer-events: none;
         }
 
@@ -162,7 +164,7 @@
         /* ── Title: *San Diego* **Coffee Beans** — Playfair Display italic + bold serif */
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
             font-weight: 400;
             line-height: 1;
             color: #EDE0CC;
@@ -187,8 +189,8 @@
 
         /* ── "A RESOURCE TO SPECIALTY COFFEE IN SAN DIEGO" tagline */
         .tagline {
-            font-size: 0.68rem;
-            color: rgba(196, 167, 125, 0.75);
+            font-size: 0.6rem;
+            color: rgba(196, 167, 125, 0.65);
             font-weight: 600;
             letter-spacing: 0.22em;
             text-transform: uppercase;
@@ -437,22 +439,15 @@
             z-index: 2;
         }
 
-        /* Outer: mirrors header centering so left edge aligns with logo */
-        .hero-content-outer {
-            position: absolute;
-            top: 44%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            max-width: 1400px;
-            padding: 0 2.5rem;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        /* Inner: constrains text width */
+        /* Content on top of overlay */
         .hero-content {
-            max-width: 520px;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            padding: 0 3.5rem;
+            max-width: 560px;
+            z-index: 3;
             pointer-events: none;
         }
 
@@ -466,18 +461,18 @@
         }
 
         .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.9rem, 3.2vw, 2.8rem);
-            font-weight: 700;
+            font-family: 'Lora', serif;
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 600;
             color: var(--white);
-            line-height: 1.15;
+            line-height: 1.2;
             margin-bottom: 0.5rem;
             letter-spacing: -0.02em;
         }
 
         .hero-title em {
             color: var(--latte);
-            font-style: italic;
+            font-style: normal;
         }
 
         .hero-subtitle {
@@ -495,8 +490,6 @@
             gap: 1.5rem;
             margin-bottom: 2rem;
             pointer-events: all;
-            padding-top: 1.1rem;
-            border-top: 1px solid rgba(255,255,255,0.15);
         }
 
         .hero-stat {
@@ -519,7 +512,7 @@
 
         .hero-stat-num {
             font-family: 'Lora', serif;
-            font-size: 2.2rem;
+            font-size: 1.75rem;
             font-weight: 600;
             color: var(--white);
             line-height: 1;
@@ -722,16 +715,7 @@
             gap: 0.75rem;
         }
         .recent-header-left { display: flex; flex-direction: column; gap: 0.2rem; }
-        .section-eyebrow {
-            font-size: 0.62rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--latte);
-            margin-bottom: 0.4rem;
-            display: block;
-        }
-        .recent-title { font-family: "Lora", serif; font-size: 2rem; font-weight: 600; color: var(--espresso); }
+        .recent-title { font-family: "Lora", serif; font-size: 1.6rem; font-weight: 600; color: var(--espresso); }
         .recent-subtitle { font-size: 0.8rem; color: #aaa; font-style: italic; }
         .recent-view-all {
             font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
@@ -763,18 +747,14 @@
         /* Real photo */
         .recent-card-image {
             width: 100%;
-            height: 200px;
+            height: 160px;
             object-fit: cover;
             display: block;
-            transition: transform 0.45s ease;
-        }
-        .recent-card:hover .recent-card-image {
-            transform: scale(1.05);
         }
         /* Fallback: initials on branded gradient */
         .recent-card-initials {
             width: 100%;
-            height: 200px;
+            height: 160px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -799,7 +779,7 @@
             color: rgba(196, 167, 125, 0.45);
         }
         .recent-card-body {
-            padding: 1rem 1.2rem 1rem;
+            padding: 1rem 1.1rem 0.9rem;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -809,17 +789,17 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.35rem;
         }
         .recent-card-type.roaster { color: #2e7d32; }
         .recent-card-type.cafe { color: #1565c0; }
         .recent-card-name {
             font-family: "Lora", serif;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-weight: 600;
             line-height: 1.3;
             color: var(--espresso);
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.35rem;
         }
         .recent-card-meta {
             font-size: 0.72rem;
@@ -873,7 +853,7 @@
         }
         .news-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 1.55rem;
             font-weight: 700;
             color: var(--espresso);
             line-height: 1.2;
@@ -886,8 +866,7 @@
         }
         .news-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-template-rows: auto auto;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.25rem;
         }
         .news-card {
@@ -897,7 +876,7 @@
             flex-direction: column;
             text-decoration: none;
             color: inherit;
-            transition: border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+            transition: all 0.22s ease;
             overflow: hidden;
         }
         .news-card:hover {
@@ -905,61 +884,15 @@
             transform: translateY(-3px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.09);
         }
-        .news-card--featured {
-            grid-row: span 2;
-            position: relative;
-            min-height: 300px;
-        }
         .news-card-image {
             width: 100%;
-            height: 66px;
+            height: 160px;
             object-fit: cover;
             display: block;
-            transition: transform 0.45s ease;
         }
-        .news-card:hover .news-card-image {
-            transform: scale(1.05);
-        }
-        .news-card--featured .news-card-image,
-        .news-card--featured .news-card-placeholder {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            flex: none;
-        }
-        .news-card--featured .news-card-body {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            flex: none;
-            background: linear-gradient(to top, rgba(20,10,4,0.95) 0%, rgba(20,10,4,0.65) 55%, transparent 100%);
-            padding: 2.5rem 1.25rem 1.1rem;
-        }
-        .news-card--featured .news-card-title {
-            font-size: 1.25rem;
-            color: white;
-        }
-        .news-card--featured .news-card-date { color: var(--latte); }
-        .news-card--featured .news-card-venue { color: rgba(255,255,255,0.6); }
-        .news-card--featured .news-card-excerpt { color: rgba(255,255,255,0.75); }
-        .news-card--featured .news-card-footer {
-            color: var(--latte);
-            border-top-color: rgba(255,255,255,0.15);
-        }
-        /* Smaller text on non-featured news cards */
-        .news-grid .news-card:not(.news-card--featured) .news-card-body { padding: 0.65rem 0.9rem 0.7rem; }
-        .news-grid .news-card:not(.news-card--featured) .news-card-badge { font-size: 0.52rem; margin-bottom: 0.35rem; }
-        .news-grid .news-card:not(.news-card--featured) .news-card-title { font-size: 0.82rem; margin-bottom: 0.25rem; }
-        .news-grid .news-card:not(.news-card--featured) .news-card-date { font-size: 0.65rem; margin-bottom: 0.2rem; }
-        .news-grid .news-card:not(.news-card--featured) .news-card-venue { font-size: 0.62rem; margin-bottom: 0.2rem; }
-        .news-grid .news-card:not(.news-card--featured) .news-card-excerpt { font-size: 0.67rem; }
-        .news-grid .news-card:not(.news-card--featured) .news-card-footer { font-size: 0.62rem; margin-top: 0.5rem; padding-top: 0.45rem; }
         .news-card-placeholder {
             width: 100%;
-            height: 66px;
+            height: 140px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1049,18 +982,7 @@
             color: var(--accent-red);
             text-align: right;
         }
-        @media (max-width: 900px) {
-            .news-grid { grid-template-columns: 1fr; }
-            .news-card--featured { grid-row: span 1; min-height: unset; position: static; }
-            .news-card--featured .news-card-image { height: 63px; position: static; width: 100%; flex: none; }
-            .news-card--featured .news-card-placeholder { height: 63px; position: static; width: 100%; flex: none; }
-            .news-card--featured .news-card-body { position: static; background: white; padding: 1rem 1.1rem 0.9rem; }
-            .news-card--featured .news-card-title { color: var(--espresso); font-size: 1rem; }
-            .news-card--featured .news-card-date { color: var(--accent-red); }
-            .news-card--featured .news-card-venue { color: #888; }
-            .news-card--featured .news-card-excerpt { color: #777; }
-            .news-card--featured .news-card-footer { color: var(--accent-red); border-top-color: var(--light-tan); }
-        }
+        @media (max-width: 900px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px) { .news-grid { grid-template-columns: 1fr; } }
 
         /* ── Minimal Footer ──────────────────────────────────────────── */
@@ -1108,7 +1030,7 @@
             .header-eyebrow-line { display: none; }
             .header-eyebrow-text { font-size: 0.55rem; }
 
-            .logo { font-size: 1.5rem; }
+            .logo { font-size: 1.35rem; }
 
             .tagline { font-size: 0.55rem; margin-top: 0.5rem; }
 
@@ -1158,26 +1080,20 @@
             }
 
             /* Lift content out of absolute positioning, render above map */
-            .hero-content-outer {
+            .hero-content {
                 position: static;
                 transform: none;
-                width: 100%;
+                padding: 0.6rem 1.25rem 0.75rem;
                 max-width: 100%;
-                padding: 0;
+                background: linear-gradient(135deg, var(--warm-brown) 0%, var(--coffee-brown) 100%);
+                color: var(--white);
                 order: -1;
             }
 
-            .hero-content {
-                max-width: 100%;
-                padding: 0.6rem 1.25rem 0.75rem;
-                background: linear-gradient(135deg, var(--warm-brown) 0%, var(--coffee-brown) 100%);
-                color: var(--white);
-            }
-
             .hero-title {
-                font-size: 1.65rem;
+                font-size: 1.3rem;
                 margin-bottom: 0.4rem;
-                line-height: 1.15;
+                line-height: 1.35;
             }
 
             .hero-subtitle {
@@ -1394,90 +1310,6 @@
             margin-bottom: 0 !important;
         }
         .iw-cta-btn:hover { opacity: 0.9; }
-
-        /* ── Featured Roaster Highlight ──────────────────────────────── */
-        .feature-highlight-section {
-            background: #2A1508;
-            border-top: 3px solid var(--accent-red);
-            border-bottom: 3px solid var(--accent-red);
-        }
-        .feature-highlight-inner {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-        .feature-highlight-image-wrap {
-            position: relative;
-            overflow: hidden;
-            min-height: 280px;
-        }
-        .feature-highlight-image {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
-        }
-        .feature-highlight-image-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, #3A1C0A 0%, #5C3420 50%, #2A1508 100%);
-        }
-        .feature-highlight-body {
-            padding: 3rem 3rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .feature-highlight-eyebrow {
-            font-size: 0.62rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--accent-red);
-            margin-bottom: 0.85rem;
-        }
-        .feature-highlight-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.5rem, 2.5vw, 2.1rem);
-            font-weight: 700;
-            color: #EDE0CC;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-        .feature-highlight-excerpt {
-            font-size: 0.88rem;
-            color: rgba(196,167,125,0.75);
-            line-height: 1.75;
-            margin-bottom: 1.75rem;
-            flex: 1;
-        }
-        .feature-highlight-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--latte);
-            text-decoration: none;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            border-bottom: 1px solid rgba(196,167,125,0.3);
-            padding-bottom: 0.25rem;
-            transition: all 0.2s ease;
-            align-self: flex-start;
-        }
-        .feature-highlight-cta:hover {
-            color: #EDE0CC;
-            border-bottom-color: rgba(237,224,204,0.55);
-            gap: 0.8rem;
-        }
-        @media (max-width: 768px) {
-            .feature-highlight-inner { grid-template-columns: 1fr; }
-            .feature-highlight-image-wrap { min-height: 220px; }
-            .feature-highlight-body { padding: 1.75rem 1.25rem; }
-            .feature-highlight-title { font-size: 1.4rem; }
-        }
     </style>
 </head>
 <body>
@@ -1526,7 +1358,6 @@
             </div>
         </div>
 
-        <div class="hero-content-outer">
         <div class="hero-content">
             <h2 class="hero-title">Built by the community. <br><em>For the coffee obsessed.</em></h2>
             <p class="hero-subtitle">Crowd-sourced by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" style="color: var(--latte); text-decoration: underline; text-underline-offset: 2px;">r/SanDiegoCoffeeBeans</a> community. The most complete map of roasters and specialty cafes across San Diego County.</p>
@@ -1553,7 +1384,6 @@
                 <span class="hero-cta-arrow">→</span>
             </a>
         </div>
-        </div>
 
         <div class="hero-teaser-bar">
             <span class="hero-teaser-text">Click any pin · Full details on the map</span>
@@ -1572,9 +1402,8 @@
         <div class="container">
             <div class="news-header" style="display:flex;justify-content:space-between;align-items:flex-end;">
                 <div>
-                    <span class="section-eyebrow">What's Happening</span>
                     <div class="news-title">News &amp; Events</div>
-                    <div class="news-subtitle">San Diego coffee community updates</div>
+                    <div class="news-subtitle">What's happening in San Diego coffee</div>
                 </div>
                 <a href="news.html" style="font-size:0.72rem;font-weight:700;color:var(--accent-red);text-decoration:none;letter-spacing:0.02em;white-space:nowrap;padding-bottom:0.2rem;">View All →</a>
             </div>
@@ -1584,20 +1413,11 @@
         </div>
     </section>
 
-    <!-- Featured Roaster Highlight -->
-    <section class="feature-highlight-section" id="featuredHighlightSection" style="display:none;">
-        <div class="container" style="padding:0 2rem;">
-            <div class="feature-highlight-inner" id="featuredHighlightInner">
-            </div>
-        </div>
-    </section>
-
     <!-- Recently Added -->
     <section class="recent-section">
         <div class="container">
             <div class="recent-header">
                 <div class="recent-header-left">
-                    <span class="section-eyebrow">From the Community</span>
                     <div class="recent-title">Recently Added</div>
                     <div class="recent-subtitle">The latest additions to the guide</div>
                 </div>
@@ -1619,7 +1439,6 @@
 
     <script src="locations.js"></script>
     <script src="news.js"></script>
-    <script src="highlights.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initPreviewMap" async defer></script>
     <script>
         // Nav dropdown
@@ -1759,7 +1578,7 @@
 
             const previewMap = new google.maps.Map(document.getElementById('previewMap'), {
                 zoom: 11,
-                center: { lat: 32.78, lng: -117.21 },
+                center: { lat: 32.78, lng: -117.13 },
                 mapTypeControl: false,
                 streetViewControl: false,
                 fullscreenControl: false,
@@ -1875,9 +1694,8 @@
             }
             const typeIcons = { event: '📅', news: '📰', update: '🔧' };
             const typeCTA   = { event: 'Learn More →', news: 'Read More →', update: 'See Update →' };
-            grid.innerHTML = items.map((item, idx) => {
+            grid.innerHTML = items.map(item => {
                 const typeClass = 'type-' + (item.type || 'news');
-                const featuredClass = idx === 0 ? ' news-card--featured' : '';
                 const badge = { event: 'EVENT', news: 'NEWS', update: 'SITE UPDATE' }[item.type] || 'NEWS';
                 const icon = typeIcons[item.type] || '📰';
                 const cta  = typeCTA[item.type] || 'Read More →';
@@ -1899,13 +1717,13 @@
                 const dateStr = formatNewsDate(item.date, item.endDate);
 
                 return `
-                <a class="news-card${featuredClass}" href="${item.url || '#'}"${target}>
+                <a class="news-card" href="${item.url || '#'}"${target}>
                     ${topHtml}
                     <div class="news-card-body">
                         <span class="news-card-badge ${typeClass}">${badge}</span>
                         <div class="news-card-title">${item.title}</div>
                         ${dateStr ? `<div class="news-card-date">${dateStr}</div>` : ''}
-                        ${item.venue ? `<div class="news-card-venue">${item.venue}</div>` : ''}
+                        ${item.venue ? `<div class="news-card-venue">📍 ${item.venue}</div>` : ''}
                         ${item.excerpt ? `<div class="news-card-excerpt">${item.excerpt}</div>` : ''}
                         <div class="news-card-footer">${cta}</div>
                     </div>
@@ -1985,7 +1803,7 @@
                         </div>`;
                 }
 
-                const typeLabel = isOnline ? 'Online Roaster' : isRoaster ? 'Roaster' : 'Multi-Roaster Cafe';
+                const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
                 const typeClass = isRoaster ? 'roaster' : 'cafe';
                 const newBadge = isNew ? '<span class="recent-new-badge">New</span>' : '';
 
@@ -1995,7 +1813,8 @@
                     <div class="recent-card-body">
                         <div class="recent-card-type ${typeClass}">${typeLabel}</div>
                         <div class="recent-card-name">${name}${newBadge}</div>
-                        ${neighborhood ? `<div class="recent-card-neighborhood">${neighborhood}</div>` : ''}
+                        ${neighborhood ? `<div class="recent-card-neighborhood">📍 ${neighborhood}</div>` : ''}
+                        ${desc ? `<div class="recent-card-desc">"${desc}"</div>` : ''}
                         <div class="recent-card-meta">
                             <span>${addedLabel || ''}</span>
                             <span style="color:var(--accent-red); font-weight:600; font-size:0.68rem;">View Details →</span>
@@ -2005,33 +1824,9 @@
             }).join('');
         }
 
-        function renderFeaturedHighlight() {
-            const section = document.getElementById('featuredHighlightSection');
-            const inner = document.getElementById('featuredHighlightInner');
-            if (!section || !inner) return;
-            const highlights = (window.highlights || []).slice().sort((a, b) => {
-                return new Date(b.date || 0) - new Date(a.date || 0);
-            });
-            if (!highlights.length) return;
-            const h = highlights[0];
-            const imgHtml = h.image
-                ? `<div class="feature-highlight-image-wrap"><img class="feature-highlight-image" src="${h.image}" alt="${h.roasterName}"></div>`
-                : `<div class="feature-highlight-image-wrap feature-highlight-image-placeholder"></div>`;
-            inner.innerHTML = `
-                ${imgHtml}
-                <div class="feature-highlight-body">
-                    <div class="feature-highlight-eyebrow">Roaster Highlight</div>
-                    <div class="feature-highlight-title">${h.title || h.roasterName}</div>
-                    <div class="feature-highlight-excerpt">${h.excerpt || ''}</div>
-                    <a class="feature-highlight-cta" href="highlight.html?id=${h.id}">Read the Interview →</a>
-                </div>`;
-            section.style.display = '';
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             renderNews();
             renderRecentLocations();
-            renderFeaturedHighlight();
         });
     </script>
 </body>

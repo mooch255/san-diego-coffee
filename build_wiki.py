@@ -145,9 +145,9 @@ now = datetime.now()
 today_str = f'{MONTH_NAMES[now.month]} {ordinal(now.day)}, {now.year}'
 
 total      = len(all_locations)
-roasters   = sum(1 for l in all_locations if l['basicInfo'].get('type') == 'roaster' and not l['basicInfo'].get('onlineOnly'))
-cafes      = sum(1 for l in all_locations if l['basicInfo'].get('type') == 'cafe')
-online     = sum(1 for l in all_locations if l['basicInfo'].get('onlineOnly'))
+roasters   = len({l['basicInfo']['name'] for l in all_locations if l['basicInfo'].get('type') == 'roaster'})
+cafes      = len({l['basicInfo']['name'] for l in all_locations if l['basicInfo'].get('type') == 'cafe'})
+online     = len({l['basicInfo']['name'] for l in all_locations if l['basicInfo'].get('onlineOnly')})
 nbrs       = len({(l.get('coffeeDetails') or {}).get('neighborhood') or l['basicInfo'].get('address', {}).get('neighborhood', '')
                   for l in all_locations
                   if not l['basicInfo'].get('onlineOnly')} - {''})
@@ -158,8 +158,17 @@ new_subtitle = (
     f'{online} online-only roasters · {nbrs} neighborhoods'
 )
 
+new_faq_stats = (
+    f'As of {MONTH_NAMES[now.month]} {now.year}: '
+    f'<strong>{roasters} roasters</strong>, plus '
+    f'<strong>{cafes} multi-roaster cafés</strong> and '
+    f'<strong>{online} online-only roasters</strong>, totaling '
+    f'<strong>{total} tracked locations</strong> across '
+    f'<strong>{nbrs} neighborhoods</strong>.'
+)
+
 def update_stats(source):
-    # Stats subtitle
+    # Stats subtitle (appears in both the <p> tag and the JS textContent)
     source = re.sub(
         r'Last updated:.*?neighborhoods',
         new_subtitle,
@@ -170,6 +179,13 @@ def update_stats(source):
         r'Interactive Map — All \d+ Locations',
         f'Interactive Map — All {total} Locations',
         source
+    )
+    # FAQ stats paragraph
+    source = re.sub(
+        r'(?<=id="faq-stats">).*?(?=</p>)',
+        new_faq_stats,
+        source,
+        flags=re.DOTALL
     )
     return source
 

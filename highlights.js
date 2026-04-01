@@ -67,7 +67,7 @@ window.highlights = [
     image: '/images/locations/loc_058.jpg',
     excerpt: 'Seth and Will built Visitor Coffee Roasters around a simple philosophy: tread lightly on the planet, roast lightly on the bean. From an Imperial Beach kitchen to a National City warehouse, they\'re doing it their way.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1re1eh1/roaster_highlight_visitor_coffee_roasters_w/',
-    locationUrl: '/locations/visitor-coffee-roaster',
+    locationUrl: 'location.html?id=loc_058',
     body: [
       { type: 'text', content: 'Visitor Coffee Roasters is named for a philosophy as much as a brand — Seth and Will see themselves as visitors on Earth, and that mindset shapes everything from their sourcing to their packaging. Started in a small Imperial Beach kitchen in 2020, they\'ve grown into a National City warehouse operation with a quietly expanding footprint across San Diego\'s south bay. We sat down with both of them to talk Tartine, Tony Gwynn, and why fine-tuning your grind might matter more than your water source.' },
       { type: 'qa',

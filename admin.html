@@ -49,10 +49,7 @@
 
         /* ── Header ─────────────────────────────────────────────────── */
         .header {
-            background:
-                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.022) 39px, rgba(255,255,255,0.022) 40px),
-                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px),
-                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            background: linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
             border-top: 3px solid var(--accent-red);
             border-bottom: 3px solid var(--accent-red);
             position: relative; overflow: hidden;
@@ -62,6 +59,13 @@
             background:
                 radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.42) 0%, transparent 65%),
                 radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.42) 0%, transparent 65%);
+            pointer-events: none;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 160% at 50% 115%, rgba(184,92,56,0.22) 0%, transparent 55%);
             pointer-events: none;
         }
         .header-content {

@@ -963,6 +963,10 @@
                 left: 0;
                 right: 0;
                 width: 100%;
+                /* Let the panel be content-sized — no max-height cap, no internal scroll */
+                max-height: none;
+                overflow: hidden;
+                overscroll-behavior: contain;
             }
         }
 
@@ -2586,6 +2590,13 @@ function setupEventListeners() {
         const panel = document.getElementById('filtersPanel');
         const controls = document.querySelector('.list-panel-controls');
         const isExpanding = !panel.classList.contains('expanded');
+
+        if (isExpanding && window.innerWidth <= 768) {
+            // Ensure the sheet is fully expanded before positioning — if it's still
+            // in peek/partial state, the fixed panel (whose containing block is the
+            // transformed list panel) would appear off-screen below the viewport.
+            document.getElementById('listPanel').classList.add('sheet-expanded');
+        }
 
         panel.classList.toggle('expanded');
         panel.classList.toggle('overlay-open', isExpanding);

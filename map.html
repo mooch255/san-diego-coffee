@@ -3568,6 +3568,9 @@ function selectLocationCard(locationId) {
         panel.classList.remove('sheet-expanded');
         const floatBtn = document.getElementById('mapFloatNearMe');
         if (floatBtn) floatBtn.classList.remove('hidden');
+        const floatClearNearMe = document.getElementById('mapFloatClearFilters');
+        const filtersActiveNearMe = document.getElementById('toggleFilters')?.classList.contains('filters-active');
+        if (floatClearNearMe) floatClearNearMe.classList.toggle('hidden', !filtersActiveNearMe);
         const si = document.getElementById('searchInput');
         if (si) {
             const count = document.getElementById('visibleCount')?.textContent || '—';
@@ -3695,6 +3698,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (expand) {
                 panel.classList.add('sheet-expanded');
                 if (floatBtn) floatBtn.classList.add('hidden');
+                const floatClearBtn = document.getElementById('mapFloatClearFilters');
+                if (floatClearBtn) floatClearBtn.classList.add('hidden');
                 if (hint) hint.textContent = '↓  Scroll Down for Map View';
                 if (window.innerWidth <= 768 && searchInput) {
                     searchInput.placeholder = PLACEHOLDER_EXPANDED;
@@ -3703,6 +3708,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 panel.classList.remove('sheet-expanded');
                 if (floatBtn) floatBtn.classList.remove('hidden');
+                const floatClear = document.getElementById('mapFloatClearFilters');
+                const filtersActive = document.getElementById('toggleFilters')?.classList.contains('filters-active');
+                if (floatClear) floatClear.classList.toggle('hidden', !filtersActive);
                 if (hint) hint.textContent = '↑  Swipe Up To Browse';
                 if (window.innerWidth <= 768 && searchInput) {
                     searchInput.placeholder = peekPlaceholder();
@@ -3927,7 +3935,8 @@ document.addEventListener('DOMContentLoaded', () => {
                               openNow;
         filterBtn.classList.toggle('filters-active', anyNonDefault);
         const floatClear = document.getElementById('mapFloatClearFilters');
-        if (floatClear) floatClear.classList.toggle('hidden', !anyNonDefault);
+        const sheetExpanded = document.getElementById('listPanel')?.classList.contains('sheet-expanded');
+        if (floatClear) floatClear.classList.toggle('hidden', !anyNonDefault || sheetExpanded);
     }
 
     document.getElementById('mapFloatClearFilters')?.addEventListener('click', () => {

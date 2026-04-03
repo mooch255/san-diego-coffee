@@ -1529,7 +1529,7 @@
         <div class="hero-content-outer">
         <div class="hero-content">
             <h2 class="hero-title">Built by the community. <br><em>For the coffee obsessed.</em></h2>
-            <p class="hero-subtitle">Crowd-sourced by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" style="color: var(--latte); text-decoration: underline; text-underline-offset: 2px;">r/SanDiegoCoffeeBeans</a> community. The most complete map of roasters and specialty cafes across San Diego County.</p>
+            <p class="hero-subtitle">The most complete map of roasters and specialty cafes across San Diego County. Discovered and verified by the city's most dedicated coffee drinkers.</p>
 
             <div class="hero-stats">
                 <a href="map.html" class="hero-stat" id="heroStatTotal">
@@ -1615,6 +1615,8 @@
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
         <span class="footer-sep">·</span>
         <a href="submit.html">Add a Spot</a>
+        <span class="footer-sep">·</span>
+        <a href="privacy.html">Privacy Policy</a>
     </footer>
 
     <script src="locations.js"></script>
@@ -1763,11 +1765,12 @@
                 mapTypeControl: false,
                 streetViewControl: false,
                 fullscreenControl: false,
-                zoomControl: true,
+                zoomControl: false,
                 scrollwheel: false,
-                gestureHandling: 'cooperative',
-                draggable: true,
-                disableDoubleClickZoom: false,
+                gestureHandling: 'none',
+                draggable: false,
+                disableDoubleClickZoom: true,
+                clickableIcons: false,
                 styles: mapStyles
             });
 
@@ -1801,7 +1804,6 @@
                         lng: location.basicInfo.address.coordinates.lng
                     },
                     map: previewMap,
-                    title: location.basicInfo.name,
                     icon: {
                         url: isRoaster
                             ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
@@ -1810,36 +1812,6 @@
                     }
                 });
 
-                marker.addListener('click', () => {
-                    const info = location.basicInfo;
-                    const isOnline = info.onlineOnly || false;
-                    const typeLabel = isOnline ? '🌐 Online Roaster' : (isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe');
-                    const neighborhood = location.coffeeDetails?.neighborhood || '';
-
-                    let html = `<div class="info-window info-window-teaser">`;
-                    html += `<h3>${info.name}</h3>`;
-                    html += `<div class="iw-teaser-meta">`;
-                    html += `<span class="iw-type">${typeLabel}</span>`;
-                    if (neighborhood) html += `<span class="iw-sep">·</span><span class="iw-hood">${neighborhood}</span>`;
-                    html += `</div>`;
-                    html += `<a href="map.html?location=${encodeURIComponent(location.id)}" id="popupMapLink" class="info-window-btn iw-cta-btn">Explore on full map →</a>`;
-                    html += `</div>`;
-
-                    infoWindow.setContent(html);
-                    infoWindow.open(previewMap, marker);
-
-                    setTimeout(() => {
-                        const link = document.getElementById('popupMapLink');
-                        if (link) {
-                            link.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                const overlay = document.getElementById('pageTransition');
-                                overlay.classList.add('active');
-                                setTimeout(() => { window.location.href = `map.html?location=${encodeURIComponent(location.id)}`; }, 320);
-                            });
-                        }
-                    }, 50);
-                });
             });
         }
 

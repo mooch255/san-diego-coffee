@@ -73,6 +73,9 @@ function buildCoffeeDetails(type, row) {
       onlineWebsite:        row.onlineWebsite        || '',
       onlineInstagram:      row.onlineInstagram      || '',
       instagramReviewUrl:   row.instagramReviewUrl   || '',
+      shopUrl:              row.shopUrl              || '',
+      promoCode:            row.promoCode            || '',
+      promoOffer:           row.promoOffer           || '',
       lastUpdated:          row.timestamp            || '',
     };
   }
@@ -88,6 +91,9 @@ function buildCoffeeDetails(type, row) {
     notes:               row.notes               || '',
     description:         row.description         || '',
     instagramReviewUrl:  row.instagramReviewUrl  || '',
+    shopUrl:             row.shopUrl             || '',
+    promoCode:           row.promoCode           || '',
+    promoOffer:          row.promoOffer          || '',
     lastUpdated:         row.timestamp           || '',
   };
 }

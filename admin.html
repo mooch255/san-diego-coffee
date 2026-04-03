@@ -686,6 +686,25 @@
                 </div>
 
                 <div class="form-section">
+                    <div class="section-label">🛒 Partner / Shop Link</div>
+                    <div class="field-group">
+                        <label>Shop URL</label>
+                        <div class="field-hint">Affiliate or referral URL for ordering beans. Can be a long/ugly URL — the display text is set by Promo Offer below. Leave blank if no partner deal.</div>
+                        <input type="text" id="r-shopUrl" placeholder="e.g. https://roaster.com/shop?ref=sdcoffee">
+                    </div>
+                    <div class="field-group">
+                        <label>Promo Offer (link label)</label>
+                        <div class="field-hint">Displayed as the clickable link text, e.g. "15% Off First Order" or "Order Beans Online". Leave blank to use default label.</div>
+                        <input type="text" id="r-promoOffer" placeholder="e.g. 15% Off First Order">
+                    </div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <label>Promo Code</label>
+                        <div class="field-hint">Optional discount code shown beneath the link, e.g. "SDCOFFEE10". Leave blank if no code.</div>
+                        <input type="text" id="r-promoCode" placeholder="e.g. SDCOFFEE10">
+                    </div>
+                </div>
+
+                <div class="form-section">
                     <div class="section-label">Admin Notes</div>
                     <div class="field-group" style="margin-bottom:0;">
                         <textarea id="r-notes" placeholder="Internal notes for your reference…"></textarea>
@@ -788,6 +807,25 @@
                         <label>SDCoffeeGuide Review URL</label>
                         <div class="field-hint">Link to the specific Instagram post by @sdcoffeeguide reviewing this location. Leave blank if no review exists.</div>
                         <input type="text" id="c-instagramReviewUrl" placeholder="e.g. https://www.instagram.com/p/ABC123/">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="section-label">🛒 Partner / Shop Link</div>
+                    <div class="field-group">
+                        <label>Shop URL</label>
+                        <div class="field-hint">Affiliate or referral URL for ordering beans. Can be a long/ugly URL — the display text is set by Promo Offer below. Leave blank if no partner deal.</div>
+                        <input type="text" id="c-shopUrl" placeholder="e.g. https://roaster.com/shop?ref=sdcoffee">
+                    </div>
+                    <div class="field-group">
+                        <label>Promo Offer (link label)</label>
+                        <div class="field-hint">Displayed as the clickable link text, e.g. "15% Off First Order" or "Order Beans Online". Leave blank to use default label.</div>
+                        <input type="text" id="c-promoOffer" placeholder="e.g. 15% Off First Order">
+                    </div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <label>Promo Code</label>
+                        <div class="field-hint">Optional discount code shown beneath the link, e.g. "SDCOFFEE10". Leave blank if no code.</div>
+                        <input type="text" id="c-promoCode" placeholder="e.g. SDCOFFEE10">
                     </div>
                 </div>
 
@@ -1247,6 +1285,9 @@
                 setVal('r-onlineWebsite',       d.onlineWebsite       || '');
                 setVal('r-onlineInstagram',     d.onlineInstagram     || '');
                 setVal('r-instagramReviewUrl',  d.instagramReviewUrl  || '');
+                setVal('r-shopUrl',             d.shopUrl             || '');
+                setVal('r-promoCode',           d.promoCode           || '');
+                setVal('r-promoOffer',          d.promoOffer          || '');
                 if (d.amenities && d.amenities.length) {
                     setCheckboxes('r-amenities', d.amenities);
                 }
@@ -1258,6 +1299,9 @@
                 setVal('c-notes',               d.notes);
                 setVal('c-description',         d.description);
                 setVal('c-instagramReviewUrl',  d.instagramReviewUrl  || '');
+                setVal('c-shopUrl',             d.shopUrl             || '');
+                setVal('c-promoCode',           d.promoCode           || '');
+                setVal('c-promoOffer',          d.promoOffer          || '');
                 if (d.brewingOptions && d.brewingOptions.length) {
                     setCheckboxes('c-brewing', d.brewingOptions);
                 }
@@ -1399,6 +1443,9 @@
                     onlineWebsite:        document.getElementById('r-onlineWebsite').value.trim(),
                     onlineInstagram:      document.getElementById('r-onlineInstagram').value.trim(),
                     instagramReviewUrl:   document.getElementById('r-instagramReviewUrl').value.trim(),
+                    shopUrl:              document.getElementById('r-shopUrl').value.trim(),
+                    promoCode:            document.getElementById('r-promoCode').value.trim(),
+                    promoOffer:           document.getElementById('r-promoOffer').value.trim(),
                 };
             } else {
                 payload = {
@@ -1414,6 +1461,9 @@
                     notes:               document.getElementById('c-notes').value.trim(),
                     description:         document.getElementById('c-description').value.trim(),
                     instagramReviewUrl:  document.getElementById('c-instagramReviewUrl').value.trim(),
+                    shopUrl:             document.getElementById('c-shopUrl').value.trim(),
+                    promoCode:           document.getElementById('c-promoCode').value.trim(),
+                    promoOffer:          document.getElementById('c-promoOffer').value.trim(),
                 };
             }
 

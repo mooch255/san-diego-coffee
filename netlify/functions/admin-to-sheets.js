@@ -54,6 +54,9 @@ exports.handler = async function (event) {
       onlineWebsite:        data.onlineWebsite        || '',
       onlineInstagram:      data.onlineInstagram      || '',
       instagramReviewUrl:   data.instagramReviewUrl   || '',
+      shopUrl:              data.shopUrl              || '',
+      promoCode:            data.promoCode            || '',
+      promoOffer:           data.promoOffer           || '',
     };
 
   } else if (locationType === 'cafe') {
@@ -73,6 +76,9 @@ exports.handler = async function (event) {
       notes:               data.notes               || '',
       description:         data.description         || '',
       instagramReviewUrl:  data.instagramReviewUrl  || '',
+      shopUrl:             data.shopUrl             || '',
+      promoCode:           data.promoCode           || '',
+      promoOffer:          data.promoOffer          || '',
     };
 
   } else {

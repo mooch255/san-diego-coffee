@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W1SW2S30PY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-W1SW2S30PY');
+    </script>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "w12ykvsrtj");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy · San Diego Specialty Coffee</title>
+    <meta name="robots" content="noindex">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sandiegocoffee.co/privacy.html">
+    <meta property="og:title" content="Privacy Policy · San Diego Specialty Coffee">
+    <meta property="og:description" content="Privacy policy for sandiegocoffee.co — how we use analytics and tracking tools.">
+    <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
+    <meta property="og:image:alt" content="San Diego Specialty Coffee">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Privacy Policy · San Diego Specialty Coffee">
+    <meta name="twitter:description" content="Privacy policy for sandiegocoffee.co — how we use analytics and tracking tools.">
+    <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --espresso:   #3D2817;
+            --coffee:     #6B4E3D;
+            --latte:      #C4A77D;
+            --cream:      #F8F5F0;
+            --white:      #FFFFFF;
+            --accent-red: #B85C38;
+            --light-tan:  #E8DED2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Libre Franklin', -apple-system, sans-serif;
+            color: var(--espresso);
+            background: var(--white);
+        }
+
+        /* ── Header ─────────────────────────────────────────────────── */
+        header {
+            background: linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            color: var(--white);
+            border-top: 3px solid var(--accent-red);
+            border-bottom: 3px solid var(--accent-red);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%),
+                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 140% at 50% 110%, rgba(184,92,56,0.18) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.85rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-brand-eyebrow {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(196,167,125,0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            line-height: 1;
+            color: #EDE0CC;
+            text-decoration: none;
+            display: block;
+        }
+
+        .header-logo em   { font-style: italic; color: #C9A97E; font-weight: 400; }
+        .header-logo strong { font-style: normal; font-weight: 800; color: #EDE0CC; }
+
+        .header-subtitle {
+            font-size: 0.6rem;
+            color: rgba(196,167,125,0.55);
+            margin-top: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        /* ── Hamburger Nav ───────────────────────────────────────────── */
+        .nav-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(196,167,125,0.08);
+            border: 1px solid rgba(196,167,125,0.4);
+            color: rgba(196,167,125,0.9);
+            padding: 0.5rem 0.9rem;
+            cursor: pointer;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-toggle-icon { font-size: 1.15rem; line-height: 1; }
+
+        .nav-toggle:hover, .nav-toggle.open {
+            border-color: var(--latte);
+            color: var(--latte);
+            background: rgba(196,167,125,0.13);
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: fixed;
+            background: #2A1508;
+            border-left: 1px solid rgba(196,167,125,0.25);
+            border-bottom: 1px solid rgba(196,167,125,0.25);
+            border-top: 2px solid var(--accent-red);
+            min-width: 210px;
+            z-index: 9999;
+            box-shadow: -4px 8px 32px rgba(0,0,0,0.45);
+        }
+
+        .nav-dropdown.open { display: block; }
+
+        .nav-dropdown a {
+            display: block;
+            padding: 0.9rem 1.5rem;
+            color: rgba(196,167,125,0.8);
+            text-decoration: none;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(196,167,125,0.1);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .nav-dropdown a:last-child { border-bottom: none; }
+
+        .nav-dropdown a:hover {
+            background: rgba(196,167,125,0.1);
+            color: var(--latte);
+        }
+
+        /* ── Page intro band ─────────────────────────────────────────── */
+        .intro {
+            background: linear-gradient(135deg, #E8D9C8 0%, #D9C9B4 100%);
+            padding: 1.75rem 0 1.5rem;
+            border-bottom: 1px solid #E0DBD3;
+        }
+
+        .intro h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--espresso);
+            line-height: 1.15;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ── Content ─────────────────────────────────────────────────── */
+        .content-area {
+            padding: 3rem 0 4rem;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-label {
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.85rem;
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--espresso);
+            margin-bottom: 0.75rem;
+        }
+
+        .section p {
+            font-size: 0.92rem;
+            line-height: 1.75;
+            color: var(--coffee);
+            margin-bottom: 0.85rem;
+        }
+
+        .section p:last-child { margin-bottom: 0; }
+
+        .section a {
+            color: var(--accent-red);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .section a:hover { text-decoration: underline; }
+
+        .section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0.85rem;
+        }
+
+        .section ul li {
+            font-size: 0.92rem;
+            line-height: 1.75;
+            color: var(--coffee);
+            padding: 0.25rem 0 0.25rem 1.2rem;
+            position: relative;
+        }
+
+        .section ul li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--latte);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--light-tan);
+            margin: 2.5rem 0;
+        }
+
+        .updated-note {
+            font-size: 0.75rem;
+            color: rgba(107,78,61,0.55);
+            margin-top: 3rem;
+            font-style: italic;
+        }
+
+        /* ── Footer ──────────────────────────────────────────────────── */
+        footer {
+            background: var(--espresso);
+            color: rgba(196,167,125,0.65);
+            text-align: center;
+            padding: 1.5rem 2rem;
+            font-size: 0.78rem;
+        }
+
+        footer a {
+            color: var(--latte);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        footer a:hover { color: #EDE0CC; }
+
+        .footer-sep { opacity: 0.4; margin: 0 0.4rem; }
+
+        @media (max-width: 600px) {
+            .intro h1 { font-size: 1.8rem; }
+            .container { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
+                <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+                <p class="header-subtitle">Privacy Policy</p>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                <span class="nav-toggle-icon">≡</span>
+                <span class="nav-toggle-label">Menu</span>
+            </button>
+        </div>
+    </header>
+    <nav class="nav-dropdown" id="navDropdown">
+        <a href="index.html">Home</a>
+        <a href="map.html">Explore Map</a>
+        <a href="submit.html">Add a Spot</a>
+        <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="news.html">News &amp; Events</a>
+        <a href="about.html">About</a>
+        <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
+    </nav>
+
+    <section class="intro">
+        <div class="container">
+            <h1>Privacy Policy</h1>
+        </div>
+    </section>
+
+    <div class="content-area">
+        <div class="container">
+
+            <div class="section">
+                <div class="section-label">Overview</div>
+                <p>sandiegocoffee.co is a free, community-driven directory. We don't sell your data or require you to create an account. This page explains the third-party tools we use and what data they may collect when you visit the site.</p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section">
+                <div class="section-label">Analytics &amp; Tracking</div>
+                <h2>Google Analytics &amp; Microsoft Clarity</h2>
+                <p>This site uses Google Analytics and Microsoft Clarity to understand how visitors use the site. These tools may collect anonymized data including pages visited, clicks, and session behavior.</p>
+                <p>Specifically, these tools may collect:</p>
+                <ul>
+                    <li>Pages you visit and how long you spend on them</li>
+                    <li>Clicks, scrolls, and general interaction patterns</li>
+                    <li>Approximate location derived from your IP address (city/region level)</li>
+                    <li>Device type, browser, and operating system</li>
+                    <li>Session recordings and heatmaps (Microsoft Clarity)</li>
+                </ul>
+                <p>This data is used solely to improve the site experience — for example, understanding which pages and features are most useful to visitors. No personally identifiable information is intentionally collected.</p>
+                <p>You can opt out of Google Analytics tracking via the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>. Microsoft Clarity's data practices are described in <a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener">Microsoft's Privacy Statement</a>.</p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section">
+                <div class="section-label">Map</div>
+                <h2>Google Maps</h2>
+                <p>The interactive map is powered by the Google Maps API. Google may collect data about your use of the map in accordance with <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section">
+                <div class="section-label">Cookies</div>
+                <h2>Cookie Use</h2>
+                <p>We do not set first-party cookies ourselves. The third-party analytics tools described above (Google Analytics, Microsoft Clarity, Google Maps) may set cookies in accordance with their own privacy policies.</p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section">
+                <div class="section-label">External Links</div>
+                <h2>Third-Party Sites</h2>
+                <p>This site contains links to external websites including Reddit, Google Maps, and individual coffee shop websites. We are not responsible for the privacy practices of those sites.</p>
+            </div>
+
+            <hr class="divider">
+
+            <div class="section">
+                <div class="section-label">Contact</div>
+                <h2>Questions</h2>
+                <p>If you have questions about this privacy policy, reach out at <a href="mailto:sdcoffeebeans@gmail.com">sdcoffeebeans@gmail.com</a>.</p>
+            </div>
+
+            <p class="updated-note">Last updated: April 2026</p>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <a href="index.html">Home</a>
+        <span class="footer-sep">·</span>
+        <a href="about.html">About</a>
+        <span class="footer-sep">·</span>
+        <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
+    </footer>
+
+    <script>
+        const toggle = document.getElementById('navToggle');
+        const dropdown = document.getElementById('navDropdown');
+        const label = toggle.querySelector('.nav-toggle-label');
+        const icon = toggle.querySelector('.nav-toggle-icon');
+
+        toggle.addEventListener('click', () => {
+            const isOpen = dropdown.classList.contains('open');
+            if (!isOpen) {
+                icon.textContent = '✕';
+                label.textContent = 'Close';
+                toggle.classList.add('open');
+                toggle.setAttribute('aria-expanded', 'true');
+                const tRect = toggle.getBoundingClientRect();
+                dropdown.style.right = Math.max(0, document.documentElement.clientWidth - tRect.right) + 'px';
+                dropdown.style.top = document.querySelector('header').getBoundingClientRect().bottom + 'px';
+                dropdown.classList.add('open');
+            } else {
+                icon.textContent = '≡';
+                label.textContent = 'Menu';
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                dropdown.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('click', e => {
+            if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+                icon.textContent = '≡';
+                label.textContent = 'Menu';
+                toggle.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+                dropdown.classList.remove('open');
+            }
+        });
+    </script>
+
+</body>
+</html>

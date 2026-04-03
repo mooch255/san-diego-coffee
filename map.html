@@ -700,10 +700,29 @@
         }
 
         .location-card.featured-interview {
-            border: 1.5px solid rgba(139, 26, 26, 0.5);
+            border: 2.5px solid rgba(139, 26, 26, 0.5);
             background: #fef4f4;
         }
         .location-card.featured-interview:hover {
+            background: #fdeaea;
+        }
+
+        .location-card.has-ig-review {
+            border: 2.5px solid rgba(232, 114, 12, 0.5);
+            background: #fef8f2;
+        }
+        .location-card.has-ig-review:hover {
+            background: #fdf0e0;
+        }
+
+        /* Double border: red inner + orange outer */
+        .location-card.featured-interview.has-ig-review {
+            border: 2.5px solid rgba(139, 26, 26, 0.5);
+            outline: 2.5px solid rgba(232, 114, 12, 0.6);
+            outline-offset: 2px;
+            background: #fef4f4;
+        }
+        .location-card.featured-interview.has-ig-review:hover {
             background: #fdeaea;
         }
 
@@ -1679,7 +1698,9 @@ const highlightByLocation = {};
         const slugMatch = h.locationUrl?.match(/\/locations\/([^/?#]+)/);
         if (slugMatch) {
             const slug = slugMatch[1];
-            const loc = (window.COFFEE_LOCATIONS || []).find(l => slugify(l.basicInfo.name) === slug);
+            const loc = (window.COFFEE_LOCATIONS || []).find(l =>
+                slugify(l.basicInfo.name) === slug || locationSlug(l) === slug
+            );
             if (loc) highlightByLocation[loc.id] = h;
         }
     }
@@ -1987,6 +2008,15 @@ function slugify(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+function locationSlug(loc) {
+    const base = slugify(loc.basicInfo.name);
+    const allLocs = window.COFFEE_LOCATIONS || [];
+    const dupes = allLocs.filter(l => slugify(l.basicInfo.name) === base);
+    if (dupes.length <= 1) return base;
+    const hood = loc.coffeeDetails?.neighborhood || '';
+    return hood ? `${base}-${slugify(hood)}` : `${base}-${loc.id}`;
+}
+
 function createInfoWindowContent(location, custom) {
     custom = custom || {};
     const info = location.basicInfo;
@@ -2027,7 +2057,7 @@ function createInfoWindowContent(location, custom) {
     const likeBtnColor = pinIsLiked ? '#B85C38' : '#6B4E3D';
     const likeBtnBorder = pinIsLiked ? '#B85C38' : '#C8B9AC';
     const likeBtnStyle = `cursor:pointer;background:transparent;border:1px solid ${likeBtnBorder};color:${likeBtnColor};padding:0.18rem 0.55rem;font-size:0.7rem;font-family:'Libre Franklin',sans-serif;font-weight:600;line-height:1.4;`;
-    const reviewsUrl = `locations/${slugify(location.basicInfo.name)}#reviews`;
+    const reviewsUrl = `locations/${locationSlug(location)}#reviews`;
     const linkStyle = `font-size:0.7rem;color:#C4A77D;text-decoration:none;`;
     const likeCountHtml = pinLikes > 0 ? `<a id="map-like-count-${location.id}" href="${reviewsUrl}" style="${linkStyle}">${pinLikes} ${pinLikes === 1 ? 'like' : 'likes'}</a>` : `<span id="map-like-count-${location.id}" style="font-size:0.7rem;color:#C4A77D;"></span>`;
     const reviewCountHtml = pinReviews > 0 ? `<a href="${reviewsUrl}" style="${linkStyle}">· 💬 ${pinReviews} review${pinReviews > 1 ? 's' : ''}</a>` : '';
@@ -2101,17 +2131,16 @@ function createInfoWindowContent(location, custom) {
     if (location.coffeeDetails?.instagramReviewUrl) {
         const locSlugIg = slugify(location.basicInfo.name);
         html += `<div style="margin-top:0.5rem;padding:0.4rem 0.6rem;background:#fff3e8;border:1px solid #f0d0a0;border-left:3px solid #E8720C;border-radius:4px;font-size:0.72rem;">`;
-        html += `<span style="font-weight:700;color:#E8720C;text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">📸 SDCoffeeGuide Review &nbsp;·&nbsp;</span><a href="/locations/${locSlugIg}" style="color:#E8720C;font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See Details</a>`;
+        html += `<span style="font-weight:700;color:#E8720C;text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">📸 SDCoffeeGuide Review &nbsp;·&nbsp;</span><a href="/locations/${locationSlug(location)}" style="color:#E8720C;font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See Details</a>`;
         html += `</div>`;
     }
 
     // ── Buttons ────────────────────────────────────────────────────────
-    const locSlug = slugify(location.basicInfo.name);
-    const shareUrl = `${window.location.origin}/locations/${locSlug}`;
+    const shareUrl = `${window.location.origin}/locations/${locationSlug(location)}`;
 
     // 2-column grid: View Details | Suggest Edit on row 1, Directions | Share on row 2
     const bStyle = 'display:block;width:100%;box-sizing:border-box;text-align:center;';
-    const primaryBtn = `<a href="locations/${locSlug}" class="directions-btn" style="${bStyle}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
+    const primaryBtn = `<a href="locations/${locationSlug(location)}" class="directions-btn" style="${bStyle}background:#6F4E37;color:white !important;">&#128203; View Details</a>`;
     const editBtn    = `<a href="edit.html?id=${location.id}&return=map.html" class="directions-btn" style="${bStyle}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;">&#9999;&#65039; Suggest Edit</a>`;
     const shareBtn   = `<button onclick="copyShareLink('${shareUrl}', this)" class="directions-btn" style="${bStyle}background:transparent;color:#6B4E3D !important;border-color:#C8B9AC;cursor:pointer;">&#128279; Share</button>`;
 
@@ -3416,6 +3445,12 @@ function renderCard(loc) {
                 lines.push(`<div class="card-detail-line card-description">"${cardDesc}"</div>`);
             }
 
+            // Partner shop link
+            if (custom.shopUrl) {
+                const shopLabel = custom.promoOffer || 'Order beans online';
+                lines.push(`<div class="card-detail-line" style="margin-top:0.2rem;"><a href="${custom.shopUrl}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()" style="color:var(--accent-red,#8B1A1A);font-size:0.75rem;text-decoration:none;">🛒 ${shopLabel} ↗</a></div>`);
+            }
+
             detailLines = lines.join('');
         }
 
@@ -3433,7 +3468,7 @@ function renderCard(loc) {
         }
 
         return `
-        <div class="location-card${highlightByLocation[loc.id] ? ' featured-interview' : ''}" data-id="${loc.id}"
+        <div class="location-card${highlightByLocation[loc.id] ? ' featured-interview' : ''}${loc.coffeeDetails?.instagramReviewUrl ? ' has-ig-review' : ''}" data-id="${loc.id}"
              onclick="selectLocationCard('${loc.id}')"
              onmouseenter="highlightMarker('${loc.id}', true)"
              onmouseleave="highlightMarker('${loc.id}', false)">

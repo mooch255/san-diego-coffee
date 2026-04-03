@@ -656,6 +656,74 @@
 
         .contact-value a:hover { text-decoration: underline; }
 
+        .shop-link-section {
+            background: #fff8f0;
+            border: 1px solid #e8d5c0;
+            border-left: 3px solid var(--accent-red);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .shop-link-text { flex: 1; min-width: 0; }
+
+        .shop-link-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-red);
+            margin-bottom: 0.3rem;
+        }
+
+        .shop-link-offer {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--espresso);
+            line-height: 1.3;
+            margin-bottom: 0.4rem;
+        }
+
+        .promo-code-badge {
+            display: inline-block;
+            background: var(--white);
+            border: 1px dashed #c4a77d;
+            border-radius: 3px;
+            padding: 0.15rem 0.5rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--coffee-brown);
+            letter-spacing: 0.05em;
+        }
+
+        .shop-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--accent-red);
+            color: white;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.6rem 1.1rem;
+            border-radius: 3px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .shop-link-btn:hover {
+            background: #a04e30;
+            transform: translateY(-1px);
+        }
+
         /* Description */
         .description-text {
             font-family: 'Lora', serif;
@@ -1247,6 +1315,7 @@
     <footer>
         <p>Community-driven guide for <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a></p>
         <p style="margin-top:0.5rem; opacity:0.5; font-size:0.78rem;"><span id="footerCount">150+</span> locations and counting</p>
+        <p style="margin-top:0.5rem;"><a href="privacy.html">Privacy Policy</a></p>
     </footer>
 
     <script src="/locations.js"></script>
@@ -1297,6 +1366,15 @@
             return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         }
 
+        function locationSlug(loc) {
+            const base = slugify(loc.basicInfo.name);
+            const allLocs = window.COFFEE_LOCATIONS || [];
+            const dupes = allLocs.filter(l => slugify(l.basicInfo.name) === base);
+            if (dupes.length <= 1) return base;
+            const hood = loc.coffeeDetails?.neighborhood || '';
+            return hood ? `${base}-${slugify(hood)}` : `${base}-${loc.id}`;
+        }
+
         // ── Get location from URL ──────────────────────────────────────────
         const params = new URLSearchParams(window.location.search);
         // Support both clean URLs (/locations/slug-or-id) and query string (?id=loc_123)
@@ -1329,13 +1407,13 @@
         } else {
             // Support loc_xxx IDs (query string or legacy) and name slugs (/locations/roaster-name)
             const location = (window.COFFEE_LOCATIONS || []).find(l =>
-                l.id === locationId || slugify(l.basicInfo.name) === locationId
+                l.id === locationId ||
+                slugify(l.basicInfo.name) === locationId ||
+                locationSlug(l) === locationId
             );
             // Redirect legacy loc_xxx URLs to canonical slug URL
             if (location && locationId.startsWith('loc_')) {
-                const slug = slugify(location.basicInfo.name);
-                const newUrl = `/locations/${slug}`;
-                window.history.replaceState(null, '', newUrl);
+                window.history.replaceState(null, '', `/locations/${locationSlug(location)}`);
             }
 
             // Ensure back-to-map link always uses loc_XXX id — map.html's ?location= handler
@@ -1378,7 +1456,7 @@
                 // Set canonical to clean URL
                 let canonical = document.querySelector('link[rel="canonical"]');
                 if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-                canonical.href = `https://sandiegocoffee.co/locations/${slugify(location.basicInfo.name)}`;
+                canonical.href = `https://sandiegocoffee.co/locations/${locationSlug(location)}`;
                 const ogDesc = document.querySelector('meta[property="og:description"]');
                 if (ogDesc) ogDesc.content = metaDescription;
                 const metaDesc = document.querySelector('meta[name="description"]');
@@ -1564,6 +1642,7 @@
                         ${renderHighlightCallout(loc.id)}
                         ${renderDescription(custom, loc.legacyData)}
                         ${renderDetailsCard(isRoaster, custom, loc)}
+                        ${renderShopLink(custom)}
                         ${renderInstagramReview(custom, 'mobile')}
                         ${renderContact(contact, info, custom)}
                         ${custom.instagramReviewUrl ? renderHours(hours, today) : ''}
@@ -1757,6 +1836,24 @@
                 <div class="section">
                     <div class="section-label">Hours</div>
                     <div class="hours-grid">${rowsHtml}</div>
+                </div>
+            `;
+        }
+
+        function renderShopLink(custom) {
+            if (!custom || !custom.shopUrl) return '';
+            const offerLabel = custom.promoOffer || 'Order beans online';
+            const codeBadge = custom.promoCode
+                ? `<div style="margin-top:0.35rem;">Use code <span class="promo-code-badge">${custom.promoCode}</span></div>`
+                : '';
+            return `
+                <div class="shop-link-section">
+                    <div class="shop-link-text">
+                        <div class="shop-link-eyebrow">☕ Community Deal</div>
+                        <div class="shop-link-offer">${offerLabel}</div>
+                        ${codeBadge}
+                    </div>
+                    <a href="${custom.shopUrl}" target="_blank" rel="noopener sponsored" class="shop-link-btn">Shop Online ↗</a>
                 </div>
             `;
         }

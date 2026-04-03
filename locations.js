@@ -14222,7 +14222,7 @@ window.COFFEE_LOCATIONS = [
       "onlineWebsite": "",
       "onlineInstagram": "",
       "instagramReviewUrl": "",
-      "shopUrl": "www.memlicoffee.com/referral/FkNGvUzGuNLR?utm_source=referral_program",
+      "shopUrl": "https://www.memlicoffee.com/referral/FkNGvUzGuNLR?utm_source=referral_program",
       "promoCode": "",
       "promoOffer": "20% Off Link",
       "lastUpdated": "2026-03-16T17:34:20.000Z"

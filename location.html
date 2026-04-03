@@ -1842,6 +1842,7 @@
 
         function renderShopLink(custom) {
             if (!custom || !custom.shopUrl) return '';
+            const shopUrl = /^https?:\/\//i.test(custom.shopUrl) ? custom.shopUrl : 'https://' + custom.shopUrl;
             const offerLabel = custom.promoOffer || 'Order beans online';
             const codeBadge = custom.promoCode
                 ? `<div style="margin-top:0.35rem;">Use code <span class="promo-code-badge">${custom.promoCode}</span></div>`
@@ -1853,7 +1854,7 @@
                         <div class="shop-link-offer">${offerLabel}</div>
                         ${codeBadge}
                     </div>
-                    <a href="${custom.shopUrl}" target="_blank" rel="noopener sponsored" class="shop-link-btn">Shop Online ↗</a>
+                    <a href="${shopUrl}" target="_blank" rel="noopener sponsored" class="shop-link-btn">Shop Online ↗</a>
                 </div>
             `;
         }

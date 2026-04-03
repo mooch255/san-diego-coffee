@@ -3447,8 +3447,9 @@ function renderCard(loc) {
 
             // Partner shop link
             if (custom.shopUrl) {
+                const shopUrl = /^https?:\/\//i.test(custom.shopUrl) ? custom.shopUrl : 'https://' + custom.shopUrl;
                 const shopLabel = custom.promoOffer || 'Order beans online';
-                lines.push(`<div class="card-detail-line" style="margin-top:0.2rem;"><a href="${custom.shopUrl}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()" style="color:var(--accent-red,#8B1A1A);font-size:0.75rem;text-decoration:none;">🛒 ${shopLabel} ↗</a></div>`);
+                lines.push(`<div class="card-detail-line" style="margin-top:0.2rem;"><a href="${shopUrl}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()" style="color:var(--accent-red,#8B1A1A);font-size:0.75rem;text-decoration:none;">🛒 ${shopLabel} ↗</a></div>`);
             }
 
             detailLines = lines.join('');

@@ -1081,6 +1081,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://sandiegocoffee.co/locations/loc_197</loc>
+    <lastmod>2026-04-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://sandiegocoffee.co/highlight.html?id=highlight_frequent-coffee</loc>
     <lastmod>2026-02-04</lastmod>
     <changefreq>monthly</changefreq>

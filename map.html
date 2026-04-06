@@ -1616,7 +1616,7 @@
                     <h3>Featured</h3>
                     <div class="amenity-toggles">
                         <button class="amenity-toggle" data-amenity="highlight">⭐ Roaster Highlight</button>
-                        <button class="amenity-toggle" data-amenity="sdguide">📸 SD Coffee Guide</button>
+                        <button class="amenity-toggle" data-amenity="sdguide">📸 SDCoffeeGuide Review</button>
                     </div>
                 </div>
                 <div class="filters-see-results-row">
@@ -1655,7 +1655,11 @@
                 </div>
                 <div class="map-legend-item">
                     <img src="https://maps.google.com/mapfiles/ms/icons/blue-dot.png" width="16" height="16" alt="cafe">
-                    <span>Cafe</span>
+                    <span>Specialty Cafe</span>
+                </div>
+                <div class="map-legend-item">
+                    <img src="https://maps.google.com/mapfiles/ms/icons/orange-dot.png" width="16" height="16" alt="sdcoffeeguide review">
+                    <span>SDCoffeeGuide Review</span>
                 </div>
             </div>
         </div>
@@ -1955,9 +1959,12 @@ function loadLocations() {
 }
 
 function createMarker(location) {
-    const markerColor = location.basicInfo.type === 'roaster' ?
-        'https://maps.google.com/mapfiles/ms/icons/green-dot.png' :
-        'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+    const hasReview = !!(location.coffeeDetails?.instagramReviewUrl);
+    const markerColor = hasReview
+        ? 'https://maps.google.com/mapfiles/ms/icons/orange-dot.png'
+        : location.basicInfo.type === 'roaster'
+            ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+            : 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png';
     
     const marker = new google.maps.Marker({
         position: {
@@ -2028,7 +2035,7 @@ function createInfoWindowContent(location, custom) {
     const todayHours = todayEntry ? todayEntry.replace(/^\w+:\s*/, '') : '';
     const isOnline = info.onlineOnly || location.basicInfo?.onlineOnly || false;
     const isRoaster = info.type === 'roaster';
-    const typeLabel = isOnline ? '🌐 Online Roaster' : (isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe');
+    const typeLabel = isOnline ? '🌐 Online Roaster' : (isRoaster ? '📍 Roaster' : '☕ Specialty Cafe');
     const hasUserLocation = userLocationMarker !== null;
 
     let html = `<div class="info-window"><h3>${info.name}</h3>`;
@@ -3476,7 +3483,7 @@ function renderCard(loc) {
             ${imgHtml}
             <div class="location-card-body">
                 <div class="location-card-name">${info.name}</div>
-                <div class="location-card-type ${isOnline ? 'online' : isRoaster ? 'roaster' : 'cafe'}">${(() => { const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe'; const hood = loc.coffeeDetails?.neighborhood; return hood ? `${typeLabel} · ${hood}` : typeLabel; })()}</div>
+                <div class="location-card-type ${isOnline ? 'online' : isRoaster ? 'roaster' : 'cafe'}">${(() => { const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Specialty Cafe'; const hood = loc.coffeeDetails?.neighborhood; return hood ? `${typeLabel} · ${hood}` : typeLabel; })()}</div>
                 ${distHtml}
                 ${communityHtml}
                 ${highlightByLocation[loc.id] ? `<div style="font-size:0.7rem; font-weight:700; color:var(--accent-red,#8B1A1A); margin-bottom:0.25rem;">🎙️ Featured Interview</div>` : ''}

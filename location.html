@@ -1689,7 +1689,7 @@
         }
 
         function renderHero(loc, isRoaster, rating, info, contact, today, hours) {
-            const typeLabel = info.onlineOnly ? '🌐 Online Only Roaster' : isRoaster ? '📍 Roaster' : '☕ Multi-Roaster Cafe';
+            const typeLabel = info.onlineOnly ? '🌐 Online Only Roaster' : isRoaster ? '📍 Roaster' : '☕ Specialty Cafe';
             const typeClass = isRoaster ? 'roaster' : 'cafe';
             const starsHtml = renderStars(rating.rating || 0);
             const reviewUrl = contact.googleMapsUrl || '#';
@@ -1702,15 +1702,7 @@
                         <div class="type-badge ${typeClass}">${typeLabel}</div>
                         <h1>${info.name}</h1>
                         <div class="hero-meta">
-                            ${rating.rating ? `
-                                <div class="rating-display">
-                                    <div class="stars">${starsHtml}</div>
-                                    <span class="rating-num">${rating.rating}</span>
-                                    <span class="rating-count">(${(rating.reviewCount || 0).toLocaleString()} reviews)</span>
-                                    <a href="${reviewUrl}" target="_blank" class="rating-link">See on Google →</a>
-                                </div>
-                            ` : ''}
-                            ${city ? `<div class="hero-address">📍 ${city}</div>` : ''}
+                                ${city ? `<div class="hero-address">📍 ${city}</div>` : ''}
                         </div>
                     </div>
                 </div>
@@ -1765,7 +1757,6 @@
                         <div class="gallery-hero">
                             <img src="${localImage}" alt="${name}" loading="eager"
                                  onerror="this.parentElement.style.display='none'">
-                            ${mapsUrl ? `<a class="gallery-maps-link" href="${mapsUrl}" target="_blank" rel="noopener">More photos on Google Maps ↗</a>` : ''}
                         </div>
                     </div>
                 `;
@@ -1784,7 +1775,6 @@
                     <div class="gallery-track">
                         ${photoHtml}
                     </div>
-                    ${mapsUrl ? `<a class="gallery-maps-link" href="${mapsUrl}" target="_blank" rel="noopener">More photos on Google Maps ↗</a>` : ''}
                 </div>
             `;
         }
@@ -1866,7 +1856,7 @@
             // For online-only roasters, show their links prominently instead of address
             if (info.onlineOnly) {
                 if (custom.onlineWebsite) {
-                    const display = custom.onlineWebsite.replace(/https?:\/\//, '').replace(/\/$/, '');
+                    const display = custom.onlineWebsite.replace(/https?:\/\//, '').replace(/[/?#].*$/, '');
                     html += contactItem('🌐', 'Website', `<a href="${custom.onlineWebsite}" target="_blank">${display}</a>`);
                 }
                 if (custom.onlineInstagram) {
@@ -1889,7 +1879,7 @@
                 html += contactItem('📞', 'Phone', `<a href="tel:${contact.phone}">${contact.phone}</a>`);
             }
             if (contact.website) {
-                const display = contact.website.replace(/https?:\/\//, '').replace(/\/$/, '');
+                const display = contact.website.replace(/https?:\/\//, '').replace(/[/?#].*$/, '');
                 html += contactItem('🌐', 'Website', `<a href="${contact.website}" target="_blank">${display}</a>`);
             }
             if (contact.googleMapsUrl) {

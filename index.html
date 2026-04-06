@@ -1544,7 +1544,7 @@
                 <div class="hero-stat-divider"></div>
                 <a href="map.html?filter=cafes" class="hero-stat" id="heroStatCafes">
                     <div class="hero-stat-num" id="heroCafes">—</div>
-                    <div class="hero-stat-label">Multi-Roaster Cafes</div>
+                    <div class="hero-stat-label">Specialty Cafes</div>
                 </a>
             </div>
 
@@ -1559,7 +1559,8 @@
             <span class="hero-teaser-text">Click any pin · Full details on the map</span>
             <div class="hero-legend">
                 <span><span class="hero-legend-dot" style="background:#0F9D58;"></span>Roaster</span>
-                <span><span class="hero-legend-dot" style="background:#0288D1;"></span>Multi-Roaster Cafe</span>
+                <span><span class="hero-legend-dot" style="background:#0288D1;"></span>Specialty Cafe</span>
+                <span><span class="hero-legend-dot" style="background:#FF6D00;"></span>SDCoffeeGuide Review</span>
             </div>
         </div>
 
@@ -1798,6 +1799,7 @@
             locations.forEach(location => {
                 if (!location.basicInfo.address?.coordinates) return;
                 const isRoaster = location.basicInfo.type === 'roaster';
+                const hasReview = !!(location.coffeeDetails?.instagramReviewUrl);
                 const marker = new google.maps.Marker({
                     position: {
                         lat: location.basicInfo.address.coordinates.lat,
@@ -1805,9 +1807,11 @@
                     },
                     map: previewMap,
                     icon: {
-                        url: isRoaster
-                            ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
-                            : 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                        url: hasReview
+                            ? 'https://maps.google.com/mapfiles/ms/icons/orange-dot.png'
+                            : isRoaster
+                                ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                                : 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
                         scaledSize: new google.maps.Size(18, 18)
                     }
                 });
@@ -1957,7 +1961,7 @@
                         </div>`;
                 }
 
-                const typeLabel = isOnline ? 'Online Roaster' : isRoaster ? 'Roaster' : 'Multi-Roaster Cafe';
+                const typeLabel = isOnline ? 'Online Roaster' : isRoaster ? 'Roaster' : 'Specialty Cafe';
                 const typeClass = isRoaster ? 'roaster' : 'cafe';
                 const newBadge = isNew ? '<span class="recent-new-badge">New</span>' : '';
 

@@ -72,7 +72,7 @@ def location_label(loc):
     elif ltype == 'roaster':
         kind = f'Roaster — {nbr}' if nbr else 'Roaster'
     else:
-        kind = f'Multi-Roaster Café — {nbr}' if nbr else 'Multi-Roaster Café'
+        kind = f'Specialty Cafe — {nbr}' if nbr else 'Specialty Cafe'
 
     return f'<a href="{url}">{name}</a> ({kind})'
 
@@ -154,14 +154,14 @@ nbrs       = len({(l.get('coffeeDetails') or {}).get('neighborhood') or l['basic
 
 new_subtitle = (
     f'Last updated: {MONTH_NAMES[now.month]} {now.day}, {now.year} — '
-    f'{total} locations · {roasters} roasters · {cafes} multi-roaster cafés · '
+    f'{total} locations · {roasters} roasters · {cafes} specialty cafes · '
     f'{online} online-only roasters · {nbrs} neighborhoods'
 )
 
 new_faq_stats = (
     f'As of {MONTH_NAMES[now.month]} {now.year}: '
     f'<strong>{roasters} roasters</strong>, plus '
-    f'<strong>{cafes} multi-roaster cafés</strong> and '
+    f'<strong>{cafes} specialty cafes</strong> and '
     f'<strong>{online} online-only roasters</strong>, totaling '
     f'<strong>{total} tracked locations</strong> across '
     f'<strong>{nbrs} neighborhoods</strong>.'

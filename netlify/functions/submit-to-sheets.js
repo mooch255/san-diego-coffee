@@ -57,7 +57,7 @@ exports.handler = async function (event) {
     sheetName = 'Cafes';
     row = [
       timestamp,
-      'Multi-Roaster Cafe',
+      'Specialty Cafe',
       data.cafe_businessName || '',
       data.cafe_neighborhood || '',
       data.cafe_website || '',

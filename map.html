@@ -417,6 +417,9 @@
         }
         .amenity-toggle:hover { background: #f5ede6; border-color: #6B4E3D; }
         .amenity-toggle.active { background: #6F4E37; color: white; border-color: #6F4E37; }
+        @media (max-width: 480px) {
+            .featured-toggles .amenity-toggle { font-size: 0.65rem; padding: 0.25rem 0.5rem; }
+        }
 
         .filters-section h3 {
             font-family: 'Crimson Pro', serif;
@@ -896,9 +899,9 @@
             }
             .sheet-peek-hint {
                 font-family: 'Libre Franklin', sans-serif;
-                font-size: 0.7rem;
-                font-weight: 700;
-                color: #6F4E37;
+                font-size: 0.82rem;
+                font-weight: 800;
+                color: #4a2f1a;
                 letter-spacing: 0.03em;
                 text-transform: uppercase;
                 pointer-events: none;
@@ -1614,7 +1617,7 @@
                 </div>
                 <div class="filters-amenity-row" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-bottom: 1.1rem;">
                     <h3>Featured</h3>
-                    <div class="amenity-toggles">
+                    <div class="amenity-toggles featured-toggles">
                         <button class="amenity-toggle" data-amenity="highlight">⭐ Roaster Highlight</button>
                         <button class="amenity-toggle" data-amenity="sdguide">📸 SDCoffeeGuide Review</button>
                     </div>
@@ -3050,7 +3053,7 @@ function applyFilters() {
 
     // When a new neighborhood was just selected, ignore the current viewport bounds —
     // the map hasn't zoomed yet so markers in the new neighborhood would be filtered out.
-    const visibleMarkers = markers.filter(marker => shouldShowMarker(marker, neighborhoodZoomPending));
+    const visibleMarkers = markers.filter(marker => shouldShowMarker(marker, neighborhoodZoomPending || activeAmenities.size > 0));
     markerCluster.clearMarkers();
     markerCluster.addMarkers(visibleMarkers);
 

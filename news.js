@@ -1,5 +1,28 @@
 window.NEWS_ITEMS = [
   {
+    id: 'news_005',
+    type: 'news',
+    title: 'We Asked For Your San Diego Coffee Recs. We Got Over 100 Responses.',
+    date: '2026-04-07',
+    endDate: null,
+    venue: null,
+    excerpt: 'Fresh Cup Magazine — one of the specialty coffee industry\'s leading trade publications — asked readers for San Diego coffee recommendations ahead of World of Coffee 2026 and received over 100 responses. Their writeup named sandiegocoffee.co as the definitive map of the city\'s cafes and called out r/SanDiegoCoffeeBeans as the community behind it. The first time a major coffee publication has directly spotlighted both.',
+    url: 'https://freshcup.com/we-asked-for-your-san-diego-coffee-recs-we-got-over-100-responses/',
+    image: '/images/news/news_005.webp',
+    source: 'By Ashley Rodriguez — Fresh Cup Magazine',
+  },
+  {
+    id: 'news_004',
+    type: 'news',
+    title: "What's Happening at World of Coffee San Diego",
+    date: '2026-04-10',
+    endDate: '2026-04-12',
+    venue: null,
+    excerpt: "Perfect Daily Grind breaks down everything happening at the first-ever North American World of Coffee, taking place April 10–12 in San Diego. From the World Latte Art Championships to industry panels and exhibitor floors, this is a deep look at what to expect from the biggest specialty coffee event ever held in the US.",
+    url: 'https://perfectdailygrind.com/2026/04/whats-happening-at-world-of-coffee-san-diego/',
+    image: 'https://perfectdailygrind.com/wp-content/uploads/2026/04/WoC-Ritual-article-cover.webp',
+  },
+  {
     id: 'news_001',
     type: 'event',
     title: 'San Diego World of Coffee 2026',

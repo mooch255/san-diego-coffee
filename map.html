@@ -1831,6 +1831,7 @@ function initMap() {
         const onlineFilter = document.getElementById('filterOnlineOnly');
         if (onlineFilter) onlineFilter.checked = false;
         applyFilters();
+        document.getElementById('filterCafes').dispatchEvent(new Event('change'));
         document.title = 'Specialty Coffee Roasters in San Diego — Map & Directory';
         const metaD = document.querySelector('meta[name="description"]');
         if (metaD) metaD.content = 'Browse all specialty coffee roasters across San Diego neighborhoods — roast profiles, brew methods, visitor info, and hours.';
@@ -1845,6 +1846,7 @@ function initMap() {
         const onlineFilter = document.getElementById('filterOnlineOnly');
         if (onlineFilter) onlineFilter.checked = false;
         applyFilters();
+        document.getElementById('filterRoasters').dispatchEvent(new Event('change'));
         document.title = 'Specialty Coffee Cafes in San Diego — Map & Directory';
         const metaD = document.querySelector('meta[name="description"]');
         if (metaD) metaD.content = 'Browse specialty coffee cafes across San Diego — barista service, roasters served, brewing options, and hours.';

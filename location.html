@@ -1885,6 +1885,10 @@
             if (contact.googleMapsUrl) {
                 html += contactItem('🗺️', 'Google Maps', `<a href="${contact.googleMapsUrl}" target="_blank">Open in Google Maps →</a>`);
             }
+            if (custom.onlineInstagram) {
+                const display = custom.onlineInstagram.replace(/https?:\/\/(www\.)?instagram\.com\//, '@').replace(/\/$/, '');
+                html += contactItem('📸', 'Instagram', `<a href="${custom.onlineInstagram}" target="_blank">${display}</a>`);
+            }
 
             if (!html) return '';
             return `

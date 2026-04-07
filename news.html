@@ -39,6 +39,42 @@
     [
       {
         "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": "We Asked For Your San Diego Coffee Recs. We Got Over 100 Responses.",
+        "datePublished": "2026-04-07",
+        "url": "https://freshcup.com/we-asked-for-your-san-diego-coffee-recs-we-got-over-100-responses/",
+        "image": "https://sandiegocoffee.co/images/news/news_005.webp",
+        "description": "Fresh Cup Magazine named sandiegocoffee.co the definitive resource for mapping San Diego's specialty coffee scene, noting the site was born from the r/SanDiegoCoffeeBeans Reddit community. Over 100 reader recommendations were gathered ahead of World of Coffee 2026.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Fresh Cup Magazine",
+          "url": "https://freshcup.com"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Ashley Rodriguez"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": "What's Happening at World of Coffee San Diego",
+        "datePublished": "2026-04-10",
+        "url": "https://perfectdailygrind.com/2026/04/whats-happening-at-world-of-coffee-san-diego/",
+        "image": "https://perfectdailygrind.com/wp-content/uploads/2026/04/WoC-Ritual-article-cover.webp",
+        "description": "The first North American edition of World of Coffee takes place April 10-12, 2026 in San Diego, featuring the World Latte Art Championships, competitions, and industry events. U.S. specialty coffee consumption reached a 14-year high in 2025.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Perfect Daily Grind",
+          "url": "https://perfectdailygrind.com"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Tasmin Grant"
+        }
+      },
+      {
+        "@context": "https://schema.org",
         "@type": "Event",
         "name": "San Diego World of Coffee 2026",
         "startDate": "2026-04-10",
@@ -425,6 +461,13 @@
             flex: 1;
         }
 
+        .news-card-source {
+            font-size: 0.68rem;
+            color: #999;
+            font-style: italic;
+            margin-top: 0.4rem;
+        }
+
         .news-card-footer {
             margin-top: 0.75rem;
             padding-top: 0.6rem;
@@ -615,6 +658,7 @@
                         ${dateStr ? `<div class="news-card-date">${dateStr}</div>` : ''}
                         ${item.venue ? `<div class="news-card-venue">📍 ${item.venue}</div>` : ''}
                         ${item.excerpt ? `<div class="news-card-excerpt">${item.excerpt}</div>` : ''}
+                        ${item.source ? `<div class="news-card-source">${item.source}</div>` : ''}
                         <div class="news-card-footer">${cta}</div>
                     </div>
                 </a>`;

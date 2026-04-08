@@ -1293,6 +1293,7 @@
         <a href="/map.html" class="active">Explore Map</a>
         <a href="/submit.html">Add a Spot</a>
         <a href="/roaster-highlights.html">Roaster Highlights</a>
+        <a href="/blog.html">Blog</a>
         <a href="/news.html">News &amp; Events</a>
         <a href="/about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
@@ -1320,6 +1321,7 @@
 
     <script src="/locations.js"></script>
     <script src="/highlights.js"></script>
+    <script src="/blog.js"></script>
     <script>
         // Footer count
         (function() {
@@ -1566,6 +1568,17 @@
 
                 // coffeeDetails is always populated by sync-locations.js — no live Sheets fetch needed
                 renderPage(location, location.coffeeDetails || {});
+                if (window.location.hash === '#sdcoffeeguide') {
+                    setTimeout(() => {
+                        const isMobile = window.innerWidth <= 768;
+                        const target = document.getElementById(isMobile ? 'ig-review-mobile' : 'ig-review');
+                        if (target) {
+                            const headerH = document.querySelector('header')?.offsetHeight || 0;
+                            const top = target.getBoundingClientRect().top + window.pageYOffset - headerH - 16;
+                            window.scrollTo({ top, behavior: 'smooth' });
+                        }
+                    }, 300);
+                }
                 loadCommunityData(location.id);
             }
         }
@@ -1593,6 +1606,19 @@
                     <a href="/highlight.html?id=${h.id}&from=location&locationId=${locationId}" class="highlight-callout-link">Read the Interview →</a>
                 </div>
             `;
+        }
+
+        // ── Blog callout ───────────────────────────────────────────────
+        function renderBlogCallout(locationId) {
+            const posts = (window.BLOG_POSTS || []).filter(p => p.relatedLocationId === locationId);
+            if (!posts.length) return '';
+            return posts.map(p => `
+                <div class="highlight-callout">
+                    <div class="highlight-callout-label">📝 From the Blog</div>
+                    <div class="highlight-callout-text">${p.excerpt}</div>
+                    <a href="/blog-post.html?id=${p.id}" class="highlight-callout-link">Read the Post →</a>
+                </div>
+            `).join('');
         }
 
         function renderInstagramReview(custom, variant) {
@@ -1640,6 +1666,7 @@
                 <div class="content-wrap${custom.instagramReviewUrl ? ' has-ig-review' : ''}">
                     <div class="left-col fade-up">
                         ${renderHighlightCallout(loc.id)}
+                        ${renderBlogCallout(loc.id)}
                         ${renderDescription(custom, loc.legacyData)}
                         ${renderDetailsCard(isRoaster, custom, loc)}
                         ${renderShopLink(custom)}

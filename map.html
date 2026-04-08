@@ -899,8 +899,8 @@
             }
             .sheet-peek-hint {
                 font-family: 'Libre Franklin', sans-serif;
-                font-size: 0.82rem;
-                font-weight: 800;
+                font-size: 0.88rem;
+                font-weight: 900;
                 color: #4a2f1a;
                 letter-spacing: 0.03em;
                 text-transform: uppercase;
@@ -1529,6 +1529,7 @@
         <a href="map.html" class="active">Explore Map</a>
         <a href="submit.html">Add a Spot</a>
         <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="blog.html">Blog</a>
         <a href="news.html">News &amp; Events</a>
         <a href="about.html">About</a>
         <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans ↗</a>
@@ -2143,7 +2144,7 @@ function createInfoWindowContent(location, custom) {
     if (location.coffeeDetails?.instagramReviewUrl) {
         const locSlugIg = slugify(location.basicInfo.name);
         html += `<div style="margin-top:0.5rem;padding:0.4rem 0.6rem;background:#fff3e8;border:1px solid #f0d0a0;border-left:3px solid #E8720C;border-radius:4px;font-size:0.72rem;">`;
-        html += `<span style="font-weight:700;color:#E8720C;text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">📸 SDCoffeeGuide Review &nbsp;·&nbsp;</span><a href="/locations/${locationSlug(location)}" style="color:#E8720C;font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See Details</a>`;
+        html += `<span style="font-weight:700;color:#E8720C;text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">📸 SDCoffeeGuide Review &nbsp;·&nbsp;</span><a href="/locations/${locationSlug(location)}#sdcoffeeguide" style="color:#E8720C;font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See Details</a>`;
         html += `</div>`;
     }
 
@@ -2767,6 +2768,8 @@ function performSearch() {
     
     // Define San Diego neighborhoods and cities with their approximate coordinates
     const neighborhoods = {
+        'north county': { lat: 33.1100, lng: -117.3200, zoom: 11 },
+        'north county san diego': { lat: 33.1100, lng: -117.3200, zoom: 11 },
         'oceanside': { lat: 33.1959, lng: -117.3795, zoom: 13 },
         'carlsbad': { lat: 33.1581, lng: -117.3506, zoom: 13 },
         'encinitas': { lat: 33.0370, lng: -117.2920, zoom: 13 },

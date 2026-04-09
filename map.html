@@ -1911,6 +1911,13 @@ function initMap() {
         // Clear the pin once the user manually interacts with the map or filters
         google.maps.event.addListenerOnce(map, 'dragstart', () => { pinnedLocationId = null; });
     }
+
+    // Focus on downtown / Convention Center area (?focus=downtown from WoC banner)
+    const focusParam = urlParams.get('focus');
+    if (focusParam === 'downtown') {
+        map.setCenter({ lat: 32.720, lng: -117.149 });
+        map.setZoom(isMobile ? 13 : 14);
+    }
 }
 
 function loadLocations() {

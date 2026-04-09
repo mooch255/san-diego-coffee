@@ -1630,6 +1630,69 @@
     </style>
 </head>
 <body>
+    <!-- World of Coffee banner — auto-expires 2026-04-13 -->
+    <style>
+        #woc-banner {
+            background: #2c1a0e;
+            color: #f5ece2;
+            padding: 0.6rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.85rem;
+            position: relative;
+        }
+        #woc-banner a.woc-cta {
+            background: #27ae60;
+            color: #fff;
+            text-decoration: none;
+            padding: 0.3rem 0.85rem;
+            border-radius: 3px;
+            font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        #woc-banner a.woc-cta:hover { background: #1e8449; }
+        #woc-dismiss {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #f5ece2;
+            opacity: 0.6;
+            font-size: 1rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0.2rem 0.4rem;
+        }
+        #woc-dismiss:hover { opacity: 1; }
+        @media (max-width: 500px) {
+            #woc-banner { font-size: 0.75rem; gap: 0.4rem; padding: 0.2rem 2.5rem 0.2rem 0.75rem; }
+        }
+    </style>
+    <div id="woc-banner">
+        <span>Here for World of Coffee San Diego? Find specialty spots near the Convention Center.</span>
+        <a href="map.html?focus=downtown" class="woc-cta">Explore the Map →</a>
+        <button id="woc-dismiss" aria-label="Dismiss">✕</button>
+    </div>
+    <script>
+        (function() {
+            var expired = new Date() >= new Date('2026-04-13');
+            var dismissed = localStorage.getItem('woc_banner_dismissed');
+            if (expired || dismissed) {
+                document.getElementById('woc-banner').style.display = 'none';
+            }
+            document.getElementById('woc-dismiss').addEventListener('click', function() {
+                localStorage.setItem('woc_banner_dismissed', '1');
+                document.getElementById('woc-banner').style.display = 'none';
+            });
+        })();
+    </script>
+
     <!-- Header — banner-style centered layout -->
     <div class="header">
         <div class="header-content">

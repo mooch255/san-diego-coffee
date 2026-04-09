@@ -549,12 +549,14 @@
         function renderBody(bodyArr, post) {
             return bodyArr.map(block => {
                 if (block.type === 'text') {
+                    const locationCount = window.COFFEE_LOCATIONS ? window.COFFEE_LOCATIONS.length : '';
+                    const content = block.content.replace(/\{\{LOCATION_COUNT\}\}/g, locationCount);
                     // content may already be HTML or plain text
-                    const isHtml = /<[a-z][\s\S]*>/i.test(block.content);
+                    const isHtml = /<[a-z][\s\S]*>/i.test(content);
                     if (isHtml) {
-                        return `<div class="text-block">${block.content}</div>`;
+                        return `<div class="text-block">${content}</div>`;
                     }
-                    return block.content.split('\n\n').map(p => `<p class="text-block">${p.trim()}</p>`).join('');
+                    return content.split('\n\n').map(p => `<p class="text-block">${p.trim()}</p>`).join('');
                 }
                 if (block.type === 'heading') {
                     const tag = block.level === 3 ? 'h3' : 'h2';
@@ -682,6 +684,26 @@
                 var tag = document.getElementById('ld-breadcrumb');
                 if (tag) tag.textContent = JSON.stringify(breadcrumb);
             })(post);
+
+            // ── JSON-LD ItemList schema (curated list posts only) ─────────
+            if (post.itemList && post.itemList.length) {
+                (function injectItemList(p) {
+                    var schema = {
+                        '@context': 'https://schema.org',
+                        '@type': 'ItemList',
+                        name: p.title,
+                        description: p.metaDescription || p.excerpt || undefined,
+                        numberOfItems: p.itemList.length,
+                        itemListElement: p.itemList.map(function(item) {
+                            return { '@type': 'ListItem', position: item.position, name: item.name, url: item.url };
+                        })
+                    };
+                    var tag = document.createElement('script');
+                    tag.type = 'application/ld+json';
+                    tag.textContent = JSON.stringify(schema);
+                    document.head.appendChild(tag);
+                })(post);
+            }
 
             // ── Render page ───────────────────────────────────────────────
             const heroHtml = post.image

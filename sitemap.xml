@@ -1176,4 +1176,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://sandiegocoffee.co/blog.html</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/blog-post.html?id=blog_woc-guide-2026</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/blog-post.html?id=blog_color-magic-oceanside</loc>
+    <lastmod>2026-04-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

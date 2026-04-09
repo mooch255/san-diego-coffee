@@ -1,5 +1,16 @@
 window.NEWS_ITEMS = [
   {
+    id: 'news_006',
+    type: 'news',
+    title: 'WOC Visitor Guide: Best Specialty Coffee Near the Convention Center',
+    date: '2026-04-09',
+    endDate: null,
+    venue: null,
+    excerpt: "Attending World of Coffee San Diego? We put together a shortlist of the best specialty coffee within reach of the convention. Eight picks vetted by the local community.",
+    url: 'blog-post.html?id=blog_woc-guide-2026',
+    image: '/images/blog/blog_woc-guide-2026.jpg',
+  },
+  {
     id: 'news_005',
     type: 'news',
     title: 'We Asked For Your San Diego Coffee Recs. We Got Over 100 Responses.',

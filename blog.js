@@ -1,5 +1,162 @@
 window.BLOG_POSTS = [
   {
+    id: 'blog_woc-guide-2026',
+
+    // SEO
+    title: 'World of Coffee Visitor Guide: Best Specialty Coffee Near the Convention Center',
+    metaDescription: 'Attending World of Coffee San Diego 2026? Here are 8 specialty coffee picks within reach of the Convention Center, curated by the r/SanDiegoCoffeeBeans community.',
+    focusKeyword: 'World of Coffee San Diego coffee guide',
+    category: 'guide',
+
+    // ItemList schema for rich results
+    itemList: [
+      { position: 1, name: 'Rikka Fika', url: 'https://sandiegocoffee.co/location.html?id=loc_138' },
+      { position: 2, name: 'Mnemonic Coffee', url: 'https://sandiegocoffee.co/location.html?id=loc_137' },
+      { position: 3, name: 'Mostra Coffee', url: 'https://sandiegocoffee.co/location.html?id=loc_019' },
+      { position: 4, name: 'Provecho! Coffee Co.', url: 'https://sandiegocoffee.co/location.html?id=loc_055' },
+      { position: 5, name: 'Genteel Coffee Roasters', url: 'https://sandiegocoffee.co/location.html?id=loc_090' },
+      { position: 6, name: 'Little While', url: 'https://sandiegocoffee.co/location.html?id=loc_087' },
+      { position: 7, name: 'Yipao Coffee', url: 'https://sandiegocoffee.co/location.html?id=loc_160' },
+      { position: 8, name: 'Torque Coffee', url: 'https://sandiegocoffee.co/location.html?id=loc_040' },
+    ],
+
+    // Display
+    date: '2026-04-09',
+    image: '/images/blog/blog_woc-guide-2026.jpg',
+    excerpt: "Here for World of Coffee San Diego? Skip the hotel lobby drip. These are our picks for the best specialty spots within reach of the Convention Center, curated by the r/SanDiegoCoffeeBeans community.",
+
+    body: [
+      {
+        type: 'text',
+        content: '<p><a href="https://usa.worldofcoffee.org/world-of-coffee-san-diego-2026" target="_blank">World of Coffee</a> is making its North American debut in San Diego this April, and the city\'s specialty coffee scene is ready for the spotlight. Whether you\'re between sessions, escaping the show floor for an hour, or just arrived and want your bearings, this is your shortlist. Eight picks within rideshare distance of the Convention Center, all vetted by the <a href="https://reddit.com/r/SanDiegoCoffeeBeans">r/SanDiegoCoffeeBeans</a> community.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '1. Rikka Fika, East Village'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_138.jpg',
+        alt: 'Rikka Fika coffee shop in East Village, San Diego',
+        caption: 'East Village · 810 13th St · ~0.5 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>The closest specialty stop to the Convention Center. Rikka Fika is dedicated to a detailed coffee program. The minimalist interior matches the menu, but everything you get is made with care. They built their following on matcha and a curated selection of international roasters, and as of 2026 they\'ve started roasting their own light roasts in-house. <a href="location.html?id=loc_138">Full details →</a></p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '2. Mnemonic Coffee, Bankers Hill'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_137b.jpg',
+        alt: 'Mnemonic Coffee in Bankers Hill, San Diego',
+        caption: 'Bankers Hill · 2604 Fifth Ave · ~1.5 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>A minimalist Bankers Hill cafe with a creative drink menu and an experimental approach to specialty coffee. Known for thoughtful presentation and a menu that goes beyond the standard espresso bar. Worth the short rideshare for the vibe alone. <a href="location.html?id=loc_137">Full details →</a></p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '3. Mostra Coffee, Bankers Hill'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_019.jpg',
+        alt: 'Mostra Coffee Bankers Hill location in San Diego',
+        caption: 'Bankers Hill · ~1.5 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>Roast Magazine\'s Micro-Roaster of the Year in 2020 and the official coffee partner of the Padres at Petco Park. Founded by four Filipino-Americans who started on a one-pound roaster in a garage, Mostra is now the largest purchaser of Philippine specialty coffee in the US. The Bankers Hill location is their most central. Don\'t leave without trying Ghost Bear. <a href="location.html?id=loc_019">Full details →</a></p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '4. Provecho! Coffee Co., Logan Heights'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_055.jpg',
+        alt: 'Provecho Coffee Co. in Logan Heights, San Diego',
+        caption: 'Logan Heights · ~1.2 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>A beautifully designed cafe with skilled baristas and a focus on Mexican-origin beans. The drinks are as good as the beautiful pictures you see online. Provecho is one of those rare spots that actually lives up to its own aesthetic. Worth the trek to Barrio Logan. <a href="location.html?id=loc_055">Full details →</a></p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '5. Genteel Coffee Roasters, North Park'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_090.jpg',
+        alt: 'Genteel Coffee Roasters on University Ave in North Park, San Diego',
+        caption: 'North Park · 2603 University Ave · ~2.5 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>Micro roaster on University Ave in North Park roasting their own beans in-house with an emphasis on origin character. The house classic is a Mexican Siltepec Chiapas espresso, with rotating pour-over selections from the same roasting program. Rustic-industrial space with indoor and outdoor seating. <a href="location.html?id=loc_090">Full details →</a></p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '6. Little While, North Park'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_087.jpg',
+        alt: 'Little While coffee shop in North Park, San Diego',
+        caption: 'North Park · 3019 Adams Ave · ~2.5 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>A newer North Park cafe that roasts its own beans and takes single-origin espresso and slow bar pour-overs seriously. Unique pastries and drinks round out one of the more intentional lineups in the city. If you\'re spending an afternoon in the neighborhood, this is an easy first stop. <a href="location.html?id=loc_087">Full details →</a></p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '7. Yipao Coffee, University Heights'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_160.jpg',
+        alt: 'Yipao Coffee in University Heights, San Diego',
+        caption: 'University Heights · 4601 Park Blvd · ~2.5 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>Colombian-owned roaster sourcing through Forest Coffee, a importer working directly with Colombian co-ops and farmers to produce competition-grade coffee. The owner has a high attention to detail and periodically offers SCA training. If origin transparency matters to you, this one hits differently. <a href="location.html?id=loc_160">Full details →</a></p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '8. Torque Coffee, City Heights'
+      },
+      {
+        type: 'image',
+        src: '/images/locations/loc_040b.jpg',
+        alt: 'Torque Coffee roaster cafe in City Heights, San Diego',
+        caption: 'City Heights · ~3 mi from the Convention Center'
+      },
+      {
+        type: 'text',
+        content: '<p>One of the most respected roasters in the local specialty scene. Torque is known for proportional pricing, detailed roast guides, multiple espresso options at the bar, and solid food. They\'ve been in the game a long time and it shows. Worth the trip if you have an afternoon to spare. <a href="location.html?id=loc_040">Full details →</a></p>'
+      },
+      {
+        type: 'text',
+        content: '<p style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid #e8ded2;">Want to explore further? <a href="map.html?focus=downtown">See the interactive map →</a> {{LOCATION_COUNT}} locations across San Diego.</p>'
+      }
+    ]
+  },
+  {
     id: 'blog_color-magic-oceanside',
 
     // SEO
@@ -13,7 +170,7 @@ window.BLOG_POSTS = [
     image: '/images/blog/blog_color-magic-oceanside.jpg',
     excerpt: 'Every once in a while, a coffee concept pulls you in completely. Color Magic, based in Oceanside, is one of those rare finds — an intimate private tasting experience run by a roaster who has dedicated over a decade to the craft.',
 
-    // Links to loc_182 (Color Magic) in locations.js
+    // No itemList (not a curated list post)
     relatedLocationId: 'loc_182',
 
     body: [

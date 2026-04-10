@@ -990,6 +990,10 @@
             background: var(--espresso);
             color: rgba(196,167,125,0.65);
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
             padding: 0.85rem 2rem;
             border-top: 2px solid var(--accent-red);
             font-size: 0.78rem;
@@ -1005,6 +1009,7 @@
         footer a:hover { color: #EDE0CC; }
 
         .footer-sep { opacity: 0.4; margin: 0 0.4rem; }
+        .footer-row { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; }
 
         /* Responsive Design */
         @media (max-width: 768px) {

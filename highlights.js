@@ -5,7 +5,7 @@ window.highlights = [
     title: "Roaster Highlight: Marlette's Coffee Company w/ Founder Marlette Vater",
     date: '2026-04-09',
     author: 'u/sdcoffeebeans',
-    image: '/images/locations/loc_181.jpg',
+    image: '/images/highlights/highlight_marlettes-coffee-company.jpg',
     excerpt: "Marlette Vater built a roast-to-order specialty roastery near Lake Hodges on the foundation of SCA training, sensory science, and a firm belief that better coffee doesn't have to feel complicated.",
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1sh955p/san_diego_roaster_highlight_marlettes_coffee/',
     locationUrl: 'location.html?id=loc_181',
@@ -52,7 +52,7 @@ window.highlights = [
       { type: 'qa', question: 'Most unique roaster in San Diego right now?', answer: '<a href="location.html?id=loc_002">Steady State</a>.' },
       { type: 'qa', question: 'One roaster outside San Diego that is changing the game?', answer: 'Prolog.' },
       { type: 'qa', question: 'Early morning roast session or late night?', answer: 'Neither. Middle of the day, no little people around.' },
-      { type: 'text', content: "Thanks to Marlette for joining us on the subreddit. Find Marlette's Coffee Company's current offerings and follow along at <a href=\"https://marlettescoffee.com\" target=\"_blank\" rel=\"noopener\">marlettescoffee.com</a> or on Instagram <a href=\"https://www.instagram.com/marlettescoffee\" target=\"_blank\" rel=\"noopener\">@marlettescoffee</a>." },
+      { type: 'text', content: "Thanks to Marlette for joining us on the subreddit. Find Marlette's Coffee Company's current offerings and follow along at <a href=\"https://marlettescoffee.com/my-account?referral=6b369cd7148842418224b50edac54ee2\" target=\"_blank\" rel=\"noopener\">marlettescoffee.com</a> or on Instagram <a href=\"https://www.instagram.com/marlettescoffee\" target=\"_blank\" rel=\"noopener\">@marlettescoffee</a>." },
     ]
   },
   {

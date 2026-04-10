@@ -2894,21 +2894,26 @@ function performSearch() {
         } else {
             const visibleMarkers = markers.filter(marker => {
                 const location = marker.locationData;
-                const isOnline = location.basicInfo?.onlineOnly || location.coffeeDetails?.visitorExperience === 'Online Only';
-                if (isOnline) return false;
                 const name = location.basicInfo.name.toLowerCase();
                 const address = location.basicInfo.address.fullAddress?.toLowerCase() || '';
                 return (name.includes(query) || address.includes(query)) && shouldShowMarker(marker, true);
             });
 
-            if (visibleMarkers.length === 0) {
+            // Also search online-only locations (they have no markers)
+            const matchingOnline = allLocations.filter(loc => {
+                if (!loc.basicInfo?.onlineOnly) return false;
+                if (!document.getElementById('filterRoasters').checked) return false;
+                return loc.basicInfo.name.toLowerCase().includes(query);
+            });
+
+            if (visibleMarkers.length === 0 && matchingOnline.length === 0) {
                 dropdown.innerHTML = `<div class="search-no-result">Not yet in our guide.<a href="submit.html">Add this location →</a></div>`;
                 dropdown.classList.add('show');
             } else {
                 markerCluster.clearMarkers();
                 markerCluster.addMarkers(visibleMarkers);
-                updateVisibleCount(visibleMarkers.length);
-                renderLocationCards(visibleMarkers, true);
+                updateVisibleCount(visibleMarkers.length + matchingOnline.length);
+                renderLocationCards(visibleMarkers, true, matchingOnline);
             }
         }
     }
@@ -3322,7 +3327,7 @@ function updateVisibleCount(count) {
 }
 
 // ── Location Cards ─────────────────────────────────────────────────────────
-function renderLocationCards(visibleMarkers, suppressOnline = false) {
+function renderLocationCards(visibleMarkers, suppressOnline = false, forcedOnline = null) {
     const container = document.getElementById('locationCards');
     if (!container) return;
 
@@ -3335,7 +3340,8 @@ function renderLocationCards(visibleMarkers, suppressOnline = false) {
                        && map.getZoom() <= 10;
     const activeRoastFilter = document.getElementById('filterRoastStyle')?.value;
     const activeVisitorFilter = document.getElementById('filterVisitorExp')?.value;
-    const onlineLocations = showOnline && !openNowActive ? allLocations.filter(loc => {
+    const onlineLocations = forcedOnline !== null ? forcedOnline
+        : (showOnline && !openNowActive ? allLocations.filter(loc => {
         if (!loc.basicInfo?.onlineOnly) return false;
         // Apply roast style filter to online-only roasters
         if (activeRoastFilter && loc.coffeeDetails?.roastStyle !== activeRoastFilter) return false;
@@ -3346,7 +3352,7 @@ function renderLocationCards(visibleMarkers, suppressOnline = false) {
             if (!locationHasAmenity(loc, key)) return false;
         }
         return true;
-    }) : [];
+    }) : []);
 
     // Combine: marker locations + online-only as plain location objects
     let combined = [

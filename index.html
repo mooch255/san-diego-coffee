@@ -38,6 +38,7 @@
     <link rel="prefetch" href="/map.html">
     <link rel="prefetch" href="/locations.js">
     <link rel="prefetch" href="/highlights.js">
+    <link rel="prefetch" href="/blog.js">
     <link rel="preconnect" href="https://maps.googleapis.com">
     <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
     <link rel="canonical" href="https://sandiegocoffee.co/">
@@ -1660,6 +1661,8 @@
             flex-shrink: 0;
         }
         #woc-banner a.woc-cta:hover { background: #1e8449; }
+        #woc-banner a.woc-cta.woc-cta-orange { background: #e8650a; }
+        #woc-banner a.woc-cta.woc-cta-orange:hover { background: #c4530a; }
         #woc-dismiss {
             position: absolute;
             right: 0.75rem;
@@ -1682,6 +1685,7 @@
     <div id="woc-banner">
         <span>Here for World of Coffee San Diego? Find specialty spots near Downtown.</span>
         <a href="blog-post.html?id=blog_woc-guide-2026" class="woc-cta">Read the Guide →</a>
+        <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1shvaf7/world_of_coffee_san_diego_2026_live_weekend/" target="_blank" rel="noopener" class="woc-cta woc-cta-orange">r/ WOC Megathread ↗</a>
         <button id="woc-dismiss" aria-label="Dismiss">✕</button>
     </div>
     <script>
@@ -1774,7 +1778,6 @@
         </div>
 
         <div class="hero-teaser-bar">
-            <span class="hero-teaser-text">Click any pin · Full details on the map</span>
             <div class="hero-legend">
                 <span><span class="hero-legend-dot" style="background:#0F9D58;"></span>Roaster</span>
                 <span><span class="hero-legend-dot" style="background:#0288D1;"></span>Specialty Cafe</span>
@@ -1796,6 +1799,7 @@
             <div class="woc-secondary-links">
                 <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocIgBtn">Instagram ↗</a>
                 <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocRedditBtn">Reddit ↗</a>
+                <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1shvaf7/world_of_coffee_san_diego_2026_live_weekend/" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocMegathreadBtn">WOC Megathread ↗</a>
             </div>
             <div class="woc-form-wrap">
                 <p class="woc-form-label">Stay in touch ↓</p>
@@ -1837,14 +1841,14 @@
         </div>
     </section>
 
-    <!-- Recently Added -->
+    <!-- What's New -->
     <section class="recent-section">
         <div class="container">
             <div class="recent-header">
                 <div class="recent-header-left">
                     <span class="section-eyebrow">From the Community</span>
-                    <div class="recent-title">Recently Added</div>
-                    <div class="recent-subtitle">The latest additions to the guide</div>
+                    <div class="recent-title">What's New</div>
+                    <div class="recent-subtitle">The latest locations and blog posts</div>
                 </div>
             </div>
             <div class="recent-grid" id="recentGrid">
@@ -1870,6 +1874,7 @@
     <script src="locations.js"></script>
     <script src="news.js"></script>
     <script src="highlights.js"></script>
+    <script src="blog.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initPreviewMap" async defer></script>
     <script>
         // Nav dropdown
@@ -2136,7 +2141,7 @@
             }).join('');
         }
 
-        // ── Recently Added ────────────────────────────────────────────────
+        // ── What's New ───────────────────────────────────────────────────
         function getInitials(name) {
     const FILLER = new Set(['the','a','an','of','and','&','at','by','for','in','on','to']);
         const clean = name
@@ -2166,30 +2171,50 @@
             const grid = document.getElementById('recentGrid');
             if (!grid) return;
 
-            const locations = window.COFFEE_LOCATIONS || [];
-
-            // Sort by importDate descending, take 3
-            const recent = [...locations]
+            // Build unified list: locations + blog posts, sorted by date descending
+            const locationItems = (window.COFFEE_LOCATIONS || [])
                 .filter(l => l.metadata?.importDate)
-                .sort((a, b) => new Date(b.metadata.importDate) - new Date(a.metadata.importDate))
+                .map(l => ({ kind: 'location', date: new Date(l.metadata.importDate), data: l }));
+
+            const blogItems = (window.BLOG_POSTS || [])
+                .filter(p => p.date)
+                .map(p => ({ kind: 'blog', date: new Date(p.date), data: p }));
+
+            const toShow = [...locationItems, ...blogItems]
+                .sort((a, b) => b.date - a.date)
                 .slice(0, 3);
 
-            // Fallback: just take last 3 in array order if no dates
-            const toShow = recent.length >= 3 ? recent : locations.slice(-3).reverse();
+            grid.innerHTML = toShow.map(item => {
+                if (item.kind === 'blog') {
+                    const p = item.data;
+                    const addedLabel = formatAddedDate(p.date);
+                    const isNew = (new Date() - item.date) < 14 * 86400000;
+                    const newBadge = isNew ? '<span class="recent-new-badge">New</span>' : '';
+                    const imageHtml = p.image
+                        ? `<img class="recent-card-image" src="${p.image}" alt="${p.title}">`
+                        : `<div class="recent-card-initials"><div class="recent-card-initials-text">Blog</div><div class="recent-card-initials-label">San Diego Coffee</div></div>`;
+                    return `
+                <a class="recent-card" href="blog-post.html?id=${p.id}">
+                    ${imageHtml}
+                    <div class="recent-card-body">
+                        <div class="recent-card-type roaster">Blog</div>
+                        <div class="recent-card-name">${p.title}${newBadge}</div>
+                        <div class="recent-card-meta">
+                            <span>${addedLabel || ''}</span>
+                            <span style="color:var(--accent-red); font-weight:600; font-size:0.68rem;">Read Post →</span>
+                        </div>
+                    </div>
+                </a>`;
+                }
 
-            const API_KEY = 'AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI';
-
-            grid.innerHTML = toShow.map(loc => {
+                const loc = item.data;
                 const info = loc.basicInfo || {};
                 const isRoaster = info.type === 'roaster';
                 const isOnline = loc.basicInfo?.onlineOnly || loc.customFlags?.onlineOnly;
                 const name = info.name || 'Unknown';
                 const neighborhood = info.neighborhood || info.address?.city || '';
-                const desc = loc.coffeeDetails?.description || '';
                 const addedLabel = formatAddedDate(loc.metadata?.importDate);
-                const isNew = loc.metadata?.importDate && (new Date() - new Date(loc.metadata.importDate)) < 14 * 86400000;
-
-                // Photo: use self-hosted localImage (no API call)
+                const isNew = (new Date() - item.date) < 14 * 86400000;
                 const initials = getInitials(name);
                 let imageHtml;
                 if (loc.localImage) {
@@ -2207,11 +2232,9 @@
                             <div class="recent-card-initials-label">San Diego Coffee</div>
                         </div>`;
                 }
-
                 const typeLabel = isOnline ? 'Online Roaster' : isRoaster ? 'Roaster' : 'Specialty Cafe';
                 const typeClass = isRoaster ? 'roaster' : 'cafe';
                 const newBadge = isNew ? '<span class="recent-new-badge">New</span>' : '';
-
                 return `
                 <a class="recent-card" href="locations/${loc.id}?from=home">
                     ${imageHtml}
@@ -2281,6 +2304,9 @@
             });
             document.getElementById('wocRedditBtn').addEventListener('click', function() {
                 if (typeof gtag === 'function') gtag('event', 'woc_cta_reddit', { event_category: 'event' });
+            });
+            document.getElementById('wocMegathreadBtn').addEventListener('click', function() {
+                if (typeof gtag === 'function') gtag('event', 'woc_cta_megathread', { event_category: 'event' });
             });
 
             var form = document.getElementById('wocContactForm');

@@ -1663,6 +1663,8 @@
         #woc-banner a.woc-cta:hover { background: #1e8449; }
         #woc-banner a.woc-cta.woc-cta-orange { background: #e8650a; }
         #woc-banner a.woc-cta.woc-cta-orange:hover { background: #c4530a; }
+        .woc-banner-btns { display: flex; gap: 0.75rem; align-items: center; }
+        .woc-banner-text-mobile { display: none; }
         #woc-dismiss {
             position: absolute;
             right: 0.75rem;
@@ -1678,14 +1680,35 @@
             padding: 0.2rem 0.4rem;
         }
         #woc-dismiss:hover { opacity: 1; }
-        @media (max-width: 500px) {
-            #woc-banner { font-size: 0.75rem; gap: 0.4rem; padding: 0.2rem 2.5rem 0.2rem 0.75rem; }
+        @media (max-width: 640px) {
+            #woc-banner {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.55rem 2.2rem 0.55rem 0.75rem;
+                font-size: 0.78rem;
+                text-align: center;
+            }
+            .woc-banner-text-full { display: none; }
+            .woc-banner-text-mobile { display: inline; white-space: nowrap; }
+            .woc-banner-btns {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: nowrap;
+            }
+            #woc-banner a.woc-cta {
+                font-size: 0.72rem;
+                padding: 0.25rem 0.65rem;
+            }
         }
     </style>
     <div id="woc-banner">
-        <span>Here for World of Coffee San Diego? Find specialty spots near Downtown.</span>
-        <a href="blog-post.html?id=blog_woc-guide-2026" class="woc-cta">Read the Guide →</a>
-        <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1shvaf7/world_of_coffee_san_diego_2026_live_weekend/" target="_blank" rel="noopener" class="woc-cta woc-cta-orange">r/ WOC Megathread ↗</a>
+        <span class="woc-banner-text-full">Here for World of Coffee San Diego? Find specialty spots near Downtown.</span>
+        <span class="woc-banner-text-mobile">Here for World of Coffee San Diego?</span>
+        <div class="woc-banner-btns">
+            <a href="blog-post.html?id=blog_woc-guide-2026" class="woc-cta">Read the Guide →</a>
+            <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1shvaf7/world_of_coffee_san_diego_2026_live_weekend/" target="_blank" rel="noopener" class="woc-cta woc-cta-orange">r/ WOC Megathread ↗</a>
+        </div>
         <button id="woc-dismiss" aria-label="Dismiss">✕</button>
     </div>
     <script>

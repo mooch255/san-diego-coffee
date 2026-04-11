@@ -1822,7 +1822,6 @@
             <div class="woc-secondary-links">
                 <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocIgBtn">Instagram ↗</a>
                 <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocRedditBtn">Reddit ↗</a>
-                <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1shvaf7/world_of_coffee_san_diego_2026_live_weekend/" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocMegathreadBtn">WOC Megathread ↗</a>
             </div>
             <div class="woc-form-wrap">
                 <p class="woc-form-label">Stay in touch ↓</p>
@@ -2328,9 +2327,7 @@
             document.getElementById('wocRedditBtn').addEventListener('click', function() {
                 if (typeof gtag === 'function') gtag('event', 'woc_cta_reddit', { event_category: 'event' });
             });
-            document.getElementById('wocMegathreadBtn').addEventListener('click', function() {
-                if (typeof gtag === 'function') gtag('event', 'woc_cta_megathread', { event_category: 'event' });
-            });
+
 
             var form = document.getElementById('wocContactForm');
             form.addEventListener('submit', function(e) {

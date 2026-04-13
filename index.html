@@ -1486,7 +1486,7 @@
         }
 
         /* ══════════════════════════════════════════════════════════════
-           WOC EVENT OVERLAY — shown only when ?woc= param is present
+           NFC SCAN OVERLAY — shown only when ?nfc= param is present
            ══════════════════════════════════════════════════════════════ */
         .woc-modal {
             position: fixed;
@@ -1576,49 +1576,6 @@
             background: rgba(61,40,23,0.05);
         }
 
-        .woc-form-wrap {
-            margin-top: 1.5rem;
-            padding-top: 1.25rem;
-            border-top: 1px solid rgba(61,40,23,0.12);
-        }
-
-        .woc-form-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--espresso);
-            opacity: 0.55;
-            margin-bottom: 0.75rem;
-        }
-
-        .woc-input {
-            display: block;
-            width: 100%;
-            padding: 0.6rem 0.85rem;
-            border: 1.5px solid rgba(61,40,23,0.2);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            margin-bottom: 0.5rem;
-            background: white;
-            color: var(--espresso);
-            box-sizing: border-box;
-            transition: border-color 0.15s ease;
-        }
-        .woc-input:focus {
-            outline: none;
-            border-color: var(--accent-red);
-        }
-        .woc-input::placeholder { color: rgba(61,40,23,0.35); }
-
-        .woc-form-confirm {
-            font-size: 0.9rem;
-            color: var(--espresso);
-            font-style: italic;
-            padding: 0.4rem 0 0.2rem;
-        }
-
         .woc-dismiss {
             display: inline-block;
             margin-top: 1.25rem;
@@ -1636,95 +1593,6 @@
     </style>
 </head>
 <body>
-    <!-- World of Coffee banner — auto-expires 2026-04-13 -->
-    <style>
-        #woc-banner {
-            background: #2c1a0e;
-            color: #f5ece2;
-            padding: 0.6rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            font-family: 'Libre Franklin', sans-serif;
-            font-size: 0.85rem;
-            position: relative;
-        }
-        #woc-banner a.woc-cta {
-            background: #27ae60;
-            color: #fff;
-            text-decoration: none;
-            padding: 0.3rem 0.85rem;
-            border-radius: 3px;
-            font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        #woc-banner a.woc-cta:hover { background: #1e8449; }
-        #woc-banner a.woc-cta.woc-cta-orange { background: #e8650a; }
-        #woc-banner a.woc-cta.woc-cta-orange:hover { background: #c4530a; }
-        .woc-banner-btns { display: flex; gap: 0.75rem; align-items: center; }
-        .woc-banner-text-mobile { display: none; }
-        #woc-dismiss {
-            position: absolute;
-            right: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #f5ece2;
-            opacity: 0.6;
-            font-size: 1rem;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0.2rem 0.4rem;
-        }
-        #woc-dismiss:hover { opacity: 1; }
-        @media (max-width: 640px) {
-            #woc-banner {
-                flex-direction: column;
-                align-items: center;
-                gap: 0.4rem;
-                padding: 0.55rem 2.2rem 0.55rem 0.75rem;
-                font-size: 0.78rem;
-                text-align: center;
-            }
-            .woc-banner-text-full { display: none; }
-            .woc-banner-text-mobile { display: inline; white-space: nowrap; }
-            .woc-banner-btns {
-                display: flex;
-                gap: 0.5rem;
-                flex-wrap: nowrap;
-            }
-            #woc-banner a.woc-cta {
-                font-size: 0.72rem;
-                padding: 0.25rem 0.65rem;
-            }
-        }
-    </style>
-    <div id="woc-banner">
-        <span class="woc-banner-text-full">Here for World of Coffee San Diego? Find specialty spots near Downtown.</span>
-        <span class="woc-banner-text-mobile">Here for World of Coffee San Diego?</span>
-        <div class="woc-banner-btns">
-            <a href="blog-post.html?id=blog_woc-guide-2026" class="woc-cta">Read the Guide →</a>
-            <a href="https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1shvaf7/world_of_coffee_san_diego_2026_live_weekend/" target="_blank" rel="noopener" class="woc-cta woc-cta-orange">r/ WOC Megathread ↗</a>
-        </div>
-        <button id="woc-dismiss" aria-label="Dismiss">✕</button>
-    </div>
-    <script>
-        (function() {
-            var expired = new Date() >= new Date('2026-04-13');
-            var dismissed = localStorage.getItem('woc_banner_dismissed');
-            if (expired || dismissed) {
-                document.getElementById('woc-banner').style.display = 'none';
-            }
-            document.getElementById('woc-dismiss').addEventListener('click', function() {
-                localStorage.setItem('woc_banner_dismissed', '1');
-                document.getElementById('woc-banner').style.display = 'none';
-            });
-        })();
-    </script>
-
     <!-- Header — banner-style centered layout -->
     <div class="header">
         <div class="header-content">
@@ -1812,27 +1680,15 @@
 
     <div class="page-transition" id="pageTransition"></div>
 
-    <!-- WOC Event Overlay — visible only when ?woc= URL param is present -->
-    <div id="wocModal" class="woc-modal" role="dialog" aria-modal="true" aria-label="World of Coffee welcome" hidden>
+    <!-- NFC Scan Overlay — visible only when ?nfc= URL param is present -->
+    <div id="wocModal" class="woc-modal" role="dialog" aria-modal="true" aria-label="Welcome to San Diego Coffee Beans" hidden>
         <div class="woc-modal-card">
-            <p class="woc-eyebrow">☕ World of Coffee 2026</p>
-            <h2 class="woc-title">San Diego Coffee Beans</h2>
-            <p class="woc-tagline">Your guide to 185+ specialty coffee spots across San Diego — roasters, cafes, and hidden gems.</p>
+            <h2 class="woc-title">San Diego Specialty Coffee</h2>
+            <p class="woc-tagline">A community directory of 200+ specialty coffee spots across San Diego — roasters, cafes, and hidden gems.</p>
             <a href="map.html" class="woc-btn woc-btn-primary" id="wocMapBtn">Explore the Map</a>
             <div class="woc-secondary-links">
                 <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocIgBtn">Instagram ↗</a>
                 <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" class="woc-btn woc-btn-secondary" id="wocRedditBtn">Reddit ↗</a>
-            </div>
-            <div class="woc-form-wrap">
-                <p class="woc-form-label">Stay in touch ↓</p>
-                <form id="wocContactForm" name="woc-contacts" netlify netlify-honeypot="bot-field">
-                    <input type="hidden" name="form-name" value="woc-contacts">
-                    <input type="hidden" name="bot-field" style="display:none">
-                    <input type="text" name="name" placeholder="Your name" class="woc-input" autocomplete="name">
-                    <input type="text" name="contact" placeholder="Instagram handle or email" class="woc-input" autocomplete="email">
-                    <button type="submit" class="woc-btn woc-btn-primary">Submit</button>
-                </form>
-                <p class="woc-form-confirm" id="wocFormConfirm" hidden>Thanks! We'll follow you back ☕</p>
             </div>
             <button class="woc-dismiss" id="wocDismiss" aria-label="Close and enter site">× Enter Site</button>
         </div>
@@ -2302,15 +2158,15 @@
             renderFeaturedHighlight();
         });
 
-        // WOC event landing overlay — only active when ?woc= param is present
+        // NFC scan overlay — only active when ?nfc= param is present
         (function() {
-            if (!new URLSearchParams(window.location.search).has('woc')) return;
+            if (!new URLSearchParams(window.location.search).has('nfc')) return;
 
             var modal = document.getElementById('wocModal');
             modal.removeAttribute('hidden');
 
             if (typeof gtag === 'function') {
-                gtag('event', 'woc_scan', { event_category: 'event', event_label: 'World of Coffee 2026' });
+                gtag('event', 'nfc_scan', { event_category: 'nfc' });
             }
 
             function dismiss() { modal.setAttribute('hidden', ''); }
@@ -2319,29 +2175,13 @@
             document.addEventListener('keydown', function(e) { if (e.key === 'Escape') dismiss(); });
 
             document.getElementById('wocMapBtn').addEventListener('click', function() {
-                if (typeof gtag === 'function') gtag('event', 'woc_cta_map', { event_category: 'event' });
+                if (typeof gtag === 'function') gtag('event', 'nfc_cta_map', { event_category: 'nfc' });
             });
             document.getElementById('wocIgBtn').addEventListener('click', function() {
-                if (typeof gtag === 'function') gtag('event', 'woc_cta_instagram', { event_category: 'event' });
+                if (typeof gtag === 'function') gtag('event', 'nfc_cta_instagram', { event_category: 'nfc' });
             });
             document.getElementById('wocRedditBtn').addEventListener('click', function() {
-                if (typeof gtag === 'function') gtag('event', 'woc_cta_reddit', { event_category: 'event' });
-            });
-
-
-            var form = document.getElementById('wocContactForm');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                fetch('/', { method: 'POST', body: new FormData(form) })
-                    .then(function() {
-                        form.hidden = true;
-                        document.getElementById('wocFormConfirm').removeAttribute('hidden');
-                        if (typeof gtag === 'function') gtag('event', 'woc_form_submit', { event_category: 'event' });
-                    })
-                    .catch(function() {
-                        form.hidden = true;
-                        document.getElementById('wocFormConfirm').removeAttribute('hidden');
-                    });
+                if (typeof gtag === 'function') gtag('event', 'nfc_cta_reddit', { event_category: 'nfc' });
             });
         })();
     </script>

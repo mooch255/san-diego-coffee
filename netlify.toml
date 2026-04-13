@@ -1,7 +1,54 @@
 [build]
   functions = "netlify/functions"
 
-# Clean URLs for location pages — /locations/loc_123 serves location.html?id=loc_123
+# 301 redirects for locations whose slugs changed (neighborhood added after initial indexing)
+[[redirects]]
+  from = "/locations/communal-coffee-loc_139"
+  to   = "/locations/communal-coffee-north-park-university-ave"
+  status = 301
+
+[[redirects]]
+  from = "/locations/achilles-coffee-roasters-loc_074"
+  to   = "/locations/achilles-coffee-roasters-downtown-fourth-ave-suite-101"
+  status = 301
+
+# 301 redirects for old collision slugs (same name+neighborhood — now disambiguated by street)
+[[redirects]]
+  from = "/locations/achilles-coffee-roasters-downtown"
+  to   = "/locations/achilles-coffee-roasters-downtown-fourth-ave-suite-101"
+  status = 301
+
+[[redirects]]
+  from = "/locations/lofty-coffee-co-carlsbad"
+  to   = "/locations/lofty-coffee-co-carlsbad-state-st"
+  status = 301
+
+[[redirects]]
+  from = "/locations/communal-coffee-north-park"
+  to   = "/locations/communal-coffee-north-park-university-ave"
+  status = 301
+
+[[redirects]]
+  from = "/locations/coffee-n-talk-downtown"
+  to   = "/locations/coffee-n-talk-downtown-w-broadway-suite-150"
+  status = 301
+
+[[redirects]]
+  from = "/locations/lestat-s-normal-heights"
+  to   = "/locations/lestat-s-normal-heights-park-blvd"
+  status = 301
+
+[[redirects]]
+  from = "/locations/bird-rock-coffee-roasters-la-jolla"
+  to   = "/locations/bird-rock-coffee-roasters-la-jolla-gilman-dr"
+  status = 301
+
+[[redirects]]
+  from = "/locations/lofty-coffee-co-encinitas"
+  to   = "/locations/lofty-coffee-co-encinitas-n-coast-hwy-101"
+  status = 301
+
+# Clean URLs for location pages — /locations/slug serves location.html?id=slug
 [[redirects]]
   from = "/locations/:id"
   to   = "/location.html?id=:id"

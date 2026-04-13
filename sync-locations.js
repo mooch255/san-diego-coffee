@@ -248,7 +248,7 @@ async function main() {
 
     updated++;
     if (sheetRow.locationName) loc.basicInfo.name = sheetRow.locationName;
-    loc.coffeeDetails = buildCoffeeDetails(type, sheetRow);
+    loc.coffeeDetails = { ...loc.coffeeDetails, ...buildCoffeeDetails(type, sheetRow) };
     // Sync onlineOnly flag from amenities checkbox
     const amenitiesList = sheetRow.amenities ? sheetRow.amenities.split(',').map(a => a.trim()) : [];
     if (amenitiesList.includes('Online-only (no physical storefront)')) {

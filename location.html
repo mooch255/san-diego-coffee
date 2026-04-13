@@ -1383,10 +1383,23 @@
         function locationSlug(loc) {
             const base = slugify(loc.basicInfo.name);
             const allLocs = window.COFFEE_LOCATIONS || [];
-            const dupes = allLocs.filter(l => slugify(l.basicInfo.name) === base);
-            if (dupes.length <= 1) return base;
-            const hood = loc.coffeeDetails?.neighborhood || '';
-            return hood ? `${base}-${slugify(hood)}` : `${base}-${loc.id}`;
+            const nameDupes = allLocs.filter(l => slugify(l.basicInfo.name) === base);
+            if (nameDupes.length <= 1) return base;
+            const hood = (loc.coffeeDetails && loc.coffeeDetails.neighborhood) || '';
+            if (!hood) return `${base}-${loc.id}`;
+            const hoodSlug = slugify(hood);
+            const withHood = `${base}-${hoodSlug}`;
+            // Check if same name + same neighborhood still collides
+            const hoodDupes = nameDupes.filter(l => slugify((l.coffeeDetails && l.coffeeDetails.neighborhood) || '') === hoodSlug);
+            if (hoodDupes.length <= 1) return withHood;
+            // Append street name to break the tie
+            const fullAddr = (loc.basicInfo && loc.basicInfo.address && loc.basicInfo.address.fullAddress) || '';
+            if (fullAddr) {
+                const streetName = fullAddr.split(',')[0].replace(/^\d+\s+/, '').trim();
+                const streetS = slugify(streetName);
+                if (streetS) return `${withHood}-${streetS}`;
+            }
+            return `${withHood}-${loc.id}`;
         }
 
         // ── Get location from URL ──────────────────────────────────────────
@@ -1920,6 +1933,11 @@
             if (contact.website) {
                 const display = contact.website.replace(/https?:\/\//, '').replace(/[/?#].*$/, '');
                 html += contactItem('🌐', 'Website', `<a href="${contact.website}" target="_blank">${display}</a>`);
+            }
+            if (custom.secondaryUrl) {
+                const label = custom.secondaryUrlLabel || custom.secondaryUrl.replace(/https?:\/\//, '').replace(/[/?#].*$/, '');
+                const display = custom.secondaryUrl.replace(/https?:\/\//, '').replace(/[/?#].*$/, '');
+                html += contactItem('🌐', label, `<a href="${custom.secondaryUrl}" target="_blank">${display}</a>`);
             }
             if (contact.googleMapsUrl) {
                 html += contactItem('🗺️', 'Google Maps', `<a href="${contact.googleMapsUrl}" target="_blank">Open in Google Maps →</a>`);

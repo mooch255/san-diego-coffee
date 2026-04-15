@@ -1,5 +1,98 @@
 window.BLOG_POSTS = [
   {
+    id: 'blog_woc-recap-2026',
+
+    // SEO
+    title: 'World of Coffee San Diego 2026 Recap: Firsthand from the Show Floor',
+    metaDescription: 'A firsthand recap of World of Coffee San Diego 2026 — 700+ booths, the Roaster Village, standout local roasters, and what it means for the San Diego specialty coffee scene.',
+    focusKeyword: 'World of Coffee San Diego 2026',
+    category: 'community',
+
+    // Display
+    date: '2026-04-14',
+    image: '/images/blog/blog_woc-recap-2026.jpg',
+    excerpt: 'World of Coffee came to San Diego from April 10 to 12. Here is a firsthand account from the show floor — the Roaster Village, 700+ booths of specialty coffee, local roaster connections, and a few standout moments worth sharing.',
+
+    body: [
+      {
+        type: 'text',
+        content: '<p><a href="https://usa.worldofcoffee.org/world-of-coffee-san-diego-2026" target="_blank" rel="noopener">World of Coffee</a> came to San Diego from April 10 to 12, and I will be honest — I almost did not go.</p><p>A friend encouraged me to apply for a press badge, since general admission typically runs between $300 and $400. At the time, the <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans</a> community had only around 500 subscribers, and I had not yet launched <a href="index.html">sandiegocoffee.co</a>. I assumed approval was unlikely. Somehow, I received it fairly quickly — which caught me off guard in the best way.</p><p>I was not able to attend Friday, but I spent most of Saturday and part of Sunday at the event. I went in with no plan. No meetings scheduled, no agenda. My goal was simply to walk the floor, meet people, and learn as much as I could about the specialty coffee industry.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: '700+ Booths and a Full Immersion into Specialty Coffee'
+      },
+      {
+        type: 'text',
+        content: '<p>Saturday felt overwhelming in the best way possible. There were roughly 700 booths spread across the convention center, with an entire second level dedicated to lectures, panels, and guest speakers. Everywhere you looked, something was happening — baristas dialing in espresso, pour overs being brewed, conversations about sourcing and green coffee, and new equipment being demonstrated.</p><p>Free coffee was everywhere, which made it easy to keep exploring. For anyone interested in specialty coffee — whether brewing, roasting, or sourcing — this event offers an incredible amount of exposure in a very short amount of time.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: 'The Roaster Village and One of the Most Unique Coffees I Have Tried'
+      },
+      {
+        type: 'text',
+        content: '<p>One of the most memorable areas was the Roaster Village. It featured groups of roasters brewing continuously while offering samples and selling their beans directly to attendees.</p><p>This is where I tried a Colombian banana co-ferment from <a href="location.html?id=loc_055">Provecho! Coffee Co.</a> It genuinely tasted like banana bread mixed into a macchiato — something I had never experienced before. I do not have a lot of experience with co-ferments, but this one stood out enough that I decided to buy a bag on the spot.</p><p>Later that day, I described it to my mom and she became immediately interested just from smelling the bag. She asked me to grab her one as well. I returned early Sunday, told the Provecho team the story, and they kindly gave me a bag at no cost. It was a great example of how welcoming the specialty coffee community tends to be.</p><p>I also picked up a bag from <a href="location.html?id=loc_121">Inspired Coffee Roasters</a>, a North Park café and roaster that I have just started working through. A roaster highlight with them is coming very soon.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: 'Building Connections with San Diego Coffee Roasters'
+      },
+      {
+        type: 'text',
+        content: '<p>One of my main priorities at the event was connecting with local San Diego roasters, and this ended up being one of the most valuable parts of the entire experience.</p><p>Everyone I introduced myself to was welcoming, and a number of people were already familiar with r/SanDiegoCoffeeBeans or had heard about the <a href="map.html">San Diego coffee map</a> I have been building. A common theme came up in many of these conversations: there is a clear need for better visibility and easier access to information within the local specialty coffee scene. That is exactly what I am aiming to build — making it easier for people to discover both well-known and smaller roasters across the region.</p><p>Some of the San Diego roasters present at the event included <a href="location.html?id=loc_028">Coffee Cycle Roasting</a>, <a href="location.html?id=loc_183">Blank Space Coffee</a>, <a href="location.html?id=loc_102">Inflection Point Coffee</a>, <a href="location.html?id=loc_131">Vigilante Coffee</a>, <a href="location.html?id=loc_032">Bird Rock Coffee Roasters</a>, <a href="location.html?id=loc_025">Daymar Artisan Coffee Roasters</a>, <a href="location.html?id=loc_160">Yipao Coffee</a>, <a href="location.html?id=loc_051">Ryan Bros Coffee</a>, and <a href="location.html?id=loc_046">Cafe Moto</a>.</p><p>I also had the chance to meet the teams behind <a href="location.html?id=loc_147">Frequent Coffee</a> and <a href="location.html?id=loc_090">Genteel Coffee Roasters</a> while they were doing a guest pour at the Swiss Water Process booth, highlighting their decaf offerings.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: 'Learning More About Sourcing and the Coffee Supply Chain'
+      },
+      {
+        type: 'text',
+        content: '<p>One of the more interesting aspects of the event was simply listening to the conversations happening around me. Hearing roasters and importers discuss sourcing timelines, green coffee buying, and long-term producer relationships gave me a much deeper appreciation for everything that goes into a single bag of coffee.</p><p>It is easy to focus on brewing and tasting notes. This experience highlighted just how much trust and relationship-building happens long before a bean ever reaches a roaster — and how that upstream work shapes everything you taste in the cup.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: 'Equipment, Brands, and Industry Presence'
+      },
+      {
+        type: 'text',
+        content: '<p>There were plenty of well-known brands and equipment manufacturers present. Larger booths that stood out included <a href="https://fellowproducts.com/" target="_blank" rel="noopener">Fellow</a>, <a href="https://www.oatly.com/" target="_blank" rel="noopener">Oatly</a>, and <a href="https://home.lamarzocco.com/" target="_blank" rel="noopener">La Marzocco</a>. On the equipment side, it was especially interesting to see brands I already use or follow gathered in one place — including <a href="https://www.rocket-espresso.com/" target="_blank" rel="noopener">Rocket Espresso</a>, <a href="https://www.lelit.com/" target="_blank" rel="noopener">Lelit</a>, <a href="https://flairespresso.com/" target="_blank" rel="noopener">Flair</a>, <a href="https://zerno.com/" target="_blank" rel="noopener">Zerno</a>, <a href="https://www.oxo.com/" target="_blank" rel="noopener">OXO</a>, <a href="https://www.hario-usa.com/" target="_blank" rel="noopener">Hario</a>, <a href="https://aillio.com/" target="_blank" rel="noopener">Aillio</a>, and <a href="https://www.notneutral.com/" target="_blank" rel="noopener">notNeutral</a>.</p><p><a href="location.html?id=loc_032">Bird Rock Coffee Roasters</a> also had a notably strong presence, with a setup that stood out among both local and international exhibitors — a fitting showcase for one of San Diego\'s most recognized roasters.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: 'A Memorable Moment with Fresh Cup Magazine'
+      },
+      {
+        type: 'text',
+        content: '<p>One of the more unexpected highlights was meeting the team from <a href="https://www.freshcup.com/" target="_blank" rel="noopener">Fresh Cup Magazine</a>. They had recently published an article featuring both the subreddit and the website. They overheard me speaking with Andy from <a href="location.html?id=loc_040">Torque Coffee</a> and introduced themselves shortly after.</p><p>That moment made everything feel more real. It reinforced that the work being put into building visibility for the San Diego specialty coffee scene is starting to reach a wider audience than I expected.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: 'Final Thoughts: San Diego\'s Specialty Coffee Scene Is Ready for the Spotlight'
+      },
+      {
+        type: 'text',
+        content: '<p>By the end of the weekend, I was completely exhausted. Between the constant movement, conversations, and cumulative caffeine from dozens of small samples, it was a full sensory experience.</p><p>One thing stood out clearly: San Diego has an incredibly strong specialty coffee scene that still feels underrated on a national level. The quality, variety, and passion are all there. The city feels like it is on the verge of being recognized among the top coffee destinations in the United States.</p>'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        content: 'What Comes Next'
+      },
+      {
+        type: 'text',
+        content: '<p>Attending World of Coffee gave me a renewed level of motivation to keep building. There will be more roast reviews, more <a href="roaster-highlights.html">roaster highlights</a>, and continued improvements to <a href="index.html">sandiegocoffee.co</a> — especially as I work toward making it the most complete <a href="map.html">San Diego specialty coffee directory</a> available.</p><p>If you are interested in discovering new roasters, exploring unique beans, or getting a better picture of the local coffee scene, there is a lot more on the way. Follow along on <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener">r/SanDiegoCoffeeBeans</a> or <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener">Instagram @sdcoffeebeans</a> for updates.</p>'
+      }
+    ]
+  },
+  {
     id: 'blog_woc-guide-2026',
 
     // SEO

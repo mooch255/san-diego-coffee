@@ -1,5 +1,17 @@
 window.NEWS_ITEMS = [
   {
+    id: 'news_007',
+    type: 'news',
+    title: "KPBS: 'It's Not Just a Product' — Enter the World of Specialty Coffee",
+    date: '2026-04-08',
+    endDate: null,
+    venue: null,
+    excerpt: "KPBS covers the rise of specialty coffee culture in San Diego County, spotlighting local microroasters who are building community around quality and sourcing. The piece references sandiegocoffee.co as a directory for tracking roasters across the county, a notable mention for the site.",
+    url: 'https://www.kpbs.org/news/arts-culture/2026/04/08/its-not-just-a-product-enter-the-world-of-specialty-coffee',
+    image: '/images/news/news_007.jpg',
+    source: 'By Brenden Tuccinardi — KPBS',
+  },
+  {
     id: 'news_006',
     type: 'news',
     title: 'WOC Visitor Guide: Best Specialty Coffee Near the Convention Center',

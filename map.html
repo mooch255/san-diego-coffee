@@ -477,17 +477,17 @@
         /* Filters Panel */
         .filters-panel {
             background: var(--warm-white);
-            border-bottom: 1px solid rgba(107, 78, 61, 0.1);
             padding: 0;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease, box-shadow 0.3s ease;
         }
 
         .filters-panel.expanded {
-            max-height: 320px;
+            max-height: 600px;
             padding: 0;
             overflow-y: auto;
+            box-shadow: inset 0 -4px 8px rgba(0,0,0,0.04), 0 4px 10px rgba(0,0,0,0.06);
         }
 
         .filters-section {
@@ -497,48 +497,101 @@
         }
 
         .filters-amenity-row {
-            padding: 0.5rem 0.85rem 0.75rem;
-            border-top: 2px solid rgba(107, 78, 61, 0.15);
+            padding: 0.45rem 1rem 0.6rem;
+            border-top: 1px solid #ede8e1;
             display: flex;
             align-items: center;
             gap: 0.75rem;
             flex-wrap: wrap;
         }
         .filters-amenity-row h3 {
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #888;
+            letter-spacing: 0.08em;
+            color: #b0a090;
             flex-shrink: 0;
             margin: 0;
         }
-        .amenity-toggles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .amenity-toggles { display: flex; flex-wrap: wrap; gap: 0.45rem; }
         .amenity-toggle {
-            padding: 0.3rem 0.75rem;
-            font-size: 0.75rem;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.74rem;
             font-weight: 600;
             font-family: 'Libre Franklin', sans-serif;
-            border: 1.5px solid #c8b9ac;
-            border-radius: 20px;
+            border: 1.5px solid #d4c6ba;
+            border-radius: 999px;
             background: white;
             color: #6B4E3D;
             cursor: pointer;
-            transition: background 0.15s, color 0.15s, border-color 0.15s;
+            transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
         }
-        .amenity-toggle:hover { background: #f5ede6; border-color: #6B4E3D; }
-        .amenity-toggle.active { background: #6F4E37; color: white; border-color: #6F4E37; }
+        .amenity-toggle:hover { background: #fdf3eb; border-color: #a07860; }
+        .amenity-toggle.active { background: #5C3D2E; color: #f9f0e6; border-color: #5C3D2E; box-shadow: 0 0 0 2px rgba(92, 61, 46, 0.2); }
         @media (max-width: 480px) {
-            .featured-toggles .amenity-toggle { font-size: 0.65rem; padding: 0.25rem 0.5rem; }
+            .featured-toggles .amenity-toggle { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
         }
 
         .filters-section h3 {
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.1rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #b0a090;
+            margin-bottom: 0.55rem;
+        }
+
+        /* Type filter pills */
+        .type-toggle-pills {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .type-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+            padding: 0.35rem 0.8rem;
+            font-size: 0.74rem;
+            font-weight: 600;
+            font-family: 'Libre Franklin', sans-serif;
+            border: 1.5px solid #d4c6ba;
+            border-radius: 999px;
+            background: #f7f2ed;
+            color: #9a8070;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+            text-align: left;
+        }
+        .type-pill .filter-count {
+            font-size: 0.68rem;
             font-weight: 400;
-            color: var(--rich-brown);
-            margin-bottom: 0.2rem;
-            letter-spacing: -0.01em;
+            opacity: 0.6;
+            margin-left: 0.1rem;
+        }
+        .type-pill--roaster.active {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: #a5d6a7;
+        }
+        .type-pill--roaster.active .filter-count { color: #66bb6a; opacity: 1; }
+        .type-pill--cafe.active {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-color: #90caf9;
+        }
+        .type-pill--cafe.active .filter-count { color: #64b5f6; opacity: 1; }
+        .type-pill--online.active {
+            background: #f3e8fd;
+            color: #7B4F9E;
+            border-color: #ce93d8;
+        }
+        .type-pill--online.active .filter-count { color: #ba68c8; opacity: 1; }
+        .type-pill:not(.active):hover {
+            background: #fdf3eb;
+            border-color: #a07860;
+            color: #6B4E3D;
         }
 
         .filter-label {
@@ -569,21 +622,22 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
-            padding: 8px 12px 4px;
+            padding: 8px 14px 6px;
         }
         .active-filter-chips:empty { display: none; }
         .filter-chip {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            background: #f5ece4;
-            border: 1px solid #d4a574;
+            background: #fdf0e6;
+            border: 1px solid rgba(184, 92, 56, 0.3);
             color: #3d2b1f;
-            border-radius: 20px;
-            padding: 3px 10px;
-            font-size: 0.78rem;
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 0.76rem;
             font-family: inherit;
             white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(184, 92, 56, 0.1);
         }
         .filter-chip-remove {
             background: none;
@@ -597,21 +651,41 @@
         }
         .filter-chip-remove:hover { color: #c0392b; }
 
+        /* Select wrapper with custom arrow */
+        .filter-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .filter-select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 0.65rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid rgba(107, 78, 61, 0.5);
+        }
+
         .neighborhood-select {
             width: 100%;
-            padding: 0.35rem 0.5rem;
-            font-size: 0.85rem;
+            padding: 0.45rem 1.8rem 0.45rem 0.75rem;
+            font-size: 0.8rem;
             font-family: inherit;
-            border: 1px solid rgba(107, 78, 61, 0.25);
-            border-radius: 6px;
-            background: var(--warm-white);
-            color: var(--rich-brown);
+            border: 1.5px solid rgba(107, 78, 61, 0.22);
+            border-radius: 8px;
+            background: white;
+            color: var(--espresso, #2a1810);
             cursor: pointer;
-            appearance: auto;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
         .neighborhood-select:focus {
             outline: none;
             border-color: var(--coffee-brown);
+            box-shadow: 0 0 0 2px rgba(111, 78, 55, 0.15);
         }
 
         .location-btn {
@@ -691,9 +765,16 @@
             box-sizing: border-box;
             padding: 0.5rem 0.85rem;
             border: 1.5px solid #c4b8ac;
+            border-radius: 8px;
             font-size: 16px; /* must be ≥16px to prevent iOS auto-zoom on focus */
             background: var(--cream);
             font-family: 'Libre Franklin', sans-serif;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .list-panel-controls #searchInput:focus {
+            outline: none;
+            border-color: var(--coffee-brown);
+            box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.1);
         }
 
         .list-panel-controls .button-row {
@@ -707,6 +788,7 @@
             text-transform: uppercase;
             letter-spacing: 0.04em;
             flex: 1;
+            border-radius: 6px;
         }
 
         /* Active filter dot indicator */
@@ -732,7 +814,7 @@
             display: flex;
             gap: 0;
             border: 1.5px solid #c4b8ac;
-            border-radius: 2px;
+            border-radius: 6px;
             overflow: hidden;
             margin-top: 0;
         }
@@ -766,7 +848,12 @@
         .list-panel-cards {
             flex: 1;
             overflow-y: auto;
-            padding: 0;
+            padding: 0.5rem 0.75rem 0.75rem 0;
+        }
+        @media (max-width: 768px) {
+            .list-panel-cards {
+                padding-right: 0;
+            }
         }
 
         .list-panel-header {
@@ -790,68 +877,74 @@
             display: flex;
             gap: 0.75rem;
             padding: 0.85rem 1rem;
-            border-bottom: 1px solid #E0DBD3;
+            margin: 0 0.75rem 0.5rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04);
             background: var(--white);
             cursor: pointer;
-            cursor: pointer;
-            transition: background 0.15s;
+            transition: background 0.15s, transform 0.18s ease, box-shadow 0.18s ease;
             text-decoration: none;
             color: inherit;
         }
 
         .location-card:hover {
             background: #fdf8f3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
         }
 
         .location-card.map-hover {
             background: #fdf3eb;
-            border-left: 3px solid var(--latte);
+            box-shadow: 0 0 0 2px var(--latte), 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .location-card.active {
-            background: #fdf3eb;
-            border-left: 3px solid var(--accent-red);
+            background: #fef4f4;
+            box-shadow: 0 0 0 2px var(--accent-red), 0 2px 8px rgba(0,0,0,0.08);
         }
 
         .location-card.featured-interview {
-            border: 2.5px solid rgba(139, 26, 26, 0.5);
+            box-shadow: 0 0 0 2px rgba(139, 26, 26, 0.5), 0 1px 6px rgba(0,0,0,0.08);
             background: #fef4f4;
         }
         .location-card.featured-interview:hover {
             background: #fdeaea;
+            box-shadow: 0 0 0 2px rgba(139, 26, 26, 0.6), 0 4px 12px rgba(0,0,0,0.12);
         }
 
         .location-card.has-ig-review {
-            border: 2.5px solid rgba(232, 114, 12, 0.5);
+            box-shadow: 0 0 0 2px rgba(232, 114, 12, 0.5), 0 1px 6px rgba(0,0,0,0.08);
             background: #fef8f2;
         }
         .location-card.has-ig-review:hover {
             background: #fdf0e0;
+            box-shadow: 0 0 0 2px rgba(232, 114, 12, 0.6), 0 4px 12px rgba(0,0,0,0.12);
         }
 
-        /* Double border: red inner + orange outer */
+        /* Double ring: red inner + orange outer */
         .location-card.featured-interview.has-ig-review {
-            border: 2.5px solid rgba(139, 26, 26, 0.5);
-            outline: 2.5px solid rgba(232, 114, 12, 0.6);
-            outline-offset: 2px;
+            box-shadow: 0 0 0 2px rgba(139, 26, 26, 0.5), 0 0 0 4px rgba(232, 114, 12, 0.4), 0 1px 6px rgba(0,0,0,0.08);
             background: #fef4f4;
         }
         .location-card.featured-interview.has-ig-review:hover {
             background: #fdeaea;
+            box-shadow: 0 0 0 2px rgba(139, 26, 26, 0.6), 0 0 0 4px rgba(232, 114, 12, 0.5), 0 4px 12px rgba(0,0,0,0.12);
         }
 
         .location-card-img {
-            width: 72px;
-            height: 72px;
+            width: 80px;
+            height: 80px;
             object-fit: cover;
             flex-shrink: 0;
+            border-radius: 8px;
             background: #e8e0d8;
         }
 
         .location-card-img-placeholder {
-            width: 72px;
-            height: 72px;
+            width: 80px;
+            height: 80px;
             flex-shrink: 0;
+            border-radius: 8px;
             background: linear-gradient(145deg, #2A1508 0%, #5C3420 50%, #3D2010 100%);
             display: flex;
             flex-direction: column;
@@ -881,25 +974,29 @@
 
         .location-card-name {
             font-weight: 700;
-            font-size: 0.88rem;
+            font-size: 0.94rem;
             color: var(--espresso);
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.45rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .location-card-type {
-            font-size: 0.72rem;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.68rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.35rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-bottom: 0.4rem;
         }
 
-        .location-card-type.roaster { color: #2e7d32; }
-        .location-card-type.cafe { color: #1565c0; }
-        .location-card-type.online { color: #7B4F9E; }
+        .location-card-type.roaster { color: #2e7d32; background: #e8f5e9; }
+        .location-card-type.cafe    { color: #1565c0; background: #e3f2fd; }
+        .location-card-type.online  { color: #7B4F9E; background: #f3e8fd; }
 
         .location-card-tags {
             display: flex;
@@ -938,7 +1035,7 @@
         }
 
         .card-detail-line {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: #8a7060;
             margin-bottom: 0.2rem;
             line-height: 1.3;
@@ -1105,20 +1202,21 @@
 
         .filters-inner {
             display: flex;
-            gap: 0.75rem;
-            padding: 0.45rem 0.85rem;
+            gap: 1rem;
+            padding: 0.55rem 1rem 0.45rem;
             align-items: flex-start;
         }
 
         .filters-inner > .filters-section {
             flex-shrink: 0;
+            min-width: 115px;
         }
 
         .filters-right {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
             min-width: 0;
         }
 
@@ -1137,9 +1235,9 @@
             .filters-inner > .filters-section {
                 width: 50%;
                 flex-shrink: 0;
-                padding: 0.65rem 0.5rem;
+                min-width: 0;
+                padding: 0.65rem 0.6rem;
                 box-sizing: border-box;
-                border-right: 1px solid #f0ebe4;
             }
             .filters-right {
                 flex: 1;
@@ -1149,16 +1247,12 @@
             .filters-right .filters-section {
                 padding: 0.65rem 0.6rem;
                 box-sizing: border-box;
-                border-top: 1px solid #f0ebe4;
-            }
-            .filters-right .filters-section:first-child {
-                border-top: none;
             }
         }
 
         @media (max-width: 768px) {
             .filters-panel.expanded {
-                max-height: 420px;
+                max-height: 480px;
             }
         }
 
@@ -1199,12 +1293,12 @@
         }
 
         .filters-section h3 {
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #888;
-            margin: 0;
+            letter-spacing: 0.08em;
+            color: #b0a090;
+            margin: 0 0 0.5rem;
         }
 
         .filter-label {
@@ -1690,40 +1784,40 @@
                 <div class="filters-inner">
                     <div class="filters-section">
                         <h3>Type</h3>
-                        <label class="filter-label">
-                            <input type="checkbox" id="filterRoasters" checked>
-                            <span class="roaster-badge">📍 Roasters</span>
-                            <span class="filter-count" id="count-roasters"></span>
-                        </label>
-                        <label class="filter-label">
-                            <input type="checkbox" id="filterCafes" checked>
-                            <span class="cafe-badge">☕ Cafes</span>
-                            <span class="filter-count" id="count-cafes"></span>
-                        </label>
-                        <label class="filter-label">
-                            <input type="checkbox" id="filterOnlineOnly" checked>
-                            <span style="background:#ede8f5; color:#7B4F9E; padding:4px 10px; font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em;">🌐 Online Roasters</span>
-                            <span class="filter-count" id="count-online"></span>
-                        </label>
+                        <!-- Hidden checkboxes — JS reads .checked; pills sync state -->
+                        <input type="checkbox" id="filterRoasters" checked style="display:none">
+                        <input type="checkbox" id="filterCafes" checked style="display:none">
+                        <input type="checkbox" id="filterOnlineOnly" checked style="display:none">
+                        <div class="type-toggle-pills">
+                            <button class="type-pill type-pill--roaster active" data-filter="filterRoasters">📍 Roasters<span class="filter-count" id="count-roasters"></span></button>
+                            <button class="type-pill type-pill--cafe active" data-filter="filterCafes">☕ Cafes<span class="filter-count" id="count-cafes"></span></button>
+                            <button class="type-pill type-pill--online active" data-filter="filterOnlineOnly">🌐 Online<span class="filter-count" id="count-online"></span></button>
+                        </div>
                     </div>
                     <div class="filters-right">
                         <div class="filters-section">
                             <h3>Roast Style</h3>
-                            <select id="filterRoastStyle" class="neighborhood-select">
-                                <option value="">All Styles</option>
-                            </select>
+                            <div class="filter-select-wrapper">
+                                <select id="filterRoastStyle" class="neighborhood-select">
+                                    <option value="">All Styles</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="filters-section">
                             <h3>Visitor Experience</h3>
-                            <select id="filterVisitorExp" class="neighborhood-select">
-                                <option value="">All Types</option>
-                            </select>
+                            <div class="filter-select-wrapper">
+                                <select id="filterVisitorExp" class="neighborhood-select">
+                                    <option value="">All Types</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="filters-section">
                             <h3>Neighborhood</h3>
-                            <select id="filterNeighborhood" class="neighborhood-select">
-                                <option value="">All Neighborhoods</option>
-                            </select>
+                            <div class="filter-select-wrapper">
+                                <select id="filterNeighborhood" class="neighborhood-select">
+                                    <option value="">All Neighborhoods</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1754,7 +1848,7 @@
 
             <!-- Count header -->
             <div class="list-panel-header">
-                <span><span id="visibleCount">—</span>&thinsp;locations in view
+                <span><span id="visibleCount">—</span><span id="visibleCountLabel">&thinsp;locations in view</span>
                 <span id="zoomNudge" style="display:none; font-size:0.68rem; color:var(--latte); font-style:italic; font-weight:400; text-transform:none; letter-spacing:0;">zoom out for more</span></span>
                 <div class="sort-toggle" style="margin-top:0; flex-shrink:0;">
                     <button class="sort-btn active" id="sortAZ" onclick="setSort('az')">A–Z</button>
@@ -2024,7 +2118,7 @@ function initMap() {
                     card.classList.add('active');
                     const cardTop = card.getBoundingClientRect().top;
                     const panelTop = panelCards.getBoundingClientRect().top;
-                    panelCards.scrollTop += cardTop - panelTop;
+                    panelCards.scrollTop += cardTop - panelTop - 8;
                 }
             }
         }, 800);
@@ -2120,7 +2214,7 @@ function createMarker(location) {
         if (card) {
             card.classList.add('active');
             const panelCards = document.getElementById('locationCards');
-            if (panelCards) panelCards.scrollTop = card.offsetTop - panelCards.offsetTop;
+            if (panelCards) panelCards.scrollTop = Math.max(0, card.offsetTop - panelCards.offsetTop - 8);
         }
         // Suppress idle re-render during pan so the highlighted card isn't wiped out
         suppressIdleFilter = true;
@@ -2454,7 +2548,7 @@ function selectLocation(locationId) {
     if (card) {
         card.classList.add('active');
         const panelCards = document.getElementById('locationCards');
-        if (panelCards) panelCards.scrollTop = card.offsetTop - panelCards.offsetTop;
+        if (panelCards) panelCards.scrollTop = Math.max(0, card.offsetTop - panelCards.offsetTop - 8);
     }
 }
 
@@ -2729,6 +2823,18 @@ function setupEventListeners() {
     }
     document.getElementById('filterRoastStyle')?.addEventListener('change', applyFilters);
     document.getElementById('filterVisitorExp')?.addEventListener('change', applyFilters);
+
+    // Type pill toggle buttons — sync with hidden checkboxes
+    document.querySelectorAll('.type-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            const cb = document.getElementById(pill.dataset.filter);
+            if (cb) {
+                cb.checked = !cb.checked;
+                syncTypePills();
+                applyFilters();
+            }
+        });
+    });
 
     // Update card list whenever map finishes moving (idle fires once movement settles)
     // Debounced so rapid zoom steps don't re-render on every tick
@@ -3183,7 +3289,17 @@ function showNoResults(query) {
     infoWindow.open(map);
 }
 
+function syncTypePills() {
+    document.querySelectorAll('.type-pill').forEach(pill => {
+        const cb = document.getElementById(pill.dataset.filter);
+        if (cb) pill.classList.toggle('active', cb.checked);
+    });
+}
+
 function applyFilters() {
+    // Keep type pill visual state in sync with hidden checkbox state
+    syncTypePills();
+
     if (document.getElementById('searchInput').value.trim()) {
         performSearch();
         return;
@@ -3212,8 +3328,11 @@ function applyFilters() {
         }
         return true;
     }).length : 0;
-    // Count always reflects what's actually in the map viewport
-    updateVisibleCount(visibleMarkers.length + onlineCount);
+    // "In view" = physical pins only. Online roasters have no pins so they only
+    // count when they're the exclusive result (both Roasters and Cafes filters off).
+    const physicalFiltersOn = document.getElementById('filterRoasters')?.checked
+                           || document.getElementById('filterCafes')?.checked;
+    updateVisibleCount(physicalFiltersOn ? visibleMarkers.length : onlineCount);
 
     // Card list: show all locations sorted by distance when nearest is active and the
     // user hasn't manually panned/zoomed yet. Once they interact, revert to in-bounds only.
@@ -3431,6 +3550,16 @@ function updateVisibleCount(count) {
         el.classList.add('flash');
         setTimeout(() => el.classList.remove('flash'), 450);
     }
+
+    // Update label text based on what's actually being shown
+    const labelEl = document.getElementById('visibleCountLabel');
+    if (labelEl) {
+        const showRoasters = document.getElementById('filterRoasters')?.checked;
+        const showCafes = document.getElementById('filterCafes')?.checked;
+        const onlineOnly = !showRoasters && !showCafes;
+        labelEl.textContent = onlineOnly ? '\u2009online roasters' : '\u2009locations in view';
+    }
+
     const src = document.getElementById('seeResultsCount');
     if (src) src.textContent = count;
     // Show "zoom out for more" nudge when very few results visible
@@ -3442,7 +3571,11 @@ function updateVisibleCount(count) {
         const panel = document.getElementById('listPanel');
         const si = document.getElementById('searchInput');
         if (si && panel && !panel.classList.contains('sheet-expanded')) {
-            si.placeholder = `${count} Locations in View — Scroll Up for More`;
+            const onlineOnly = !document.getElementById('filterRoasters')?.checked
+                            && !document.getElementById('filterCafes')?.checked;
+            si.placeholder = onlineOnly
+                ? `${count} Online Roasters — Scroll Up for More`
+                : `${count} Locations in View — Scroll Up for More`;
         }
     }
 }
@@ -3522,7 +3655,7 @@ function renderLocationCards(visibleMarkers, suppressOnline = false, forcedOnlin
             card.classList.add('active');
             const cardTop = card.getBoundingClientRect().top;
             const panelTop = container.getBoundingClientRect().top;
-            container.scrollTop += cardTop - panelTop;
+            container.scrollTop += cardTop - panelTop - 8;
         }
     }
 }
@@ -3614,13 +3747,8 @@ function renderCard(loc) {
         // Community likes + review count for this card
         const locLikes   = communityData.likes[loc.id] || 0;
         const locReviews = (communityData.reviews[loc.id] || []).length;
-        let communityHtml = '';
-        if (locLikes > 0 || locReviews > 0) {
-            const parts = [];
-            if (locLikes   > 0) parts.push(`♥ ${locLikes}`);
-            if (locReviews > 0) parts.push(`💬 ${locReviews} review${locReviews > 1 ? 's' : ''}`);
-            communityHtml = `<div style="font-size:0.7rem; color:#C4A77D; margin-bottom:0.25rem;">${parts.join(' · ')}</div>`;
-        }
+        const likesInline = locLikes > 0 ? `<span style="font-size:0.78rem;color:#B85C38;white-space:nowrap;font-weight:600;flex-shrink:0;">♥ ${locLikes}</span>` : '';
+        const reviewsHtml = locReviews > 0 ? `<div class="card-detail-line" style="color:#C4A77D;">💬 ${locReviews} review${locReviews > 1 ? 's' : ''}</div>` : '';
 
         return `
         <div class="location-card${highlightByLocation[loc.id] ? ' featured-interview' : ''}${loc.coffeeDetails?.instagramReviewUrl ? ' has-ig-review' : ''}" data-id="${loc.id}"
@@ -3630,9 +3758,12 @@ function renderCard(loc) {
             ${imgHtml}
             <div class="location-card-body">
                 <div class="location-card-name">${info.name}</div>
-                <div class="location-card-type ${isOnline ? 'online' : isRoaster ? 'roaster' : 'cafe'}">${(() => { const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Specialty Cafe'; const hood = loc.coffeeDetails?.neighborhood; return hood ? `${typeLabel} · ${hood}` : typeLabel; })()}</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;margin-bottom:0.4rem;">
+                    <div class="location-card-type ${isOnline ? 'online' : isRoaster ? 'roaster' : 'cafe'}" style="margin-bottom:0;">${(() => { const typeLabel = isOnline ? '🌐 Online Roaster' : isRoaster ? '📍 Roaster' : '☕ Specialty Cafe'; const hood = loc.coffeeDetails?.neighborhood; return hood ? `${typeLabel} · ${hood}` : typeLabel; })()}</div>
+                    ${likesInline}
+                </div>
                 ${distHtml}
-                ${communityHtml}
+                ${reviewsHtml}
                 ${highlightByLocation[loc.id] ? `<div style="font-size:0.7rem; font-weight:700; color:var(--accent-red,#8B1A1A); margin-bottom:0.25rem;">🎙️ Featured Interview</div>` : ''}
                 ${loc.coffeeDetails?.instagramReviewUrl ? `<div style="font-size:0.7rem; font-weight:700; color:#E8720C; margin-bottom:0.25rem;">📸 SDCoffeeGuide Review</div>` : ''}
                 ${detailLines}
@@ -3749,7 +3880,7 @@ function selectLocationCard(locationId) {
     if (card) {
         card.classList.add('active');
         const panelCards = document.getElementById('locationCards');
-        if (panelCards) panelCards.scrollTop = card.offsetTop - panelCards.offsetTop;
+        if (panelCards) panelCards.scrollTop = Math.max(0, card.offsetTop - panelCards.offsetTop - 8);
     }
 
     // On mobile: snap sheet to peek so the pin is visible on the map

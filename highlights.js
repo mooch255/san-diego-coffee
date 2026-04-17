@@ -1,5 +1,57 @@
 window.highlights = [
   {
+    id: 'highlight_leleka-coffee-roasters',
+    roasterName: 'Leleka Coffee Roasters',
+    title: 'Roaster Highlight: Leleka Coffee Roasters w/ Founders Alex & Victoria',
+    date: '2026-04-16',
+    author: 'u/sdcoffeebeans',
+    image: '/images/highlights/highlight_leleka-coffee-roasters.jpg',
+    excerpt: 'Alex and Victoria brought 20+ years of Ukrainian coffee culture (barista competitions, roasting, and training) to San Diego, where they now craft balanced, approachable specialty coffee under the Leleka name.',
+    redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1snkw8f/roaster_highlight_leleka_coffee_w_founders_alex/',
+    locationUrl: 'location.html?id=loc_149',
+    body: [
+      { type: 'text', content: 'Alex and Victoria are the founders of Leleka Coffee Roasters, an online-only specialty roastery based in San Diego. Originally from Ukraine, they bring over 20 years of coffee experience — starting as baristas and progressing through roasting, barista training, and competition — to every bag they produce. Their focus is on coffees that work well across brewing methods and are genuinely enjoyable every day. You can find them at <a href="https://www.leleka.coffee" target="_blank" rel="noopener">leleka.coffee</a> and on Instagram at <a href="https://www.instagram.com/lelekacoffee/" target="_blank" rel="noopener">@lelekacoffee</a>.' },
+      { type: 'qa',
+        question: 'You both grew up around coffee culture in Ukraine before building Leleka here in San Diego. What are some of the biggest differences you\'ve noticed between coffee culture in Ukraine and the U.S.? Also, your expertise crafted through roasting, barista training, and competition is very unique. Can you tell us more about those experiences, and how they\'ve shaped the way you approach coffee at Leleka in San Diego today?',
+        answer: 'Coffee culture in Ukraine — especially in cities like Kyiv — grew very fast and with a clear focus. There\'s a lot of attention to quality, equipment, and barista skills. Many coffee shops have small menus and care a lot about how the coffee tastes.\n\nSome places are very strict about how they serve coffee. For example, they may not offer sugar, and they won\'t make an americano by adding hot water to espresso. Instead, they might serve drip coffee instead.\n\nIn the U.S., and in San Diego, coffee culture is more relaxed and more diverse. Coffee shops are often busy, and the experience is more casual. There is still great quality coffee here, but the approach is different, and people are more open to different styles.\n\nOur background — from working as baristas to competing and roasting — taught us discipline and consistency. Competitions helped us understand coffee better. Today at Leleka, we try to keep that quality while making coffee that people can enjoy every day.'
+      },
+      { type: 'qa',
+        question: 'What makes a coffee feel like a good fit for Leleka specifically? I know you mention you strive for balance with a "pinch of wilderness", but how does this translate to your sourcing style and preference?',
+        answer: 'For us, balance is the base. That\'s how we look at coffee.\n\nWe choose coffee in two ways. First, coffee that is easy to drink and easy to understand — more classic taste profiles. Second, coffee that we enjoy drinking every day — more fruity and floral, clean in the cup, and sometimes a bit more interesting or different.\n\nWe also like when a coffee has something a little unexpected, like a unique fruit note, a different process, or a brighter acidity that gives it character but doesn\'t take over the cup.\n\nWhen sourcing, we try not to go to extremes. We\'re not looking for the most experimental coffees, but we also don\'t want anything boring. We want coffee you can drink every day and still enjoy.'
+      },
+      { type: 'image', src: '/images/highlights/highlight_leleka-coffee-roasters-b.jpg', caption: '' },
+      { type: 'qa',
+        question: 'When dialing in a new coffee, what are the key variables you\'re paying the most attention to during roasting? On average, how many iterations does it take before you feel like you\'ve perfected a new roast?',
+        answer: 'We focus a lot on rate of rise (ROR), development time and balance, and the color and smell of the beans.\n\nThe goal is to bring out the flavors that are typical for the coffee and make them balanced in the cup.\n\nUsually, it takes us 3 to 6 roast tries to feel confident. But in reality, it\'s never really finished — we keep making small changes as the coffee gets older or conditions change.'
+      },
+      { type: 'qa',
+        question: 'San Diego tap water is pretty hard. How much does that factor into your roasting decisions, considering most locals probably brew at home? And do you think having "ideal" coffee water is essential to getting the best out of a given bean?',
+        answer: 'It\'s a good question. In real life, most people don\'t think about water, so we keep that in mind when we roast.\n\nWe try to develop coffee so they still taste good even if the water isn\'t perfect.'
+      },
+      { type: 'qa',
+        question: 'What\'s a coffee in your current lineup that you think really shines on filter — and what brew method would you personally recommend for it? How about one that is extra tasty for espresso (minus the obvious FIRA roast) and could you recommend a dose/ratio that works best?',
+        answer: 'I\'m choosing two of our bestsellers. Honduras Guama Dante Organic is great for espresso. Ethiopia Sidamo Shantawene Organic is great for filter coffee. But you can brew both coffees using different methods as well.'
+      },
+      { type: 'image', src: '/images/highlights/highlight_leleka-coffee-roasters-c.jpg', caption: '' },
+      { type: 'qa',
+        question: 'Your drip coffee bags stand out, especially the attention to detail in the packaging. What did the R&D process look like when developing that product, and what made you decide to offer it when many roasters don\'t?',
+        answer: 'You\'d be surprised if you look into how many roasters actually offer drip bags. The main issue with this product is that most American homes don\'t have a kettle.\n\nWe found a few co-packing facilities that handle packaging for us. It was not easy to choose a partner for this project.\n\nIn Ukraine, we could go from idea to finished product in about a week. No emails, no long shipping times between steps. In the U.S., almost every step takes at least a week. That\'s a big difference between Ukraine and the U.S. Things move much faster in Ukraine.\n\nWe also tested many recipes and doses. In the end, we decided not to overcomplicate it with things like bloom time or exact seconds between pours. It\'s just three full pours, that\'s it. Recipes can get too complicated — it\'s not a barista competition.'
+      },
+      { type: 'qa',
+        question: 'Now that San Diego feels like home, how would you compare the specialty coffee scenes in Kyiv and San Diego? Is there something from Kyiv\'s coffee culture you\'d love to see more of here?',
+        answer: 'Kyiv\'s coffee scene is very dense and competitive, with many small focused shops pushing quality forward. I would say it\'s more coffee-focused.\n\nSan Diego is more lifestyle-driven, with an emphasis on experience and community, and supporting local small businesses, but business side still matters a lot.\n\nOne thing we would like to see more here is coffee shops staying open after 6 pm.'
+      },
+      { type: 'image', src: '/images/highlights/highlight_leleka-coffee-roasters-d.jpg', caption: '' },
+      { type: 'text', content: '<strong>Fun Hypothetical: Dream Coffee Shop</strong>' },
+      { type: 'qa', question: 'Espresso machine?', answer: 'La Marzocco Linea S EE, 3-group semi-automatic.' },
+      { type: 'qa', question: 'Grinders?', answer: 'Mahlkönig or Mazzer (not sure about exact models yet).' },
+      { type: 'qa', question: 'Manual brew?', answer: 'V60 or Kalita.' },
+      { type: 'qa', question: 'Wild card gear?', answer: 'French press and AeroPress.' },
+      { type: 'qa', question: 'Pastries?', answer: 'European-style pastries with less sugar and a better balance.' },
+      { type: 'text', content: 'Thanks to Alex and Victoria for joining us on the subreddit. Find Leleka Coffee Roasters\' current offerings and follow along at <a href="https://www.leleka.coffee" target="_blank" rel="noopener">leleka.coffee</a> or on Instagram <a href="https://www.instagram.com/lelekacoffee/" target="_blank" rel="noopener">@lelekacoffee</a>.' },
+    ]
+  },
+  {
     id: 'highlight_marlettes-coffee-company',
     roasterName: "Marlette's Coffee Company",
     title: "Roaster Highlight: Marlette's Coffee Company w/ Founder Marlette Vater",
@@ -11,7 +63,6 @@ window.highlights = [
     locationUrl: 'location.html?id=loc_181',
     body: [
       { type: 'text', content: "Marlette Vater is the founder and head roaster of Marlette's Coffee Company, a small-batch specialty roastery tucked near Lake Hodges in North County San Diego. Operating out of a fully permitted Cottage Food Class B setup, everything is roast-to-order: you choose your roast level, and your coffee is batch roasted specifically for you. Marlette's serves both direct-to-consumer and a handful of small wholesale partners locally.\n\nIt's a family-run operation with Marlette's husband Jesse handling green sourcing, web development, and the numbers — a project engineer by day and spreadsheet wizard by night. Between her background in math and nursing and his in engineering, the approach to coffee is equal parts sensory science and process control.\n\nMarlette completed her SCA roasting certification under Morten Münchow, later continuing at CoffeeMind Academy in Copenhagen. Her mission: help people get into specialty coffee without making it feel intimidating. She describes it as being a coffee Sherpa, meeting people where they are and helping them explore what they actually like." },
-      { type: 'image', src: '/images/highlights/highlight_marlettes-coffee-company.jpg', caption: 'Me, every time I get new green bean samples' },
       { type: 'qa',
         question: 'What did your coffee journey look like, and when did it shift from just enjoying coffee to wanting to build something around it?',
         answer: "That shift happened during two very different kinds of upheaval, one personal and one shared.\n\nThe day after Christmas in 2019, our family experienced a house fire. We were displaced for over a year. It was incredibly difficult, but it also created a rare opportunity to eventually rebuild and think differently about what we wanted to create moving forward.\n\nNot long after, COVID reshaped everything for everyone. For me, that meant going deeper into coffee. Roasting became more than a side interest, right alongside a very active sourdough starter phase. At the time, friends and family were already grabbing a bag here and there.\n\nAs life stabilized and all of our kids were finally in school, things started to click. Demand from friends and family kept growing, and the timing felt right to take it more seriously.\n\nThat's when everything accelerated. I upgraded from a Gene Cafe to an Aillio Bullet and really started diving into the science of roasting. I come from a math background, so understanding heat transfer, development, and repeatability became a bit of an obsession.\n\nFrom there, my husband and I made it official and launched Marlette's Coffee Company. We stayed risk-averse, kept our lifestyle intact, and stayed grounded in quality, consistency, and customer experience. We also realized there was a gap: a lot of people are curious about specialty coffee but feel intimidated by it. That became our lane."
@@ -62,7 +113,7 @@ window.highlights = [
     date: '2026-02-04',
     author: 'u/sdcoffeebeans',
     image: '/images/highlights/highlight_frequent-coffee.jpg',
-    excerpt: 'Mark Gano is rethinking what decaf can be — sourcing directly from farms, air-freighting for freshness, and chasing complexity in a category most specialty roasters won\'t touch.',
+    excerpt: 'Mark Gano is rethinking what decaf can be: sourcing directly from farms, air-freighting for freshness, and chasing complexity in a category most specialty roasters won\'t touch.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1qw495e/roaster_highlight_frequent_coffee_w_head_roaster/',
     locationUrl: '/locations/frequent-coffee',
     body: [
@@ -227,7 +278,7 @@ window.highlights = [
     date: '2026-03-17',
     author: 'u/sdcoffeebeans',
     image: '/images/highlights/highlight_torque-coffee.jpg',
-    excerpt: 'Andy Newbom built Torque Coffee on a radical premise: give every coffee-producing origin a minimum 20% equity share of every coffee\'s retail price — and make it taste extraordinary while doing it.',
+    excerpt: 'Andy Newbom built Torque Coffee on a radical premise: give every coffee-producing origin a minimum 20% equity share of every coffee\'s retail price, and make it taste extraordinary while doing it.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1rwdvza/roaster_highlight_torque_coffee_w_founder_andy/',
     locationUrl: '/locations/torque-coffee',
     body: [
@@ -281,7 +332,7 @@ window.highlights = [
     date: '2026-03-19',
     author: 'u/sdcoffeebeans',
     image: '/images/highlights/highlight_big-step-coffee.jpg',
-    excerpt: 'After catching the specialty coffee bug in Portland, Kyle Hayslip moved back to San Diego and launched Big Step Coffee — an online roaster built around sourcing great beans and letting them speak for themselves.',
+    excerpt: 'After catching the specialty coffee bug in Portland, Kyle Hayslip moved back to San Diego and launched Big Step Coffee, an online roaster built around sourcing great beans and letting them speak for themselves.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1ryag02/roaster_highlight_big_step_coffee_w_founder_kyle/',
     locationUrl: '/locations/big-step-coffee',
     body: [
@@ -326,7 +377,7 @@ window.highlights = [
     date: '2026-03-24',
     author: 'u/sdcoffeebeans',
     image: '/images/highlights/highlight_mindwater-coffee-company.jpg',
-    excerpt: 'Jeff and Juan built Mindwater around two very different coffee cultures — Swedish fika and Colombian terroir — launching out of the California Roasting Collective with a mission to make specialty coffee welcoming to everyone.',
+    excerpt: 'Jeff and Juan built Mindwater around two very different coffee cultures (Swedish fika and Colombian terroir), launching out of the California Roasting Collective with a mission to make specialty coffee welcoming to everyone.',
     redditUrl: 'https://www.reddit.com/r/SanDiegoCoffeeBeans/comments/1s25c24/roaster_highlight_mindwater_coffee_company/',
     locationUrl: '/locations/mindwater-coffee-company',
     body: [

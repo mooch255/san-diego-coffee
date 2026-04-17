@@ -848,7 +848,7 @@
         .list-panel-cards {
             flex: 1;
             overflow-y: auto;
-            padding: 0.5rem 0.75rem 0.75rem 0;
+            padding: 0.5rem 0 0.75rem 0;
         }
         @media (max-width: 768px) {
             .list-panel-cards {
@@ -1791,7 +1791,7 @@
                         <div class="type-toggle-pills">
                             <button class="type-pill type-pill--roaster active" data-filter="filterRoasters">📍 Roasters<span class="filter-count" id="count-roasters"></span></button>
                             <button class="type-pill type-pill--cafe active" data-filter="filterCafes">☕ Cafes<span class="filter-count" id="count-cafes"></span></button>
-                            <button class="type-pill type-pill--online active" data-filter="filterOnlineOnly">🌐 Online<span class="filter-count" id="count-online"></span></button>
+                            <button class="type-pill type-pill--online active" data-filter="filterOnlineOnly">🌐 Online Only<span class="filter-count" id="count-online"></span></button>
                         </div>
                     </div>
                     <div class="filters-right">
@@ -2832,6 +2832,8 @@ function setupEventListeners() {
                 cb.checked = !cb.checked;
                 syncTypePills();
                 applyFilters();
+                if (window.updateFilterDot) window.updateFilterDot();
+                if (window.renderActiveFilterChips) window.renderActiveFilterChips();
             }
         });
     });
@@ -4293,6 +4295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Expose to global scope so initMap-context callers can reach it
     window.renderActiveFilterChips = renderActiveFilterChips;
+    window.updateFilterDot = updateFilterDot;
 
     // Location hint on sort nearest button (shown until location is granted)
     const sortNearestBtn = document.getElementById('sortNearest');

@@ -32,6 +32,19 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Returns the path + web path of an existing image for a given id+suffix,
+// checking .webp before .jpg. Returns null if neither exists.
+function findExistingImage(id, suffix = '') {
+  for (const ext of ['.webp', '.jpg']) {
+    const filename = `${id}${suffix}${ext}`;
+    const fullPath = path.join(IMAGES_DIR, filename);
+    if (fs.existsSync(fullPath)) {
+      return { fullPath, webPath: `/images/locations/${filename}` };
+    }
+  }
+  return null;
+}
+
 async function downloadPhoto(photoName, destPath) {
   const url = `https://places.googleapis.com/v1/${photoName}/media?maxWidthPx=1200&key=${API_KEY}`;
   const res = await fetch(url);
@@ -87,8 +100,8 @@ async function main() {
     const name = loc.basicInfo?.name || loc.id;
 
     // Track whether primary photo is already done (path set AND file exists on disk)
-    const primaryImagePath = path.join(IMAGES_DIR, `${loc.id}.jpg`);
-    let primaryDone = !!loc.localImage && fs.existsSync(primaryImagePath);
+    const existingPrimary = findExistingImage(loc.id);
+    let primaryDone = !!loc.localImage && !!existingPrimary;
 
     if (primaryDone) {
       alreadyDone++;
@@ -96,9 +109,8 @@ async function main() {
       // fall through to check secondary photos
     } else {
       // If image file already exists on disk, just register it without downloading
-      const existingPath = path.join(IMAGES_DIR, `${loc.id}.jpg`);
-      if (fs.existsSync(existingPath)) {
-        loc.localImage = `/images/locations/${loc.id}.jpg`;
+      if (existingPrimary) {
+        loc.localImage = existingPrimary.webPath;
         downloaded++;
         primaryDone = true;
         console.log(`  ✓  ${name} (used existing file)`);
@@ -158,14 +170,15 @@ async function main() {
 
     // ── Secondary photo 2 ──
     const photos = loc.googlePhotos;
-    const dest2 = path.join(IMAGES_DIR, `${loc.id}b.jpg`);
-    if (!loc.localImage2 && fs.existsSync(dest2)) {
+    const existing2 = findExistingImage(loc.id, 'b');
+    if (!loc.localImage2 && existing2) {
       // File manually dropped in — register it without API call
-      loc.localImage2 = `/images/locations/${loc.id}b.jpg`;
-    } else if (photos?.[1]?.name && (!loc.localImage2 || !fs.existsSync(dest2))) {
-      if (fs.existsSync(dest2)) {
-        loc.localImage2 = `/images/locations/${loc.id}b.jpg`;
+      loc.localImage2 = existing2.webPath;
+    } else if (photos?.[1]?.name && (!loc.localImage2 || !existing2)) {
+      if (existing2) {
+        loc.localImage2 = existing2.webPath;
       } else if (primaryDone) {
+        const dest2 = path.join(IMAGES_DIR, `${loc.id}b.jpg`);
         try {
           process.stdout.write(`  ↓  ${name} (photo 2) ... `);
           await downloadPhoto(photos[1].name, dest2);
@@ -181,14 +194,15 @@ async function main() {
     }
 
     // ── Secondary photo 3 ──
-    const dest3 = path.join(IMAGES_DIR, `${loc.id}c.jpg`);
-    if (!loc.localImage3 && fs.existsSync(dest3)) {
+    const existing3 = findExistingImage(loc.id, 'c');
+    if (!loc.localImage3 && existing3) {
       // File manually dropped in — register it without API call
-      loc.localImage3 = `/images/locations/${loc.id}c.jpg`;
-    } else if (photos?.[2]?.name && (!loc.localImage3 || !fs.existsSync(dest3))) {
-      if (fs.existsSync(dest3)) {
-        loc.localImage3 = `/images/locations/${loc.id}c.jpg`;
+      loc.localImage3 = existing3.webPath;
+    } else if (photos?.[2]?.name && (!loc.localImage3 || !existing3)) {
+      if (existing3) {
+        loc.localImage3 = existing3.webPath;
       } else if (primaryDone) {
+        const dest3 = path.join(IMAGES_DIR, `${loc.id}c.jpg`);
         try {
           process.stdout.write(`  ↓  ${name} (photo 3) ... `);
           await downloadPhoto(photos[2].name, dest3);

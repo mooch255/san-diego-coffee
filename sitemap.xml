@@ -1177,6 +1177,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://sandiegocoffee.co/locations/loc_213</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://sandiegocoffee.co/highlight.html?id=highlight_leleka-coffee-roasters</loc>
     <lastmod>2026-04-16</lastmod>
     <changefreq>monthly</changefreq>

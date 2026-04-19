@@ -40,8 +40,6 @@
     <link rel="prefetch" href="/highlights.js">
     <link rel="prefetch" href="/blog.js">
     <link rel="preconnect" href="https://maps.googleapis.com">
-    <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://maps.google.com">
     <link rel="canonical" href="https://sandiegocoffee.co/">
     <script type="application/ld+json">
     {
@@ -777,6 +775,7 @@
         .hero-map-wrap {
             position: absolute;
             inset: 0;
+            display: block;
         }
 
         /* Page transition flash on CTA click */
@@ -1787,13 +1786,20 @@
     <main>
     <!-- Hero Map -->
     <section class="hero-map-section">
-        <div class="hero-map-wrap">
-            <div id="previewMap"></div>
+        <a href="map.html" class="hero-map-wrap" aria-label="Explore the full San Diego specialty coffee map">
+            <picture>
+                <source srcset="/images/homepage-map-mobile.webp" media="(max-width: 768px)">
+                <img id="previewMap"
+                    src="/images/homepage-map.webp"
+                    alt="San Diego specialty coffee map showing roasters and cafes"
+                    fetchpriority="high"
+                    style="width:100%;height:100%;object-fit:cover;display:block;">
+            </picture>
             <div class="hero-overlay"></div>
-            <div class="map-tap-overlay" id="mapTapOverlay">
+            <div class="map-tap-overlay">
                 <div class="map-tap-overlay-inner">Explore the Full Map →</div>
             </div>
-        </div>
+        </a>
 
         <div class="hero-content-outer">
         <div class="hero-content">
@@ -2040,78 +2046,6 @@
             });
         }
 
-        // Preview Map
-        function initPreviewMap() {
-            const mapStyles = [
-                { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
-                { featureType: "transit", elementType: "labels", stylers: [{ visibility: "off" }] },
-                { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#F5F0E8" }] },
-                { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#E8DCC8" }] },
-                { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#F5EFE3" }] },
-                { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#D4C4A8" }] },
-                { featureType: "water", elementType: "geometry", stylers: [{ color: "#B8D4E8" }] },
-                { featureType: "landscape.natural", elementType: "geometry", stylers: [{ color: "#EBE7DB" }] },
-                { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#D4E4CD" }] }
-            ];
-
-            const previewMap = new google.maps.Map(document.getElementById('previewMap'), {
-                zoom: 11,
-                center: { lat: 32.78, lng: -117.21 },
-                mapTypeControl: false,
-                streetViewControl: false,
-                fullscreenControl: false,
-                zoomControl: false,
-                scrollwheel: false,
-                gestureHandling: 'cooperative',
-                draggable: true,
-                disableDoubleClickZoom: true,
-                clickableIcons: false,
-                styles: mapStyles
-            });
-
-            // Mobile tap overlay: navigates to full map page
-            const tapOverlay = document.getElementById('mapTapOverlay');
-            if (tapOverlay) {
-                tapOverlay.addEventListener('click', function() {
-                    const transition = document.getElementById('pageTransition');
-                    if (transition) {
-                        transition.classList.add('active');
-                        setTimeout(() => { window.location.href = 'map.html'; }, 320);
-                    } else {
-                        window.location.href = 'map.html';
-                    }
-                });
-            }
-
-            const infoWindow = new google.maps.InfoWindow();
-            const locations = window.COFFEE_LOCATIONS || [];
-
-            function slugify(name) {
-                return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-            }
-
-            locations.forEach(location => {
-                if (!location.basicInfo.address?.coordinates) return;
-                const isRoaster = location.basicInfo.type === 'roaster';
-                const hasReview = !!(location.coffeeDetails?.instagramReviewUrl);
-                const marker = new google.maps.Marker({
-                    position: {
-                        lat: location.basicInfo.address.coordinates.lat,
-                        lng: location.basicInfo.address.coordinates.lng
-                    },
-                    map: previewMap,
-                    icon: {
-                        url: hasReview
-                            ? 'https://maps.google.com/mapfiles/ms/icons/orange-dot.png'
-                            : isRoaster
-                                ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
-                                : 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                        scaledSize: new google.maps.Size(18, 18)
-                    }
-                });
-
-            });
-        }
 
         // ── News & Events ─────────────────────────────────────────────────
         function formatNewsDate(dateStr, endDateStr) {
@@ -2322,14 +2256,8 @@
             renderFeaturedHighlight();
         });
 
-        // Inject Maps API after DOMContentLoaded so deferred data scripts (locations.js etc.)
-        // are guaranteed to have run before initPreviewMap() fires.
-        document.addEventListener('DOMContentLoaded', function() {
-            var mapsScript = document.createElement('script');
-            mapsScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initPreviewMap';
-            mapsScript.async = true;
-            document.head.appendChild(mapsScript);
-        });
+
+
 
         // NFC scan overlay — only active when ?nfc= param is present
         (function() {

@@ -679,10 +679,15 @@
 
                 <div class="form-section">
                     <div class="section-label">📸 SDCoffeeGuide Review</div>
-                    <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-group">
                         <label>SDCoffeeGuide Review URL</label>
                         <div class="field-hint">Link to the specific Instagram post by @sdcoffeeguide reviewing this location. Leave blank if no review exists.</div>
                         <input type="text" id="r-instagramReviewUrl" placeholder="e.g. https://www.instagram.com/p/ABC123/">
+                    </div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <label>Bean Review URL (Reddit)</label>
+                        <div class="field-hint">Link to a Reddit post reviewing this roaster's beans. Leave blank if no review exists.</div>
+                        <input type="text" id="r-reviewUrl" placeholder="e.g. https://reddit.com/r/SanDiegoCoffeeBeans/comments/...">
                     </div>
                 </div>
 
@@ -818,10 +823,15 @@
 
                 <div class="form-section">
                     <div class="section-label">📸 SDCoffeeGuide Review</div>
-                    <div class="field-group" style="margin-bottom:0;">
+                    <div class="field-group">
                         <label>SDCoffeeGuide Review URL</label>
                         <div class="field-hint">Link to the specific Instagram post by @sdcoffeeguide reviewing this location. Leave blank if no review exists.</div>
                         <input type="text" id="c-instagramReviewUrl" placeholder="e.g. https://www.instagram.com/p/ABC123/">
+                    </div>
+                    <div class="field-group" style="margin-bottom:0;">
+                        <label>Bean Review URL (Reddit)</label>
+                        <div class="field-hint">Link to a Reddit post reviewing this cafe's beans. Leave blank if no review exists.</div>
+                        <input type="text" id="c-reviewUrl" placeholder="e.g. https://reddit.com/r/SanDiegoCoffeeBeans/comments/...">
                     </div>
                 </div>
 
@@ -1314,6 +1324,7 @@
                 setVal('r-onlineWebsite',       d.onlineWebsite       || '');
                 setVal('r-onlineInstagram',     d.onlineInstagram     || '');
                 setVal('r-instagramReviewUrl',  d.instagramReviewUrl  || '');
+                setVal('r-reviewUrl',           d.reviewUrl           || '');
                 setVal('r-embedYoutubeUrl',    d.embedYoutubeUrl    || '');
                 setVal('r-embedInstagramUrl',  d.embedInstagramUrl  || '');
                 setVal('r-shopUrl',             d.shopUrl             || '');
@@ -1330,6 +1341,7 @@
                 setVal('c-notes',               d.notes);
                 setVal('c-description',         d.description);
                 setVal('c-instagramReviewUrl',  d.instagramReviewUrl  || '');
+                setVal('c-reviewUrl',           d.reviewUrl           || '');
                 setVal('c-embedYoutubeUrl',    d.embedYoutubeUrl    || '');
                 setVal('c-embedInstagramUrl',  d.embedInstagramUrl  || '');
                 setVal('c-shopUrl',             d.shopUrl             || '');
@@ -1476,6 +1488,7 @@
                     onlineWebsite:        document.getElementById('r-onlineWebsite').value.trim(),
                     onlineInstagram:      document.getElementById('r-onlineInstagram').value.trim(),
                     instagramReviewUrl:   document.getElementById('r-instagramReviewUrl').value.trim(),
+                    reviewUrl:            document.getElementById('r-reviewUrl').value.trim(),
                     embedYoutubeUrl:      document.getElementById('r-embedYoutubeUrl').value.trim(),
                     embedInstagramUrl:    document.getElementById('r-embedInstagramUrl').value.trim(),
                     shopUrl:              document.getElementById('r-shopUrl').value.trim(),
@@ -1496,6 +1509,7 @@
                     notes:               document.getElementById('c-notes').value.trim(),
                     description:         document.getElementById('c-description').value.trim(),
                     instagramReviewUrl:  document.getElementById('c-instagramReviewUrl').value.trim(),
+                    reviewUrl:           document.getElementById('c-reviewUrl').value.trim(),
                     embedYoutubeUrl:     document.getElementById('c-embedYoutubeUrl').value.trim(),
                     embedInstagramUrl:   document.getElementById('c-embedInstagramUrl').value.trim(),
                     shopUrl:             document.getElementById('c-shopUrl').value.trim(),

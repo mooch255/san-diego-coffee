@@ -963,6 +963,37 @@
         }
         .highlight-callout-link:hover { text-decoration: underline; }
 
+        /* ── Bean Review Callout ─────────────────────────────────────────── */
+        .review-callout {
+            background: #f6f0ff;
+            border: 1px solid #d5c8f0;
+            border-left: 3px solid #ff4500;
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .review-callout-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #cc3700;
+            margin-bottom: 0.35rem;
+        }
+        .review-callout-text {
+            font-size: 0.9rem;
+            color: var(--coffee-brown);
+            line-height: 1.5;
+            margin-bottom: 0.6rem;
+        }
+        .review-callout-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ff4500;
+            text-decoration: none;
+        }
+        .review-callout-link:hover { text-decoration: underline; }
+
         /* ── SDCoffeeGuide Review Embed ──────────────────────────────────── */
         .ig-review-mobile  { display: none; }
         .ig-review-desktop { display: block; }
@@ -1884,6 +1915,18 @@
             `).join('');
         }
 
+        // ── Bean Review callout ────────────────────────────────────────────
+        function renderReviewCallout(custom) {
+            if (!custom || !custom.reviewUrl) return '';
+            return `
+                <div class="review-callout">
+                    <div class="review-callout-label">☕ Bean Review</div>
+                    <div class="review-callout-text">A detailed roast review of this roaster's beans, posted to r/SanDiegoCoffeeBeans.</div>
+                    <a href="${custom.reviewUrl}" target="_blank" rel="noopener" class="review-callout-link">Read the Review on Reddit →</a>
+                </div>
+            `;
+        }
+
         function renderInstagramReview(custom, variant) {
             const raw = custom && custom.instagramReviewUrl;
             if (!raw) return '';
@@ -1930,6 +1973,7 @@
                     <div class="left-col fade-up">
                         ${renderHighlightCallout(loc.id)}
                         ${renderBlogCallout(loc.id)}
+                        ${renderReviewCallout(custom)}
                         ${renderDescription(custom, loc.legacyData)}
                         ${renderMediaFeature(loc, custom)}
                         ${renderDetailsCard(isRoaster, custom, loc)}
@@ -1984,7 +2028,9 @@
             const typeClass = isRoaster ? 'roaster' : 'cafe';
             const starsHtml = renderStars(rating.rating || 0);
             const reviewUrl = contact.googleMapsUrl || '#';
-            const city = (info.address.fullAddress || '').split(',').slice(1, 3).join(',').trim();
+            const city = info.onlineOnly
+                ? 'San Diego, CA'
+                : (info.address.fullAddress || '').split(',').slice(1, 3).join(',').trim();
 
             return `
                 <div class="hero">

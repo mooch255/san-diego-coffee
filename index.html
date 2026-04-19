@@ -19,18 +19,18 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Diego Specialty Coffee Guide</title>
+    <title>Best Coffee Shops in San Diego | San Diego Coffee Guide</title>
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sandiegocoffee.co/">
-    <meta property="og:title" content="San Diego Specialty Coffee Guide">
-    <meta property="og:description" content="An interactive map of 150+ specialty roasters and cafes across San Diego.">
+    <meta property="og:title" content="Best Coffee Shops in San Diego | San Diego Coffee Guide">
+    <meta property="og:description" content="Discover the best coffee shops and specialty roasters in San Diego. Browse 150+ locations by neighborhood — roast profiles, brew methods, hours, and more.">
     <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
-    <meta property="og:image:alt" content="San Diego Specialty Coffee">
+    <meta property="og:image:alt" content="Best Coffee Shops in San Diego">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="San Diego Specialty Coffee Guide">
-    <meta name="twitter:description" content="An interactive map of 150+ specialty roasters and cafes across San Diego. Built by the r/SanDiegoCoffeeBeans community.">
+    <meta name="twitter:title" content="Best Coffee Shops in San Diego | San Diego Coffee Guide">
+    <meta name="twitter:description" content="Discover the best coffee shops and specialty roasters in San Diego. Browse 150+ locations by neighborhood — roast profiles, brew methods, hours, and more.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
-    <meta name="description" content="An interactive map of 150+ specialty roasters and cafes across San Diego — roast profiles, brew methods, hours, and more. Built by the r/SanDiegoCoffeeBeans community.">
+    <meta name="description" content="Discover the best coffee shops and specialty roasters in San Diego. Browse 150+ locations by neighborhood — roast profiles, brew methods, hours, and more. Built by the r/SanDiegoCoffeeBeans community.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
 
@@ -41,18 +41,38 @@
     <link rel="prefetch" href="/blog.js">
     <link rel="preconnect" href="https://maps.googleapis.com">
     <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://maps.google.com">
     <link rel="canonical" href="https://sandiegocoffee.co/">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "San Diego Specialty Coffee",
+      "name": "San Diego Coffee Guide",
       "url": "https://sandiegocoffee.co",
-      "description": "An interactive directory of 150+ specialty roasters and cafes across San Diego — built by the r/SanDiegoCoffeeBeans community.",
+      "description": "The best coffee shops and specialty roasters in San Diego — 190+ locations with roast profiles, brew methods, hours, and neighborhood guides.",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://sandiegocoffee.co/map.html?q={search_term_string}",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://sandiegocoffee.co/map.html?q={search_term_string}"
+        },
         "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "San Diego Specialty Coffee",
+      "url": "https://sandiegocoffee.co",
+      "description": "Community-curated directory of 190+ specialty coffee shops and independent roasters in San Diego, CA. Built for the r/SanDiegoCoffeeBeans Reddit community.",
+      "sameAs": ["https://www.reddit.com/r/SanDiegoCoffeeBeans/", "https://www.instagram.com/sdcoffeebeans/"],
+      "areaServed": {
+        "@type": "City",
+        "name": "San Diego",
+        "addressRegion": "CA",
+        "addressCountry": "US"
       }
     }
     </script>
@@ -534,8 +554,8 @@
         }
 
         @keyframes badge-pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 6px 24px rgba(184,92,56,0.5), 0 2px 8px rgba(0,0,0,0.2); }
-            50% { transform: scale(1.04); box-shadow: 0 8px 32px rgba(184,92,56,0.72), 0 2px 10px rgba(0,0,0,0.28); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
         }
 
         @media (max-width: 768px) {
@@ -857,12 +877,12 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            color: var(--latte);
+            color: var(--warm-brown);
             margin-bottom: 0.4rem;
             display: block;
         }
         .recent-title { font-family: "Lora", serif; font-size: 2rem; font-weight: 600; color: var(--espresso); }
-        .recent-subtitle { font-size: 0.8rem; color: #aaa; font-style: italic; }
+        .recent-subtitle { font-size: 0.8rem; color: #666; font-style: italic; }
         .recent-view-all {
             font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
             letter-spacing: 0.07em; color: var(--accent-red); text-decoration: none;
@@ -953,7 +973,7 @@
         }
         .recent-card-meta {
             font-size: 0.72rem;
-            color: #999;
+            color: #666;
             margin-top: auto;
             padding-top: 0.65rem;
             border-top: 1px solid var(--light-tan);
@@ -963,12 +983,12 @@
         }
         .recent-card-neighborhood {
             font-size: 0.72rem;
-            color: #888;
+            color: #666;
             margin-bottom: 0.5rem;
         }
         .recent-card-desc {
             font-size: 0.75rem;
-            color: #888;
+            color: #666;
             line-height: 1.5;
             flex: 1;
             margin-bottom: 0.4rem;
@@ -1010,7 +1030,7 @@
         }
         .news-subtitle {
             font-size: 0.78rem;
-            color: #999;
+            color: #666;
             margin-top: 0.25rem;
             letter-spacing: 0.01em;
         }
@@ -1166,7 +1186,7 @@
         }
         .news-card-excerpt {
             font-size: 0.74rem;
-            color: #777;
+            color: #555;
             line-height: 1.5;
             flex: 1;
         }
@@ -1196,7 +1216,7 @@
         /* ── Minimal Footer ──────────────────────────────────────────── */
         footer {
             background: var(--espresso);
-            color: rgba(196,167,125,0.65);
+            color: rgba(196,167,125,0.88);
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -1569,7 +1589,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.2em;
-            color: var(--accent-red);
+            color: var(--latte);
             margin-bottom: 0.85rem;
         }
         .feature-highlight-title {
@@ -1719,6 +1739,7 @@
             transition: opacity 0.15s ease;
         }
         .woc-dismiss:hover { opacity: 0.75; }
+
     </style>
 </head>
 <body>
@@ -1763,7 +1784,7 @@
         </div>
     </nav>
 
-    <!-- Intro -->
+    <main>
     <!-- Hero Map -->
     <section class="hero-map-section">
         <div class="hero-map-wrap">
@@ -1870,6 +1891,8 @@
         </div>
     </section>
 
+    </main>
+
     <!-- Footer -->
     <footer>
         <div class="footer-row">
@@ -1884,11 +1907,10 @@
         </div>
     </footer>
 
-    <script src="locations.js"></script>
-    <script src="news.js"></script>
-    <script src="highlights.js"></script>
-    <script src="blog.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initPreviewMap" async defer></script>
+    <script src="locations.js" defer></script>
+    <script src="news.js" defer></script>
+    <script src="highlights.js" defer></script>
+    <script src="blog.js" defer></script>
     <script>
         // Nav drawer
         (function() {
@@ -2135,7 +2157,7 @@
                 let topHtml;
                 if (item.image) {
                     const imgStyle = item.imageFit === 'contain' ? ' style="object-fit:contain;background:#fff;"' : '';
-                    topHtml = `<img class="news-card-image" src="${item.image}" alt="${item.title}"${imgStyle}>`;
+                    topHtml = `<img class="news-card-image" src="${item.image}" alt="${item.title}" loading="lazy"${imgStyle}>`;
                 } else {
                     topHtml = `
                         <div class="news-card-placeholder ${typeClass}">
@@ -2211,7 +2233,7 @@
                     const isNew = (new Date() - item.date) < 14 * 86400000;
                     const newBadge = isNew ? '<span class="recent-new-badge">New</span>' : '';
                     const imageHtml = p.image
-                        ? `<img class="recent-card-image" src="${p.image}" alt="${p.title}">`
+                        ? `<img class="recent-card-image" src="${p.image}" alt="${p.title}" loading="lazy">`
                         : `<div class="recent-card-initials"><div class="recent-card-initials-text">Blog</div><div class="recent-card-initials-label">San Diego Coffee</div></div>`;
                     return `
                 <a class="recent-card" href="blog-post.html?id=${p.id}">
@@ -2239,7 +2261,7 @@
                 let imageHtml;
                 if (loc.localImage) {
                     imageHtml = `
-                        <img class="recent-card-image" src="${loc.localImage}" alt="${name}"
+                        <img class="recent-card-image" src="${loc.localImage}" alt="${name}" loading="lazy"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="recent-card-initials" style="display:none;">
                             <div class="recent-card-initials-text">${initials}</div>
@@ -2281,7 +2303,7 @@
             if (!highlights.length) return;
             const h = highlights[0];
             const imgHtml = h.image
-                ? `<div class="feature-highlight-image-wrap"><img class="feature-highlight-image" src="${h.image}" alt="${h.roasterName}"></div>`
+                ? `<div class="feature-highlight-image-wrap"><img class="feature-highlight-image" src="${h.image}" alt="${h.roasterName}" loading="lazy"></div>`
                 : `<div class="feature-highlight-image-wrap feature-highlight-image-placeholder"></div>`;
             inner.innerHTML = `
                 ${imgHtml}
@@ -2298,6 +2320,15 @@
             renderNews();
             renderRecentLocations();
             renderFeaturedHighlight();
+        });
+
+        // Inject Maps API after DOMContentLoaded so deferred data scripts (locations.js etc.)
+        // are guaranteed to have run before initPreviewMap() fires.
+        document.addEventListener('DOMContentLoaded', function() {
+            var mapsScript = document.createElement('script');
+            mapsScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&callback=initPreviewMap';
+            mapsScript.async = true;
+            document.head.appendChild(mapsScript);
         });
 
         // NFC scan overlay — only active when ?nfc= param is present

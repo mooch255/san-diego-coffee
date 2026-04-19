@@ -545,7 +545,7 @@
         .type-toggle-pills {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.6rem;
         }
         .type-pill {
             display: inline-flex;
@@ -1253,6 +1253,11 @@
         @media (max-width: 768px) {
             .filters-panel.expanded {
                 max-height: 480px;
+            }
+            .amenity-toggles:not(.featured-toggles) .amenity-toggle {
+                font-size: 0.68rem;
+                padding: 0.28rem 0.7rem;
+                white-space: nowrap;
             }
         }
 
@@ -2635,6 +2640,11 @@ function setupEventListeners() {
             userLocationMarker = null;
         }
         userLatLng = null;
+        // Close any open info window and clear the active card highlight
+        if (infoWindow) infoWindow.close();
+        document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
+        holdPanelForCardClick = false;
+
         // Show ALL markers then fit bounds.
         // suppressIdleFilter blocks idle events during the animation so the
         // bounds filter doesn't re-run mid-flight. After 600ms the animation

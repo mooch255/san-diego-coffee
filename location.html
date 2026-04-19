@@ -19,17 +19,17 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Diego Specialty Coffee — Location Details</title>
+    <title>San Diego Coffee Shops & Roasters | San Diego Coffee Guide</title>
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sandiegocoffee.co/location.html">
-    <meta property="og:title" content="San Diego Specialty Coffee — Location Details">
-    <meta property="og:description" content="Explore specialty coffee roasters and cafes across San Diego — roast profiles, brew methods, hours, and more.">
+    <meta property="og:title" content="San Diego Coffee Shops & Roasters | San Diego Coffee Guide">
+    <meta property="og:description" content="Explore the best coffee shops and specialty roasters in San Diego — roast profiles, brew methods, hours, and neighborhood guides.">
     <meta property="og:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="San Diego Specialty Coffee — Location Details">
-    <meta name="twitter:description" content="Explore specialty coffee roasters and cafes across San Diego — roast profiles, brew methods, hours, and more.">
+    <meta name="twitter:title" content="San Diego Coffee Shops & Roasters | San Diego Coffee Guide">
+    <meta name="twitter:description" content="Explore the best coffee shops and specialty roasters in San Diego — roast profiles, brew methods, hours, and neighborhood guides.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
-    <meta name="description" content="Explore specialty coffee roasters and cafes across San Diego — roast profiles, brew methods, hours, and more.">
+    <meta name="description" content="Explore the best coffee shops and specialty roasters in San Diego — roast profiles, brew methods, hours, and neighborhood guides.">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <script type="application/ld+json" id="ld-schema"></script>
@@ -494,37 +494,62 @@
             border-bottom: 3px solid var(--accent-red);
         }
 
+        /* 2-photo: side by side at fixed height */
         .gallery-track {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 3px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            max-width: 100%;
+            height: 300px;
         }
 
-        .gallery-track::-webkit-scrollbar { display: none; }
+        /* 3-photo: hero left (wider) + two stacked right */
+        .gallery-track-3 {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 3px;
+            height: 300px;
+        }
 
         .gallery-photo {
-            flex-shrink: 0;
-            height: 200px;
             overflow: hidden;
             cursor: pointer;
             position: relative;
         }
 
-        .gallery-photo:first-child { flex: 2; min-width: 300px; }
-        .gallery-photo:not(:first-child) { flex: 1; min-width: 160px; }
+        .gallery-photo--hero {
+            grid-row: 1 / 3; /* spans both rows */
+        }
 
         .gallery-photo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center 25%;
             transition: transform 0.4s ease;
             display: block;
         }
 
         .gallery-photo:hover img { transform: scale(1.04); }
+
+        /* "Tap to expand" hint on hover */
+        .gallery-photo::after {
+            content: '⛶';
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.45rem;
+            border-radius: 3px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            backdrop-filter: blur(3px);
+            pointer-events: none;
+        }
+
+        .gallery-photo:hover::after { opacity: 1; }
 
         .gallery-placeholder {
             background: linear-gradient(135deg, var(--warm-brown) 0%, var(--espresso) 100%);
@@ -559,16 +584,39 @@
         .gallery-hero {
             position: relative;
             width: 100%;
-            height: 260px;
+            height: 320px;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .gallery-hero img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center 25%;
+            transition: transform 0.4s ease;
             display: block;
         }
+
+        .gallery-hero:hover img { transform: scale(1.04); }
+
+        .gallery-hero::after {
+            content: '⛶';
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.45rem;
+            border-radius: 3px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            backdrop-filter: blur(3px);
+            pointer-events: none;
+        }
+
+        .gallery-hero:hover::after { opacity: 1; }
 
         .gallery-maps-link {
             position: absolute;
@@ -605,6 +653,7 @@
             max-width: 90vw;
             max-height: 90vh;
             object-fit: contain;
+            user-select: none;
         }
 
         .lightbox-close {
@@ -622,6 +671,42 @@
         }
 
         .lightbox-close:hover { opacity: 1; }
+
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 0.75rem 1.1rem;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s, background 0.2s;
+            border-radius: 4px;
+            user-select: none;
+        }
+
+        .lightbox-prev { left: 1.25rem; }
+        .lightbox-next { right: 1.25rem; }
+        .lightbox-prev:hover,
+        .lightbox-next:hover { opacity: 1; background: rgba(255,255,255,0.2); }
+        .lightbox-prev[hidden],
+        .lightbox-next[hidden] { display: none; }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            font-family: 'Libre Franklin', sans-serif;
+            letter-spacing: 0.05em;
+        }
 
         /* ── Main Content ───────────────────────────────────────────────── */
         .content-wrap {
@@ -1137,9 +1222,6 @@
             }
 
             .details-card { position: static; }
-            .gallery-photo:first-child { min-width: 240px; }
-            .gallery-photo:not(:first-child) { min-width: 150px; }
-            .gallery-photo { height: 160px; }
 
         }
 
@@ -1288,6 +1370,31 @@
 
         .review-form { margin-top: 1rem; }
 
+        /* ── Featured Media Section ─────────────────────── */
+        .media-feature-section {
+            margin-bottom: 1.75rem;
+        }
+        .yt-embed-wrap {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #1a1a1a;
+        }
+        .yt-embed-wrap.has-ig {
+            margin-bottom: 1.5rem;
+        }
+        .yt-embed-wrap iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: 0;
+        }
+        .ig-about-wrap {
+            display: flex;
+            justify-content: center;
+        }
         /* ── Explore Nearby ─────────────────────────────── */
         .nearby-section {
             max-width: 900px;
@@ -1433,9 +1540,12 @@
     </div>
 
     <!-- Lightbox -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-        <img id="lightboxImg" src="" alt="">
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox(); event.stopPropagation()">✕</button>
+        <button class="lightbox-prev" id="lightboxPrev" onclick="lightboxNav(-1); event.stopPropagation()" hidden>‹</button>
+        <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+        <button class="lightbox-next" id="lightboxNext" onclick="lightboxNav(1); event.stopPropagation()" hidden>›</button>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
     </div>
 
     <!-- Footer -->
@@ -1582,22 +1692,23 @@
                 // ── Page title & meta ──────────────────────────────────────────────
                 const locType   = location.basicInfo.type;
                 const hood      = location.coffeeDetails?.neighborhood || location.basicInfo.address?.city || '';
-                const typeLabel = locType === 'roaster' ? 'Specialty Coffee Roaster' : 'Specialty Café';
-                const hoodSuffix = hood ? ` in ${hood}, San Diego` : ', San Diego';
+                const typeLabel = locType === 'roaster' ? 'Coffee Roaster' : 'Coffee Shop';
+                const hoodSuffix = hood ? ` in ${hood}, San Diego` : ' in San Diego';
                 const pageTitle = `${location.basicInfo.name} — ${typeLabel}${hoodSuffix}`;
 
                 function buildMetaDesc(loc) {
                     const cd = loc.coffeeDetails || {};
                     if (cd.description) return cd.description.slice(0, 160);
                     const n = loc.basicInfo.name;
-                    const h = cd.neighborhood || loc.basicInfo.address?.city || 'San Diego';
+                    const h = cd.neighborhood || loc.basicInfo.address?.city || '';
+                    const locationStr = h && h !== 'San Diego' ? `in ${h}, San Diego` : 'in San Diego';
                     if (loc.basicInfo.type === 'roaster') {
-                        const parts = [`${n} is a specialty coffee roaster in ${h}, San Diego.`];
+                        const parts = [`${n} is a specialty coffee roaster ${locationStr}.`];
                         if (cd.roastScale) parts.push(`Known for ${cd.roastScale.toLowerCase()} roasts.`);
                         if (cd.roastStyle) parts.push(cd.roastStyle + '.');
                         return parts.join(' ').slice(0, 160);
                     }
-                    const parts = [`${n} is a specialty coffee shop in ${h}, San Diego.`];
+                    const parts = [`${n} is a specialty coffee shop ${locationStr}.`];
                     if (cd.roastersServed?.length) parts.push(`Serving ${cd.roastersServed.slice(0, 2).join(' and ')}.`);
                     if (cd.brewingOptions?.length) parts.push(`Brewing: ${cd.brewingOptions.slice(0, 3).join(', ')}.`);
                     return parts.join(' ').slice(0, 160);
@@ -1820,6 +1931,7 @@
                         ${renderHighlightCallout(loc.id)}
                         ${renderBlogCallout(loc.id)}
                         ${renderDescription(custom, loc.legacyData)}
+                        ${renderMediaFeature(loc, custom)}
                         ${renderDetailsCard(isRoaster, custom, loc)}
                         ${renderShopLink(custom)}
                         ${renderInstagramReview(custom, 'mobile')}
@@ -1840,8 +1952,8 @@
                 ${renderMapEmbed(placeId)}
             `;
 
-            // Load Instagram embed script lazily — only when a review exists
-            if (custom && custom.instagramReviewUrl) {
+            // Load Instagram embed script lazily — only when a review or about embed exists
+            if (custom && (custom.instagramReviewUrl || custom.embedInstagramUrl)) {
                 const igScript = document.createElement('script');
                 igScript.src = '//www.instagram.com/embed.js';
                 igScript.async = true;
@@ -1932,8 +2044,8 @@
 
             if (imgs.length === 1) {
                 return `
-                    <div class="gallery-section">
-                        <div class="gallery-hero">
+                    <div class="gallery-section" style="position:relative;">
+                        <div class="gallery-hero" onclick="openLightbox('${localImage}')">
                             <img src="${localImage}" alt="${name}" loading="eager"
                                  onerror="this.parentElement.style.display='none'">
                         </div>
@@ -1942,17 +2054,40 @@
             }
 
             const labels = [name, `${name} — interior`, `${name} — detail`];
-            const photoHtml = imgs.map((src, i) => `
-                <div class="gallery-photo">
-                    <img src="${src}" alt="${labels[i]}" loading="${i === 0 ? 'eager' : 'lazy'}"
-                         onerror="this.parentElement.style.display='none'">
-                </div>
-            `).join('');
 
+            if (imgs.length === 2) {
+                return `
+                    <div class="gallery-section">
+                        <div class="gallery-track">
+                            <div class="gallery-photo" onclick="openLightbox('${imgs[0]}')">
+                                <img src="${imgs[0]}" alt="${labels[0]}" loading="eager"
+                                     onerror="this.parentElement.style.display='none'">
+                            </div>
+                            <div class="gallery-photo" onclick="openLightbox('${imgs[1]}')">
+                                <img src="${imgs[1]}" alt="${labels[1]}" loading="lazy"
+                                     onerror="this.parentElement.style.display='none'">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 3 photos: hero left (wider, spans full height) + two stacked right
             return `
-                <div class="gallery-section" style="position:relative;">
-                    <div class="gallery-track">
-                        ${photoHtml}
+                <div class="gallery-section">
+                    <div class="gallery-track-3">
+                        <div class="gallery-photo gallery-photo--hero" onclick="openLightbox('${imgs[0]}')">
+                            <img src="${imgs[0]}" alt="${labels[0]}" loading="eager"
+                                 onerror="this.parentElement.style.display='none'">
+                        </div>
+                        <div class="gallery-photo" onclick="openLightbox('${imgs[1]}')">
+                            <img src="${imgs[1]}" alt="${labels[1]}" loading="lazy"
+                                 onerror="this.parentElement.style.display='none'">
+                        </div>
+                        <div class="gallery-photo" onclick="openLightbox('${imgs[2]}')">
+                            <img src="${imgs[2]}" alt="${labels[2]}" loading="lazy"
+                                 onerror="this.parentElement.style.display='none'">
+                        </div>
                     </div>
                 </div>
             `;
@@ -2007,6 +2142,57 @@
                     <div class="hours-grid">${rowsHtml}</div>
                 </div>
             `;
+        }
+
+        function renderMediaFeature(loc, custom) {
+            const youtube   = custom && custom.embedYoutubeUrl   && custom.embedYoutubeUrl.trim();
+            const instagram = custom && custom.embedInstagramUrl && custom.embedInstagramUrl.trim();
+            if (!youtube && !instagram) return '';
+
+            let ytHtml = '';
+            if (youtube) {
+                const match = youtube.match(
+                    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+                );
+                const videoId = match && match[1];
+                if (videoId) {
+                    const locName = (loc.basicInfo && loc.basicInfo.name) ? loc.basicInfo.name : 'Featured Video';
+                    ytHtml = `
+                        <div class="yt-embed-wrap${instagram ? ' has-ig' : ''}">
+                            <iframe
+                                src="https://www.youtube-nocookie.com/embed/${videoId}"
+                                title="${locName} — Featured Video"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen
+                                loading="lazy"
+                            ></iframe>
+                        </div>`;
+                }
+            }
+
+            let igHtml = '';
+            if (instagram) {
+                const permaUrl = instagram.endsWith('/') ? instagram : instagram + '/';
+                igHtml = `
+                    <div class="ig-about-wrap">
+                        <blockquote
+                            class="instagram-media"
+                            data-instgrm-permalink="${permaUrl}"
+                            data-instgrm-version="14"
+                            style="max-width:540px; width:100%;"
+                        ></blockquote>
+                    </div>`;
+            }
+
+            const isRoaster = loc.basicInfo && loc.basicInfo.type === 'roaster';
+            const label = isRoaster ? '▶ In Their Own Words' : '▶ See It In Action';
+
+            return `
+                <div class="media-feature-section">
+                    <div class="section-label">${label}</div>
+                    ${ytHtml}
+                    ${igHtml}
+                </div>`;
         }
 
         function renderShopLink(custom) {
@@ -2276,12 +2462,34 @@
         }
 
         // ── Lightbox ───────────────────────────────────────────────────────
+        let _lbImgs = [], _lbIdx = 0;
+
         function openLightbox(url) {
-            const img = document.getElementById('lightboxImg');
-            img.src = url;
-            img.alt = document.title.split(' —')[0];
+            // Collect all gallery images in DOM order — use getAttribute('src') to get
+            // the original relative path, since n.src returns an absolute URL which
+            // won't match the relative paths passed to openLightbox()
+            const nodes = document.querySelectorAll('.gallery-hero img, .gallery-photo img');
+            _lbImgs = Array.from(nodes).map(n => n.getAttribute('src')).filter(Boolean);
+            _lbIdx  = _lbImgs.indexOf(url);
+            if (_lbIdx === -1) { _lbImgs = [url]; _lbIdx = 0; }
+            _lbShow();
             document.getElementById('lightbox').classList.add('open');
             document.body.style.overflow = 'hidden';
+        }
+
+        function _lbShow() {
+            const img = document.getElementById('lightboxImg');
+            img.src = _lbImgs[_lbIdx];
+            img.alt = document.title.split(' —')[0];
+            document.getElementById('lightboxPrev').hidden = _lbIdx === 0;
+            document.getElementById('lightboxNext').hidden = _lbIdx === _lbImgs.length - 1;
+            const counter = document.getElementById('lightboxCounter');
+            counter.textContent = _lbImgs.length > 1 ? `${_lbIdx + 1} / ${_lbImgs.length}` : '';
+        }
+
+        function lightboxNav(dir) {
+            _lbIdx = Math.max(0, Math.min(_lbImgs.length - 1, _lbIdx + dir));
+            _lbShow();
         }
 
         function closeLightbox() {
@@ -2289,9 +2497,28 @@
             document.body.style.overflow = '';
         }
 
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeLightbox();
+        // Close on backdrop click
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) closeLightbox();
         });
+
+        // Keyboard: Escape closes, arrows navigate
+        document.addEventListener('keydown', e => {
+            if (!document.getElementById('lightbox').classList.contains('open')) return;
+            if (e.key === 'Escape')     closeLightbox();
+            if (e.key === 'ArrowLeft')  lightboxNav(-1);
+            if (e.key === 'ArrowRight') lightboxNav(1);
+        });
+
+        // Touch swipe
+        let _swipeX = 0;
+        document.getElementById('lightbox').addEventListener('touchstart', e => {
+            _swipeX = e.touches[0].clientX;
+        }, { passive: true });
+        document.getElementById('lightbox').addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - _swipeX;
+            if (Math.abs(dx) > 50) lightboxNav(dx < 0 ? 1 : -1);
+        }, { passive: true });
 
         // ── Community Likes & Reviews ───────────────────────────────────────
 

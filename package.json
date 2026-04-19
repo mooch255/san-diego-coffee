@@ -20,5 +20,8 @@
   "homepage": "https://github.com/mooch255/san-diego-coffee#readme",
   "dependencies": {
     "googleapis": "^171.4.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

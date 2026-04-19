@@ -1,4 +1,24 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /edit.html
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
 
 Sitemap: https://sandiegocoffee.co/sitemap.xml

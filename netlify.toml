@@ -44,6 +44,11 @@
   status = 301
 
 [[redirects]]
+  from = "/locations/bird-rock-coffee-roasters-downtown"
+  to   = "/locations/bird-rock-coffee-roasters-downtown-kettner-blvd"
+  status = 301
+
+[[redirects]]
   from = "/locations/lofty-coffee-co-encinitas"
   to   = "/locations/lofty-coffee-co-encinitas-n-coast-hwy-101"
   status = 301

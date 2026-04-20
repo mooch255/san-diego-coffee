@@ -36,11 +36,13 @@
     <link rel="canonical" href="https://sandiegocoffee.co/map.html">
 
     <!-- Marker Clusterer -->
-    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
-    
+    <script defer src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap"></noscript>
     
     <style>
         :root {
@@ -1460,8 +1462,8 @@
         #visibleCount { font-weight: 600; color: var(--latte); }
 
         @keyframes countFlash {
-            0%   { color: var(--accent-red); transform: scale(1.15); }
-            100% { color: var(--latte);      transform: scale(1); }
+            0%   { opacity: 0.5; transform: scale(1.15); }
+            100% { opacity: 1;   transform: scale(1); }
         }
         #visibleCount.flash {
             animation: countFlash 0.4s ease-out forwards;
@@ -1915,6 +1917,12 @@ let map, markers = [], markerCluster, infoWindow, allLocations = [], userLocatio
 let sheetDataByLocation = {};
 let communityData = { likes: {}, reviews: {} };
 
+// Infinite scroll state for location card list
+const CARD_BATCH = 25;
+let _allCards = [];
+let _renderedCount = 0;
+let _scrollObserver = null;
+
 // Build highlight lookup: locationId → highlight entry
 const highlightByLocation = {};
 (window.highlights || []).forEach(h => {
@@ -2254,7 +2262,18 @@ function locationSlug(loc) {
     const dupes = allLocs.filter(l => slugify(l.basicInfo.name) === base);
     if (dupes.length <= 1) return base;
     const hood = loc.coffeeDetails?.neighborhood || '';
-    return hood ? `${base}-${slugify(hood)}` : `${base}-${loc.id}`;
+    if (!hood) return `${base}-${loc.id}`;
+    const hoodSlug = slugify(hood);
+    const withHood = `${base}-${hoodSlug}`;
+    const hoodDupes = dupes.filter(l => slugify(l.coffeeDetails?.neighborhood || '') === hoodSlug);
+    if (hoodDupes.length <= 1) return withHood;
+    const fullAddr = loc.basicInfo?.address?.fullAddress || '';
+    if (fullAddr) {
+        const streetName = fullAddr.split(',')[0].replace(/^\d+\s+/, '').trim();
+        const streetS = slugify(streetName);
+        if (streetS) return `${withHood}-${streetS}`;
+    }
+    return `${withHood}-${loc.id}`;
 }
 
 function createInfoWindowContent(location, custom) {
@@ -3651,7 +3670,21 @@ function renderLocationCards(visibleMarkers, suppressOnline = false, forcedOnlin
         return;
     }
 
-    container.innerHTML = combined.map(({ loc }) => renderCard(loc)).join('');
+    // Infinite scroll — render first batch, load more as user scrolls
+    _allCards = combined;
+    _renderedCount = 0;
+    container.innerHTML = '';
+
+    // If a pinned card exists, pre-render enough batches to include it so it's immediately visible
+    if (pinnedLocationId) {
+        const pinnedIdx = _allCards.findIndex(({ loc }) => loc.id === pinnedLocationId);
+        const batchesNeeded = pinnedIdx >= 0 ? Math.ceil((pinnedIdx + 1) / CARD_BATCH) : 1;
+        for (let i = 0; i < batchesNeeded; i++) appendCardBatch(container);
+    } else {
+        appendCardBatch(container);
+    }
+    attachScrollObserver(container);
+
     document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
 
     // Scroll to top if clear was just pressed
@@ -3672,6 +3705,44 @@ function renderLocationCards(visibleMarkers, suppressOnline = false, forcedOnlin
     }
 }
 
+function appendCardBatch(container) {
+    if (_renderedCount >= _allCards.length) return;
+
+    // Remove previous sentinel before adding new cards
+    const prev = container.querySelector('.scroll-sentinel');
+    if (prev) prev.remove();
+
+    const batch = _allCards.slice(_renderedCount, _renderedCount + CARD_BATCH);
+    container.insertAdjacentHTML('beforeend', batch.map(({ loc }) => renderCard(loc)).join(''));
+    _renderedCount += batch.length;
+
+    // Add new sentinel if more cards remain; otherwise clean up observer
+    if (_renderedCount < _allCards.length) {
+        const sentinel = document.createElement('div');
+        sentinel.className = 'scroll-sentinel';
+        sentinel.style.height = '1px';
+        container.appendChild(sentinel);
+        if (_scrollObserver) _scrollObserver.observe(sentinel);
+    } else if (_scrollObserver) {
+        _scrollObserver.disconnect();
+        _scrollObserver = null;
+    }
+}
+
+function attachScrollObserver(container) {
+    if (_scrollObserver) { _scrollObserver.disconnect(); _scrollObserver = null; }
+    if (_renderedCount >= _allCards.length) return;
+
+    _scrollObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            appendCardBatch(container);
+        }
+    }, { root: container, rootMargin: '200px' });
+
+    const sentinel = container.querySelector('.scroll-sentinel');
+    if (sentinel) _scrollObserver.observe(sentinel);
+}
+
 function renderCard(loc) {
         const info = loc.basicInfo;
         const custom = sheetDataByLocation[loc.id] || {};
@@ -3682,7 +3753,7 @@ function renderCard(loc) {
         const photoUrl = loc.localImage || null;
         const _initials = getCardInitials(info.name);
         const imgHtml = photoUrl
-            ? `<img class="location-card-img" src="${photoUrl}" alt="${info.name}" onerror="this.style.display='none'; this.nextElementSibling.style.removeProperty('display');">
+            ? `<img class="location-card-img" src="${photoUrl}" alt="${info.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.removeProperty('display');">
                <div class="location-card-img-placeholder" style="display:none;"><div class="card-initials">${_initials}</div><div class="card-initials-dot"></div></div>`
             : `<div class="location-card-img-placeholder"><div class="card-initials">${_initials}</div><div class="card-initials-dot"></div></div>`;
 
@@ -4530,6 +4601,6 @@ document.addEventListener('DOMContentLoaded', function() {
     -->
 
     <!-- Google Maps API with Places library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initMap" defer></script>
 </body>
 </html>

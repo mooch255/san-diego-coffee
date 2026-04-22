@@ -36,13 +36,12 @@
     <link rel="canonical" href="https://sandiegocoffee.co/map.html">
 
     <!-- Marker Clusterer -->
-    <script defer src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -2564,6 +2563,15 @@ function selectLocation(locationId) {
                 updateVisibleCount(vis.length);
             }, 500);
         }, 300);
+    } else if (location.basicInfo?.onlineOnly) {
+        // Online-only roasters have no map marker — render them in the card list directly
+        const currentVisible = markers.filter(m => m.getMap() !== null);
+        pinnedLocationId = locationId; // ensures card is rendered + scrolled to even if past first batch
+        renderLocationCards(currentVisible, false, [location]);
+        // Float an infoWindow at the map center — no geographic pin since there's no physical address
+        infoWindow.setContent(createInfoWindowContent(location, sheetDataByLocation[location.id] || {}));
+        infoWindow.setPosition(map.getCenter());
+        infoWindow.open(map);
     }
 
     // Highlight and jump card to top of panel
@@ -4601,6 +4609,6 @@ document.addEventListener('DOMContentLoaded', function() {
     -->
 
     <!-- Google Maps API with Places library -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initMap" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initMap" async defer></script>
 </body>
 </html>

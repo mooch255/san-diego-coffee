@@ -259,6 +259,8 @@ async function main() {
     const amenitiesList = sheetRow.amenities ? sheetRow.amenities.split(',').map(a => a.trim()) : [];
     if (amenitiesList.includes('Online-only (no physical storefront)')) {
       loc.basicInfo.onlineOnly = true;
+    } else {
+      delete loc.basicInfo.onlineOnly;
     }
     return loc;
   });

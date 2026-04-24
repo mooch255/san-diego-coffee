@@ -33,9 +33,9 @@ function sleep(ms) {
 }
 
 // Returns the path + web path of an existing image for a given id+suffix,
-// checking .webp before .jpg. Returns null if neither exists.
+// checking common web formats. Returns null if none exist.
 function findExistingImage(id, suffix = '') {
-  for (const ext of ['.webp', '.jpg']) {
+  for (const ext of ['.webp', '.jpg', '.png', '.avif']) {
     const filename = `${id}${suffix}${ext}`;
     const fullPath = path.join(IMAGES_DIR, filename);
     if (fs.existsSync(fullPath)) {

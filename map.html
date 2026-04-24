@@ -2220,17 +2220,12 @@ function createMarker(location) {
     
     marker.addListener('click', () => {
         showInfoWindow(marker, location);
-        // Highlight the card and scroll panel to it
-        document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
-        const card = document.querySelector(`.location-card[data-id="${location.id}"]`);
-        if (card) {
-            card.classList.add('active');
-            const panelCards = document.getElementById('locationCards');
-            if (panelCards) panelCards.scrollTop = Math.max(0, card.offsetTop - panelCards.offsetTop - 8);
-        }
-        // Suppress idle re-render during pan so the highlighted card isn't wiped out
+        pinnedLocationId = location.id;
         suppressIdleFilter = true;
-        setTimeout(() => { suppressIdleFilter = false; }, 600);
+        setTimeout(() => {
+            suppressIdleFilter = false;
+            applyFilters(); // re-render with pinned card floated to top
+        }, 600);
     });
 
     // Map → List: hovering a marker highlights its card
@@ -2443,15 +2438,21 @@ function setupAutocomplete() {
     function updateAutocompleteDropdown(query) {
         // Search our existing locations
         const isZip = /^\d{5}$/.test(query.trim());
-        const matches = allLocations.filter(loc => {
+        const q = query.toLowerCase();
+        const nameMatches = [], addressMatches = [];
+        allLocations.forEach(loc => {
             const name = loc.basicInfo.name.toLowerCase();
             const address = loc.basicInfo.address.fullAddress?.toLowerCase() || '';
             const zip = (loc.basicInfo.address.zip || '').trim();
             if (isZip) {
-                return zip.startsWith(query) || address.includes(query.toLowerCase());
+                if (zip.startsWith(query) || address.includes(q)) nameMatches.push(loc);
+            } else if (name.includes(q)) {
+                nameMatches.push(loc);
+            } else if (address.includes(q)) {
+                addressMatches.push(loc);
             }
-            return name.includes(query.toLowerCase()) || address.includes(query.toLowerCase());
-        }).slice(0, 8);
+        });
+        const matches = [...nameMatches, ...addressMatches].slice(0, 8);
         
         if (matches.length === 0) {
             dropdown.classList.remove('show');
@@ -2551,16 +2552,16 @@ function selectLocation(locationId) {
     if (marker) {
         suppressIdleFilter = true;
         holdPanelForCardClick = true; // keep panel unchanged until user manually pans/zooms
+        pinnedLocationId = locationId; // ensure card is included + highlighted after pan
         map.setZoom(16);
         map.panTo(marker.getPosition());
         setTimeout(() => {
             showInfoWindow(marker, location);
             setTimeout(() => {
                 suppressIdleFilter = false;
-                // Update count to reflect the zoomed-in viewport (idle won't re-fire since
-                // the map has already settled, so we compute it directly here)
-                const vis = markers.filter(m => shouldShowMarker(m, false));
-                updateVisibleCount(vis.length);
+                holdPanelForCardClick = false;
+                // Re-render cards for the new viewport so the pinned card is visible
+                applyFilters();
             }, 500);
         }, 300);
     } else if (location.basicInfo?.onlineOnly) {
@@ -3678,6 +3679,15 @@ function renderLocationCards(visibleMarkers, suppressOnline = false, forcedOnlin
         return;
     }
 
+    // Pinned card floats to top of list
+    if (pinnedLocationId) {
+        const pinnedIdx = combined.findIndex(({ loc }) => loc.id === pinnedLocationId);
+        if (pinnedIdx > 0) {
+            const [pinned] = combined.splice(pinnedIdx, 1);
+            combined.unshift(pinned);
+        }
+    }
+
     // Infinite scroll — render first batch, load more as user scrolls
     _allCards = combined;
     _renderedCount = 0;
@@ -3996,6 +4006,7 @@ function selectLocationCard(locationId) {
     // Zoom in and open info window on map
     // Suppress idle-triggered applyFilters during this zoom so the map doesn't flash
     const marker = markers.find(m => m.locationData?.id === locationId);
+    pinnedLocationId = locationId;
     if (marker) {
         suppressIdleFilter = true;
         holdPanelForCardClick = true; // keep panel unchanged until user manually pans/zooms
@@ -4011,8 +4022,8 @@ function selectLocationCard(locationId) {
             infoWindow.open(map);
             setTimeout(() => {
                 suppressIdleFilter = false;
-                const vis = markers.filter(m => shouldShowMarker(m, false));
-                updateVisibleCount(vis.length);
+                holdPanelForCardClick = false;
+                applyFilters(); // re-render with pinned card floated to top
             }, 400);
         }, 300);
     } else {
@@ -4022,6 +4033,7 @@ function selectLocationCard(locationId) {
             infoWindow.setContent(createInfoWindowContent(loc, sheetDataByLocation[loc.id] || {}));
             infoWindow.setPosition(map.getCenter());
             infoWindow.open(map);
+            applyFilters(); // re-render with pinned card floated to top
         }
     }
 }

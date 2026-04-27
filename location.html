@@ -1116,6 +1116,9 @@
         }
 
         @media (max-width: 768px) {
+            .header-brand-eyebrow { display: none; }
+            .header-logo { font-size: 1.2rem; }
+            .header-subtitle { font-size: 0.6rem; color: rgba(196,167,125,0.85); margin-top: 0.35rem; }
             .detail-row:has(.sibling-links) {
                 flex-direction: column;
                 gap: 0.5rem;
@@ -1553,6 +1556,7 @@
         <a href="/roaster-highlights.html">Roaster Highlights</a>
         <a href="/blog.html">Blog</a>
         <a href="/news.html">News &amp; Events</a>
+        <a href="/guides.html">Guides</a>
         <a href="/about.html">About</a>
         <div class="nav-social">
             <span class="nav-social-label">Follow Us</span>
@@ -1595,6 +1599,7 @@
 
     <script src="/locations.js"></script>
     <script src="/highlights.js"></script>
+    <script src="/guides.js"></script>
     <script src="/blog.js"></script>
     <script>
         // Footer count
@@ -1679,6 +1684,7 @@
         const fromParam = params.get('from');
         const highlightId = params.get('highlightId');
         const fromLocationId = params.get('locationId');
+        const guideId = params.get('guideId');
 
         let backHref, backLabel, useHistoryBack = false;
         if (fromParam === 'home') {
@@ -1691,6 +1697,11 @@
             const fromLoc = (window.COFFEE_LOCATIONS || []).find(l => l.id === fromLocationId);
             backHref  = `location.html?id=${fromLocationId}`;
             backLabel = `← Back to ${fromLoc ? fromLoc.basicInfo.name : 'Location'}`;
+        } else if (fromParam === 'guide' && guideId) {
+            const guideMap = window.GUIDE_MAP || {};
+            const guide = guideMap[guideId];
+            backHref  = `/guide.html?id=${guideId}`;
+            backLabel = `← Back to ${guide ? guide.neighborhood + ' Guide' : 'Guide'}`;
         } else {
             backHref  = `/map.html${locationId ? `?location=${locationId}` : ''}`;
             backLabel = '← Back to Map';

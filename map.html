@@ -36,12 +36,14 @@
     <link rel="canonical" href="https://sandiegocoffee.co/map.html">
 
     <!-- Marker Clusterer -->
-    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+    <script src="/js/markerclusterer.min.js" defer></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap"></noscript>
     
     <style>
         :root {
@@ -1746,6 +1748,7 @@
         <a href="roaster-highlights.html">Roaster Highlights</a>
         <a href="blog.html">Blog</a>
         <a href="news.html">News &amp; Events</a>
+        <a href="guides.html">Guides</a>
         <a href="about.html">About</a>
         <div class="nav-social">
             <span class="nav-social-label">Follow Us</span>

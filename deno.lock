@@ -11,7 +11,8 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:googleapis@^171.4.0"
+        "npm:googleapis@^171.4.0",
+        "npm:sharp@~0.34.5"
       ]
     }
   }

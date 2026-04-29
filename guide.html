@@ -21,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Best Coffee in North Park, San Diego | Neighborhood Guide</title>
     <meta property="og:type" content="article">
-    <meta property="og:url" content="https://sandiegocoffee.co/guide.html?id=north-park">
+    <meta property="og:url" content="https://sandiegocoffee.co/guides/north-park">
     <meta property="og:title" content="Best Coffee in North Park, San Diego | Neighborhood Guide">
     <meta property="og:description" content="The definitive guide to specialty coffee in North Park, San Diego. Must-visit roasters and cafes with an interactive map, editorial picks, and what to order.">
     <meta property="og:image" content="https://sandiegocoffee.co/images/guides/north-park-hero.jpg">
@@ -33,7 +33,7 @@
     <meta name="keywords" id="keywordsTag" content="North Park coffee, San Diego specialty coffee, North Park roasters, best coffee 30th street, North Park cafes">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
-    <link rel="canonical" href="https://sandiegocoffee.co/guide.html?id=north-park" id="canonicalTag">
+    <link rel="canonical" href="https://sandiegocoffee.co/guides/north-park" id="canonicalTag">
     <link rel="prerender" href="" id="prerenderLink">
     <script type="application/ld+json" id="ld-schema"></script>
     <script type="application/ld+json" id="ld-breadcrumb"></script>
@@ -2100,19 +2100,14 @@
             if (next) next.disabled = index === total - 1;
         }
 
-        // ── Open full location detail card (mobile) ────────────────────
-        var detailSwipeAttached = false;
-        function openDetailCard(entry, guide) {
-            var detailSheet = document.getElementById('guideDetailSheet');
-            var detailOverlay = document.getElementById('guideDetailOverlay');
+        // ── Populate detail card content (no open/close, no animation) ──
+        function populateDetailCard(entry, guide) {
             var detailBody = document.getElementById('guideDetailBody');
-            if (!detailSheet || !detailBody) return;
+            if (!detailBody) return;
 
             var loc = getLocById(entry.locationId);
             var name = loc ? loc.basicInfo.name : '';
             var type = loc ? (loc.basicInfo.type || '') : '';
-            var rating = loc && loc.googleRating ? loc.googleRating.rating : null;
-            var ratingTxt = rating ? '★ ' + rating.toFixed(1) : '';
             var todayHrs = loc ? getTodayHours(loc) : '';
             var localImg = loc && loc.localImage ? loc.localImage : '';
             var rankStr = entry.rank < 10 ? ('0' + entry.rank) : String(entry.rank);
@@ -2131,17 +2126,11 @@
                 : '<div class="guide-detail-photo-fallback">☕</div>';
 
             var mustOrderHtml = entry.mustOrder
-                ? '<div class="guide-detail-tip">'
-                    + '<div class="guide-detail-tip-label">Must Order</div>'
-                    + '<div class="guide-detail-tip-text">' + escHtml(entry.mustOrder) + '</div>'
-                  + '</div>'
+                ? '<div class="guide-detail-tip"><div class="guide-detail-tip-label">Must Order</div><div class="guide-detail-tip-text">' + escHtml(entry.mustOrder) + '</div></div>'
                 : '';
 
             var insightHtml = entry.localInsight
-                ? '<div class="guide-detail-tip">'
-                    + '<div class="guide-detail-tip-label">Insider Tip</div>'
-                    + '<div class="guide-detail-tip-text">' + escHtml(entry.localInsight) + '</div>'
-                  + '</div>'
+                ? '<div class="guide-detail-tip"><div class="guide-detail-tip-label">Insider Tip</div><div class="guide-detail-tip-text">' + escHtml(entry.localInsight) + '</div></div>'
                 : '';
 
             detailBody.innerHTML =
@@ -2160,23 +2149,55 @@
                 +   '<a href="location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id) + '" class="guide-detail-cta">View full location details →</a>'
                 + '</div>';
 
-            // Reset scroll
             detailBody.scrollTop = 0;
-
-            // Track current position for nav
             detailGuide = guide;
             detailCurrentIndex = guide.locations.findIndex(function(l) { return l.locationId === entry.locationId; });
             updateDetailNav(detailCurrentIndex, guide.locations.length);
 
-            // Sync carousel to this card
+            // Sync carousel + markers
+            var previousId = activeCarouselId;
             var mini = document.querySelector('.guide-mini-card[data-id="' + entry.locationId + '"]');
             if (mini) {
                 document.querySelectorAll('.guide-mini-card.is-active').forEach(function(c) { c.classList.remove('is-active'); });
                 mini.classList.add('is-active');
+                if (previousId && previousId !== entry.locationId) highlightMarker(previousId, false);
                 activeCarouselId = entry.locationId;
                 mini.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                 highlightMarker(entry.locationId, true);
             }
+        }
+
+        // ── Navigate with slide transition ─────────────────────────────
+        function navigateDetail(entry, guide, direction) {
+            var body = document.getElementById('guideDetailBody');
+            if (!body) return;
+            var easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
+            var outX = direction === 'next' ? '-105%' : '105%';
+            var inX  = direction === 'next' ? '105%'  : '-105%';
+
+            body.style.transition = 'transform 0.2s ' + easing;
+            body.style.transform  = 'translateX(' + outX + ')';
+
+            setTimeout(function() {
+                populateDetailCard(entry, guide);
+                body.style.transition = 'none';
+                body.style.transform  = 'translateX(' + inX + ')';
+                body.offsetHeight; // force reflow
+                body.style.transition = 'transform 0.2s ' + easing;
+                body.style.transform  = 'translateX(0)';
+                setTimeout(function() { body.style.transform = ''; body.style.transition = ''; }, 210);
+            }, 200);
+        }
+
+        // ── Open full location detail card (mobile) ────────────────────
+        var detailSwipeAttached = false;
+        function openDetailCard(entry, guide) {
+            var detailSheet = document.getElementById('guideDetailSheet');
+            var detailOverlay = document.getElementById('guideDetailOverlay');
+            var detailBody = document.getElementById('guideDetailBody');
+            if (!detailSheet || !detailBody) return;
+
+            populateDetailCard(entry, guide);
 
             detailSheet.classList.add('open');
             if (detailOverlay) detailOverlay.classList.add('open');
@@ -2186,30 +2207,33 @@
                 detailSheet.classList.remove('open');
                 if (detailOverlay) detailOverlay.classList.remove('open');
                 document.body.style.overflow = '';
+                Object.keys(guideMarkers).forEach(function(id) {
+                    var m = guideMarkers[id];
+                    if (!m) return;
+                    var isActive = id === activeCarouselId;
+                    m.marker.setIcon(buildMarkerIcon(m.rank, isActive));
+                    m.marker.setZIndex(isActive ? 999 : 100);
+                });
             }
 
-            // Wire prev/next buttons (replace listeners each open)
+            // Prev/next buttons use slide transition
             var prevBtn = document.getElementById('guideDetailPrev');
             var nextBtn = document.getElementById('guideDetailNext');
-            if (prevBtn) {
-                prevBtn.onclick = function() {
-                    if (detailCurrentIndex > 0) openDetailCard(guide.locations[detailCurrentIndex - 1], guide);
-                };
-            }
-            if (nextBtn) {
-                nextBtn.onclick = function() {
-                    if (detailCurrentIndex < guide.locations.length - 1) openDetailCard(guide.locations[detailCurrentIndex + 1], guide);
-                };
-            }
+            if (prevBtn) prevBtn.onclick = function() {
+                if (detailCurrentIndex > 0) navigateDetail(detailGuide.locations[detailCurrentIndex - 1], detailGuide, 'prev');
+            };
+            if (nextBtn) nextBtn.onclick = function() {
+                if (detailCurrentIndex < detailGuide.locations.length - 1) navigateDetail(detailGuide.locations[detailCurrentIndex + 1], detailGuide, 'next');
+            };
 
-            // Attach swipe gestures once; subsequent opens reuse the same listeners
+            // Attach swipe gestures once
             if (!detailSwipeAttached) {
                 detailSwipeAttached = true;
                 attachSwipeClose(detailSheet, function() { return detailBody; }, closeDetail);
                 attachHorizontalNav(
                     detailBody,
-                    function() { if (detailCurrentIndex > 0) openDetailCard(detailGuide.locations[detailCurrentIndex - 1], detailGuide); },
-                    function() { if (detailCurrentIndex < detailGuide.locations.length - 1) openDetailCard(detailGuide.locations[detailCurrentIndex + 1], detailGuide); }
+                    function() { if (detailCurrentIndex > 0) navigateDetail(detailGuide.locations[detailCurrentIndex - 1], detailGuide, 'prev'); },
+                    function() { if (detailCurrentIndex < detailGuide.locations.length - 1) navigateDetail(detailGuide.locations[detailCurrentIndex + 1], detailGuide, 'next'); }
                 );
             }
 

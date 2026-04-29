@@ -29,7 +29,7 @@ window.GUIDES = [
     metaTitle: 'Best Coffee in North Park, San Diego | Neighborhood Guide',
     metaDescription: 'The definitive guide to specialty coffee in North Park, San Diego. Must-visit roasters and cafes with an interactive map, editorial picks, and what to order.',
     metaKeywords: 'North Park coffee, San Diego specialty coffee, North Park roasters, best coffee 30th street, North Park cafes',
-    canonicalUrl: 'https://sandiegocoffee.co/guide.html?id=north-park',
+    canonicalUrl: 'https://sandiegocoffee.co/guides/north-park',
     ogImage: '/images/guides/north-park-hero.jpg',
 
     // ── About section ─────────────────────────────────────────────────

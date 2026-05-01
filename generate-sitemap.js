@@ -31,19 +31,26 @@ function slugify(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+// Must stay identical to locationSlug() in location.html
 function locationSlug(loc, allLocs) {
   var base = slugify(loc.basicInfo.name);
-  var dupes = allLocs.filter(function(l) { return slugify(l.basicInfo.name) === base; });
-  if (dupes.length <= 1) return base;
+  var nameDupes = allLocs.filter(function(l) { return slugify(l.basicInfo.name) === base; });
+  if (nameDupes.length <= 1) return base;
   var hood = (loc.coffeeDetails && loc.coffeeDetails.neighborhood) || '';
-  var withHood = hood ? base + '-' + slugify(hood) : base + '-' + loc.id;
-  // If adding the neighborhood still collides, fall back to the unique loc ID
-  var hoodDupes = allLocs.filter(function(l) {
-    var b = slugify(l.basicInfo.name);
-    var h = (l.coffeeDetails && l.coffeeDetails.neighborhood) || '';
-    return (h ? b + '-' + slugify(h) : b + '-' + l.id) === withHood;
+  if (!hood) return base + '-' + loc.id;
+  var hoodSlug = slugify(hood);
+  var withHood = base + '-' + hoodSlug;
+  var hoodDupes = nameDupes.filter(function(l) {
+    return slugify((l.coffeeDetails && l.coffeeDetails.neighborhood) || '') === hoodSlug;
   });
-  return hoodDupes.length <= 1 ? withHood : base + '-' + loc.id;
+  if (hoodDupes.length <= 1) return withHood;
+  var fullAddr = (loc.basicInfo && loc.basicInfo.address && loc.basicInfo.address.fullAddress) || '';
+  if (fullAddr) {
+    var streetName = fullAddr.split(',')[0].replace(/^\d+\s+/, '').trim();
+    var streetS = slugify(streetName);
+    if (streetS) return withHood + '-' + streetS;
+  }
+  return withHood + '-' + loc.id;
 }
 
 function loadLocations() {
@@ -86,6 +93,7 @@ var staticPages = [
   { path: '/map.html',                changefreq: 'weekly',  priority: '0.9' },
   { path: '/roaster-highlights.html', changefreq: 'weekly',  priority: '0.8' },
   { path: '/blog.html',               changefreq: 'weekly',  priority: '0.7' },
+  { path: '/news.html',               changefreq: 'weekly',  priority: '0.7' },
   { path: '/about.html',              changefreq: 'monthly', priority: '0.5' },
   { path: '/submit.html',             changefreq: 'monthly', priority: '0.5' },
 ];

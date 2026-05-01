@@ -365,74 +365,11 @@ async function main() {
   console.log(`  ✓ Backup saved to locations.js.backup`);
 
   // ── 6. Regenerate sitemap.xml ──────────────────────────────────────────────
-  console.log('\n  Regenerating sitemap.xml...');
-
-  const BASE_URL      = 'https://sandiegocoffee.co';
-  const SITEMAP_FILE  = path.join(__dirname, 'sitemap.xml');
-  const HIGHLIGHTS_FILE = path.join(__dirname, 'highlights.js');
-
-  function safeDate(str) {
-    if (!str) return new Date().toISOString().slice(0, 10);
-    const d = new Date(str);
-    return isNaN(d.getTime()) ? new Date().toISOString().slice(0, 10) : d.toISOString().slice(0, 10);
-  }
-
-  function urlEntry(loc, lastmod, changefreq, priority) {
-    return [
-      '  <url>',
-      `    <loc>${loc}</loc>`,
-      `    <lastmod>${lastmod}</lastmod>`,
-      `    <changefreq>${changefreq}</changefreq>`,
-      `    <priority>${priority}</priority>`,
-      '  </url>',
-    ].join('\n');
-  }
-
-  const todayStr = new Date().toISOString().slice(0, 10);
-
-  const staticPages = [
-    { p: '/',                        cf: 'weekly',  pri: '1.0' },
-    { p: '/map.html',                cf: 'weekly',  pri: '0.9' },
-    { p: '/roaster-highlights.html', cf: 'weekly',  pri: '0.8' },
-    { p: '/about.html',              cf: 'monthly', pri: '0.5' },
-    { p: '/submit.html',             cf: 'monthly', pri: '0.5' },
-  ];
-
-  const sitemapEntries = [];
-
-  staticPages.forEach(pg => {
-    sitemapEntries.push(urlEntry(BASE_URL + pg.p, todayStr, pg.cf, pg.pri));
-  });
-
-  locations.forEach(loc => {
-    const lastmod = safeDate(loc.coffeeDetails && loc.coffeeDetails.lastUpdated);
-    sitemapEntries.push(urlEntry(`${BASE_URL}/locations/${loc.id}`, lastmod, 'monthly', '0.8'));
-  });
-
-  let highlightCount = 0;
-  try {
-    const hlRaw = fs.readFileSync(HIGHLIGHTS_FILE, 'utf8');
-    const hlMatch = hlRaw.match(/window\.highlights\s*=\s*(\[[\s\S]*\]);?\s*$/m);
-    if (hlMatch) {
-      const highlights = Function('"use strict"; return ' + hlMatch[1])();
-      highlights.forEach(h => {
-        sitemapEntries.push(urlEntry(`${BASE_URL}/highlight.html?id=${h.id}`, safeDate(h.date), 'monthly', '0.8'));
-      });
-      highlightCount = highlights.length;
-    }
-  } catch (e) {
-    console.log('  ⚠️  Could not read highlights.js — highlight URLs skipped');
-  }
-
-  const sitemapXml = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    sitemapEntries.join('\n'),
-    '</urlset>',
-  ].join('\n');
-
-  fs.writeFileSync(SITEMAP_FILE, sitemapXml, 'utf8');
-  console.log(`  ✓ sitemap.xml updated — ${sitemapEntries.length} URLs (${staticPages.length} static, ${locations.length} locations, ${highlightCount} highlights)`);
+  require('child_process').execFileSync(
+    process.execPath,
+    [path.join(__dirname, 'generate-sitemap.js')],
+    { stdio: 'inherit' }
+  );
 
   console.log('\n✅ Sync complete! Run:\n');
   console.log('   GOOGLE_PLACES_API_KEY=your_key node migrate-photos.js');

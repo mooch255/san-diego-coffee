@@ -1928,18 +1928,22 @@ let _scrollObserver = null;
 // Build highlight lookup: locationId → highlight entry
 const highlightByLocation = {};
 (window.highlights || []).forEach(h => {
-    // Support old ?id=loc_xxx format and new /locations/slug format
-    const idMatch = h.locationUrl?.match(/[?&]id=([^&]+)/);
-    if (idMatch) {
-        highlightByLocation[idMatch[1]] = h;
+    if (h.relatedLocationIds?.length) {
+        h.relatedLocationIds.forEach(id => { highlightByLocation[id] = h; });
     } else {
-        const slugMatch = h.locationUrl?.match(/\/locations\/([^/?#]+)/);
-        if (slugMatch) {
-            const slug = slugMatch[1];
-            const loc = (window.COFFEE_LOCATIONS || []).find(l =>
-                slugify(l.basicInfo.name) === slug || locationSlug(l) === slug
-            );
-            if (loc) highlightByLocation[loc.id] = h;
+        // Support old ?id=loc_xxx format and new /locations/slug format
+        const idMatch = h.locationUrl?.match(/[?&]id=([^&]+)/);
+        if (idMatch) {
+            highlightByLocation[idMatch[1]] = h;
+        } else {
+            const slugMatch = h.locationUrl?.match(/\/locations\/([^/?#]+)/);
+            if (slugMatch) {
+                const slug = slugMatch[1];
+                const loc = (window.COFFEE_LOCATIONS || []).find(l =>
+                    slugify(l.basicInfo.name) === slug || locationSlug(l) === slug
+                );
+                if (loc) highlightByLocation[loc.id] = h;
+            }
         }
     }
 });

@@ -1893,6 +1893,7 @@
             const loc = (window.COFFEE_LOCATIONS || []).find(l => l.id === locationId);
             const locSlug = loc ? slugify(loc.basicInfo.name) : null;
             return (window.highlights || []).find(h => {
+                if (h.relatedLocationIds?.includes(locationId)) return true;
                 // Support old ?id=loc_xxx format and new /locations/slug format
                 const idMatch = h.locationUrl?.match(/[?&]id=([^&]+)/);
                 if (idMatch) return idMatch[1] === locationId;

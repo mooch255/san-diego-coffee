@@ -691,9 +691,9 @@
                 </div>`;
         } else {
             // Update page meta
-            document.title = entry.roasterName + ' · San Diego Specialty Coffee';
+            document.title = entry.title + ' | San Diego Specialty Coffee';
             const ogTitle = document.querySelector('meta[property="og:title"]');
-            if (ogTitle) ogTitle.content = entry.roasterName + ' · San Diego Specialty Coffee';
+            if (ogTitle) ogTitle.content = entry.title + ' | San Diego Specialty Coffee';
             // Set canonical
             let canonical = document.querySelector('link[rel="canonical"]');
             if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
@@ -735,7 +735,13 @@
                     mainEntityOfPage: {
                         '@type': 'WebPage',
                         '@id': 'https://sandiegocoffee.co/highlight.html?id=' + e.id
-                    }
+                    },
+                    about: {
+                        '@type': 'LocalBusiness',
+                        name: e.roasterName,
+                        url: e.websiteUrl || undefined
+                    },
+                    interviewee: e.interviewee || undefined
                 };
                 schema = JSON.parse(JSON.stringify(schema));
                 var tag = document.getElementById('ld-schema');

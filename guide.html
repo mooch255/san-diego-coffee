@@ -1448,7 +1448,7 @@
         <div class="header-content">
             <div>
                 <div class="header-brand-eyebrow">Roasters · Cafes · Community</div>
-                <a href="index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+                <a href="/index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
                 <p class="header-subtitle" id="headerSubtitle">Neighborhood Guide</p>
             </div>
             <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
@@ -1462,14 +1462,14 @@
             <span class="nav-drawer-label">Menu</span>
             <button class="nav-drawer-close" id="navDrawerClose" aria-label="Close navigation">✕</button>
         </div>
-        <a href="index.html">Home</a>
-        <a href="map.html">Explore Map</a>
-        <a href="submit.html">Add a Spot</a>
-        <a href="roaster-highlights.html">Roaster Highlights</a>
-        <a href="blog.html">Blog</a>
-        <a href="news.html">News &amp; Events</a>
-        <a href="guides.html" class="active">Guides</a>
-        <a href="about.html">About</a>
+        <a href="/index.html">Home</a>
+        <a href="/map.html">Explore Map</a>
+        <a href="/submit.html">Add a Spot</a>
+        <a href="/roaster-highlights.html">Roaster Highlights</a>
+        <a href="/blog.html">Blog</a>
+        <a href="/news.html">News &amp; Events</a>
+        <a href="/guides.html" class="active">Guides</a>
+        <a href="/about.html">About</a>
         <div class="nav-social">
             <span class="nav-social-label">Follow Us</span>
             <div class="nav-social-icons">
@@ -1511,7 +1511,7 @@
                     </div>
                     <div class="guide-locations-list" id="guideLocationsList"></div>
                     <div class="guide-panel-cta">
-                        <a href="map.html" id="guideMapCta">Explore all San Diego coffee on the full map →</a>
+                        <a href="/map.html" id="guideMapCta">Explore all San Diego coffee on the full map →</a>
                     </div>
                 </div>
                 <div class="guide-map-panel">
@@ -1551,7 +1551,7 @@
     <div class="guide-not-found" id="guideNotFound" style="display:none">
         <h2>Guide Not Found</h2>
         <p>We couldn't find that guide. Try browsing all guides below.</p>
-        <a href="guides.html">← Back to Guides</a>
+        <a href="/guides.html">← Back to Guides</a>
     </div>
 
     <footer>
@@ -1561,12 +1561,12 @@
             <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>@sdcoffeebeans</a>
         </div>
         <div class="footer-row">
-            <a href="privacy.html">Privacy Policy</a>
+            <a href="/privacy.html">Privacy Policy</a>
         </div>
     </footer>
 
-    <script src="guides.js"></script>
-    <script src="locations.js"></script>
+    <script src="/guides.js"></script>
+    <script src="/locations.js"></script>
     <script>
         // ── Nav drawer ─────────────────────────────────────────────────
         (function() {
@@ -1906,7 +1906,7 @@
                           + '</div>'
                         : '')
                     +   insightHtml
-                    +   '<a href="location.html?id=' + entry.locationId + '&from=guide&guideId=' + guide.id + '" class="guide-location-link">View location details →</a>'
+                    +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + guide.id + '" class="guide-location-link">View location details →</a>'
                     + '</div>';
 
                 card.addEventListener('mouseenter', function() { highlightMarker(entry.locationId, true); });
@@ -1966,7 +1966,7 @@
                 card.className = 'guide-mini-card';
                 card.setAttribute('data-id', entry.locationId);
                 card.setAttribute('role', 'listitem');
-                card.href = 'location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id);
+                card.href = '/location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id);
                 card.innerHTML =
                     '<div class="guide-mini-card-inner">'
                     +   '<div class="guide-mini-photo">'
@@ -2146,7 +2146,7 @@
                 +   '<p class="guide-detail-blurb">' + escHtml(entry.blurb || '') + '</p>'
                 +   mustOrderHtml
                 +   insightHtml
-                +   '<a href="location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id) + '" class="guide-detail-cta">View full location details →</a>'
+                +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id) + '" class="guide-detail-cta">View full location details →</a>'
                 + '</div>';
 
             detailBody.scrollTop = 0;
@@ -2539,13 +2539,15 @@
         // ── Init ───────────────────────────────────────────────────────
         (function() {
             var params = new URLSearchParams(window.location.search);
-            var id = params.get('id');
+            // Support both clean URLs (/guides/slug) and query string (?id=slug)
+            var pathMatch = window.location.pathname.match(/\/guides\/([^\/]+)$/);
+            var pathSegment = pathMatch && pathMatch[1];
+            var id = params.get('id') || pathSegment;
 
             if (!id || !window.GUIDE_MAP || !window.GUIDE_MAP[id]) {
                 // Show not-found state
                 document.getElementById('guideHeroTitle').textContent = 'Guide Not Found';
                 document.getElementById('guideHeroMeta').textContent = '';
-                document.getElementById('breadcrumbCurrent').textContent = 'Not Found';
                 document.getElementById('guideNotFound').style.display = '';
                 return;
             }

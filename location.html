@@ -1600,6 +1600,7 @@
     <script src="/locations.js"></script>
     <script src="/highlights.js"></script>
     <script src="/guides.js"></script>
+    <script src="/neighborhoods.js"></script>
     <script src="/blog.js"></script>
     <script>
         // Footer count
@@ -2477,11 +2478,18 @@
                     </a>`;
             }).join('');
 
+            const nearbyHood = loc.coffeeDetails?.neighborhood || '';
+            const nhPage = nearbyHood && window.NEIGHBORHOOD_MAP && window.NEIGHBORHOOD_MAP[
+                nearbyHood.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+            ];
+            const seeAllHref = nhPage ? `/neighborhoods/${nhPage.id}` : `/map.html?neighborhood=${encodeURIComponent(nearbyHood)}`;
+            const seeAllLabel = nhPage ? `All coffee in ${nearbyHood} →` : 'See all on map →';
+
             return `
                 <div class="nearby-section">
                     <div class="nearby-header">
                         <h2>${label}</h2>
-                        <a href="/map.html" class="nearby-see-all">See all on map →</a>
+                        <a href="${seeAllHref}" class="nearby-see-all">${seeAllLabel}</a>
                     </div>
                     <div class="nearby-grid">${cardsHtml}</div>
                 </div>`;

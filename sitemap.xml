@@ -2,43 +2,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sandiegocoffee.co/</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/map.html</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://sandiegocoffee.co/guides.html</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://sandiegocoffee.co/roaster-highlights.html</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/blog.html</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/news.html</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/about.html</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/submit.html</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -62,7 +68,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/interim-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -74,67 +80,67 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lofty-coffee-co-encinitas-n-coast-hwy-101</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lofty-coffee-co-solana-beach</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lofty-coffee-co-carlsbad-state-st</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lofty-coffee-co-carlsbad-el-camino-real-unit-a</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lofty-coffee-co-downtown</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bump-coffee-encinitas</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bump-coffee-cardiff-by-the-sea</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/ironsmith-coffee-roasters</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/mostra-coffee-carmel-mountain-ranch</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/mostra-coffee-rancho-bernardo</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/mostra-coffee-carmel-valley</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -146,13 +152,13 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/mostra-coffee-downtown</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/mostra-coffee-hillcrest</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -182,7 +188,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/la-costa-coffee-roasting</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -212,37 +218,37 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bird-rock-coffee-roasters-bird-rock</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bird-rock-coffee-roasters-la-jolla-gilman-dr</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bird-rock-coffee-roasters-bay-park</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bird-rock-coffee-roasters-downtown-kettner-blvd</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bird-rock-coffee-roasters-point-loma</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bird-rock-coffee-roasters-encinitas</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -260,7 +266,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/snakebite-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -272,7 +278,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/coffee-hub-and-cafe-now-juno-s</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -290,19 +296,19 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/ryan-bros-coffee-barrio-logan</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/ryan-bros-coffee-city-heights</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/ryan-bros-coffee-san-marcos</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -314,13 +320,13 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/heave-ho-coffee-co-chula-vista</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/heave-ho-coffee-co-coronado</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -338,7 +344,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/goldchild-coffee-roasters</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -362,115 +368,115 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/trident-coffee-imperial-beach</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/trident-coffee-coronado</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/trident-coffee-pacific-beach</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/james-coffee-co-hillcrest</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/james-coffee-co-north-park</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/james-coffee-co-carmel-mountain-ranch</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/james-coffee-co-vista</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/achilles-coffee-roasters-carmel-valley</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/achilles-coffee-roasters-solana-beach</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/achilles-coffee-roasters-downtown-fourth-ave-suite-101</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/achilles-coffee-roasters-downtown-park-plz-suite-175</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/achilles-coffee-roasters-downtown-b-st</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/modern-times-beer</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/dark-horse-coffee-roasters-normal-heights</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/dark-horse-coffee-roasters-north-park</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/dark-horse-coffee-roasters-south-park</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/dark-horse-coffee-roasters-golden-hill</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/dark-horse-coffee-roasters-la-mesa</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/dark-horse-coffee-roasters-chula-vista</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -506,13 +512,13 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/parabola-coffee-roasting-co</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/holsem-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -530,25 +536,25 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/parakeet-cafe-la-jolla</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/parakeet-cafe-carmel-valley</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/parakeet-cafe-carlsbad</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/parakeet-cafe-sorrento-valley</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -560,7 +566,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/inflection-point-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -578,19 +584,19 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lestat-s-hillcrest</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lestat-s-normal-heights-park-blvd</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/lestat-s-normal-heights-adams-ave</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -608,7 +614,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/the-king-s-craft-coffee-co-mission-valley</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -620,13 +626,13 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/brew-coffee-spot</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/the-simple-coffee-house</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -638,13 +644,13 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/dark-horse-coffee-roasters-allied-gardens</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/cafeina-cafe</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -668,55 +674,55 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/heartwork-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/local-krave-point-loma</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/local-krave-pacific-beach</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/scrimshaw-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/safari-coffee-roasters</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/idego-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/shepherds-coffee-company</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/the-king-s-craft-coffee-co-poway</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/ob-beans-coffee-roasters</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -728,7 +734,7 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/cosmic-bloom-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -746,13 +752,13 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/flor-and-seed-coffee-roasters</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/james-coffee-co-escondido</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -788,13 +794,13 @@
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/the-template</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sandiegocoffee.co/locations/bay-park-coffee</loc>
-    <lastmod>2026-05-04</lastmod>
+    <lastmod>2026-05-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -871,7 +877,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sandiegocoffee.co/locations/communal-coffee-san-diego</loc>
+    <loc>https://sandiegocoffee.co/locations/communal-coffee-south-park</loc>
     <lastmod>2026-03-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -1325,5 +1331,107 @@
     <lastmod>2026-04-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/north-park</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/downtown</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/carlsbad</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/oceanside</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/encinitas</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/la-jolla</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/point-loma</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/hillcrest</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/escondido</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/ocean-beach</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/pacific-beach</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/carmel-valley</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/bankers-hill</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/barrio-logan</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/vista</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/normal-heights</loc>
+    <lastmod>2026-05-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/guides/north-park</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>

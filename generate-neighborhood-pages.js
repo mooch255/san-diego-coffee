@@ -1,0 +1,477 @@
+// generate-neighborhood-pages.js
+// Generates static HTML pages for each neighborhood at neighborhoods/{id}/index.html
+// These are fully crawlable by Google and LLM crawlers without JavaScript.
+// JS in the page progressively enhances the static location list with photo cards.
+//
+// Usage:
+//   node generate-neighborhood-pages.js
+//
+// Re-run whenever locations.js or neighborhoods.js changes.
+
+const fs   = require('fs');
+const path = require('path');
+
+const BASE_URL         = 'https://sandiegocoffee.co';
+const LOCATIONS_FILE   = path.join(__dirname, 'locations.js');
+const NEIGHBORHOODS_FILE = path.join(__dirname, 'neighborhoods.js');
+const GUIDES_FILE      = path.join(__dirname, 'guides.js');
+const OUT_DIR          = path.join(__dirname, 'neighborhoods');
+
+// ── Loaders ───────────────────────────────────────────────────────────────────
+
+function loadLocations() {
+  const raw = fs.readFileSync(LOCATIONS_FILE, 'utf8');
+  const window = {};
+  eval(raw);
+  return window.COFFEE_LOCATIONS;
+}
+
+function loadNeighborhoods() {
+  const raw = fs.readFileSync(NEIGHBORHOODS_FILE, 'utf8');
+  const window = {};
+  eval(raw);
+  return window.NEIGHBORHOODS;
+}
+
+function loadGuides() {
+  const raw = fs.readFileSync(GUIDES_FILE, 'utf8');
+  const window = {};
+  eval(raw);
+  return window.GUIDES;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function locationSlug(loc, allLocs) {
+  const base = slugify(loc.basicInfo.name);
+  const nameDupes = allLocs.filter(l => slugify(l.basicInfo.name) === base);
+  if (nameDupes.length <= 1) return base;
+  const hood = (loc.coffeeDetails && loc.coffeeDetails.neighborhood) || '';
+  if (!hood) return base + '-' + loc.id;
+  const hoodSlug = slugify(hood);
+  const withHood = base + '-' + hoodSlug;
+  const hoodDupes = nameDupes.filter(l =>
+    slugify((l.coffeeDetails && l.coffeeDetails.neighborhood) || '') === hoodSlug
+  );
+  if (hoodDupes.length <= 1) return withHood;
+  const fullAddr = (loc.basicInfo && loc.basicInfo.address && loc.basicInfo.address.fullAddress) || '';
+  if (fullAddr) {
+    const streetName = fullAddr.split(',')[0].replace(/^\d+\s+/, '').trim();
+    const streetS = slugify(streetName);
+    if (streetS) return withHood + '-' + streetS;
+  }
+  return withHood + '-' + loc.id;
+}
+
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+// ── Page template ─────────────────────────────────────────────────────────────
+
+function buildPage(hood, locs, allLocs, guide) {
+  const canonicalUrl = `${BASE_URL}/neighborhoods/${hood.id}`;
+  const h1 = `Best Coffee in ${hood.name}, San Diego`;
+  const spotCount = locs.length;
+  const mapHref = `/map.html?neighborhood=${encodeURIComponent(hood.name)}`;
+
+  // ── JSON-LD ──────────────────────────────────────────────────────────────
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    'name': `Coffee Shops in ${hood.name}, San Diego`,
+    'description': hood.metaDescription,
+    'url': canonicalUrl,
+    'about': { '@type': 'Place', 'name': `${hood.name}, San Diego, CA` },
+    'mainEntity': {
+      '@type': 'ItemList',
+      'numberOfItems': locs.length,
+      'itemListElement': locs.map((l, i) => {
+        const item = {
+          '@type': 'ListItem',
+          'position': i + 1,
+          'item': {
+            '@type': 'CafeOrCoffeeShop',
+            'name': l.basicInfo.name,
+            'url': `${BASE_URL}/locations/${locationSlug(l, allLocs)}`
+          }
+        };
+        const addr = l.basicInfo && l.basicInfo.address;
+        if (addr && addr.fullAddress) {
+          item.item.address = {
+            '@type': 'PostalAddress',
+            'streetAddress': addr.street || '',
+            'addressLocality': hood.name,
+            'addressRegion': 'CA',
+            'addressCountry': 'US'
+          };
+        }
+        const coords = addr && addr.coordinates;
+        if (coords && coords.lat && coords.lng) {
+          item.item.geo = {
+            '@type': 'GeoCoordinates',
+            'latitude': coords.lat,
+            'longitude': coords.lng
+          };
+        }
+        if (l.basicInfo && l.basicInfo.contact && l.basicInfo.contact.phone) {
+          item.item.telephone = l.basicInfo.contact.phone;
+        }
+        return item;
+      })
+    }
+  };
+
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': `${BASE_URL}/` },
+      { '@type': 'ListItem', 'position': 2, 'name': 'Neighborhood Guides', 'item': `${BASE_URL}/guides.html` },
+      { '@type': 'ListItem', 'position': 3, 'name': hood.name, 'item': canonicalUrl }
+    ]
+  };
+
+  // ── Static location list ─────────────────────────────────────────────────
+  const listItems = locs.map(l => {
+    const slug = locationSlug(l, allLocs);
+    const type = l.basicInfo.type === 'cafe' ? 'Cafe' : 'Roaster';
+    return `      <li><a href="/locations/${esc(slug)}">${esc(l.basicInfo.name)}</a> <span class="sll-type">${type}</span></li>`;
+  }).join('\n');
+
+  // ── Guide button ─────────────────────────────────────────────────────────
+  const guideBtnHtml = guide
+    ? `<a href="/guides/${esc(guide.id)}" class="hood-guide-btn">Read the full guide →</a>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-W1SW2S30PY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-W1SW2S30PY');
+    </script>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "w12ykvsrtj");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${esc(hood.metaTitle)}</title>
+    <meta name="description" content="${esc(hood.metaDescription)}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="${esc(canonicalUrl)}">
+    <meta property="og:title" content="${esc(hood.metaTitle)}">
+    <meta property="og:description" content="${esc(hood.metaDescription)}">
+    <meta property="og:image" content="${BASE_URL}/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${esc(hood.metaTitle)}">
+    <meta name="twitter:description" content="${esc(hood.metaDescription)}">
+    <meta name="twitter:image" content="${BASE_URL}/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="canonical" href="${esc(canonicalUrl)}">
+    <script type="application/ld+json">${JSON.stringify(schema)}</script>
+    <script type="application/ld+json">${JSON.stringify(breadcrumb)}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --espresso: #3D2817;
+            --coffee-brown: #6B4E3D;
+            --cream: #F8F5F0;
+            --white: #FFFFFF;
+            --latte: #C4A77D;
+            --accent-red: #B85C38;
+            --warm-brown: #5C4033;
+            --light-tan: #E8DED2;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Libre Franklin', -apple-system, sans-serif; color: var(--espresso); background: var(--white); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Header */
+        header { background: linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%); color: var(--white); border-top: 3px solid var(--accent-red); border-bottom: 3px solid var(--accent-red); overflow: hidden; position: relative; }
+        header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%), radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%); pointer-events: none; }
+        header::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 140% at 50% 110%, rgba(184,92,56,0.18) 0%, transparent 60%); pointer-events: none; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0.85rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+        .header-brand-eyebrow { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(196,167,125,0.6); margin-bottom: 0.4rem; }
+        .header-logo { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 400; letter-spacing: -0.01em; line-height: 1; color: #EDE0CC; text-decoration: none; display: block; }
+        .header-logo em { font-style: italic; color: #C9A97E; }
+        .header-logo strong { font-style: normal; font-weight: 800; color: #EDE0CC; }
+        .header-subtitle { font-size: 0.6rem; color: rgba(196,167,125,0.55); margin-top: 0.4rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+
+        /* Nav toggle */
+        .nav-toggle { display: flex; align-items: center; gap: 0.5rem; background: rgba(196,167,125,0.08); border: 1px solid rgba(196,167,125,0.4); color: rgba(196,167,125,0.9); padding: 0.7rem 1.3rem; cursor: pointer; font-family: 'Libre Franklin', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 0; transition: all 0.2s; white-space: nowrap; }
+        .nav-toggle-icon { font-size: 1.35rem; line-height: 1; }
+        .nav-toggle:hover, .nav-toggle.open { border-color: var(--latte); color: var(--latte); background: rgba(196,167,125,0.13); }
+        .nav-backdrop { position: fixed; inset: 0; background: rgba(20,10,4,0.55); z-index: 9998; opacity: 0; visibility: hidden; transition: opacity 0.32s ease, visibility 0s linear 0.32s; backdrop-filter: blur(2px); }
+        .nav-backdrop.open { opacity: 1; visibility: visible; transition: opacity 0.32s ease, visibility 0s linear 0s; }
+        .nav-dropdown { position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 300px; background: #2A1508; border-left: 1px solid rgba(196,167,125,0.18); z-index: 9999; transform: translateX(100%); visibility: hidden; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.32s; display: flex; flex-direction: column; overflow-y: auto; box-shadow: -8px 0 40px rgba(0,0,0,0.5); }
+        .nav-dropdown.open { transform: translateX(0); visibility: visible; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s; }
+        .nav-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem 1rem; border-bottom: 1px solid rgba(196,167,125,0.12); border-top: 3px solid var(--accent-red); flex-shrink: 0; }
+        .nav-drawer-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(196,167,125,0.45); }
+        .nav-drawer-close { background: none; border: 1px solid rgba(196,167,125,0.28); color: rgba(196,167,125,0.75); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0.35rem 0.65rem; transition: all 0.18s; font-family: inherit; }
+        .nav-drawer-close:hover { border-color: var(--latte); color: var(--latte); background: rgba(196,167,125,0.08); }
+        .nav-dropdown a { display: block; padding: 1.05rem 1.5rem; color: rgba(196,167,125,0.72); text-decoration: none; font-family: 'Libre Franklin', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; border-bottom: 1px solid rgba(196,167,125,0.08); transition: background 0.15s, color 0.15s, padding-left 0.15s; }
+        .nav-dropdown a:hover { background: rgba(196,167,125,0.07); color: var(--latte); padding-left: 1.85rem; }
+        .nav-dropdown a.active { color: var(--latte); border-left: 3px solid var(--accent-red); padding-left: calc(1.5rem - 3px); }
+        .nav-social { margin-top: auto; padding: 1.2rem 1.5rem 1.5rem; border-top: 1px solid rgba(196,167,125,0.2); display: flex; flex-direction: column; gap: 0.85rem; flex-shrink: 0; background: rgba(0,0,0,0.15); }
+        .nav-social-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(196,167,125,0.75); }
+        .nav-social-icons { display: flex; gap: 0.65rem; }
+        .nav-social .nav-social-icon { display: flex; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border: 1px solid rgba(196,167,125,0.2); transition: transform 0.18s, border-color 0.18s, background 0.18s; text-decoration: none; }
+        .nav-social .nav-social-icon.reddit { color: #FF4500; }
+        .nav-social .nav-social-icon.instagram { color: #E1306C; }
+        .nav-social .nav-social-icon:hover { transform: scale(1.08); border-color: rgba(196,167,125,0.45); background: rgba(196,167,125,0.08); }
+
+        /* Hero */
+        .hood-hero { background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%); border-bottom: 1px solid #E0DBD3; padding: 3rem 0 2.5rem; }
+        .hood-eyebrow { font-size: 0.62rem; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-red); margin-bottom: 0.6rem; }
+        .hood-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 700; color: var(--espresso); line-height: 1.15; margin-bottom: 1rem; }
+        .hood-about { font-size: 1.05rem; line-height: 1.75; color: var(--coffee-brown); max-width: 720px; margin-bottom: 1.75rem; }
+        .hood-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .hood-map-btn { display: inline-flex; align-items: center; background: var(--accent-red); color: white; text-decoration: none; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.7rem 1.4rem; transition: background 0.18s; }
+        .hood-map-btn:hover { background: #a04a28; }
+        .hood-guide-btn { display: inline-flex; align-items: center; background: transparent; color: var(--espresso); text-decoration: none; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.7rem 1.4rem; border: 1px solid #C0B8AE; transition: border-color 0.18s, color 0.18s; }
+        .hood-guide-btn:hover { border-color: var(--espresso); color: var(--accent-red); }
+        .hood-count { font-size: 0.8rem; color: var(--coffee-brown); font-weight: 600; }
+
+        /* Static location list */
+        .locations-section { padding: 3rem 0 4rem; }
+        .static-location-list { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem 1.5rem; margin-bottom: 1rem; }
+        .static-location-list li { padding: 0.6rem 0; border-bottom: 1px solid #EDE8E0; font-size: 0.9rem; }
+        .static-location-list a { color: var(--espresso); text-decoration: none; font-weight: 600; }
+        .static-location-list a:hover { color: var(--accent-red); }
+        .sll-type { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--coffee-brown); margin-left: 0.4rem; opacity: 0.7; }
+
+        /* JS-enhanced photo cards */
+        .locations-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        .loc-card { display: flex; flex-direction: column; background: var(--white); border: 1px solid #E0DBD3; text-decoration: none; color: inherit; transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s; overflow: hidden; }
+        .loc-card:hover { border-color: var(--latte); box-shadow: 0 4px 16px rgba(61,40,23,0.1); transform: translateY(-3px); }
+        .loc-card-img { width: 100%; aspect-ratio: 3/2; object-fit: cover; display: block; background: var(--cream); }
+        .loc-card-img-placeholder { width: 100%; aspect-ratio: 3/2; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; opacity: 0.3; }
+        .loc-card-body { padding: 1rem 1.15rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+        .loc-card-type { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.35rem; }
+        .loc-card-type.roaster { color: #0F9D58; }
+        .loc-card-type.cafe { color: #0288D1; }
+        .loc-card-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--espresso); line-height: 1.25; margin-bottom: 0.5rem; }
+        .loc-card-exp { font-size: 0.75rem; color: var(--coffee-brown); margin-bottom: 0.65rem; }
+        .loc-card-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.9rem; }
+        .loc-card-tag { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: var(--cream); color: var(--warm-brown); padding: 0.2rem 0.5rem; border: 1px solid #DDD5CA; }
+        .loc-card-cta { margin-top: auto; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--accent-red); border-top: 1px solid #EDE8E0; padding-top: 0.75rem; }
+
+        /* Footer */
+        footer { background: var(--espresso); color: rgba(196,167,125,0.65); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.35rem; padding: 1.5rem 2rem; font-size: 0.78rem; }
+        footer a { color: var(--latte); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+        footer a:hover { color: #EDE0CC; }
+        .footer-sep { opacity: 0.4; margin: 0 0.4rem; }
+        .footer-row { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+        /* Responsive */
+        @media (max-width: 900px) { .locations-grid, .static-location-list { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .header-content { padding: 0.6rem 1rem; } .header-brand-eyebrow { display: none; } .header-logo { font-size: 1.2rem; } }
+        @media (max-width: 600px) { .locations-grid, .static-location-list { grid-template-columns: 1fr; } .container { padding: 0 1.25rem; } .hood-hero { padding: 2rem 0 1.75rem; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <div class="header-brand-eyebrow">Roasters &middot; Cafes &middot; Community</div>
+                <a href="/index.html" class="header-logo"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
+                <p class="header-subtitle">${esc(hood.name)} &middot; Neighborhood Guide</p>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                <span class="nav-toggle-icon">&#8801;</span>
+                <span class="nav-toggle-label">Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <nav class="nav-dropdown" id="navDropdown" aria-label="Site navigation">
+        <div class="nav-drawer-header">
+            <span class="nav-drawer-label">Menu</span>
+            <button class="nav-drawer-close" id="navDrawerClose" aria-label="Close navigation">&#x2715;</button>
+        </div>
+        <a href="/index.html">Home</a>
+        <a href="/map.html">Explore Map</a>
+        <a href="/submit.html">Add a Spot</a>
+        <a href="/roaster-highlights.html">Roaster Highlights</a>
+        <a href="/blog.html">Blog</a>
+        <a href="/news.html">News &amp; Events</a>
+        <a href="/guides.html" class="active">Guides</a>
+        <a href="/about.html">About</a>
+        <div class="nav-social">
+            <span class="nav-social-label">Follow Us</span>
+            <div class="nav-social-icons">
+                <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank" rel="noopener" aria-label="Reddit" class="nav-social-icon reddit"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg></a>
+                <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener" aria-label="Instagram" class="nav-social-icon instagram"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── STATIC CONTENT — fully crawlable without JavaScript ── -->
+    <section class="hood-hero">
+        <div class="container">
+            <p class="hood-eyebrow">Neighborhood Guide</p>
+            <h1 class="hood-title">${esc(h1)}</h1>
+            <p class="hood-about">${esc(hood.about)}</p>
+            <div class="hood-actions">
+                <a href="${esc(mapHref)}" class="hood-map-btn">View all on map &#x2192;</a>
+                ${guideBtnHtml}
+                <span class="hood-count">${spotCount} spot${spotCount !== 1 ? 's' : ''}</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="locations-section">
+        <div class="container">
+            <!-- Static list: indexed by crawlers, replaced by JS photo cards -->
+            <ul class="static-location-list" id="staticLocationList">
+${listItems}
+            </ul>
+            <!-- JS-enhanced photo cards -->
+            <div class="locations-grid" id="locationsGrid" style="display:none"></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-row">
+            <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
+            <span class="footer-sep">&middot;</span>
+            <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener">@sdcoffeebeans</a>
+        </div>
+        <div class="footer-row">
+            <a href="/privacy.html">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="/locations.js"></script>
+    <script src="/neighborhoods.js"></script>
+    <script src="/guides.js"></script>
+    <script>
+        // Nav drawer
+        (function() {
+            var toggle = document.getElementById('navToggle');
+            var drawer = document.getElementById('navDropdown');
+            var closeBtn = document.getElementById('navDrawerClose');
+            if (!toggle || !drawer) return;
+            var backdrop = document.createElement('div');
+            backdrop.className = 'nav-backdrop';
+            document.body.appendChild(backdrop);
+            function openNav() { drawer.classList.add('open'); backdrop.classList.add('open'); toggle.classList.add('open'); toggle.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; }
+            function closeNav() { drawer.classList.remove('open'); backdrop.classList.remove('open'); toggle.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
+            toggle.addEventListener('click', function(e) { e.stopPropagation(); drawer.classList.contains('open') ? closeNav() : openNav(); });
+            if (closeBtn) closeBtn.addEventListener('click', closeNav);
+            backdrop.addEventListener('click', closeNav);
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNav(); });
+        })();
+
+        // Progressive enhancement: replace static list with photo cards
+        (function() {
+            var hoodName = ${JSON.stringify(hood.name)};
+            var locs = (window.COFFEE_LOCATIONS || []).filter(function(l) {
+                return l.coffeeDetails && l.coffeeDetails.neighborhood === hoodName && !l.basicInfo.onlineOnly;
+            });
+            locs.sort(function(a, b) { return a.basicInfo.name.localeCompare(b.basicInfo.name); });
+
+            var grid = document.getElementById('locationsGrid');
+            var list = document.getElementById('staticLocationList');
+            if (!grid || !locs.length) return;
+
+            var amenityLabels = {
+                'Good for Working (Wifi)': 'Wifi', 'Offers Food / Pastries': 'Food',
+                'Dog Friendly': 'Dog Friendly', 'Outdoor Seating': 'Outdoor Seating',
+                'Pour Over Available': 'Pour Over', 'Sells Beans Online': 'Beans Online',
+                'Decaf Espresso Available': 'Decaf', 'Has Parking Lot': 'Parking',
+                'Espresso Options (Choice between different beans)': 'Single Origin Espresso'
+            };
+
+            locs.forEach(function(loc) {
+                var card = document.createElement('a');
+                card.href = '/location.html?id=' + loc.id;
+                card.className = 'loc-card';
+                var imgHtml = loc.localImage
+                    ? '<img class="loc-card-img" src="' + loc.localImage + '" alt="' + loc.basicInfo.name + '" loading="lazy">'
+                    : '<div class="loc-card-img-placeholder">&#9749;</div>';
+                var type = loc.basicInfo.type || 'roaster';
+                var exp = (loc.coffeeDetails && loc.coffeeDetails.visitorExperience || '').replace(/ \\(.*\\)/, '');
+                var tags = (loc.coffeeDetails && loc.coffeeDetails.amenities || []).slice(0, 3).map(function(a) {
+                    return '<span class="loc-card-tag">' + (amenityLabels[a] || a) + '</span>';
+                }).join('');
+                card.innerHTML = imgHtml +
+                    '<div class="loc-card-body">' +
+                        '<div class="loc-card-type ' + type + '">' + (type === 'cafe' ? 'Cafe' : 'Roaster') + '</div>' +
+                        '<div class="loc-card-name">' + loc.basicInfo.name + '</div>' +
+                        (exp ? '<div class="loc-card-exp">' + exp + '</div>' : '') +
+                        (tags ? '<div class="loc-card-tags">' + tags + '</div>' : '') +
+                        '<div class="loc-card-cta">View details &#x2192;</div>' +
+                    '</div>';
+                grid.appendChild(card);
+            });
+
+            // Swap static list for photo cards
+            list.style.display = 'none';
+            grid.style.display = '';
+        })();
+    </script>
+
+</body>
+</html>`;
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+
+console.log('\n🏘  Generating neighborhood pages\n');
+
+const allLocs    = loadLocations();
+const hoods      = loadNeighborhoods();
+const guides     = loadGuides();
+
+const guideByNeighborhood = {};
+guides.forEach(g => { if (g.neighborhood) guideByNeighborhood[g.neighborhood] = g; });
+
+if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR);
+
+let count = 0;
+hoods.forEach(hood => {
+  const locs = allLocs.filter(l =>
+    l.coffeeDetails && l.coffeeDetails.neighborhood === hood.name && !l.basicInfo.onlineOnly
+  );
+  locs.sort((a, b) => a.basicInfo.name.localeCompare(b.basicInfo.name));
+
+  const guide = guideByNeighborhood[hood.name] || null;
+  const html  = buildPage(hood, locs, allLocs, guide);
+
+  const dir = path.join(OUT_DIR, hood.id);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+  fs.writeFileSync(path.join(dir, 'index.html'), html, 'utf8');
+
+  console.log(`  ✓ neighborhoods/${hood.id}/index.html  (${locs.length} spots)`);
+  count++;
+});
+
+console.log(`\n✅ ${count} neighborhood pages written to /neighborhoods/\n`);
+console.log('   Re-run whenever locations.js or neighborhoods.js changes.\n');

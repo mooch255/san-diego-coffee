@@ -65,6 +65,12 @@
   to   = "/guide.html?id=:id"
   status = 200
 
+# Clean URLs for neighborhood pages — /neighborhoods/slug serves neighborhood.html?id=slug
+[[redirects]]
+  from = "/neighborhoods/:id"
+  to   = "/neighborhood.html?id=:id"
+  status = 200
+
 # Serve favicon.svg for legacy favicon and Apple touch icon requests
 [[redirects]]
   from = "/favicon.ico"

@@ -19,7 +19,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Diego Specialty Coffee - Specialty Coffee Map</title>
+    <title>San Diego Specialty Coffee Map | Roasters &amp; Cafes</title>
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sandiegocoffee.co/map.html">
     <meta property="og:title" content="Explore the Map · San Diego Specialty Coffee">
@@ -2102,6 +2102,21 @@ function initMap() {
         setTimeout(() => {
             document.getElementById('searchInput').value = searchQuery;
             performSearch();
+        }, 800);
+    }
+
+    // Handle ?neighborhood= deep links from the guides/neighborhoods page
+    const neighborhoodParam = urlParams.get('neighborhood');
+    if (neighborhoodParam) {
+        setTimeout(() => {
+            const sel = document.getElementById('filterNeighborhood');
+            if (!sel) return;
+            const opt = Array.from(sel.options).find(o => o.value === neighborhoodParam);
+            if (opt) {
+                sel.value = neighborhoodParam;
+                neighborhoodZoomPending = true;
+                applyFilters();
+            }
         }, 800);
     }
 

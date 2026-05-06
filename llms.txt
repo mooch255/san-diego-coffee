@@ -1,4 +1,4 @@
-# sandiegocoffee.co — LLMs.txt
+﻿# sandiegocoffee.co — LLMs.txt
 
 > San Diego Specialty Coffee is a community-curated directory of 190+ specialty coffee shops and independent roasters in San Diego, CA. Built for and by the r/SanDiegoCoffeeBeans Reddit community. Features detailed roast profiles, brew methods, neighborhood guides, hours, and visitor info — designed for specialty coffee enthusiasts who want more than basic listings.
 
@@ -6,7 +6,7 @@
 
 - [Home](https://sandiegocoffee.co/) — San Diego specialty coffee directory overview and featured locations
 - [Interactive Map](https://sandiegocoffee.co/map.html) — Browse and filter 190+ mapped coffee locations across all San Diego neighborhoods
-- [Roaster Highlights](https://sandiegocoffee.co/roaster-highlights.html) — In-depth interview-style features on San Diego's independent specialty coffee roasters
+- [Roaster Stories](https://sandiegocoffee.co/roaster-highlights.html) — In-depth interview-style features on San Diego's independent specialty coffee roasters
 - [News & Events](https://sandiegocoffee.co/news.html) — San Diego specialty coffee news, café openings, and community events
 - [Blog](https://sandiegocoffee.co/blog.html) — Coffee guides, café visit reviews, and community posts
 - [About](https://sandiegocoffee.co/about.html) — About the project and the r/SanDiegoCoffeeBeans community

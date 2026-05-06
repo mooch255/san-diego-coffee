@@ -1,4 +1,4 @@
-// generate-neighborhood-pages.js
+﻿// generate-neighborhood-pages.js
 // Generates static HTML pages for each neighborhood at neighborhoods/{id}/index.html
 // These are fully crawlable by Google and LLM crawlers without JavaScript.
 // JS in the page progressively enhances the static location list with photo cards.
@@ -206,18 +206,19 @@ function buildPage(hood, locs, allLocs, guide) {
             --accent-red: #B85C38;
             --warm-brown: #5C4033;
             --light-tan: #E8DED2;
+            --text-secondary: #6B5E52;
+            --border-subtle: #E8DED2;
+            --section-pad: 5rem;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Libre Franklin', -apple-system, sans-serif; color: var(--espresso); background: var(--white); }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 
         /* Header */
-        header { background: linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%); color: var(--white); border-top: 3px solid var(--accent-red); border-bottom: 3px solid var(--accent-red); overflow: hidden; position: relative; }
-        header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.38) 0%, transparent 65%), radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.38) 0%, transparent 65%); pointer-events: none; }
-        header::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 140% at 50% 110%, rgba(184,92,56,0.18) 0%, transparent 60%); pointer-events: none; }
+        header { background: #2A1508; color: var(--white); border-bottom: 1px solid rgba(196,167,125,0.15); position: sticky; top: 0; z-index: 100; }
         .header-content { max-width: 1200px; margin: 0 auto; padding: 0.85rem 2rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
         .header-brand-eyebrow { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(196,167,125,0.6); margin-bottom: 0.4rem; }
-        .header-logo { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 400; letter-spacing: -0.01em; line-height: 1; color: #EDE0CC; text-decoration: none; display: block; }
+        .header-logo { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 2.4vw, 2rem); font-weight: 400; letter-spacing: -0.01em; line-height: 1; color: #EDE0CC; text-decoration: none; display: block; }
         .header-logo em { font-style: italic; color: #C9A97E; }
         .header-logo strong { font-style: normal; font-weight: 800; color: #EDE0CC; }
         .header-subtitle { font-size: 0.6rem; color: rgba(196,167,125,0.55); margin-top: 0.4rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
@@ -228,7 +229,7 @@ function buildPage(hood, locs, allLocs, guide) {
         .nav-toggle:hover, .nav-toggle.open { border-color: var(--latte); color: var(--latte); background: rgba(196,167,125,0.13); }
         .nav-backdrop { position: fixed; inset: 0; background: rgba(20,10,4,0.55); z-index: 9998; opacity: 0; visibility: hidden; transition: opacity 0.32s ease, visibility 0s linear 0.32s; backdrop-filter: blur(2px); }
         .nav-backdrop.open { opacity: 1; visibility: visible; transition: opacity 0.32s ease, visibility 0s linear 0s; }
-        .nav-dropdown { position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 300px; background: #2A1508; border-left: 1px solid rgba(196,167,125,0.18); z-index: 9999; transform: translateX(100%); visibility: hidden; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.32s; display: flex; flex-direction: column; overflow-y: auto; box-shadow: -8px 0 40px rgba(0,0,0,0.5); }
+        .nav-dropdown { position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 300px; background: linear-gradient(160deg, #241308 0%, #1A0D06 100%); border-left: 1px solid rgba(196,167,125,0.18); z-index: 9999; transform: translateX(100%); visibility: hidden; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.32s; display: flex; flex-direction: column; overflow-y: auto; box-shadow: -8px 0 40px rgba(0,0,0,0.5); }
         .nav-dropdown.open { transform: translateX(0); visibility: visible; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s; }
         .nav-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem 1rem; border-bottom: 1px solid rgba(196,167,125,0.12); border-top: 3px solid var(--accent-red); flex-shrink: 0; }
         .nav-drawer-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(196,167,125,0.45); }
@@ -318,7 +319,7 @@ function buildPage(hood, locs, allLocs, guide) {
         <a href="/index.html">Home</a>
         <a href="/map.html">Explore Map</a>
         <a href="/submit.html">Add a Spot</a>
-        <a href="/roaster-highlights.html">Roaster Highlights</a>
+        <a href="/roaster-highlights.html">Roaster Stories</a>
         <a href="/blog.html">Blog</a>
         <a href="/news.html">News &amp; Events</a>
         <a href="/guides.html" class="active">Guides</a>

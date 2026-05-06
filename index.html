@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -39,8 +39,7 @@
     <link rel="prefetch" href="/locations.js">
     <link rel="prefetch" href="/highlights.js">
     <link rel="prefetch" href="/blog.js">
-    <link rel="preconnect" href="https://maps.googleapis.com">
-    <link rel="canonical" href="https://sandiegocoffee.co/">
+<link rel="canonical" href="https://sandiegocoffee.co/">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -87,6 +86,9 @@
             --accent-red: #B85C38;
             --warm-brown: #5C4033;
             --light-tan: #E8DED2;
+            --text-secondary: #6B5E52;
+            --border-subtle: #E8DED2;
+            --section-pad: 5rem;
         }
 
         * {
@@ -103,35 +105,45 @@
         }
 
         /* ══════════════════════════════════════════════════════════════
-           BANNER-STYLE HEADER — mirrors the subreddit banner exactly
+           FLOATING NAV — absolute inside hero, fixed once hero leaves view
            ══════════════════════════════════════════════════════════════ */
         .header {
-            background: linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #3A2010 75%, #2A1508 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
             color: var(--white);
-            border-top: 3px solid var(--accent-red);
-            border-bottom: 3px solid var(--accent-red);
-            position: relative;
-            overflow: hidden;
+            background: transparent;
+            border-bottom: none;
+            transition: background 0.3s ease;
         }
 
-        /* Left + right vignette exactly like the banner photo */
-        .header::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 55% 120% at 0% 50%, rgba(0,0,0,0.42) 0%, transparent 65%),
-                radial-gradient(ellipse 55% 120% at 100% 50%, rgba(0,0,0,0.42) 0%, transparent 65%);
-            pointer-events: none;
+        /* Scrolled past hero — snaps to fixed, logo appears */
+        .header.scrolled {
+            position: fixed;
+            z-index: 100;
+            background: #2A1508;
+            border-bottom: 1px solid rgba(196,167,125,0.15);
         }
 
-        /* Warm roasting glow — draws the eye to the logo */
-        .header::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 80% 160% at 50% 115%, rgba(184,92,56,0.22) 0%, transparent 55%);
-            pointer-events: none;
+        /* Over the hero — brand hidden, hamburger only */
+        .header .header-brand { display: none; }
+        /* Scrolled — logo reappears */
+        .header.scrolled .header-brand { display: flex; }
+
+        /* Over the hero — hamburger clearly visible as frosted glass pill */
+        .header:not(.scrolled) .nav-toggle {
+            background: rgba(15,7,3,0.52);
+            border: 1px solid rgba(255,255,255,0.22);
+            color: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .header:not(.scrolled) .nav-toggle:hover {
+            background: rgba(15,7,3,0.72);
+            border-color: rgba(255,255,255,0.42);
+            color: white;
         }
 
         /* Wrapper: 3-col grid so brand stays perfectly centered on desktop */
@@ -180,7 +192,7 @@
         /* ── Title: *San Diego* **Coffee Beans** — Playfair Display italic + bold serif */
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+            font-size: clamp(1.4rem, 2.4vw, 2rem);
             font-weight: 400;
             line-height: 1;
             color: #EDE0CC;
@@ -205,12 +217,7 @@
 
         /* ── "A RESOURCE TO SPECIALTY COFFEE IN SAN DIEGO" tagline */
         .tagline {
-            font-size: 0.68rem;
-            color: rgba(196, 167, 125, 0.75);
-            font-weight: 600;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            margin-top: 0.8rem;
+            display: none;
         }
 
         .header-desc { display: none; }
@@ -335,7 +342,8 @@
             bottom: 0;
             width: 82%;
             max-width: 300px;
-            background: #2A1508;
+            background: linear-gradient(160deg, #241308 0%, #1A0D06 100%);
+            border-top: 3px solid var(--accent-red);
             border-left: 1px solid rgba(196,167,125,0.18);
             z-index: 9999;
             transform: translateX(100%);
@@ -362,7 +370,7 @@
             justify-content: space-between;
             padding: 1.1rem 1.5rem 1rem;
             border-bottom: 1px solid rgba(196,167,125,0.12);
-            border-top: 3px solid var(--accent-red);
+            border-top: 1px solid rgba(196,167,125,0.2);
             flex-shrink: 0;
         }
 
@@ -372,6 +380,19 @@
             letter-spacing: 0.22em;
             text-transform: uppercase;
             color: rgba(196,167,125,0.45);
+        }
+
+        .nav-drawer-site-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.82rem;
+            font-weight: 400;
+            color: rgba(196,167,125,0.85);
+            line-height: 1.3;
+        }
+
+        .nav-drawer-site-name strong {
+            font-weight: 700;
+            color: #EDE0CC;
         }
 
         .nav-drawer-close {
@@ -474,77 +495,44 @@
             padding: 0 2rem;
         }
 
-        /* Preview Map Section */
-        /* ── Hero Map Section ─────────────────────────────────────────── */
-        .hero-map-section {
+        /* ── Photo Hero Section ───────────────────────────────────────── */
+        .hero-section {
             position: relative;
             height: 65vh;
             min-height: 480px;
+            max-height: 700px;
             overflow: hidden;
         }
 
-        #previewMap {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Tap-to-activate overlay — mobile only */
-        .map-tap-overlay {
-            display: none;
+        .hero-bg-wrap {
             position: absolute;
             inset: 0;
-            z-index: 10;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 1.25rem;
-            cursor: pointer;
         }
 
-        .map-tap-overlay-inner {
-            background: var(--accent-red);
-            color: white;
-            padding: 0.75rem 1.75rem;
-            font-family: 'Libre Franklin', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            pointer-events: none;
-            border-radius: 100px;
-            box-shadow: 0 6px 24px rgba(184,92,56,0.6), 0 2px 8px rgba(0,0,0,0.25);
-            animation: badge-pulse 2.4s ease-in-out infinite;
+        .hero-bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+            display: block;
         }
 
-        @keyframes badge-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.04); }
-        }
-
-        @media (max-width: 768px) {
-            .map-tap-overlay {
-                display: flex;
-            }
-        }
-
-        /* Dark gradient overlay from left */
+        /* Dark gradient — left anchor for text + top scrim for floating nav */
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(
-                105deg,
-                rgba(30, 16, 8, 0.52) 0%,
-                rgba(30, 16, 8, 0.30) 38%,
-                rgba(30, 16, 8, 0.04) 62%,
-                transparent 100%
-            );
+            background:
+                linear-gradient(100deg, rgba(20,10,4,0.88) 0%, rgba(20,10,4,0.60) 40%, rgba(20,10,4,0.15) 65%, transparent 100%),
+                linear-gradient(to bottom, rgba(20,10,4,0.50) 0%, transparent 28%),
+                linear-gradient(to top, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.3) 5%, rgba(255,255,255,0.08) 10%, transparent 18%);
             pointer-events: none;
             z-index: 2;
         }
 
-        /* Outer: mirrors header centering so left edge aligns with logo */
+        /* Outer: positioned in lower half of hero */
         .hero-content-outer {
             position: absolute;
-            top: 44%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
@@ -560,23 +548,15 @@
             pointer-events: none;
         }
 
-        .hero-eyebrow {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--latte);
-            margin-bottom: 0.85rem;
-        }
-
         .hero-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.9rem, 3.2vw, 2.8rem);
+            font-size: clamp(2.1rem, 3.2vw, 3rem);
             font-weight: 700;
             color: var(--white);
             line-height: 1.15;
             margin-bottom: 0.5rem;
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 18px rgba(0,0,0,0.65);
         }
 
         .hero-title em {
@@ -585,22 +565,23 @@
         }
 
         .hero-subtitle {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.75);
-            line-height: 1.6;
-            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.55;
+            margin-bottom: 1.35rem;
             font-weight: 400;
             pointer-events: all;
+            text-shadow: 0 1px 10px rgba(0,0,0,0.55);
         }
 
         /* Live stats strip */
         .hero-stats {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            display: inline-flex;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
             pointer-events: all;
-            padding-top: 1.1rem;
-            border-top: 1px solid rgba(255,255,255,0.15);
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.55);
         }
 
         .hero-stat {
@@ -623,14 +604,14 @@
 
         .hero-stat-num {
             font-family: 'Lora', serif;
-            font-size: 2.2rem;
+            font-size: 1.75rem;
             font-weight: 600;
             color: var(--white);
             line-height: 1;
         }
 
         .hero-stat-label {
-            font-size: 0.72rem;
+            font-size: 0.74rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color: var(--latte);
@@ -643,37 +624,69 @@
             align-self: stretch;
         }
 
+        /* CTA group — primary + secondary side by side */
+        .hero-cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            pointer-events: all;
+        }
+
+        /* Secondary ghost CTA */
+        .hero-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            padding: 0.9rem 1.6rem;
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: all 0.22s ease;
+            pointer-events: all;
+        }
+
+        .hero-cta-secondary:hover {
+            border-color: var(--latte);
+            color: var(--latte);
+            background: rgba(196,167,125,0.08);
+        }
+
         /* CTA button — pointer events back on */
         .hero-cta {
             pointer-events: all;
             display: inline-flex;
             align-items: center;
-            gap: 0.85rem;
+            gap: 0.65rem;
             background: var(--accent-red);
             color: white;
             text-decoration: none;
-            padding: 1.05rem 2.35rem;
+            padding: 0.9rem 2.1rem;
             font-weight: 700;
-            font-size: 1rem;
-            letter-spacing: 0.05em;
+            font-size: 0.88rem;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
             transition: all 0.25s ease;
-            border-radius: 2px;
-            box-shadow: 0 8px 32px rgba(184, 92, 56, 0.55), 0 0 0 2px rgba(255,255,255,0.12);
-            animation: cta-glow 3s ease-in-out infinite;
+            border-radius: 0;
+            box-shadow: 0 4px 18px rgba(184, 92, 56, 0.40);
+            animation: cta-glow 4s ease-in-out infinite;
         }
 
         @keyframes cta-glow {
-            0%, 100% { box-shadow: 0 8px 32px rgba(184, 92, 56, 0.45), 0 0 0 2px rgba(255,255,255,0.1); transform: translateY(0) scale(1); }
-            50%       { box-shadow: 0 10px 60px rgba(184, 92, 56, 1), 0 0 28px 8px rgba(184,92,56,0.55), 0 0 0 3px rgba(255,255,255,0.35); transform: translateY(-2px) scale(1.03); }
+            0%, 100% { box-shadow: 0 4px 18px rgba(184, 92, 56, 0.35); }
+            50%       { box-shadow: 0 6px 28px rgba(184, 92, 56, 0.60), 0 0 0 1px rgba(255,255,255,0.15); }
         }
 
         .hero-cta:hover {
             background: #a04a28;
             transform: translateY(-3px);
             animation: none;
-            box-shadow: 0 14px 40px rgba(184, 92, 56, 0.65), 0 0 0 2px rgba(255,255,255,0.18);
-            gap: 1.15rem;
+            box-shadow: 0 10px 28px rgba(184, 92, 56, 0.55);
         }
 
         .hero-cta-arrow {
@@ -685,61 +698,12 @@
             transform: translateX(5px);
         }
 
-        /* Bottom teaser bar */
-        .hero-teaser-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(20,10,4,0.75) 0%, transparent 100%);
-            padding: 1.5rem 3.5rem 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 1rem;
-            z-index: 3;
-            pointer-events: none;
-        }
-
-        .hero-teaser-text {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.6);
-            font-style: italic;
-        }
-
-        .hero-legend {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.78rem;
-            color: rgba(255,255,255,0.75);
-        }
-
-        .hero-legend-dot {
-            display: inline-block;
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            margin-right: 0.3rem;
-            vertical-align: middle;
-        }
 
         /* Pulse animation on featured pins */
         @keyframes pin-pulse {
             0%   { transform: scale(1); opacity: 0.8; }
             50%  { transform: scale(1.4); opacity: 0; }
             100% { transform: scale(1); opacity: 0; }
-        }
-
-        /* Mobile-only CTA below the hero map — hidden on desktop */
-        .hero-mobile-cta {
-            display: none;
-        }
-
-        /* Map wrap — transparent passthrough on desktop, relative container on mobile */
-        .hero-map-wrap {
-            position: absolute;
-            inset: 0;
-            display: block;
         }
 
         /* Page transition flash on CTA click */
@@ -761,15 +725,15 @@
         /* ── Recently Added Section ──────────────────────────────────── */
         .recent-section {
             background: var(--cream);
-            padding: 3.5rem 0 4rem;
-            border-top: 2px solid var(--light-tan);
+            padding: 1.5rem 0 var(--section-pad);
+            border-top: 1px solid var(--light-tan);
         }
         .recent-header {
             display: flex;
-            align-items: baseline;
+            align-items: flex-end;
             justify-content: space-between;
             margin-bottom: 1.75rem;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 0.75rem;
         }
         .recent-header-left { display: flex; flex-direction: column; gap: 0.2rem; }
@@ -777,17 +741,17 @@
             font-size: 0.62rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--warm-brown);
-            margin-bottom: 0.4rem;
+            letter-spacing: 0.25em;
+            color: var(--accent-red);
+            margin-bottom: 0.5rem;
             display: block;
         }
-        .recent-title { font-family: "Lora", serif; font-size: 2rem; font-weight: 600; color: var(--espresso); }
+        .recent-title { font-family: "Playfair Display", serif; font-size: 1.75rem; font-weight: 700; color: var(--espresso); letter-spacing: -0.02em; }
         .recent-subtitle { font-size: 0.8rem; color: #666; font-style: italic; }
         .recent-view-all {
-            font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.07em; color: var(--accent-red); text-decoration: none;
-            border: 1.5px solid var(--accent-red); padding: 0.35rem 0.85rem;
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--accent-red); text-decoration: none;
+            border: 1px solid var(--accent-red); padding: 0.4rem 1rem;
             transition: all 0.2s; white-space: nowrap;
         }
         .recent-view-all:hover { background: var(--accent-red); color: white; }
@@ -798,7 +762,7 @@
         }
         .recent-card {
             background: var(--white);
-            border: 1.5px solid var(--light-tan);
+            border: 1px solid var(--light-tan);
             display: flex;
             flex-direction: column;
             text-decoration: none;
@@ -807,9 +771,8 @@
             overflow: hidden;
         }
         .recent-card:hover {
-            border-color: var(--accent-red);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-color: var(--espresso);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.07);
         }
         /* Real photo */
         .recent-card-image {
@@ -822,7 +785,7 @@
         .recent-card:hover .recent-card-image {
             transform: scale(1.05);
         }
-        /* Fallback: initials on branded gradient */
+        /* Fallback: initials on cream background */
         .recent-card-initials {
             width: 100%;
             height: 200px;
@@ -831,14 +794,15 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            background: linear-gradient(145deg, #2A1508 0%, #5C3420 50%, #3D2010 100%);
+            background: var(--cream);
+            border-bottom: 1px solid var(--light-tan);
             flex-shrink: 0;
         }
         .recent-card-initials-text {
             font-family: "Playfair Display", serif;
             font-size: 2.2rem;
             font-weight: 700;
-            color: rgba(196, 167, 125, 0.9);
+            color: var(--coffee-brown);
             letter-spacing: 0.05em;
             line-height: 1;
         }
@@ -847,10 +811,10 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.18em;
-            color: rgba(196, 167, 125, 0.45);
+            color: var(--latte);
         }
         .recent-card-body {
-            padding: 1rem 1.2rem 1rem;
+            padding: 1.1rem 1.25rem 1.25rem;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -862,12 +826,12 @@
             letter-spacing: 0.1em;
             margin-bottom: 0.4rem;
         }
-        .recent-card-type.roaster { color: #2e7d32; }
-        .recent-card-type.cafe { color: #1565c0; }
+        .recent-card-type.roaster { color: var(--coffee-brown); }
+        .recent-card-type.cafe { color: var(--coffee-brown); }
         .recent-card-name {
-            font-family: "Lora", serif;
+            font-family: "Playfair Display", serif;
             font-size: 1.15rem;
-            font-weight: 600;
+            font-weight: 700;
             line-height: 1.3;
             color: var(--espresso);
             margin-bottom: 0.3rem;
@@ -900,14 +864,15 @@
         }
         .recent-new-badge {
             display: inline-block;
-            background: var(--accent-red);
-            color: white;
+            background: transparent;
+            color: var(--accent-red);
             font-size: 0.58rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            padding: 0.15rem 0.45rem;
-            margin-left: 0.4rem;
+            padding: 0;
+            margin-left: 0.5rem;
+            border: none;
             vertical-align: middle;
         }
         @media (max-width: 900px) { .recent-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -916,8 +881,8 @@
         /* ── News & Events ───────────────────────────────────────────── */
         .news-section {
             background: var(--white);
-            padding: 2.5rem 0 2rem;
-            border-top: 3px solid var(--accent-red);
+            padding: 2rem 0;
+            border-top: 1px solid var(--light-tan);
             border-bottom: 1px solid var(--light-tan);
         }
         .news-header {
@@ -925,10 +890,11 @@
         }
         .news-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--espresso);
             line-height: 1.2;
+            letter-spacing: -0.02em;
         }
         .news-subtitle {
             font-size: 0.78rem;
@@ -944,18 +910,17 @@
         }
         .news-card {
             background: var(--white);
-            border: 1.5px solid var(--light-tan);
+            border: 1px solid var(--light-tan);
             display: flex;
             flex-direction: column;
             text-decoration: none;
             color: inherit;
-            transition: border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+            transition: border-color 0.22s ease, box-shadow 0.22s ease;
             overflow: hidden;
         }
         .news-card:hover {
-            border-color: var(--accent-red);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.09);
+            border-color: var(--espresso);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.07);
         }
         .news-card--featured {
             grid-row: span 2;
@@ -1050,21 +1015,19 @@
             font-size: 0.58rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 0.15rem 0.5rem;
+            letter-spacing: 0.12em;
+            padding: 0;
             margin-bottom: 0.5rem;
             align-self: flex-start;
+            background: transparent;
         }
         .news-card-badge.type-event {
-            background: var(--accent-red);
-            color: white;
+            color: var(--accent-red);
         }
         .news-card-badge.type-news {
-            background: var(--light-tan);
             color: var(--coffee-brown);
         }
         .news-card-badge.type-update {
-            background: #d4e0ec;
             color: #2a4a68;
         }
         .news-card-title {
@@ -1078,7 +1041,7 @@
         .news-card-date {
             font-size: 0.72rem;
             font-weight: 600;
-            color: var(--accent-red);
+            color: var(--coffee-brown);
             margin-bottom: 0.3rem;
         }
         .news-card-venue {
@@ -1098,7 +1061,7 @@
             border-top: 1px solid var(--light-tan);
             font-size: 0.68rem;
             font-weight: 600;
-            color: var(--accent-red);
+            color: var(--coffee-brown);
             text-align: right;
         }
         @media (max-width: 900px) {
@@ -1108,25 +1071,25 @@
             .news-card--featured .news-card-placeholder { height: 63px; position: static; width: 100%; flex: none; }
             .news-card--featured .news-card-body { position: static; background: white; padding: 1rem 1.1rem 0.9rem; }
             .news-card--featured .news-card-title { color: var(--espresso); font-size: 1rem; }
-            .news-card--featured .news-card-date { color: var(--accent-red); }
+            .news-card--featured .news-card-date { color: var(--coffee-brown); }
             .news-card--featured .news-card-venue { color: #888; }
             .news-card--featured .news-card-excerpt { color: #777; }
-            .news-card--featured .news-card-footer { color: var(--accent-red); border-top-color: var(--light-tan); }
+            .news-card--featured .news-card-footer { color: var(--coffee-brown); border-top-color: var(--light-tan); }
         }
         @media (max-width: 600px) { .news-grid { grid-template-columns: 1fr; } }
 
         /* ── Minimal Footer ──────────────────────────────────────────── */
         footer {
             background: var(--espresso);
-            color: rgba(196,167,125,0.88);
+            color: rgba(196,167,125,0.7);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.35rem;
-            padding: 0.85rem 2rem;
-            border-top: 2px solid var(--accent-red);
-            font-size: 0.78rem;
+            gap: 0.4rem;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(196,167,125,0.12);
+            font-size: 0.75rem;
         }
 
         footer a {
@@ -1148,11 +1111,17 @@
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                padding: 1.25rem 1.25rem;
+                padding: 0.9rem 1.25rem;
                 gap: 0;
                 flex-wrap: nowrap;
                 text-align: left;
             }
+
+            /* Mobile hero state — hide brand, toggle stays right via margin-left: auto */
+            .header:not(.scrolled) .header-brand { display: none; }
+
+            /* Belt-and-suspenders: push toggle to right edge */
+            .header-actions { margin-left: auto; }
 
             .header-brand {
                 align-items: center;
@@ -1160,15 +1129,13 @@
 
             .header-eyebrow {
                 justify-content: center;
-                margin-bottom: 0.25rem;
+                margin-bottom: 0.2rem;
             }
 
             .header-eyebrow-line { display: none; }
-            .header-eyebrow-text { font-size: 0.55rem; }
+            .header-eyebrow-text { font-size: 0.52rem; }
 
-            .logo { font-size: 1.5rem; }
-
-            .tagline { font-size: 0.55rem; margin-top: 0.5rem; }
+            .logo { font-size: 1.2rem; }
 
             .nav-toggle {
                 position: static;
@@ -1188,262 +1155,88 @@
                 font-size: 0.68rem;
             }
 
-            /* ── Hero Map: stack content above map on mobile ── */
-            .hero-map-section {
-                height: auto;
-                min-height: unset;
-                display: flex;
-                flex-direction: column;
+            /* ── Photo Hero: mobile adjustments ── */
+            .hero-section {
+                height: 55vh;
+                min-height: 380px;
+                max-height: unset;
             }
 
-            /* Hide the dark overlay — no text sitting on map anymore */
+            /* Desktop image on mobile — frame the neon sign upper-right */
+            .hero-bg-wrap { top: -8%; }
+            .hero-bg-img { object-position: 82% top; }
+
+            /* Uniform overlay on mobile — left-to-right gradient would leave right-side text unprotected */
             .hero-overlay {
-                display: none;
+                background:
+                    linear-gradient(to bottom,
+                        rgba(20,10,4,0.62) 0%,
+                        rgba(20,10,4,0.48) 35%,
+                        rgba(20,10,4,0.58) 70%,
+                        rgba(20,10,4,0.72) 100%
+                    ),
+                    linear-gradient(to top, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.3) 5%, rgba(255,255,255,0.08) 10%, transparent 18%);
             }
 
-            /* Lift content out of absolute positioning, render above map */
             .hero-content-outer {
-                position: static;
-                transform: none;
-                width: 100%;
-                max-width: 100%;
-                padding: 0;
-                order: -1;
+                top: 51%;
+                padding: 0 1.5rem;
             }
 
             .hero-content {
                 max-width: 100%;
-                padding: 0.6rem 1.25rem 0.75rem;
-                background: linear-gradient(135deg, var(--warm-brown) 0%, var(--coffee-brown) 100%);
-                color: var(--white);
             }
 
             .hero-title {
-                font-size: 1.65rem;
+                font-size: clamp(2rem, 7.5vw, 2.5rem);
                 margin-bottom: 0.4rem;
-                line-height: 1.15;
             }
 
             .hero-subtitle {
-                font-size: 0.8rem;
-                margin-bottom: 0.9rem;
-                line-height: 1.5;
+                font-size: 0.88rem;
+                color: rgba(255,255,255,0.95);
+                text-shadow: 0 1px 12px rgba(0,0,0,0.7);
+                margin-bottom: 1.25rem;
             }
 
             .hero-stats {
                 gap: 1rem;
-                margin-bottom: 0;
+                margin-bottom: 1.25rem;
                 flex-wrap: wrap;
             }
 
             .hero-stat-num {
-                font-size: 1.25rem;
+                font-size: 1.65rem;
             }
 
             .hero-stat-label {
-                font-size: 0.62rem;
+                font-size: 0.64rem;
             }
 
-            /* Map and overlay sit inside a relative wrapper on mobile */
-            .hero-map-wrap {
-                position: relative;
-                inset: unset;
-                order: 0;
-            }
-
-            #previewMap {
-                height: 62vw;
-                min-height: 260px;
-                max-height: 380px;
-                position: static;
-            }
-
-            /* Re-enable the hazy overlay — it now only covers the map block */
-            .hero-overlay {
-                display: block;
-                background: linear-gradient(
-                    180deg,
-                    rgba(30, 16, 8, 0.18) 0%,
-                    rgba(30, 16, 8, 0.08) 50%,
-                    rgba(30, 16, 8, 0.28) 100%
-                );
-            }
-
-            /* Hide the "Explore Full Map" CTA that's baked into the overlay content */
             .hero-cta {
-                display: none;
+                font-size: 0.87rem;
+                padding: 0.9rem 1.8rem;
             }
 
-            /* Teaser bar — reposition below map as a proper CTA strip */
-            .hero-teaser-bar {
-                position: static;
-                background: var(--espresso);
-                padding: 0;
+            /* Stack CTA group vertically on mobile */
+            .hero-cta-group {
                 flex-direction: column;
-                align-items: stretch;
-                gap: 0;
-                order: 1;
+                align-items: flex-start;
             }
 
-            .hero-teaser-text {
-                display: none;
+            .news-section {
+                padding: 1.25rem 0;
             }
-
-            /* Legend moves inside the bar, small and subtle */
-            .hero-legend {
-                padding: 0.55rem 1.25rem;
-                font-size: 0.72rem;
-                color: rgba(255,255,255,0.55);
-                justify-content: center;
-                gap: 1.25rem;
-                border-bottom: 1px solid rgba(255,255,255,0.08);
-            }
-
-            /* Real tap-friendly "Explore Full Map" button below map */
-            .hero-mobile-cta {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.6rem;
-                background: var(--accent-red);
-                color: white;
-                text-decoration: none;
-                font-weight: 700;
-                font-size: 1rem;
-                letter-spacing: 0.02em;
-                padding: 1.1rem 1.25rem;
-                width: 100%;
-                order: 2;
-                box-shadow: 0 -2px 12px rgba(184,92,56,0.3);
-                transition: background 0.2s;
-            }
-
-            .hero-mobile-cta:active {
-                background: #a04a28;
-            }
-
             .recent-section {
-                padding-top: 1.5rem;
+                padding-top: 0.75rem;
             }
         }
-
-        /* ── Preview map info window — matches map.html style ──────────── */
-        .info-window {
-            padding: 0.1rem 0.9rem 0.8rem 0.9rem;
-            min-width: 280px;
-            max-width: 340px;
-            box-sizing: border-box;
-            font-family: 'Libre Franklin', sans-serif;
-        }
-        .info-window h3 {
-            color: #6F4E37;
-            margin-bottom: 0.4rem;
-            font-size: 1rem;
-        }
-        .info-window-section {
-            margin-bottom: 0.25rem;
-            font-size: 0.72rem;
-            line-height: 1.3;
-        }
-        .info-window-divider {
-            border: none;
-            border-top: 1px solid #e8e0d8;
-            margin: 0.5rem 0;
-        }
-        .info-window-description {
-            font-size: 0.78rem;
-            color: #555;
-            line-height: 1.4;
-            margin-bottom: 0.4rem;
-            font-style: italic;
-        }
-        .info-window-coffee-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.15rem 0;
-            margin-bottom: 0.5rem;
-            align-items: baseline;
-            font-size: 0.73rem;
-        }
-        .info-window-coffee-grid .cg-item {
-            display: inline-flex;
-            align-items: baseline;
-            white-space: normal;
-            flex-wrap: wrap;
-        }
-        .info-window-coffee-grid .cg-sep {
-            margin: 0 0.45rem;
-            color: #d0c4b8;
-            font-size: 0.8rem;
-        }
-        .info-window-coffee-grid .cg-label {
-            color: #a08070;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.6rem;
-            letter-spacing: 0.05em;
-            margin-right: 0.25rem;
-        }
-        .info-window-coffee-grid .cg-val {
-            color: #3a2a1a;
-            font-weight: 500;
-        }
-        .info-window-badges-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-            margin-bottom: 0.4rem;
-        }
-        .info-window-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.2rem;
-            font-size: 0.75rem;
-            padding: 0.15rem 0.5rem;
-            border-radius: 3px;
-            font-weight: 500;
-        }
-        .info-window-badge.yes {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
-        .info-window-btn {
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-            text-align: center;
-            margin-bottom: 0.3rem;
-            padding: 0.28rem 0.55rem;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            font-family: 'Libre Franklin', sans-serif;
-            border: 1.5px solid transparent;
-            cursor: pointer;
-        }
-        .info-window-btn:hover { text-decoration: none; }
-        .info-window-teaser { width: 220px; }
-        .info-window-teaser h3 { margin-bottom: 0.25rem; }
-        .iw-teaser-meta { font-size: 0.75rem; color: #888; margin-bottom: 0.65rem; }
-        .iw-sep { margin: 0 0.4rem; color: #ccc; }
-        .iw-hood { color: #666; }
-        .iw-cta-btn {
-            background: #6F4E37 !important;
-            color: white !important;
-            border-color: #6F4E37 !important;
-            padding: 0.45rem 0.75rem !important;
-            font-size: 0.8rem !important;
-            margin-bottom: 0 !important;
-        }
-        .iw-cta-btn:hover { opacity: 0.9; }
 
         /* ── Featured Roaster Highlight ──────────────────────────────── */
         .feature-highlight-section {
             background: #2A1508;
-            border-top: 3px solid var(--accent-red);
-            border-bottom: 3px solid var(--accent-red);
+            border-top: 1px solid rgba(196,167,125,0.12);
+            border-bottom: 1px solid rgba(196,167,125,0.12);
         }
         .feature-highlight-inner {
             display: grid;
@@ -1468,7 +1261,7 @@
             background: linear-gradient(145deg, #3A1C0A 0%, #5C3420 50%, #2A1508 100%);
         }
         .feature-highlight-body {
-            padding: 3rem 3rem;
+            padding: 3.5rem 3.5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -1632,26 +1425,6 @@
     </style>
 </head>
 <body>
-    <!-- Header — banner-style centered layout -->
-    <div class="header">
-        <div class="header-content">
-            <div class="header-brand">
-                <div class="header-eyebrow">
-                    <span class="header-eyebrow-line"></span>
-                    <span class="header-eyebrow-text">Roasters · Cafes · Community</span>
-                    <span class="header-eyebrow-line"></span>
-                </div>
-                <div class="logo"><em>San Diego</em> <strong>Specialty Coffee</strong></div>
-                <div class="tagline">Curated by San Diego's Coffee Community</div>
-            </div>
-            <div class="header-actions">
-                <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
-                    <span class="nav-toggle-icon">≡</span>
-                    <span class="nav-toggle-label">Menu</span>
-                </button>
-            </div>
-        </div>
-    </div>
     <nav class="nav-dropdown" id="navDropdown" aria-label="Site navigation">
         <div class="nav-drawer-header">
             <span class="nav-drawer-label">Menu</span>
@@ -1660,7 +1433,7 @@
         <a href="index.html" class="active">Home</a>
         <a href="map.html">Explore Map</a>
         <a href="submit.html">Add a Spot</a>
-        <a href="roaster-highlights.html">Roaster Highlights</a>
+        <a href="roaster-highlights.html">Roaster Stories</a>
         <a href="blog.html">Blog</a>
         <a href="news.html">News &amp; Events</a>
         <a href="guides.html">Guides</a>
@@ -1675,57 +1448,72 @@
     </nav>
 
     <main>
-    <!-- Hero Map -->
-    <section class="hero-map-section">
-        <a href="map.html" class="hero-map-wrap" aria-label="Explore the full San Diego specialty coffee map">
+    <!-- Hero -->
+    <section class="hero-section">
+        <div class="header" id="siteHeader">
+            <div class="header-content">
+                <div class="header-brand">
+                    <div class="header-eyebrow">
+                        <span class="header-eyebrow-line"></span>
+                        <span class="header-eyebrow-text">Roasters · Cafes · Community</span>
+                        <span class="header-eyebrow-line"></span>
+                    </div>
+                    <div class="logo"><em>San Diego</em> <strong>Specialty Coffee</strong></div>
+                </div>
+                <div class="header-actions">
+                    <button class="nav-toggle" id="navToggle" aria-label="Navigation menu" aria-expanded="false">
+                        <span class="nav-toggle-icon">≡</span>
+                        <span class="nav-toggle-label">Menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-bg-wrap">
             <picture>
-                <source srcset="/images/homepage-map-mobile.webp" media="(max-width: 768px)">
-                <img id="previewMap"
-                    src="/images/homepage-map.webp"
-                    alt="San Diego specialty coffee map showing roasters and cafes"
-                    fetchpriority="high"
-                    style="width:100%;height:100%;object-fit:cover;display:block;">
+                <source media="(max-width: 768px)" srcset="/images/locations/provecho-hero-desktop.jpg">
+                <img
+                    src="/images/locations/provecho-hero-desktop.jpg"
+                    alt="Provecho! Coffee Co. — San Diego specialty coffee"
+                    class="hero-bg-img"
+                    fetchpriority="high">
             </picture>
             <div class="hero-overlay"></div>
-            <div class="map-tap-overlay">
-                <div class="map-tap-overlay-inner">Explore the Full Map →</div>
-            </div>
-        </a>
+        </div>
 
         <div class="hero-content-outer">
-        <div class="hero-content">
-            <h2 class="hero-title">Built by the community. <br><em>For the coffee obsessed.</em></h2>
-            <p class="hero-subtitle">The most complete map of roasters and specialty cafes across San Diego County. Discovered and verified by the city's most dedicated coffee drinkers.</p>
+            <div class="hero-content">
+                <h1 class="hero-title">San Diego<br>Specialty Coffee, <em>mapped.</em></h1>
+                <p class="hero-subtitle">Your inside guide to San Diego's specialty coffee scene, built by coffee fanatics. The roasters, cafes, and details that make each one worth your time.</p>
 
-            <div class="hero-stats">
-                <a href="map.html" class="hero-stat" id="heroStatTotal">
-                    <div class="hero-stat-num" id="heroTotal">—</div>
-                    <div class="hero-stat-label">Locations</div>
-                </a>
-                <div class="hero-stat-divider"></div>
-                <a href="map.html?filter=roasters" class="hero-stat" id="heroStatRoasters">
-                    <div class="hero-stat-num" id="heroRoasters">—</div>
-                    <div class="hero-stat-label">Roasters</div>
-                </a>
-                <div class="hero-stat-divider"></div>
-                <a href="map.html?filter=cafes" class="hero-stat" id="heroStatCafes">
-                    <div class="hero-stat-num" id="heroCafes">—</div>
-                    <div class="hero-stat-label">Specialty Cafes</div>
-                </a>
-            </div>
 
-            <a href="map.html" class="hero-cta" id="fullMapBtn">
-                Explore the Full Map
-                <span class="hero-cta-arrow">→</span>
-            </a>
-        </div>
-        </div>
 
-        <div class="hero-teaser-bar">
-            <div class="hero-legend">
-                <span><span class="hero-legend-dot" style="background:#0F9D58;"></span>Roaster</span>
-                <span><span class="hero-legend-dot" style="background:#0288D1;"></span>Specialty Cafe</span>
-                <span><span class="hero-legend-dot" style="background:#FF6D00;"></span>Featured</span>
+                <div class="hero-stats">
+                    <a href="map.html" class="hero-stat" id="heroStatTotal">
+                        <div class="hero-stat-num" id="heroTotal">—</div>
+                        <div class="hero-stat-label">Locations</div>
+                    </a>
+                    <div class="hero-stat-divider"></div>
+                    <a href="map.html?filter=roasters" class="hero-stat" id="heroStatRoasters">
+                        <div class="hero-stat-num" id="heroRoasters">—</div>
+                        <div class="hero-stat-label">Roasters</div>
+                    </a>
+                    <div class="hero-stat-divider"></div>
+                    <a href="map.html?filter=cafes" class="hero-stat" id="heroStatCafes">
+                        <div class="hero-stat-num" id="heroCafes">—</div>
+                        <div class="hero-stat-label">Specialty Cafes</div>
+                    </a>
+                </div>
+
+                <div class="hero-cta-group">
+                    <a href="map.html" class="hero-cta" id="fullMapBtn">
+                        Explore the Full Map
+                        <span class="hero-cta-arrow">→</span>
+                    </a>
+                    <a href="roaster-highlights.html" class="hero-cta-secondary">
+                        Roaster Stories →
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -1752,11 +1540,10 @@
         <div class="container">
             <div class="news-header" style="display:flex;justify-content:space-between;align-items:flex-end;">
                 <div>
-                    <span class="section-eyebrow">What's Happening</span>
                     <div class="news-title">News &amp; Events</div>
                     <div class="news-subtitle">San Diego coffee community updates</div>
                 </div>
-                <a href="news.html" style="font-size:0.72rem;font-weight:700;color:var(--accent-red);text-decoration:none;letter-spacing:0.02em;white-space:nowrap;padding-bottom:0.2rem;">View All →</a>
+                <a href="news.html" class="recent-view-all">View All →</a>
             </div>
             <div class="news-grid" id="newsGrid">
                 <!-- Populated by JS -->
@@ -1777,7 +1564,6 @@
         <div class="container">
             <div class="recent-header">
                 <div class="recent-header-left">
-                    <span class="section-eyebrow">From the Community</span>
                     <div class="recent-title">What's New</div>
                     <div class="recent-subtitle">The latest locations and blog posts</div>
                 </div>
@@ -2069,7 +1855,7 @@
                         <div class="recent-card-name">${p.title}${newBadge}</div>
                         <div class="recent-card-meta">
                             <span>${addedLabel || ''}</span>
-                            <span style="color:var(--accent-red); font-weight:600; font-size:0.68rem;">Read Post →</span>
+                            <span style="color:var(--coffee-brown); font-weight:600; font-size:0.68rem;">Read Post →</span>
                         </div>
                     </div>
                 </a>`;
@@ -2112,7 +1898,7 @@
                         ${neighborhood ? `<div class="recent-card-neighborhood">${neighborhood}</div>` : ''}
                         <div class="recent-card-meta">
                             <span>${addedLabel || ''}</span>
-                            <span style="color:var(--accent-red); font-weight:600; font-size:0.68rem;">View Details →</span>
+                            <span style="color:var(--coffee-brown); font-weight:600; font-size:0.68rem;">View Details →</span>
                         </div>
                     </div>
                 </a>`;
@@ -2150,6 +1936,19 @@
 
 
 
+
+        // Floating nav: transparent inside hero, solid+fixed once hero exits viewport
+        (function() {
+            var header = document.getElementById('siteHeader');
+            var hero = document.querySelector('.hero-section');
+            if (!header || !hero) return;
+            function syncNav() {
+                var heroBottom = hero.getBoundingClientRect().bottom;
+                header.classList.toggle('scrolled', heroBottom < 60);
+            }
+            window.addEventListener('scroll', syncNav, { passive: true });
+            // No initial call needed — header starts absolute inside hero, always correct
+        })();
 
         // NFC scan overlay — only active when ?nfc= param is present
         (function() {

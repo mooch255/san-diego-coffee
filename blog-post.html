@@ -599,6 +599,7 @@
         <a href="roaster-highlights.html">Roaster Highlights</a>
         <a href="blog.html" class="active">Blog</a>
         <a href="news.html">News &amp; Events</a>
+        <a href="guides.html">Guides</a>
         <a href="about.html">About</a>
         <div class="nav-social">
             <span class="nav-social-label">Follow Us</span>
@@ -681,6 +682,7 @@
             'neighborhood-guide': 'Neighborhood Guide',
             'gear': 'Gear',
             'community': 'Community',
+            'review': 'Review',
         };
 
         function formatDate(iso) {
@@ -852,6 +854,26 @@
                     tag.textContent = JSON.stringify(schema);
                     document.head.appendChild(tag);
                 })(post);
+            }
+
+            // ── JSON-LD FAQPage schema (posts with qa body blocks) ────────
+            var qaBlocks = (post.body || []).filter(function(b) { return b.type === 'qa'; });
+            if (qaBlocks.length) {
+                var faqSchema = {
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    'mainEntity': qaBlocks.map(function(b) {
+                        return {
+                            '@type': 'Question',
+                            'name': b.question,
+                            'acceptedAnswer': { '@type': 'Answer', 'text': b.answer }
+                        };
+                    })
+                };
+                var faqTag = document.createElement('script');
+                faqTag.type = 'application/ld+json';
+                faqTag.textContent = JSON.stringify(faqSchema);
+                document.head.appendChild(faqTag);
             }
 
             // ── Render page ───────────────────────────────────────────────

@@ -134,16 +134,14 @@
             pointer-events: none;
         }
 
-        /* Wrapper: centers everything, stacks brand over nav */
+        /* Wrapper: 3-col grid so brand stays perfectly centered on desktop */
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0.9rem 2.5rem;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            gap: 0;
             position: relative;
             z-index: 1;
         }
@@ -152,6 +150,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            grid-column: 2;
         }
 
         /* ── "ROASTERS · CAFES · COMMUNITY" eyebrow with flanking rules */
@@ -221,6 +220,8 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            grid-column: 3;
+            justify-self: end;
         }
 
         .header-nav {
@@ -471,43 +472,6 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
-        }
-
-        /* Hero Intro Section with coffee bean pattern */
-        .intro {
-            background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%);
-            padding: 3.5rem 0;
-            border-bottom: 1px solid #E0DBD3;
-            position: relative;
-        }
-
-        .intro::after {
-            content: '☕';
-            position: absolute;
-            font-size: 15rem;
-            opacity: 0.03;
-            right: 5%;
-            bottom: -20%;
-            pointer-events: none;
-            transform: rotate(-15deg);
-        }
-
-        .intro h1 {
-            font-family: 'Crimson Pro', serif;
-            font-size: 2.75rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            color: var(--espresso);
-            letter-spacing: -0.03em;
-            line-height: 1.2;
-        }
-
-        .intro p {
-            font-size: 1.2rem;
-            color: #5A4A42;
-            max-width: 700px;
-            line-height: 1.8;
-            font-weight: 400;
         }
 
         /* Preview Map Section */
@@ -794,68 +758,6 @@
             pointer-events: all;
         }
 
-        /* ── Stats Cards (below map) ─────────────────────────────────── */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .stat-card {
-            background: var(--white);
-            padding: 2.5rem 2rem;
-            border: 2px solid var(--light-tan);
-            border-radius: 4px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--accent-red);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .stat-card:hover {
-            border-color: var(--coffee-brown);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-        }
-
-        .stat-number {
-            font-family: 'Crimson Pro', serif;
-            font-size: 3.5rem;
-            font-weight: 600;
-            color: var(--accent-red);
-            margin-bottom: 0.75rem;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: var(--espresso);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
         /* ── Recently Added Section ──────────────────────────────────── */
         .recent-section {
             background: var(--cream);
@@ -1015,6 +917,7 @@
         .news-section {
             background: var(--white);
             padding: 2.5rem 0 2rem;
+            border-top: 3px solid var(--accent-red);
             border-bottom: 1px solid var(--light-tan);
         }
         .news-header {
@@ -1241,6 +1144,7 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .header-content {
+                display: flex;
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
@@ -1251,11 +1155,11 @@
             }
 
             .header-brand {
-                align-items: flex-start;
+                align-items: center;
             }
 
             .header-eyebrow {
-                justify-content: flex-start;
+                justify-content: center;
                 margin-bottom: 0.25rem;
             }
 
@@ -1270,7 +1174,10 @@
                 position: static;
                 transform: none;
                 flex-shrink: 0;
+                padding: 0.6rem 0.75rem;
             }
+
+            .nav-toggle-label { display: none; }
 
             .header-nav {
                 display: none;
@@ -1279,23 +1186,6 @@
             .nav-btn {
                 padding: 0.35rem 0.6rem;
                 font-size: 0.68rem;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .stat-number {
-                font-size: 2.5rem;
-            }
-
-            .cta-container {
-                flex-direction: column;
-            }
-
-            .cta-button {
-                width: 100%;
             }
 
             /* ── Hero Map: stack content above map on mobile ── */
@@ -1835,7 +1725,7 @@
             <div class="hero-legend">
                 <span><span class="hero-legend-dot" style="background:#0F9D58;"></span>Roaster</span>
                 <span><span class="hero-legend-dot" style="background:#0288D1;"></span>Specialty Cafe</span>
-                <span><span class="hero-legend-dot" style="background:#FF6D00;"></span>SDCoffeeGuide Review</span>
+                <span><span class="hero-legend-dot" style="background:#FF6D00;"></span>Featured</span>
             </div>
         </div>
 
@@ -1891,6 +1781,7 @@
                     <div class="recent-title">What's New</div>
                     <div class="recent-subtitle">The latest locations and blog posts</div>
                 </div>
+                <a href="map.html" class="recent-view-all">View All →</a>
             </div>
             <div class="recent-grid" id="recentGrid">
                 <!-- Populated by JS -->

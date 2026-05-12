@@ -1774,7 +1774,7 @@
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc) metaDesc.content = metaDescription;
                 const ogUrl = document.querySelector('meta[property="og:url"]');
-                if (ogUrl) ogUrl.content = `https://sandiegocoffee.co/locations/${location.id}`;
+                if (ogUrl) ogUrl.content = `https://sandiegocoffee.co/locations/${locationSlug(location)}`;
                 const ogImage = document.querySelector('meta[property="og:image"]');
                 if (ogImage && location.localImage) ogImage.content = 'https://sandiegocoffee.co' + location.localImage;
                 const twTitle = document.querySelector('meta[name="twitter:title"]');

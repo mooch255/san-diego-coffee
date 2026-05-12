@@ -21,6 +21,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Diego Coffee Blog · San Diego Specialty Coffee</title>
     <meta name="description" content="Stories from the San Diego specialty coffee scene.">
+    <!-- SEO: synchronous slug→title before deferred JS loads -->
+    <script>
+    (function(){
+      try {
+        var qm = window.location.search.match(/[?&]id=blog_([^&]+)/);
+        if (qm) {
+          var name = decodeURIComponent(qm[1]).replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+          document.title = name + ' — San Diego Coffee Blog';
+          var d = document.querySelector('meta[name="description"]');
+          if (d) d.content = 'San Diego specialty coffee: ' + name + '. Stories from the r/SanDiegoCoffeeBeans community.';
+        }
+      } catch(e){}
+    })();
+    </script>
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://sandiegocoffee.co/blog-post.html">
     <meta property="og:title" content="San Diego Coffee Blog · San Diego Specialty Coffee">

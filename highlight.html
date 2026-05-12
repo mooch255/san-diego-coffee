@@ -30,6 +30,20 @@
     <meta name="twitter:description" content="In-depth features on the roasters shaping San Diego's specialty coffee scene — from the r/SanDiegoCoffeeBeans community.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="In-depth features on the roasters shaping San Diego's specialty coffee scene — from the r/SanDiegoCoffeeBeans community.">
+    <!-- SEO: synchronous slug→title before deferred JS loads -->
+    <script>
+    (function(){
+      try {
+        var qm = window.location.search.match(/[?&]id=highlight_([^&]+)/);
+        if (qm) {
+          var name = decodeURIComponent(qm[1]).replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+          document.title = name + ' — Roaster Highlight · San Diego Specialty Coffee';
+          var d = document.querySelector('meta[name="description"]');
+          if (d) d.content = 'Roaster feature: ' + name + ' — specialty coffee in San Diego, from the r/SanDiegoCoffeeBeans community.';
+        }
+      } catch(e){}
+    })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <script type="application/ld+json" id="ld-schema"></script>

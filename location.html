@@ -30,6 +30,27 @@
     <meta name="twitter:description" content="Explore the best coffee shops and specialty roasters in San Diego — roast profiles, brew methods, hours, and neighborhood guides.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="Explore the best coffee shops and specialty roasters in San Diego — roast profiles, brew methods, hours, and neighborhood guides.">
+    <!-- SEO: synchronous slug→title before deferred JS loads (overridden later with full data) -->
+    <script>
+    (function(){
+      try {
+        var slug = '';
+        var pm = window.location.pathname.match(/\/locations\/([^/?#]+)/);
+        if (pm) {
+          slug = decodeURIComponent(pm[1]);
+        } else {
+          var qm = window.location.search.match(/[?&]id=([^&]+)/);
+          if (qm) slug = decodeURIComponent(qm[1]).replace(/^loc_\d+$/, '');
+        }
+        if (slug) {
+          var name = slug.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+          document.title = name + ' — Specialty Coffee in San Diego';
+          var d = document.querySelector('meta[name="description"]');
+          if (d) d.content = name + ' is a specialty coffee shop or roaster in San Diego. View hours, roast profile, and neighborhood details.';
+        }
+      } catch(e){}
+    })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="apple-touch-icon" href="/favicon.svg">
     <script type="application/ld+json" id="ld-schema"></script>

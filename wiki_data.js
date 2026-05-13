@@ -63,7 +63,6 @@ window.WIKI_DATA = {
   "loc_074": { "section": "downtown-uptown" },
   "loc_075": { "section": "downtown-uptown" },
   "loc_076": { "section": "downtown-uptown" },
-  "loc_077": { "section": "beach-communities" },
   "loc_078": { "section": "downtown-uptown" },
   "loc_080": { "section": "downtown-uptown" },
   "loc_081": { "section": "downtown-uptown" },

@@ -211,6 +211,210 @@ window.GUIDES = [
         lng: -117.1392238
       }
     ]
+  },
+  {
+    // ── Identifiers ───────────────────────────────────────────────────
+    id: 'downtown-barrio-logan-bankers-hill',
+    type: 'neighborhood',
+
+    // ── Collection card fields ────────────────────────────────────────
+    title: 'Best Coffee in Downtown, Barrio Logan, Bankers Hill & Little Italy',
+    displayTitle: "San Diego's Urban Core Coffee Guide",
+    subtitle: "San Diego's Urban Core, Cup by Cup",
+    neighborhood: 'Downtown · Barrio Logan · Bankers Hill · Little Italy',
+    publishedDate: '2026-05-14',
+    updatedDate: '2026-05-14',
+    heroImage: '/images/guides/downtown-barrio-logan-bankers-hill-hero.jpg',
+    heroImagePosition: 'center 40%',
+    cardImage: '/images/guides/downtown-barrio-logan-bankers-hill-hero.jpg',
+    excerpt: "From a 1931 solar-powered roaster in Barrio Logan to a Japanese listening lounge and a Fifth Ave minimalist favorite. Eight standout spots threading San Diego's urban core.",
+    locationCount: 8,
+
+    // ── SEO fields ───────────────────────────────────────────────────
+    metaTitle: 'Best Coffee in Downtown, Barrio Logan, Bankers Hill & Little Italy, San Diego | Neighborhood Guide',
+    metaDescription: 'The definitive guide to specialty coffee in Downtown, Barrio Logan, Bankers Hill, and Little Italy. Eight standout roasters and cafes with an interactive map, editorial picks, and what to order.',
+    metaKeywords: 'Downtown San Diego coffee, Barrio Logan coffee, Bankers Hill coffee, Little Italy coffee, San Diego specialty roasters, best coffee downtown San Diego',
+    canonicalUrl: 'https://sandiegocoffee.co/guides/downtown-barrio-logan-bankers-hill',
+    ogImage: '/images/guides/downtown-barrio-logan-bankers-hill-hero.jpg',
+
+    // ── About section ─────────────────────────────────────────────────
+    about: {
+      intro: "San Diego's most varied coffee corridor. Eight standout specialty roasters and cafes threaded across Downtown, Barrio Logan, Bankers Hill, and Little Italy. A 1931 solar-powered roaster, a Japanese listening lounge, and a Mexican-origin micro-roaster, all within a 10-minute drive.",
+      howToNavigate: "Three clusters within a 10-minute drive. Bankers Hill: Mnemonic and Talitha sit a block apart on Fifth Ave. Downtown core: Goldchild on Broadway, Rikka Fika a few minutes east on 13th St, and Bird Rock at the western edge on Kettner Blvd in Little Italy. Barrio Logan: Provecho on Julian, Longplay HiFi on Imperial, and Cafe Moto further south on National. Cluster them together for a single Barrio Logan loop.",
+      bestTimeToVisit: "Weekday mornings before 9 AM for parking and pace. Several spots are closed Mondays (Mnemonic, Rikka Fika), and Longplay HiFi doesn't open until 10 AM with an intentionally slow service model. Not a quick-stop cafe.",
+      parking: "Metered in Downtown and parts of Little Italy (paid lots near Bird Rock). Free street parking is generally easy in Barrio Logan. Bankers Hill has metered street parking on Fifth Ave with mostly-free side streets."
+    },
+
+    // ── Quick Stats (rendered as pill row above split) ────────────────
+    quickStats: {
+      totalPicks: 8,
+      roasters: 6,
+      cafes: 2,
+      neighborhood: 'Urban core',
+      vibe: 'Eclectic · roasters + listening lounges'
+    },
+
+    // ── FAQ (renders as accordion + FAQPage JSON-LD) ──────────────────
+    faq: [
+      {
+        q: "How do I hit several of these in one day?",
+        a: "Cluster by neighborhood. Bankers Hill (Mnemonic + Talitha) sits a block apart on Fifth Avenue, an easy back-to-back. From there it's a 10-minute drive south to the Downtown core for Goldchild on Broadway and Rikka Fika on 13th. Bird Rock in Little Italy is the western anchor; pair it with a Little Italy walk. Barrio Logan is its own loop: Provecho on Julian, Longplay HiFi on Imperial, and Cafe Moto further south on National. Doing all eight in a day is doable but exhausting. Three to four spots is a more realistic specialty-coffee crawl."
+      },
+      {
+        q: "Which spots roast on-site vs. source beans from elsewhere?",
+        a: "Roasting in-house: Provecho, Cafe Moto, and Goldchild all roast on-site or directly behind the cafe. Bird Rock's main production is on Morena Blvd but the program is theirs, and Talitha roasts in Barrio Logan with Bankers Hill as a cafe outpost. Rikka Fika is newly roasting light at small scale as of 2026. Mnemonic is cafe-first; they pull from outside roasters, not their own. Longplay HiFi serves Provecho coffee, so the bean program there is Provecho's."
+      },
+      {
+        q: "Where can I work from? Which have wifi and seating?",
+        a: "Provecho and Goldchild both work well for work sessions: wifi, comfortable seating, and an unhurried pace. Mnemonic is good if you can work in a quieter, design-forward space. Talitha and Bird Rock both have wifi and seating but get busier than the cafes that lean work-friendly. Skip Longplay HiFi for laptop work entirely. The space is designed for being present, not productive. Cafe Moto has wifi but the production-roaster vibe makes it less of a default work spot."
+      },
+      {
+        q: "What's open late or on weekends?",
+        a: "Most spots here close between 2 and 4 PM, so this isn't the neighborhood for an afternoon crawl. Longplay HiFi is the exception; they open at 10 AM and stay open into the evening, with a bar program that extends the visit past coffee hours. Closed Mondays: Mnemonic and Rikka Fika. Weekends are reliably open across the list with similar hours to weekdays, but plan around the early-afternoon close at Cafe Moto, Talitha, and a few others."
+      },
+      {
+        q: "Where should I take someone new to specialty coffee?",
+        a: "Start at Provecho. The baristas are dialed in, the menu is approachable, and the Mexican-origin focus makes the conversation easier than 'this is from Ethiopia and tastes like blueberries.' From there, Goldchild on Broadway is a good second stop for someone curious about what micro-batch roasting means in practice. If they're more interested in the experience than the bean, take them straight to Longplay HiFi; the listening lounge does the work of selling them on slowing down with a cup. Rikka Fika is the move for matcha lovers or anyone who wants a slower, quieter cup. Mnemonic skews funkier and more playful, a good pick when you want the menu itself to be part of the conversation."
+      }
+    ],
+
+    // ── Map config ────────────────────────────────────────────────────
+    map: {
+      center: { lat: 32.714, lng: -117.154 },
+      zoom: 13
+    },
+
+    // ── Featured locations ────────────────────────────────────────────
+    locations: [
+      {
+        rank: 1,
+        locationId: 'loc_055',
+        highlightPhrase: 'Mexican origins, Barrio Logan flagship',
+        blurb: "Provecho Coffee Co. anchors Barrio Logan's specialty scene from a sunlit cafe on Julian Avenue. Founded in 2022, the team sources beans from around the world but consistently highlights Mexican producers, a sourcing philosophy that ties the cup back to the neighborhood. The baristas are dialed in, the espresso program is precise, and the space is one of the most genuinely warm in the urban core.",
+        mustOrder: 'Espresso on a Mexican single origin, or a piloncillo latte',
+        localInsight: "Their Mexican-origin lineup rotates. If you've never had Chiapas or Oaxaca beans pulled by people who care, this is the cup to ask about.",
+        whatWeLove: [
+          "Mexican-origin focus you won't find elsewhere in the city",
+          'Barista skill that backs up the bean selection',
+          'Dog-friendly, work-friendly Logan Heights flagship'
+        ],
+        bestFor: ['Roaster', 'Mexican Origins', 'Barista Standout'],
+        lat: 32.7020284,
+        lng: -117.1417158
+      },
+      {
+        rank: 2,
+        locationId: 'loc_138',
+        highlightPhrase: 'Intentional sourcing, minimalist cafe',
+        blurb: "Rikka Fika built its reputation as the city's go-to matcha cafe, with a rotating multi-roaster bar that pulled from domestic and international roasters most San Diego shops would never touch. As of 2026, they've added their own small-scale light-roasting program, a quiet pivot that's already changing the conversation. The 13th Street cafe stays comfortable and unhurried.",
+        mustOrder: 'Matcha latte, a pour-over of their current light roast, or whatever guest roaster is on bar',
+        localInsight: "Closed Mondays and Tuesdays, so plan ahead. If you want to taste their roasting evolution, ask which beans came off the roaster that week.",
+        whatWeLove: [
+          'Matcha program that built their reputation',
+          'Curated guest-roaster bar from out-of-town producers',
+          'Newly-launched light-roast program worth tracking'
+        ],
+        bestFor: ['Matcha', 'Multi-Roaster', 'Light Roast'],
+        lat: 32.7140502,
+        lng: -117.1530181
+      },
+      {
+        rank: 3,
+        locationId: 'loc_137',
+        highlightPhrase: 'Curated space, creative menu',
+        blurb: "Mnemonic Coffee on Fifth Avenue is the most design-forward cafe on this list: clean lines, restrained palette, and a menu that approaches each drink as a small experiment. Opened in 2023, the team takes a more presentation-conscious approach than the average specialty shop, and the Bankers Hill location has quietly become a favorite for anyone who pays attention to how their coffee is built.",
+        mustOrder: 'Whatever seasonal signature drink is on the menu, or a precisely-pulled espresso',
+        localInsight: "Closed Mondays. The seasonal menu rotates more often than you'd guess, so anything labeled 'experimental' is usually the move.",
+        whatWeLove: [
+          'Minimalist design that takes itself seriously',
+          'Experimental drink menu, not just a fixed list',
+          'Dog-friendly Bankers Hill staple'
+        ],
+        bestFor: ['Cafe', 'Design-Forward', 'Experimental'],
+        lat: 32.732609,
+        lng: -117.1606254
+      },
+      {
+        rank: 4,
+        locationId: 'loc_061',
+        highlightPhrase: 'Downtown micro-roaster on Broadway',
+        blurb: "Goldchild opened on Broadway in 2024 and made an immediate impression. They roast in-house on a small scale and have appeared on local 'best specialty coffee' lists alongside names like Mostra, Bird Rock, and Torque despite being one of the youngest roasters in town. The Downtown location keeps things tight: a focused menu and a small, well-run cafe.",
+        mustOrder: 'A single-origin espresso or pour-over from their current rotation',
+        localInsight: "They're newer than most of the city's named roasters, so the lineup changes fast. Ask what came off the roaster recently; there's usually something they're excited about.",
+        whatWeLove: [
+          'In-house roasting on a Downtown footprint',
+          "Already mentioned alongside the city's established names",
+          'Small, focused menu done well'
+        ],
+        bestFor: ['Roaster', 'Micro-Batch', 'Downtown'],
+        lat: 32.7159267,
+        lng: -117.1624203
+      },
+      {
+        rank: 5,
+        locationId: 'loc_046',
+        highlightPhrase: 'Cornerstone of San Diego specialty coffee',
+        blurb: "Cafe Moto is one of San Diego's longest-running specialty roasters, in the family since the late 1960s and officially launched in 1990. The Barrio Logan roastery runs on a 1931 Jabez Burns roaster powered entirely by solar panels, and every bean is Fair Trade, organic, and kosher certified. The National Avenue cafe is where you taste the history, alongside the institutional consistency that comes with 35+ years of roasting.",
+        mustOrder: 'Drip coffee or a classic espresso drink. The certified-organic beans are the story',
+        localInsight: "Worth a tour-style stop even if you don't buy a drink. The solar-powered 1931 Jabez Burns roaster on-site is one of the more remarkable pieces of equipment in any roastery in the country.",
+        whatWeLove: [
+          'Solar-powered 1931 roaster, the real deal',
+          'Fair Trade, organic, and kosher across the entire program',
+          '35+ years of San Diego coffee history under one roof'
+        ],
+        bestFor: ['Established Roaster', 'Organic', 'Solar Powered'],
+        lat: 32.6956629,
+        lng: -117.1377639
+      },
+      {
+        rank: 6,
+        locationId: 'loc_170',
+        highlightPhrase: 'Japanese listening lounge meets pour-over',
+        blurb: "Longplay HiFi is unlike anything else on this list: a Japanese-inspired cafe, listening lounge, and bar where the pace is deliberately, intentionally slow. Provecho coffee is currently offered as pour-over alongside a few specialty drinks, but the real experience is the music: a curated audio system, vinyl, and a room designed for being present, not productive. Don't bring a laptop.",
+        mustOrder: 'Provecho pour-over and whichever record is queued up',
+        localInsight: "The 10 AM opening time and no-rush philosophy make this an afternoon/evening visit, not a morning errand. The bar opens later in the day for cocktails. Make a night of it.",
+        whatWeLove: [
+          "Listening-lounge format you won't find elsewhere in SD",
+          'Provecho pour-over as the coffee anchor',
+          'Intentional pace, no laptops, no rush'
+        ],
+        bestFor: ['Listening Lounge', 'Pour Over', 'Date Spot'],
+        lat: 32.7061999,
+        lng: -117.1389758
+      },
+      {
+        rank: 7,
+        locationId: 'loc_176',
+        highlightPhrase: 'Award-winning roaster on Kettner',
+        blurb: "Bird Rock Coffee Roasters' Little Italy outpost on Kettner Boulevard brings the same direct-trade beans and award-winning program that put them on the national map. Founded in 2002, Bird Rock won Roast Magazine's Micro-Roaster of the Year in 2012 and has racked up Good Food Awards across the years. The Little Italy location pairs the roasting program with a comfortable cafe footprint near the heart of the neighborhood.",
+        mustOrder: 'Single-origin pour-over from their direct-trade lineup',
+        localInsight: "Bird Rock has 11 locations across the county. This Little Italy spot is one of the most foot-traffic-friendly. Pair it with a Little Italy walk if you're already in the neighborhood.",
+        whatWeLove: [
+          'Roast Magazine Micro-Roaster of the Year (2012)',
+          'Long-running direct-trade program',
+          'Comfortable Little Italy cafe with full pour-over service'
+        ],
+        bestFor: ['Roaster', 'Direct Trade', 'Award Winner'],
+        lat: 32.7291,
+        lng: -117.1697
+      },
+      {
+        rank: 8,
+        locationId: 'loc_173',
+        highlightPhrase: 'Mission-driven roaster on Fifth Ave',
+        blurb: "Talitha Coffee Roasters is a Barrio Logan-based, mission-driven roaster with four San Diego cafes. The Bankers Hill outpost on Fifth Avenue is the most centrally located way to taste their program. Three-time bronze medalists at the Golden Bean North America competition, Talitha emphasizes transparency and quality across espresso, pour-over, and cold brew. The Bankers Hill cafe is comfortable and consistent.",
+        mustOrder: 'Cold brew or a single-origin pour-over',
+        localInsight: "Closes earlier than most spots on this list (2 PM most days). If you want to hit Mnemonic and Talitha on the same Fifth Ave walk, do Talitha first.",
+        whatWeLove: [
+          'Three-time Golden Bean bronze medalist',
+          'Mission-driven roasting with transparency focus',
+          'Easy walk from Mnemonic for back-to-back tasting'
+        ],
+        bestFor: ['Roaster', 'Mission-Driven', 'Bankers Hill'],
+        lat: 32.7315886,
+        lng: -117.1610298
+      }
+    ]
   }
 ];
 

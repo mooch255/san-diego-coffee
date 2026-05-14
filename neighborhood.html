@@ -703,7 +703,11 @@
             document.getElementById('hoodCount').textContent = locs.length + ' spot' + (locs.length !== 1 ? 's' : '');
             document.getElementById('hoodMapBtn').href = '/map.html?neighborhood=' + encodeURIComponent(hood.name);
 
-            var guide = window.GUIDES && window.GUIDES.find(function(g) { return g.neighborhood === hood.name; });
+            var guide = window.GUIDES && window.GUIDES.find(function(g) {
+                if (!g.neighborhood) return false;
+                // A guide can cover multiple neighborhoods (joined by ' · ')
+                return g.neighborhood.split(' · ').some(function(n) { return n.trim() === hood.name; });
+            });
             if (guide) {
                 var guideBtn = document.getElementById('hoodGuideBtn');
                 guideBtn.href = '/guides/' + guide.id;

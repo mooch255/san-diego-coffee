@@ -750,7 +750,12 @@
             var guideByNeighborhood = {};
             if (window.GUIDES) {
                 window.GUIDES.forEach(function(g) {
-                    if (g.neighborhood) guideByNeighborhood[g.neighborhood] = g.id;
+                    if (!g.neighborhood) return;
+                    // A guide can cover multiple neighborhoods (joined by ' · ')
+                    g.neighborhood.split(' · ').forEach(function(n) {
+                        var key = n.trim();
+                        if (key) guideByNeighborhood[key] = g.id;
+                    });
                 });
             }
 

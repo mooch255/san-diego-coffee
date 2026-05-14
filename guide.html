@@ -35,6 +35,55 @@
     <link rel="apple-touch-icon" href="/favicon.svg">
     <link rel="canonical" href="https://sandiegocoffee.co/guides/north-park" id="canonicalTag">
     <link rel="prerender" href="" id="prerenderLink">
+    <!-- SEO: synchronous slug-based title/canonical/og before deferred JS loads (overridden later with full data) -->
+    <script>
+    (function(){
+      try {
+        var slug = '';
+        var pm = window.location.pathname.match(/\/guides\/([^/?#]+)/);
+        if (pm) slug = decodeURIComponent(pm[1]);
+        else {
+          var qm = window.location.search.match(/[?&]id=([^&]+)/);
+          if (qm) slug = decodeURIComponent(qm[1]);
+        }
+        if (!slug) return;
+        // Known guides: accurate Stage 1 SEO. Add an entry when adding a new guide to guides.js.
+        var TITLES = {
+          'north-park': {
+            title: 'Best Coffee in North Park, San Diego | Neighborhood Guide',
+            desc: 'The definitive guide to specialty coffee in North Park, San Diego. Must-visit roasters and cafes with an interactive map, editorial picks, and what to order.',
+            image: '/images/guides/north-park-hero.jpg'
+          },
+          'downtown-barrio-logan-bankers-hill': {
+            title: 'Best Coffee in Downtown, Barrio Logan, Bankers Hill & Little Italy, San Diego | Neighborhood Guide',
+            desc: 'The definitive guide to specialty coffee in Downtown, Barrio Logan, Bankers Hill, and Little Italy. Eight standout roasters and cafes with an interactive map, editorial picks, and what to order.',
+            image: '/images/guides/downtown-barrio-logan-bankers-hill-hero.jpg'
+          }
+        };
+        var entry = TITLES[slug];
+        var title = entry ? entry.title : ('Best Coffee in ' + slug.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); }) + ', San Diego | Neighborhood Guide');
+        var desc  = entry ? entry.desc  : 'A curated guide to specialty coffee in this San Diego neighborhood, with roaster picks, an interactive map, and what to order.';
+        var image = 'https://sandiegocoffee.co' + (entry ? entry.image : '/og-image.png');
+        var url   = 'https://sandiegocoffee.co/guides/' + slug;
+
+        document.title = title;
+        function setAttr(sel, attr, val) {
+          var el = document.querySelector(sel);
+          if (el) el.setAttribute(attr, val);
+        }
+        setAttr('meta[name="description"]', 'content', desc);
+        setAttr('meta[property="og:url"]', 'content', url);
+        setAttr('meta[property="og:title"]', 'content', title);
+        setAttr('meta[property="og:description"]', 'content', desc);
+        setAttr('meta[property="og:image"]', 'content', image);
+        setAttr('meta[name="twitter:title"]', 'content', title);
+        setAttr('meta[name="twitter:description"]', 'content', desc);
+        setAttr('meta[name="twitter:image"]', 'content', image);
+        var canonical = document.getElementById('canonicalTag');
+        if (canonical) canonical.setAttribute('href', url);
+      } catch(e){}
+    })();
+    </script>
     <script type="application/ld+json" id="ld-schema"></script>
     <script type="application/ld+json" id="ld-breadcrumb"></script>
     <script type="application/ld+json" id="ld-faq"></script>
@@ -2235,32 +2284,47 @@
             var carousel = document.getElementById('guideCarousel');
             if (!carousel) return;
 
-            // IntersectionObserver: center carousel card → activate its marker
-            var observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (!entry.isIntersecting || entry.intersectionRatio < 0.6) return;
-                    var id = entry.target.getAttribute('data-id');
-                    if (!id || id === activeCarouselId) return;
-                    if (activeCarouselId) {
-                        var prev = document.querySelector('.guide-mini-card[data-id="' + activeCarouselId + '"]');
-                        if (prev) prev.classList.remove('is-active');
-                        highlightMarker(activeCarouselId, false);
-                    }
-                    entry.target.classList.add('is-active');
-                    activeCarouselId = id;
-                    highlightMarker(id, true);
-
-                    // Update pagination dots
-                    var cards = Array.from(carousel.querySelectorAll('.guide-mini-card'));
-                    var idx = cards.indexOf(entry.target);
-                    var dots = document.querySelectorAll('.guide-carousel-dot');
-                    dots.forEach(function(d, i) { d.classList.toggle('is-active', i === idx); });
+            function getCenteredCardId() {
+                var cRect = carousel.getBoundingClientRect();
+                var center = cRect.left + cRect.width / 2;
+                var cards = carousel.querySelectorAll('.guide-mini-card');
+                var bestId = null;
+                var bestDist = Infinity;
+                cards.forEach(function(card) {
+                    var r = card.getBoundingClientRect();
+                    var d = Math.abs((r.left + r.width / 2) - center);
+                    if (d < bestDist) { bestDist = d; bestId = card.getAttribute('data-id'); }
                 });
-            }, { root: carousel, threshold: 0.6 });
+                return bestId;
+            }
 
-            carousel.querySelectorAll('.guide-mini-card').forEach(function(c) { observer.observe(c); });
+            function setActiveById(id) {
+                if (!id || id === activeCarouselId) return;
+                if (activeCarouselId) {
+                    var prev = document.querySelector('.guide-mini-card[data-id="' + activeCarouselId + '"]');
+                    if (prev) prev.classList.remove('is-active');
+                    highlightMarker(activeCarouselId, false);
+                }
+                var next = document.querySelector('.guide-mini-card[data-id="' + id + '"]');
+                if (next) next.classList.add('is-active');
+                activeCarouselId = id;
+                highlightMarker(id, true);
 
-            // Activate first card
+                var cards = Array.from(carousel.querySelectorAll('.guide-mini-card'));
+                var idx = cards.findIndex(function(c) { return c.getAttribute('data-id') === id; });
+                var dots = document.querySelectorAll('.guide-carousel-dot');
+                dots.forEach(function(d, i) { d.classList.toggle('is-active', i === idx); });
+            }
+
+            var scrollRaf = null;
+            carousel.addEventListener('scroll', function() {
+                if (scrollRaf) return;
+                scrollRaf = requestAnimationFrame(function() {
+                    scrollRaf = null;
+                    setActiveById(getCenteredCardId());
+                });
+            }, { passive: true });
+
             var first = carousel.querySelector('.guide-mini-card');
             if (first) {
                 first.classList.add('is-active');
@@ -2496,6 +2560,9 @@
                 img.src = guide.heroImage;
                 img.alt = guide.title;
                 img.fetchpriority = 'high';
+                if (guide.heroImagePosition) {
+                    img.style.objectPosition = guide.heroImagePosition;
+                }
                 document.getElementById('guideHeroImgWrap').appendChild(img);
             }
 

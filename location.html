@@ -997,6 +997,35 @@
             text-decoration: none;
         }
         .review-callout-link:hover { text-decoration: underline; }
+        .review-callout-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .review-callout-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #ff4500;
+            background: #ffffff;
+            border: 1px solid #d5c8f0;
+            border-radius: 999px;
+            text-decoration: none;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .review-callout-pill:hover {
+            background: #ff4500;
+            color: #ffffff;
+            border-color: #ff4500;
+        }
 
         /* ── SDCoffeeGuide Review Embed ──────────────────────────────────── */
         .ig-review-mobile  { display: none; }
@@ -1933,13 +1962,45 @@
         }
 
         // ── Bean Review callout ────────────────────────────────────────────
+        // Supports multi-URL: enter a comma-separated list in Google Sheets reviewUrl
+        // to render pill links in one callout box. Pill labels are derived from each
+        // Reddit URL's title slug (no network call). Falls back to "Review N" if the
+        // slug can't be parsed.
+        function extractRedditPostTitle(url) {
+            try {
+                const u = new URL(url);
+                if (!/(^|\.)reddit\.com$/i.test(u.hostname)) return null;
+                const m = u.pathname.match(/\/comments\/[a-z0-9]+\/([^/]+)/i);
+                if (!m || !m[1] || m[1] === 'comment') return null;
+                const slug = decodeURIComponent(m[1]).replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
+                if (!slug) return null;
+                return slug.replace(/\b\w/g, c => c.toUpperCase());
+            } catch (e) {
+                return null;
+            }
+        }
         function renderReviewCallout(custom) {
             if (!custom || !custom.reviewUrl) return '';
+            const urls = custom.reviewUrl.split(',').map(u => u.trim()).filter(Boolean);
+            if (!urls.length) return '';
+            if (urls.length === 1) {
+                return `
+                    <div class="review-callout">
+                        <div class="review-callout-label">☕ Bean Review</div>
+                        <div class="review-callout-text">A detailed roast review of this roaster's beans, posted to r/SanDiegoCoffeeBeans.</div>
+                        <a href="${urls[0]}" target="_blank" rel="noopener" class="review-callout-link">Read the Review on Reddit →</a>
+                    </div>
+                `;
+            }
+            const pillsHtml = urls.map((u, i) => {
+                const title = extractRedditPostTitle(u) || `Review ${i + 1}`;
+                return `<a href="${u}" target="_blank" rel="noopener" class="review-callout-pill" title="${escapeHtml(title)}">${escapeHtml(title)} ↗</a>`;
+            }).join('');
             return `
                 <div class="review-callout">
-                    <div class="review-callout-label">☕ Bean Review</div>
-                    <div class="review-callout-text">A detailed roast review of this roaster's beans, posted to r/SanDiegoCoffeeBeans.</div>
-                    <a href="${custom.reviewUrl}" target="_blank" rel="noopener" class="review-callout-link">Read the Review on Reddit →</a>
+                    <div class="review-callout-label">☕ Bean Reviews · ${urls.length}</div>
+                    <div class="review-callout-text">Detailed roast reviews of this roaster's beans, posted to r/SanDiegoCoffeeBeans.</div>
+                    <div class="review-callout-pills">${pillsHtml}</div>
                 </div>
             `;
         }

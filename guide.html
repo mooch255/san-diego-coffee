@@ -504,6 +504,23 @@
             margin-bottom: 0.25rem;
         }
 
+        /* Mobile-only Follow & Suggest block (rendered at bottom of page for reviewer guides).
+           Desktop hides it because the same content already appears in the about tips up top. */
+        .guide-follow-cta { display: none; }
+        .guide-follow-cta-label {
+            font-size: 0.58rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.35rem;
+        }
+        .guide-follow-cta-text {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: var(--coffee-brown);
+        }
+
         /* ── Split Layout ────────────────────────────────────────────── */
         .guide-split-header {
             display: flex;
@@ -765,7 +782,9 @@
         .guide-card-ratings {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
+            grid-template-rows: auto auto auto;
+            column-gap: 0.5rem;
+            row-gap: 0.1rem;
             margin: 0.5rem 0 0.75rem;
             padding: 0.6rem 0.75rem 0.7rem;
             background: var(--cream);
@@ -773,13 +792,15 @@
             border-left: 3px solid var(--accent-red);
             border-radius: 4px;
         }
-        .guide-card-ratings .rating-stat {
-            display: flex;
-            flex-direction: column;
-            gap: 0.1rem;
-            min-width: 0;
-        }
+        /* The .rating-stat wrapper is presentational only — display:contents lets
+           its children participate in the parent grid so both scores share row 2
+           and stay aligned no matter how many lines the signature drink name wraps to. */
+        .guide-card-ratings .rating-stat { display: contents; }
+        .guide-card-ratings .rating-stat:nth-child(1) > * { grid-column: 1; }
+        .guide-card-ratings .rating-stat:nth-child(2) > * { grid-column: 2; }
         .guide-card-ratings .rating-label {
+            grid-row: 1;
+            align-self: end;
             font-size: 0.6rem;
             font-weight: 700;
             color: var(--coffee-brown);
@@ -790,6 +811,7 @@
             text-overflow: ellipsis;
         }
         .guide-card-ratings .rating-score {
+            grid-row: 2;
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             font-weight: 800;
@@ -798,6 +820,7 @@
             letter-spacing: -0.01em;
         }
         .guide-card-ratings .rating-sublabel {
+            grid-row: 3;
             font-size: 0.55rem;
             font-weight: 600;
             color: var(--accent-red);
@@ -1675,6 +1698,28 @@
             .guide-hero-title { font-size: 1.45rem; margin-bottom: 0.25rem; text-shadow: 0 2px 10px rgba(0,0,0,0.85); }
             .guide-hero-meta { font-size: 0.68rem; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
             .guide-about { display: none; }
+            /* Reviewer guides: intro paragraph stays above the map; methodology + how-to-use
+               fold into the FAQ accordion; the Follow & Suggest CTA gets its own block at
+               the bottom of the page (rendered via #guideFollowCta below the FAQ). */
+            .guide-about.is-reviewer {
+                display: block;
+                padding: 0.85rem 1rem;
+                margin: 0.85rem 0 0;
+            }
+            .guide-about.is-reviewer .guide-about-intro {
+                font-size: 0.82rem;
+                margin-bottom: 0;
+            }
+            .guide-about.is-reviewer .guide-about-tips {
+                display: none;
+            }
+            .guide-follow-cta.is-reviewer {
+                display: block;
+                border-top: 3px solid var(--accent-red);
+                background: var(--cream);
+                padding: 0.95rem 1rem 1.05rem;
+                margin: 1.25rem 1rem 0;
+            }
             .guide-faq { padding: 1.25rem 1rem; }
             .guide-faq h2 { font-size: 1.2rem; }
 
@@ -1837,6 +1882,9 @@
                 <h2 id="guideFaqHeading">Frequently Asked</h2>
                 <div id="guideFaqList"></div>
             </section>
+
+            <!-- Mobile-only Follow & Suggest CTA for reviewer guides (populated by renderAbout) -->
+            <div class="guide-follow-cta" id="guideFollowCta"></div>
 
         </div>
 
@@ -2820,14 +2868,26 @@
             var list = document.getElementById('guideFaqList');
             if (!section || !list) return;
 
-            // On mobile, combine the about tips into one FAQ item
+            // On mobile, fold the dense about content into FAQ accordion items.
+            // Neighborhood guides: roll all 3 tips into one item (intro+tips block is hidden on mobile).
+            // Reviewer guides: intro + Follow CTA stay visible above the map; methodology + how-to-use
+            // come down here as separate items so each is one tap from the answer.
             var mobileItems = [];
             if (window.matchMedia('(max-width: 768px)').matches && guide.about) {
-                var tipParts = [];
-                if (guide.about.howToNavigate) tipParts.push('<strong>Getting around:</strong> ' + guide.about.howToNavigate);
-                if (guide.about.bestTimeToVisit) tipParts.push('<strong>Best time to visit:</strong> ' + guide.about.bestTimeToVisit);
-                if (guide.about.parking) tipParts.push('<strong>Parking:</strong> ' + guide.about.parking);
-                if (tipParts.length) mobileItems.push({ q: 'Navigation, timing & parking', a: tipParts.join('<br><br>'), html: true });
+                if (guide.type === 'reviewer') {
+                    if (guide.about.methodology) {
+                        mobileItems.push({ q: 'How are spots rated?', a: guide.about.methodology });
+                    }
+                    if (guide.about.howToUse) {
+                        mobileItems.push({ q: 'How to use this index', a: guide.about.howToUse });
+                    }
+                } else {
+                    var tipParts = [];
+                    if (guide.about.howToNavigate) tipParts.push('<strong>Getting around:</strong> ' + guide.about.howToNavigate);
+                    if (guide.about.bestTimeToVisit) tipParts.push('<strong>Best time to visit:</strong> ' + guide.about.bestTimeToVisit);
+                    if (guide.about.parking) tipParts.push('<strong>Parking:</strong> ' + guide.about.parking);
+                    if (tipParts.length) mobileItems.push({ q: 'Navigation, timing & parking', a: tipParts.join('<br><br>'), html: true });
+                }
             }
 
             var allItems = mobileItems.concat(guide.faq || []);
@@ -2845,6 +2905,8 @@
         // ── Render about section ───────────────────────────────────────
         function renderAbout(guide) {
             var isReviewer = guide.type === 'reviewer';
+            var aboutEl = document.getElementById('guideAbout');
+            if (aboutEl) aboutEl.classList.toggle('is-reviewer', isReviewer);
             var eyebrowText = isReviewer
                 ? 'About'
                 : 'About ' + guide.neighborhood;
@@ -2872,12 +2934,13 @@
             var tipData;
             if (isReviewer) {
                 tipData = [
-                    { label: 'Methodology', text: guide.about.methodology || '' },
-                    { label: 'How to Use This Index', text: guide.about.howToUse || '' }
+                    { slug: 'methodology', label: 'Methodology', text: guide.about.methodology || '' },
+                    { slug: 'how-to-use', label: 'How to Use This Index', text: guide.about.howToUse || '' }
                 ];
                 if (guide.reviewer && guide.reviewer.instagramUrl) {
                     var handle = guide.reviewer.handle || '@sdcoffeeguide';
                     tipData.push({
+                        slug: 'follow',
                         label: 'Follow & Suggest',
                         text: 'A new review drops every week. Tyler and Margarita take cafe recommendations directly in the comments, so if you have a spot they should try, drop it on their latest post.'
                             + '<a href="' + guide.reviewer.instagramUrl + '" target="_blank" rel="noopener" style="color:var(--accent-red);font-weight:600;text-decoration:none;display:block;margin-top:0.55rem;">' + handle + ' on Instagram →</a>'
@@ -2885,18 +2948,34 @@
                 }
             } else {
                 tipData = [
-                    { label: 'How to Navigate', text: guide.about.howToNavigate },
-                    { label: 'Best Time to Visit', text: guide.about.bestTimeToVisit },
-                    { label: 'Parking', text: guide.about.parking }
+                    { slug: 'navigate', label: 'How to Navigate', text: guide.about.howToNavigate },
+                    { slug: 'time', label: 'Best Time to Visit', text: guide.about.bestTimeToVisit },
+                    { slug: 'parking', label: 'Parking', text: guide.about.parking }
                 ];
             }
 
             tips.innerHTML = tipData.filter(function(t){ return t.text; }).map(function(t) {
-                return '<div class="guide-about-tip">'
+                return '<div class="guide-about-tip tip--' + t.slug + '">'
                     + '<div class="guide-about-tip-label">' + t.label + '</div>'
                     + t.text
                     + '</div>';
             }).join('');
+
+            // Populate the mobile-only Follow & Suggest block (rendered below the FAQ).
+            // The same content also lives in the about tips up top on desktop; CSS hides
+            // whichever block doesn't fit the viewport.
+            var followEl = document.getElementById('guideFollowCta');
+            if (followEl) {
+                var followTip = isReviewer ? tipData.filter(function(t){ return t.slug === 'follow'; })[0] : null;
+                if (followTip && followTip.text) {
+                    followEl.innerHTML = '<div class="guide-follow-cta-label">' + followTip.label + '</div>'
+                        + '<div class="guide-follow-cta-text">' + followTip.text + '</div>';
+                    followEl.classList.add('is-reviewer');
+                } else {
+                    followEl.innerHTML = '';
+                    followEl.classList.remove('is-reviewer');
+                }
+            }
         }
 
         // ── JSON-LD injection ──────────────────────────────────────────

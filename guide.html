@@ -58,6 +58,11 @@
             title: 'Best Coffee in Downtown, Barrio Logan, Bankers Hill & Little Italy, San Diego | Neighborhood Guide',
             desc: 'The definitive guide to specialty coffee in Downtown, Barrio Logan, Bankers Hill, and Little Italy. Eight standout roasters and cafes with an interactive map, editorial picks, and what to order.',
             image: '/images/guides/downtown-barrio-logan-bankers-hill-hero.jpg'
+          },
+          'sdcoffeeguide': {
+            title: 'Coffee Shops Reviewed by @sdcoffeeguide | San Diego',
+            desc: "Every San Diego coffee shop reviewed by @sdcoffeeguide, scored on cortado and signature drink on a 1-10 scale. Sortable, mapped.",
+            image: '/images/guides/sdcoffeeguide-og.jpg'
           }
         };
         var entry = TITLES[slug];
@@ -365,6 +370,31 @@
             display: block;
         }
 
+        /* Multi-image hero: N portrait images side-by-side on desktop */
+        .guide-hero-img-wrap.guide-hero-multi {
+            display: flex;
+            gap: 2px;
+        }
+        .guide-hero-img-wrap.guide-hero-multi img {
+            flex: 1 1 0;
+            min-width: 0;
+            object-position: center 55%;
+        }
+        /* Mobile: only show the center image (or first if only 2) */
+        @media (max-width: 768px) {
+            .guide-hero-img-wrap.guide-hero-multi {
+                gap: 0;
+            }
+            .guide-hero-img-wrap.guide-hero-multi img {
+                display: none;
+            }
+            .guide-hero-img-wrap.guide-hero-multi[data-count="2"] img:nth-child(1),
+            .guide-hero-img-wrap.guide-hero-multi[data-count="3"] img:nth-child(2),
+            .guide-hero-img-wrap.guide-hero-multi[data-count="4"] img:nth-child(2) {
+                display: block;
+            }
+        }
+
         .guide-hero-overlay {
             position: absolute;
             inset: 0;
@@ -388,13 +418,19 @@
         }
 
         .guide-hero-eyebrow {
+            display: inline-block;
             font-size: 0.65rem;
             font-weight: 800;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: var(--latte);
-            margin-bottom: 0.5rem;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+            color: var(--cream);
+            margin-bottom: 0.6rem;
+            padding: 0.32rem 0.7rem 0.34rem;
+            background: rgba(20, 10, 4, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 999px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
         .guide-hero-title {
@@ -497,6 +533,73 @@
             padding: 0.45rem 1rem;
             background: var(--cream);
             border-bottom: 1px solid var(--light-tan);
+        }
+
+        .guide-sort-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            color: var(--coffee-brown);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .guide-sort-select {
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--espresso);
+            background: var(--white);
+            border: 1px solid var(--light-tan);
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+        .guide-sort-select:focus {
+            outline: 2px solid var(--accent-red);
+            outline-offset: 1px;
+        }
+        /* Mobile floating sort pill: overlays the top of the carousel area */
+        .guide-mobile-sort-pill {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .guide-mobile-sort-pill.is-active {
+                display: inline-block;
+                position: absolute;
+                top: 0.5rem;
+                right: 0.65rem;
+                z-index: 11;
+                pointer-events: auto;
+            }
+            .guide-mobile-sort-select {
+                appearance: none;
+                -webkit-appearance: none;
+                background: rgba(20,10,4,0.78);
+                color: var(--cream);
+                border: 1px solid rgba(248,245,240,0.25);
+                border-radius: 999px;
+                font-family: inherit;
+                font-size: 0.72rem;
+                font-weight: 600;
+                letter-spacing: 0.02em;
+                padding: 0.4rem 1.7rem 0.4rem 0.85rem;
+                cursor: pointer;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+                /* Custom chevron */
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23F8F5F0' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 0.65rem center;
+                backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(4px);
+            }
+            .guide-mobile-sort-select:focus {
+                outline: 2px solid var(--accent-red);
+                outline-offset: 1px;
+            }
         }
 
         .guide-split-layout {
@@ -643,6 +746,161 @@
             line-height: 1;
             padding: 0.3rem 0.5rem 0.32rem;
             letter-spacing: 0.04em;
+        }
+
+        /* ── Reviewer-type cards ────────────────────────────────────────── */
+        .guide-card-sdcg-chip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--espresso);
+            color: var(--cream);
+            font-size: 0.58rem;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0.32rem 0.5rem 0.34rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .guide-card-ratings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin: 0.5rem 0 0.75rem;
+            padding: 0.6rem 0.75rem 0.7rem;
+            background: var(--cream);
+            border: 1px solid var(--light-tan);
+            border-left: 3px solid var(--accent-red);
+            border-radius: 4px;
+        }
+        .guide-card-ratings .rating-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            min-width: 0;
+        }
+        .guide-card-ratings .rating-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--coffee-brown);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            line-height: 1.25;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .guide-card-ratings .rating-score {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--espresso);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+        }
+        .guide-card-ratings .rating-sublabel {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .guide-card-excerpt {
+            font-size: 0.84rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 0 0 0.6rem;
+            padding-left: 0.7rem;
+            border-left: 2px solid var(--light-tan);
+        }
+        .guide-detail-excerpt {
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 0.5rem 0 0.75rem;
+            padding-left: 0.75rem;
+            border-left: 2px solid var(--light-tan);
+        }
+        .guide-card-ig-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--accent-red);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-decoration: none;
+            margin-bottom: 0.45rem;
+        }
+        .guide-card-ig-link:hover { text-decoration: underline; }
+        .guide-card-ig-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            margin-bottom: 0.45rem;
+        }
+        .guide-mini-sdcg-chip {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: var(--espresso);
+            color: var(--cream);
+            font-size: 0.7rem;
+            line-height: 1;
+            padding: 0.18rem 0.3rem;
+            border-radius: 3px;
+            z-index: 1;
+        }
+        .guide-mini-ratings {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: 0.35rem;
+        }
+        .guide-mini-rating {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+        .guide-mini-rating-label {
+            font-size: 0.52rem;
+            font-weight: 700;
+            color: var(--coffee-brown);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            line-height: 1.25;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .guide-mini-rating-score {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--espresso);
+            line-height: 1.15;
+        }
+        .guide-mini-excerpt {
+            font-size: 0.72rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            margin: 0.45rem 0 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .guide-detail-sdcg-chip {
+            display: inline-flex;
+            align-items: center;
+            background: var(--espresso);
+            color: var(--cream);
+            font-size: 0.65rem;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0.32rem 0.55rem 0.34rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-radius: 3px;
         }
 
         .guide-card-body {
@@ -1413,7 +1671,7 @@
                 );
             }
             .guide-hero-content { padding: 1rem 1.25rem 1rem; bottom: 0.65rem; }
-            .guide-hero-eyebrow { font-size: 0.6rem; margin-bottom: 0.3rem; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
+            .guide-hero-eyebrow { font-size: 0.58rem; margin-bottom: 0.4rem; padding: 0.28rem 0.6rem 0.3rem; }
             .guide-hero-title { font-size: 1.45rem; margin-bottom: 0.25rem; text-shadow: 0 2px 10px rgba(0,0,0,0.85); }
             .guide-hero-meta { font-size: 0.68rem; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
             .guide-about { display: none; }
@@ -1421,13 +1679,14 @@
             .guide-faq h2 { font-size: 1.2rem; }
 
             /* Map module: full-bleed, tall, relative container for carousel */
+            .guide-main { padding-bottom: 1rem; }
             .guide-split-layout {
                 display: block;
                 height: auto;
                 border: none;
                 border-top: 3px solid var(--accent-red);
                 margin-top: 0.75rem;
-                margin-bottom: 1.5rem;
+                margin-bottom: 0;
                 overflow: visible;
             }
             .guide-locations-panel { display: none; }
@@ -1542,6 +1801,14 @@
                 <div class="guide-locations-panel">
                     <div class="guide-split-header">
                         <span class="guide-split-title" id="guideCountNote">The Picks</span>
+                        <label class="guide-sort-wrap" id="guideSortWrap" style="display:none;">
+                            <span class="guide-sort-label">Sort</span>
+                            <select id="guideSortSelect" class="guide-sort-select" aria-label="Sort picks">
+                                <option value="cortado">Cortado rating ↓</option>
+                                <option value="signature">Signature drink ↓</option>
+                                <option value="nearest">Nearest to me</option>
+                            </select>
+                        </label>
                     </div>
                     <div class="guide-locations-list" id="guideLocationsList"></div>
                     <div class="guide-panel-cta">
@@ -1551,6 +1818,14 @@
                 <div class="guide-map-panel">
                     <div id="guideMap"></div>
                     <div class="guide-carousel-wrap" id="guideCarouselWrap">
+                        <!-- Mobile-only floating sort pill (overlays bottom of map, hidden on desktop) -->
+                        <div class="guide-mobile-sort-pill" id="guideMobileSortBar">
+                            <select id="guideSortSelectMobile" class="guide-mobile-sort-select" aria-label="Sort picks">
+                                <option value="cortado">Sort: Cortado ↓</option>
+                                <option value="signature">Sort: Signature ↓</option>
+                                <option value="nearest">Sort: Nearest</option>
+                            </select>
+                        </div>
                         <div class="guide-carousel" id="guideCarousel" role="list" aria-label="Location picks"></div>
                         <div class="guide-carousel-dots" id="guideCarouselDots"></div>
                     </div>
@@ -1601,6 +1876,7 @@
 
     <script src="/guides.js"></script>
     <script src="/locations.js"></script>
+    <script src="/sdcoffeeguide.js"></script>
     <script>
         // ── Nav drawer ─────────────────────────────────────────────────
         (function() {
@@ -1648,6 +1924,70 @@
             return null;
         }
 
+        // For reviewer-type guides: rating lookup from sdcoffeeguide.js
+        function getSdcgRatings(id) {
+            return (window.SDCG_RATINGS && window.SDCG_RATINGS[id]) || {};
+        }
+
+        // Resolve lat/lng: prefer inline entry coords (neighborhood guides),
+        // fall back to locations.js coordinates (reviewer guides reference loc IDs only).
+        function resolveLatLng(entry) {
+            if (entry.lat != null && entry.lng != null) return { lat: entry.lat, lng: entry.lng };
+            var loc = getLocById(entry.locationId);
+            var c = loc && loc.basicInfo && loc.basicInfo.address && loc.basicInfo.address.coordinates;
+            return c ? { lat: c.lat, lng: c.lng } : null;
+        }
+
+        // Format a rating as "X.X/10" or "—/10" when missing/invalid.
+        function formatRating(r) {
+            return (typeof r === 'number' && !isNaN(r)) ? (r.toFixed(1) + '/10') : '—/10';
+        }
+
+        // Parse single or comma-separated Instagram URLs (mirrors location.html pattern).
+        function splitReviewUrls(s) {
+            if (!s) return [];
+            return String(s).split(',').map(function(u){ return u.trim(); }).filter(function(u){ return !!u; });
+        }
+
+        // Haversine distance in km (mirrors map.html helper).
+        function getDistanceKm(lat1, lng1, lat2, lng2) {
+            var R = 6371;
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLng = (lng2 - lng1) * Math.PI / 180;
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2)
+                  + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180)
+                  * Math.sin(dLng/2) * Math.sin(dLng/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        // User location, populated when "Nearest to me" sort is selected.
+        var userLatLng = null;
+
+        // Sort reviewer-guide locations in place. Missing ratings sort to the bottom.
+        function sortReviewerLocations(guide, criterion) {
+            if (!guide || !guide.locations) return;
+            guide.locations.sort(function(a, b) {
+                var ra = getSdcgRatings(a.locationId);
+                var rb = getSdcgRatings(b.locationId);
+                if (criterion === 'signature') {
+                    var sa = (typeof ra.signatureDrinkRating === 'number') ? ra.signatureDrinkRating : -Infinity;
+                    var sb = (typeof rb.signatureDrinkRating === 'number') ? rb.signatureDrinkRating : -Infinity;
+                    return sb - sa;
+                }
+                if (criterion === 'nearest' && userLatLng) {
+                    var pa = resolveLatLng(a);
+                    var pb = resolveLatLng(b);
+                    var da = pa ? getDistanceKm(userLatLng.lat, userLatLng.lng, pa.lat, pa.lng) : Infinity;
+                    var db = pb ? getDistanceKm(userLatLng.lat, userLatLng.lng, pb.lat, pb.lng) : Infinity;
+                    return da - db;
+                }
+                // default: cortado desc
+                var ca = (typeof ra.cortadoRating === 'number') ? ra.cortadoRating : -Infinity;
+                var cb = (typeof rb.cortadoRating === 'number') ? rb.cortadoRating : -Infinity;
+                return cb - ca;
+            });
+        }
+
         function formatDate(iso) {
             var d = new Date(iso + 'T00:00:00');
             return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -1692,11 +2032,11 @@
         ];
 
         // ── Numbered marker SVG (44×54, cream stroke) ──────────────────
+        // Same size in both states; only the color changes on highlight so hover is smooth.
         function buildMarkerIcon(rank, active) {
             var fill = active ? '#B85C38' : '#3D2817';
             var ringStroke = active ? '#FFFFFF' : '#F8F5F0';
-            var w = active ? 50 : 44;
-            var h = active ? 60 : 54;
+            var w = 44, h = 54;
             var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 44 54">'
                 + '<path d="M22 1C10.4 1 1 10.4 1 22c0 16 21 31 21 31S43 38 43 22C43 10.4 33.6 1 22 1z" fill="' + fill + '" stroke="' + ringStroke + '" stroke-width="2"/>'
                 + '<circle cx="22" cy="22" r="13" fill="#F8F5F0"/>'
@@ -1709,26 +2049,31 @@
             };
         }
 
+        // ── Reviewer marker: clean unnumbered pin with cream center ────
+        function buildReviewerMarkerIcon(_unused, active) {
+            var fill = active ? '#B85C38' : '#3D2817';
+            var ringStroke = active ? '#FFFFFF' : '#F8F5F0';
+            var w = 32, h = 40;
+            var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 44 54">'
+                + '<path d="M22 1C10.4 1 1 10.4 1 22c0 16 21 31 21 31S43 38 43 22C43 10.4 33.6 1 22 1z" fill="' + fill + '" stroke="' + ringStroke + '" stroke-width="2"/>'
+                + '<circle cx="22" cy="22" r="6" fill="#F8F5F0"/>'
+                + '</svg>';
+            return {
+                url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+                scaledSize: new google.maps.Size(w, h),
+                anchor: new google.maps.Point(w / 2, h)
+            };
+        }
+
         // ── Highlight marker from card hover / carousel tap ────────────
+        // No pan, no bounce, no size change — just a color + z-index swap so hover is smooth.
         function highlightMarker(locationId, active) {
             var entry = guideMarkers[locationId];
             if (!entry || !guideMap) return;
             // Don't deactivate a desktop-selected pin on hover-out
             if (!active && locationId === desktopSelectedId) return;
-            entry.marker.setIcon(buildMarkerIcon(entry.rank, active));
+            entry.marker.setIcon(entry.buildIcon(active));
             entry.marker.setZIndex(active ? 999 : 100);
-            if (active) {
-                guideMap.panTo(entry.marker.getPosition());
-                var isMobile = window.matchMedia('(max-width: 768px)').matches;
-                if (!isMobile) {
-                    try {
-                        entry.marker.setAnimation(google.maps.Animation.BOUNCE);
-                        setTimeout(function() {
-                            if (entry.marker) entry.marker.setAnimation(null);
-                        }, 720);
-                    } catch (e) {}
-                }
-            }
         }
 
         // ── Debounced highlight card from marker hover ─────────────────
@@ -1799,17 +2144,27 @@
             currentGuide.locations.forEach(function(entry) {
                 var loc = getLocById(entry.locationId);
                 var name = loc ? loc.basicInfo.name : entry.locationId;
+                var pos = resolveLatLng(entry);
+                if (!pos) return;
+                var isReviewer = currentGuide.type === 'reviewer';
+                var sdcg = isReviewer ? getSdcgRatings(entry.locationId) : null;
+                var markerLabel = isReviewer
+                    ? name
+                    : (entry.rank + '. ' + name);
+                var markerIcon = isReviewer
+                    ? buildReviewerMarkerIcon(sdcg.cortadoRating, false)
+                    : buildMarkerIcon(entry.rank, false);
 
                 var marker = new google.maps.Marker({
-                    position: { lat: entry.lat, lng: entry.lng },
+                    position: pos,
                     map: guideMap,
-                    title: entry.rank + '. ' + name,
-                    icon: buildMarkerIcon(entry.rank, false),
+                    title: markerLabel,
+                    icon: markerIcon,
                     zIndex: 100,
                     optimized: false
                 });
 
-                bounds.extend({ lat: entry.lat, lng: entry.lng });
+                bounds.extend(pos);
 
                 (function(e, m) {
                     m.addListener('mouseover', function() {
@@ -1826,7 +2181,7 @@
                             // Desktop: toggle pin selection
                             if (desktopSelectedId && desktopSelectedId !== e.locationId) {
                                 var prev = guideMarkers[desktopSelectedId];
-                                if (prev) prev.marker.setIcon(buildMarkerIcon(prev.rank, false));
+                                if (prev) prev.marker.setIcon(prev.buildIcon(false));
                                 if (prev) prev.marker.setZIndex(100);
                             }
                             if (desktopSelectedId === e.locationId) {
@@ -1853,7 +2208,14 @@
                     });
                 })(entry, marker);
 
-                guideMarkers[entry.locationId] = { marker: marker, rank: entry.rank, entry: entry };
+                guideMarkers[entry.locationId] = {
+                    marker: marker,
+                    rank: entry.rank,
+                    entry: entry,
+                    buildIcon: isReviewer
+                        ? (function(score){ return function(active){ return buildReviewerMarkerIcon(score, active); }; })(sdcg.cortadoRating)
+                        : (function(rank){ return function(active){ return buildMarkerIcon(rank, active); }; })(entry.rank)
+                };
             });
 
             var isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -1886,62 +2248,111 @@
             var countNote = document.getElementById('guideCountNote');
             if (countNote) countNote.textContent = guide.locationCount + ' Picks';
 
+            var isReviewer = guide.type === 'reviewer';
+
             guide.locations.forEach(function(entry) {
                 var loc = getLocById(entry.locationId);
 
                 var name = loc ? loc.basicInfo.name : '(Location ' + entry.locationId + ')';
                 var type = loc ? (loc.basicInfo.type || '') : '';
+                var hood = loc && loc.coffeeDetails ? (loc.coffeeDetails.neighborhood || '') : '';
                 var rating = loc && loc.googleRating ? loc.googleRating.rating : null;
                 var ratingTxt = rating ? '★ ' + rating.toFixed(1) : '';
                 var todayHrs = loc ? getTodayHours(loc) : '';
                 var localImg = loc && loc.localImage ? loc.localImage : '';
-                var rankStr = entry.rank < 10 ? ('0' + entry.rank) : String(entry.rank);
-
-                var card = document.createElement('article');
-                card.className = 'guide-location-card';
-                card.setAttribute('data-id', entry.locationId);
-
-                var pillsHtml = (entry.bestFor || []).map(function(tag) {
-                    return '<span class="guide-card-pill">' + escHtml(tag) + '</span>';
-                }).join('');
-
-                var metaParts = [];
-                if (ratingTxt) metaParts.push('<span class="guide-location-rating">' + ratingTxt + '</span>');
-                if (type) metaParts.push('<span class="guide-location-type">' + escHtml(type) + '</span>');
-                if (todayHrs) metaParts.push('<span>Open today · ' + escHtml(todayHrs) + '</span>');
-                var metaHtml = metaParts.join('<span class="meta-sep">·</span>');
 
                 var photoHtml = localImg
                     ? '<img src="' + escHtml(localImg) + '" alt="' + escHtml(name) + '" loading="lazy">'
                     : '<div class="guide-card-photo-fallback">☕</div>';
 
-                var insightHtml = entry.localInsight
-                    ? '<div class="guide-card-tip">'
-                        + '<span class="guide-card-tip-label">Insider Tip</span>'
-                        + '<span class="guide-card-tip-text">' + escHtml(entry.localInsight) + '</span>'
-                      + '</div>'
-                    : '';
+                var card = document.createElement('article');
+                card.className = 'guide-location-card';
+                card.setAttribute('data-id', entry.locationId);
 
-                card.innerHTML =
-                    '<div class="guide-card-photo">'
-                    +   photoHtml
-                    +   '<span class="guide-card-rank-badge">' + rankStr + '</span>'
-                    + '</div>'
-                    + '<div class="guide-card-body">'
-                    +   '<div class="guide-card-eyebrow">' + escHtml(entry.highlightPhrase || '') + '</div>'
-                    +   '<h3 class="guide-location-name">' + escHtml(name) + '</h3>'
-                    +   (metaHtml ? '<div class="guide-location-meta-row">' + metaHtml + '</div>' : '')
-                    +   (pillsHtml ? '<div class="guide-card-pills">' + pillsHtml + '</div>' : '')
-                    +   '<p class="guide-location-blurb">' + escHtml(entry.blurb || '') + '</p>'
-                    +   (entry.mustOrder
+                if (isReviewer) {
+                    var sdcg = getSdcgRatings(entry.locationId);
+                    var reviewUrlSource = (sdcg.reviewUrl)
+                        || (loc && loc.coffeeDetails ? loc.coffeeDetails.instagramReviewUrl : '');
+                    var reviewUrls = splitReviewUrls(reviewUrlSource);
+                    var igLinkHtml = '';
+                    if (reviewUrls.length === 1) {
+                        igLinkHtml = '<a class="guide-card-ig-link" href="' + escHtml(reviewUrls[0]) + '" target="_blank" rel="noopener">View Instagram review →</a>';
+                    } else if (reviewUrls.length > 1) {
+                        igLinkHtml = '<div class="guide-card-ig-links">';
+                        reviewUrls.forEach(function(u, i) {
+                            igLinkHtml += '<a class="guide-card-ig-link" href="' + escHtml(u) + '" target="_blank" rel="noopener">Review ' + (i + 1) + ' →</a>';
+                        });
+                        igLinkHtml += '</div>';
+                    }
+                    var hoodMetaParts = [];
+                    if (type) hoodMetaParts.push('<span class="guide-location-type">' + escHtml(type) + '</span>');
+                    if (hood) hoodMetaParts.push('<span>' + escHtml(hood) + '</span>');
+                    var hoodMetaHtml = hoodMetaParts.join('<span class="meta-sep">·</span>');
+
+                    var sigName = sdcg.signatureDrinkName || 'Signature drink';
+                    var excerptHtml = sdcg.reviewExcerpt
+                        ? '<p class="guide-card-excerpt">' + escHtml(sdcg.reviewExcerpt) + '</p>'
+                        : '';
+                    card.innerHTML =
+                        '<div class="guide-card-photo">'
+                        +   photoHtml
+                        + '</div>'
+                        + '<div class="guide-card-body">'
+                        +   '<h3 class="guide-location-name">' + escHtml(name) + '</h3>'
+                        +   (hoodMetaHtml ? '<div class="guide-location-meta-row">' + hoodMetaHtml + '</div>' : '')
+                        +   '<div class="guide-card-ratings">'
+                        +     '<div class="rating-stat">'
+                        +       '<div class="rating-label">Cortado</div>'
+                        +       '<div class="rating-score">' + escHtml(formatRating(sdcg.cortadoRating)) + '</div>'
+                        +     '</div>'
+                        +     '<div class="rating-stat">'
+                        +       '<div class="rating-label">' + escHtml(sigName) + '</div>'
+                        +       '<div class="rating-score">' + escHtml(formatRating(sdcg.signatureDrinkRating)) + '</div>'
+                        +       '<div class="rating-sublabel">signature</div>'
+                        +     '</div>'
+                        +   '</div>'
+                        +   excerptHtml
+                        +   igLinkHtml
+                        +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + guide.id + '" class="guide-location-link">View location details →</a>'
+                        + '</div>';
+                } else {
+                    var rankStr = entry.rank < 10 ? ('0' + entry.rank) : String(entry.rank);
+                    var pillsHtml = (entry.bestFor || []).map(function(tag) {
+                        return '<span class="guide-card-pill">' + escHtml(tag) + '</span>';
+                    }).join('');
+                    var metaParts = [];
+                    if (ratingTxt) metaParts.push('<span class="guide-location-rating">' + ratingTxt + '</span>');
+                    if (type) metaParts.push('<span class="guide-location-type">' + escHtml(type) + '</span>');
+                    if (todayHrs) metaParts.push('<span>Open today · ' + escHtml(todayHrs) + '</span>');
+                    var metaHtml = metaParts.join('<span class="meta-sep">·</span>');
+                    var insightHtml = entry.localInsight
                         ? '<div class="guide-card-tip">'
-                            + '<span class="guide-card-tip-label">Must Order</span>'
-                            + '<span class="guide-card-tip-text">' + escHtml(entry.mustOrder) + '</span>'
+                            + '<span class="guide-card-tip-label">Insider Tip</span>'
+                            + '<span class="guide-card-tip-text">' + escHtml(entry.localInsight) + '</span>'
                           + '</div>'
-                        : '')
-                    +   insightHtml
-                    +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + guide.id + '" class="guide-location-link">View location details →</a>'
-                    + '</div>';
+                        : '';
+
+                    card.innerHTML =
+                        '<div class="guide-card-photo">'
+                        +   photoHtml
+                        +   '<span class="guide-card-rank-badge">' + rankStr + '</span>'
+                        + '</div>'
+                        + '<div class="guide-card-body">'
+                        +   '<div class="guide-card-eyebrow">' + escHtml(entry.highlightPhrase || '') + '</div>'
+                        +   '<h3 class="guide-location-name">' + escHtml(name) + '</h3>'
+                        +   (metaHtml ? '<div class="guide-location-meta-row">' + metaHtml + '</div>' : '')
+                        +   (pillsHtml ? '<div class="guide-card-pills">' + pillsHtml + '</div>' : '')
+                        +   '<p class="guide-location-blurb">' + escHtml(entry.blurb || '') + '</p>'
+                        +   (entry.mustOrder
+                            ? '<div class="guide-card-tip">'
+                                + '<span class="guide-card-tip-label">Must Order</span>'
+                                + '<span class="guide-card-tip-text">' + escHtml(entry.mustOrder) + '</span>'
+                              + '</div>'
+                            : '')
+                        +   insightHtml
+                        +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + guide.id + '" class="guide-location-link">View location details →</a>'
+                        + '</div>';
+                }
 
                 card.addEventListener('mouseenter', function() { highlightMarker(entry.locationId, true); });
                 card.addEventListener('mouseleave', function() { highlightMarker(entry.locationId, false); });
@@ -1966,57 +2377,84 @@
                 }).join('');
             }
 
+            var isReviewer = guide.type === 'reviewer';
+
             guide.locations.forEach(function(entry) {
                 var loc = getLocById(entry.locationId);
                 var name = loc ? loc.basicInfo.name : '(Location ' + entry.locationId + ')';
                 var type = loc ? (loc.basicInfo.type || '') : '';
+                var hood = loc && loc.coffeeDetails ? (loc.coffeeDetails.neighborhood || '') : '';
                 var rating = loc && loc.googleRating ? loc.googleRating.rating : null;
                 var ratingTxt = rating ? '★ ' + rating.toFixed(1) : '';
                 var todayHrs = loc ? getTodayHours(loc) : '';
                 var localImg = loc && loc.localImage ? loc.localImage : '';
-                var rankStr = entry.rank < 10 ? ('0' + entry.rank) : String(entry.rank);
-
-                var metaParts = [];
-                if (type) metaParts.push(type);
-                if (todayHrs) metaParts.push(todayHrs);
-
-                var pills = (entry.bestFor || []).slice(0, 3).map(function(tag) {
-                    return '<span class="guide-mini-pill">' + escHtml(tag) + '</span>';
-                }).join('');
 
                 var photoHtml = localImg
                     ? '<img src="' + escHtml(localImg) + '" alt="' + escHtml(name) + '" loading="lazy">'
                     : '<div class="guide-mini-photo-fallback">☕</div>';
-
-                var mustOrderHtml = entry.mustOrder
-                    ? '<div class="guide-mini-must-order"><strong>Try:</strong> ' + escHtml(entry.mustOrder) + '</div>'
-                    : '';
-
-                var eyebrowHtml = entry.highlightPhrase
-                    ? '<div class="guide-mini-eyebrow">' + escHtml(entry.highlightPhrase) + '</div>'
-                    : '';
 
                 var card = document.createElement('a');
                 card.className = 'guide-mini-card';
                 card.setAttribute('data-id', entry.locationId);
                 card.setAttribute('role', 'listitem');
                 card.href = '/location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id);
-                card.innerHTML =
-                    '<div class="guide-mini-card-inner">'
-                    +   '<div class="guide-mini-photo">'
-                    +     '<span class="guide-mini-rank">' + rankStr + '</span>'
-                    +     photoHtml
-                    +   '</div>'
-                    +   '<div class="guide-mini-body">'
-                    +     eyebrowHtml
-                    +     '<div class="guide-mini-name">' + escHtml(name) + '</div>'
-                    +     (metaParts.length ? '<div class="guide-mini-meta">' + escHtml(metaParts.join(' · ')) + '</div>' : '')
-                    +     (pills ? '<div class="guide-mini-pills">' + pills + '</div>' : '')
-                    +     '<p class="guide-mini-blurb">' + escHtml(entry.blurb || '') + '</p>'
-                    +     mustOrderHtml
-                    +   '</div>'
-                    + '</div>'
-                    + '<div class="guide-mini-footer"><span class="guide-mini-link">Full Card ↑</span></div>';
+
+                if (isReviewer) {
+                    var sdcg = getSdcgRatings(entry.locationId);
+                    var sigName = sdcg.signatureDrinkName || 'Signature drink';
+                    var miniMetaParts = [];
+                    if (hood) miniMetaParts.push(hood);
+                    else if (type) miniMetaParts.push(type);
+                    var miniExcerptHtml = sdcg.reviewExcerpt
+                        ? '<p class="guide-mini-excerpt">' + escHtml(sdcg.reviewExcerpt) + '</p>'
+                        : '';
+                    card.innerHTML =
+                        '<div class="guide-mini-card-inner">'
+                        +   '<div class="guide-mini-photo">'
+                        +     photoHtml
+                        +   '</div>'
+                        +   '<div class="guide-mini-body">'
+                        +     '<div class="guide-mini-name">' + escHtml(name) + '</div>'
+                        +     (miniMetaParts.length ? '<div class="guide-mini-meta">' + escHtml(miniMetaParts.join(' · ')) + '</div>' : '')
+                        +     '<div class="guide-mini-ratings">'
+                        +       '<div class="guide-mini-rating"><span class="guide-mini-rating-label">Cortado</span><span class="guide-mini-rating-score">' + escHtml(formatRating(sdcg.cortadoRating)) + '</span></div>'
+                        +       '<div class="guide-mini-rating"><span class="guide-mini-rating-label">' + escHtml(sigName) + '</span><span class="guide-mini-rating-score">' + escHtml(formatRating(sdcg.signatureDrinkRating)) + '</span></div>'
+                        +     '</div>'
+                        +     miniExcerptHtml
+                        +   '</div>'
+                        + '</div>'
+                        + '<div class="guide-mini-footer"><span class="guide-mini-link">Tap for full review ↑</span></div>';
+                } else {
+                    var rankStr = entry.rank < 10 ? ('0' + entry.rank) : String(entry.rank);
+                    var metaParts = [];
+                    if (type) metaParts.push(type);
+                    if (todayHrs) metaParts.push(todayHrs);
+                    var pills = (entry.bestFor || []).slice(0, 3).map(function(tag) {
+                        return '<span class="guide-mini-pill">' + escHtml(tag) + '</span>';
+                    }).join('');
+                    var mustOrderHtml = entry.mustOrder
+                        ? '<div class="guide-mini-must-order"><strong>Try:</strong> ' + escHtml(entry.mustOrder) + '</div>'
+                        : '';
+                    var eyebrowHtml = entry.highlightPhrase
+                        ? '<div class="guide-mini-eyebrow">' + escHtml(entry.highlightPhrase) + '</div>'
+                        : '';
+                    card.innerHTML =
+                        '<div class="guide-mini-card-inner">'
+                        +   '<div class="guide-mini-photo">'
+                        +     '<span class="guide-mini-rank">' + rankStr + '</span>'
+                        +     photoHtml
+                        +   '</div>'
+                        +   '<div class="guide-mini-body">'
+                        +     eyebrowHtml
+                        +     '<div class="guide-mini-name">' + escHtml(name) + '</div>'
+                        +     (metaParts.length ? '<div class="guide-mini-meta">' + escHtml(metaParts.join(' · ')) + '</div>' : '')
+                        +     (pills ? '<div class="guide-mini-pills">' + pills + '</div>' : '')
+                        +     '<p class="guide-mini-blurb">' + escHtml(entry.blurb || '') + '</p>'
+                        +     mustOrderHtml
+                        +   '</div>'
+                        + '</div>'
+                        + '<div class="guide-mini-footer"><span class="guide-mini-link">Full Card ↑</span></div>';
+                }
 
                 (function(e, g) {
                     card.addEventListener('click', function(ev) {
@@ -2139,49 +2577,93 @@
             var detailBody = document.getElementById('guideDetailBody');
             if (!detailBody) return;
 
+            var isReviewer = guide.type === 'reviewer';
             var loc = getLocById(entry.locationId);
             var name = loc ? loc.basicInfo.name : '';
             var type = loc ? (loc.basicInfo.type || '') : '';
+            var hood = loc && loc.coffeeDetails ? (loc.coffeeDetails.neighborhood || '') : '';
             var todayHrs = loc ? getTodayHours(loc) : '';
             var localImg = loc && loc.localImage ? loc.localImage : '';
-            var rankStr = entry.rank < 10 ? ('0' + entry.rank) : String(entry.rank);
-
-            var metaParts = [];
-            if (type) metaParts.push('<span class="guide-location-type">' + escHtml(type) + '</span>');
-            if (todayHrs) metaParts.push('<span>Open today · ' + escHtml(todayHrs) + '</span>');
-            var metaHtml = metaParts.join('<span class="meta-sep">·</span>');
-
-            var allPills = (entry.bestFor || []).map(function(tag) {
-                return '<span class="guide-detail-pill">' + escHtml(tag) + '</span>';
-            }).join('');
 
             var photoHtml = localImg
                 ? '<img class="guide-detail-photo" src="' + escHtml(localImg) + '" alt="' + escHtml(name) + '" loading="lazy">'
                 : '<div class="guide-detail-photo-fallback">☕</div>';
 
-            var mustOrderHtml = entry.mustOrder
-                ? '<div class="guide-detail-tip"><div class="guide-detail-tip-label">Must Order</div><div class="guide-detail-tip-text">' + escHtml(entry.mustOrder) + '</div></div>'
-                : '';
-
-            var insightHtml = entry.localInsight
-                ? '<div class="guide-detail-tip"><div class="guide-detail-tip-label">Insider Tip</div><div class="guide-detail-tip-text">' + escHtml(entry.localInsight) + '</div></div>'
-                : '';
-
-            detailBody.innerHTML =
-                photoHtml
-                + '<div class="guide-detail-content">'
-                +   '<div class="guide-detail-rank-row">'
-                +     '<span class="guide-detail-rank">' + rankStr + '</span>'
-                +     (entry.highlightPhrase ? '<span class="guide-detail-eyebrow">' + escHtml(entry.highlightPhrase) + '</span>' : '')
-                +   '</div>'
-                +   '<div class="guide-detail-name">' + escHtml(name) + '</div>'
-                +   (metaHtml ? '<div class="guide-detail-meta">' + metaHtml + '</div>' : '')
-                +   (allPills ? '<div class="guide-detail-pills">' + allPills + '</div>' : '')
-                +   '<p class="guide-detail-blurb">' + escHtml(entry.blurb || '') + '</p>'
-                +   mustOrderHtml
-                +   insightHtml
-                +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id) + '" class="guide-detail-cta">View full location details →</a>'
-                + '</div>';
+            if (isReviewer) {
+                var sdcg = getSdcgRatings(entry.locationId);
+                var reviewUrlSource = (sdcg.reviewUrl)
+                    || (loc && loc.coffeeDetails ? loc.coffeeDetails.instagramReviewUrl : '');
+                var reviewUrls = splitReviewUrls(reviewUrlSource);
+                var detailIgLinkHtml = '';
+                if (reviewUrls.length === 1) {
+                    detailIgLinkHtml = '<a class="guide-detail-cta" href="' + escHtml(reviewUrls[0]) + '" target="_blank" rel="noopener" style="margin-bottom:0.6rem;">View Instagram review →</a>';
+                } else if (reviewUrls.length > 1) {
+                    detailIgLinkHtml = '<div class="guide-detail-ig-links" style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.6rem;">';
+                    reviewUrls.forEach(function(u, i) {
+                        detailIgLinkHtml += '<a class="guide-detail-cta" href="' + escHtml(u) + '" target="_blank" rel="noopener">Instagram review ' + (i + 1) + ' →</a>';
+                    });
+                    detailIgLinkHtml += '</div>';
+                }
+                var rMetaParts = [];
+                if (type) rMetaParts.push('<span class="guide-location-type">' + escHtml(type) + '</span>');
+                if (hood) rMetaParts.push('<span>' + escHtml(hood) + '</span>');
+                if (todayHrs) rMetaParts.push('<span>Open today · ' + escHtml(todayHrs) + '</span>');
+                var rMetaHtml = rMetaParts.join('<span class="meta-sep">·</span>');
+                var sigName = sdcg.signatureDrinkName || 'Signature drink';
+                var detailExcerptHtml = sdcg.reviewExcerpt
+                    ? '<p class="guide-detail-excerpt">' + escHtml(sdcg.reviewExcerpt) + '</p>'
+                    : '';
+                detailBody.innerHTML =
+                    photoHtml
+                    + '<div class="guide-detail-content">'
+                    +   '<div class="guide-detail-name">' + escHtml(name) + '</div>'
+                    +   (rMetaHtml ? '<div class="guide-detail-meta">' + rMetaHtml + '</div>' : '')
+                    +   '<div class="guide-card-ratings">'
+                    +     '<div class="rating-stat">'
+                    +       '<div class="rating-label">Cortado</div>'
+                    +       '<div class="rating-score">' + escHtml(formatRating(sdcg.cortadoRating)) + '</div>'
+                    +     '</div>'
+                    +     '<div class="rating-stat">'
+                    +       '<div class="rating-label">' + escHtml(sigName) + '</div>'
+                    +       '<div class="rating-score">' + escHtml(formatRating(sdcg.signatureDrinkRating)) + '</div>'
+                    +       '<div class="rating-sublabel">signature</div>'
+                    +     '</div>'
+                    +   '</div>'
+                    +   detailExcerptHtml
+                    +   detailIgLinkHtml
+                    +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id) + '" class="guide-detail-cta">View full location details →</a>'
+                    + '</div>';
+            } else {
+                var rankStr = entry.rank < 10 ? ('0' + entry.rank) : String(entry.rank);
+                var metaParts = [];
+                if (type) metaParts.push('<span class="guide-location-type">' + escHtml(type) + '</span>');
+                if (todayHrs) metaParts.push('<span>Open today · ' + escHtml(todayHrs) + '</span>');
+                var metaHtml = metaParts.join('<span class="meta-sep">·</span>');
+                var allPills = (entry.bestFor || []).map(function(tag) {
+                    return '<span class="guide-detail-pill">' + escHtml(tag) + '</span>';
+                }).join('');
+                var mustOrderHtml = entry.mustOrder
+                    ? '<div class="guide-detail-tip"><div class="guide-detail-tip-label">Must Order</div><div class="guide-detail-tip-text">' + escHtml(entry.mustOrder) + '</div></div>'
+                    : '';
+                var insightHtml = entry.localInsight
+                    ? '<div class="guide-detail-tip"><div class="guide-detail-tip-label">Insider Tip</div><div class="guide-detail-tip-text">' + escHtml(entry.localInsight) + '</div></div>'
+                    : '';
+                detailBody.innerHTML =
+                    photoHtml
+                    + '<div class="guide-detail-content">'
+                    +   '<div class="guide-detail-rank-row">'
+                    +     '<span class="guide-detail-rank">' + rankStr + '</span>'
+                    +     (entry.highlightPhrase ? '<span class="guide-detail-eyebrow">' + escHtml(entry.highlightPhrase) + '</span>' : '')
+                    +   '</div>'
+                    +   '<div class="guide-detail-name">' + escHtml(name) + '</div>'
+                    +   (metaHtml ? '<div class="guide-detail-meta">' + metaHtml + '</div>' : '')
+                    +   (allPills ? '<div class="guide-detail-pills">' + allPills + '</div>' : '')
+                    +   '<p class="guide-detail-blurb">' + escHtml(entry.blurb || '') + '</p>'
+                    +   mustOrderHtml
+                    +   insightHtml
+                    +   '<a href="/location.html?id=' + entry.locationId + '&from=guide&guideId=' + encodeURIComponent(guide.id) + '" class="guide-detail-cta">View full location details →</a>'
+                    + '</div>';
+            }
 
             detailBody.scrollTop = 0;
             detailGuide = guide;
@@ -2245,7 +2727,7 @@
                     var m = guideMarkers[id];
                     if (!m) return;
                     var isActive = id === activeCarouselId;
-                    m.marker.setIcon(buildMarkerIcon(m.rank, isActive));
+                    m.marker.setIcon(m.buildIcon(isActive));
                     m.marker.setZIndex(isActive ? 999 : 100);
                 });
             }
@@ -2362,17 +2844,54 @@
 
         // ── Render about section ───────────────────────────────────────
         function renderAbout(guide) {
-            document.getElementById('guideAboutEyebrow').textContent = 'About ' + guide.neighborhood;
-            document.getElementById('guideAboutIntro').textContent = guide.about.intro;
+            var isReviewer = guide.type === 'reviewer';
+            var eyebrowText = isReviewer
+                ? 'About'
+                : 'About ' + guide.neighborhood;
+            document.getElementById('guideAboutEyebrow').textContent = eyebrowText;
+
+            // For reviewer guides, linkify the first @handle mention in the intro to their Instagram.
+            var introEl = document.getElementById('guideAboutIntro');
+            if (isReviewer && guide.reviewer && guide.reviewer.handle && guide.reviewer.instagramUrl) {
+                var handle = guide.reviewer.handle;
+                var idx = guide.about.intro.indexOf(handle);
+                if (idx >= 0) {
+                    var before = guide.about.intro.slice(0, idx);
+                    var after = guide.about.intro.slice(idx + handle.length);
+                    introEl.innerHTML = escHtml(before)
+                        + '<a href="' + guide.reviewer.instagramUrl + '" target="_blank" rel="noopener" style="color:var(--accent-red);font-weight:600;text-decoration:none;">' + escHtml(handle) + '</a>'
+                        + escHtml(after);
+                } else {
+                    introEl.textContent = guide.about.intro;
+                }
+            } else {
+                introEl.textContent = guide.about.intro;
+            }
 
             var tips = document.getElementById('guideAboutTips');
-            var tipData = [
-                { label: 'How to Navigate', text: guide.about.howToNavigate },
-                { label: 'Best Time to Visit', text: guide.about.bestTimeToVisit },
-                { label: 'Parking', text: guide.about.parking }
-            ];
+            var tipData;
+            if (isReviewer) {
+                tipData = [
+                    { label: 'Methodology', text: guide.about.methodology || '' },
+                    { label: 'How to Use This Index', text: guide.about.howToUse || '' }
+                ];
+                if (guide.reviewer && guide.reviewer.instagramUrl) {
+                    var handle = guide.reviewer.handle || '@sdcoffeeguide';
+                    tipData.push({
+                        label: 'Follow & Suggest',
+                        text: 'A new review drops every week. Tyler and Margarita take cafe recommendations directly in the comments, so if you have a spot they should try, drop it on their latest post.'
+                            + '<a href="' + guide.reviewer.instagramUrl + '" target="_blank" rel="noopener" style="color:var(--accent-red);font-weight:600;text-decoration:none;display:block;margin-top:0.55rem;">' + handle + ' on Instagram →</a>'
+                    });
+                }
+            } else {
+                tipData = [
+                    { label: 'How to Navigate', text: guide.about.howToNavigate },
+                    { label: 'Best Time to Visit', text: guide.about.bestTimeToVisit },
+                    { label: 'Parking', text: guide.about.parking }
+                ];
+            }
 
-            tips.innerHTML = tipData.map(function(t) {
+            tips.innerHTML = tipData.filter(function(t){ return t.text; }).map(function(t) {
                 return '<div class="guide-about-tip">'
                     + '<div class="guide-about-tip-label">' + t.label + '</div>'
                     + t.text
@@ -2382,7 +2901,19 @@
 
         // ── JSON-LD injection ──────────────────────────────────────────
         function injectJsonLd(guide) {
-            var itemListElements = guide.locations.map(function(entry) {
+            var isReviewer = guide.type === 'reviewer';
+
+            // For reviewer guides, fix the position on cortado-desc order so the
+            // emitted schema is stable regardless of the user's current sort.
+            var orderedForLd = isReviewer
+                ? guide.locations.slice().sort(function(a, b) {
+                    var ca = (typeof getSdcgRatings(a.locationId).cortadoRating === 'number') ? getSdcgRatings(a.locationId).cortadoRating : -Infinity;
+                    var cb = (typeof getSdcgRatings(b.locationId).cortadoRating === 'number') ? getSdcgRatings(b.locationId).cortadoRating : -Infinity;
+                    return cb - ca;
+                  })
+                : guide.locations;
+
+            var itemListElements = orderedForLd.map(function(entry, idx) {
                 var loc = getLocById(entry.locationId);
                 var name = loc ? loc.basicInfo.name : entry.locationId;
                 var street = loc && loc.basicInfo.address ? loc.basicInfo.address.street : '';
@@ -2391,11 +2922,10 @@
                 var localImg = loc && loc.localImage ? loc.localImage : null;
                 var locUrl = 'https://sandiegocoffee.co/location.html?id=' + entry.locationId;
 
-                var itemBody = {
+                var cafeBody = {
                     '@type': 'CafeOrCoffeeShop',
                     name: name,
                     url: locUrl,
-                    description: entry.blurb,
                     priceRange: '$$',
                     address: {
                         '@type': 'PostalAddress',
@@ -2404,75 +2934,128 @@
                         addressRegion: 'CA',
                         addressCountry: 'US'
                     },
-                    geo: {
-                        '@type': 'GeoCoordinates',
-                        latitude: entry.lat,
-                        longitude: entry.lng
-                    }
+                    geo: (function() {
+                        var p = resolveLatLng(entry);
+                        return p ? { '@type': 'GeoCoordinates', latitude: p.lat, longitude: p.lng } : undefined;
+                    })()
                 };
-
-                if (localImg) {
-                    itemBody.image = 'https://sandiegocoffee.co' + localImg;
-                }
-
+                if (localImg) cafeBody.image = 'https://sandiegocoffee.co' + localImg;
                 if (rating && reviewCount) {
-                    itemBody.aggregateRating = {
+                    cafeBody.aggregateRating = {
                         '@type': 'AggregateRating',
                         ratingValue: String(rating),
                         reviewCount: String(reviewCount)
                     };
                 }
 
+                if (isReviewer) {
+                    var sdcg = getSdcgRatings(entry.locationId);
+                    var reviewerName = (guide.reviewer && guide.reviewer.displayName) || 'SDCoffeeGuide';
+                    var reviewerUrl = (guide.reviewer && guide.reviewer.instagramUrl) || '';
+                    var reviewBody = {
+                        '@type': 'Review',
+                        itemReviewed: cafeBody,
+                        author: { '@type': 'Person', name: reviewerName, url: reviewerUrl },
+                        publisher: { '@type': 'Organization', name: 'San Diego Specialty Coffee', url: 'https://sandiegocoffee.co' }
+                    };
+                    if (typeof sdcg.cortadoRating === 'number') {
+                        reviewBody.reviewRating = {
+                            '@type': 'Rating',
+                            ratingValue: sdcg.cortadoRating,
+                            bestRating: 10,
+                            worstRating: 1,
+                            name: 'Cortado'
+                        };
+                    }
+                    if (sdcg.signatureDrinkName) {
+                        reviewBody.reviewBody = 'Signature drink reviewed: ' + sdcg.signatureDrinkName
+                            + (typeof sdcg.signatureDrinkRating === 'number' ? ' (' + sdcg.signatureDrinkRating + '/10)' : '');
+                    }
+                    return {
+                        '@type': 'ListItem',
+                        position: idx + 1,
+                        name: name,
+                        url: locUrl,
+                        item: reviewBody
+                    };
+                }
+
+                cafeBody.description = entry.blurb;
                 return {
                     '@type': 'ListItem',
                     position: entry.rank,
                     name: name,
                     url: locUrl,
-                    item: itemBody
+                    item: cafeBody
                 };
             });
 
-            var graph = [
-                {
-                    '@type': 'Article',
-                    '@id': guide.canonicalUrl + '#article',
-                    headline: guide.metaTitle,
-                    description: guide.metaDescription,
-                    datePublished: guide.publishedDate,
-                    dateModified: guide.updatedDate,
-                    author: { '@type': 'Organization', name: 'San Diego Specialty Coffee', url: 'https://sandiegocoffee.co' },
-                    publisher: { '@type': 'Organization', name: 'San Diego Specialty Coffee', url: 'https://sandiegocoffee.co' },
-                    image: 'https://sandiegocoffee.co' + guide.ogImage,
-                    mainEntityOfPage: guide.canonicalUrl
-                },
-                {
-                    '@type': 'ItemList',
-                    '@id': guide.canonicalUrl + '#picks',
-                    name: guide.title,
-                    description: guide.metaDescription,
-                    numberOfItems: guide.locations.length,
-                    itemListElement: itemListElements
-                },
-                {
-                    '@type': 'TouristAttraction',
-                    '@id': guide.canonicalUrl + '#neighborhood',
-                    name: guide.neighborhood + ' Coffee Neighborhood',
-                    description: (guide.about && guide.about.intro) || guide.metaDescription,
-                    image: 'https://sandiegocoffee.co' + guide.ogImage,
-                    url: guide.canonicalUrl,
-                    address: {
-                        '@type': 'PostalAddress',
-                        addressLocality: 'San Diego',
-                        addressRegion: 'CA',
-                        addressCountry: 'US'
+            var graph;
+            if (isReviewer) {
+                graph = [
+                    {
+                        '@type': 'CollectionPage',
+                        '@id': guide.canonicalUrl + '#page',
+                        name: guide.metaTitle,
+                        description: guide.metaDescription,
+                        url: guide.canonicalUrl,
+                        image: 'https://sandiegocoffee.co' + guide.ogImage,
+                        datePublished: guide.publishedDate,
+                        dateModified: guide.updatedDate,
+                        mainEntity: { '@id': guide.canonicalUrl + '#picks' }
                     },
-                    geo: {
-                        '@type': 'GeoCoordinates',
-                        latitude: guide.map.center.lat,
-                        longitude: guide.map.center.lng
+                    {
+                        '@type': 'ItemList',
+                        '@id': guide.canonicalUrl + '#picks',
+                        name: guide.title,
+                        description: guide.metaDescription,
+                        numberOfItems: guide.locations.length,
+                        itemListElement: itemListElements
                     }
-                }
-            ];
+                ];
+            } else {
+                graph = [
+                    {
+                        '@type': 'Article',
+                        '@id': guide.canonicalUrl + '#article',
+                        headline: guide.metaTitle,
+                        description: guide.metaDescription,
+                        datePublished: guide.publishedDate,
+                        dateModified: guide.updatedDate,
+                        author: { '@type': 'Organization', name: 'San Diego Specialty Coffee', url: 'https://sandiegocoffee.co' },
+                        publisher: { '@type': 'Organization', name: 'San Diego Specialty Coffee', url: 'https://sandiegocoffee.co' },
+                        image: 'https://sandiegocoffee.co' + guide.ogImage,
+                        mainEntityOfPage: guide.canonicalUrl
+                    },
+                    {
+                        '@type': 'ItemList',
+                        '@id': guide.canonicalUrl + '#picks',
+                        name: guide.title,
+                        description: guide.metaDescription,
+                        numberOfItems: guide.locations.length,
+                        itemListElement: itemListElements
+                    },
+                    {
+                        '@type': 'TouristAttraction',
+                        '@id': guide.canonicalUrl + '#neighborhood',
+                        name: guide.neighborhood + ' Coffee Neighborhood',
+                        description: (guide.about && guide.about.intro) || guide.metaDescription,
+                        image: 'https://sandiegocoffee.co' + guide.ogImage,
+                        url: guide.canonicalUrl,
+                        address: {
+                            '@type': 'PostalAddress',
+                            addressLocality: 'San Diego',
+                            addressRegion: 'CA',
+                            addressCountry: 'US'
+                        },
+                        geo: {
+                            '@type': 'GeoCoordinates',
+                            latitude: guide.map.center.lat,
+                            longitude: guide.map.center.lng
+                        }
+                    }
+                ];
+            }
 
             var schema = {
                 '@context': 'https://schema.org',
@@ -2550,12 +3133,30 @@
 
 
             // Hero
-            document.getElementById('guideHeroEyebrow').textContent = guide.neighborhood + ' · Neighborhood Guide';
+            var eyebrow = guide.type === 'reviewer'
+                ? 'San Diego · Reviewer Guide'
+                : guide.neighborhood + ' · Neighborhood Guide';
+            document.getElementById('guideHeroEyebrow').textContent = eyebrow;
             document.getElementById('guideHeroTitle').textContent = guide.displayTitle || guide.title;
+            var heroPicksLabel = guide.type === 'reviewer' ? ' reviewed picks · Updated ' : ' curated picks · Updated ';
             document.getElementById('guideHeroMeta').textContent =
-                guide.locations.length + ' curated picks · Updated ' + formatDate(guide.updatedDate);
+                guide.locations.length + heroPicksLabel + formatDate(guide.updatedDate);
 
-            if (guide.heroImage) {
+            var heroWrap = document.getElementById('guideHeroImgWrap');
+            if (guide.heroImages && guide.heroImages.length >= 2) {
+                // Multi-image hero: render N portrait images in a row on desktop.
+                // CSS hides all but the center one on mobile.
+                heroWrap.classList.add('guide-hero-multi');
+                heroWrap.setAttribute('data-count', String(guide.heroImages.length));
+                guide.heroImages.forEach(function(src, i) {
+                    var img = document.createElement('img');
+                    img.src = src;
+                    img.alt = guide.title;
+                    img.loading = i === 0 ? 'eager' : 'lazy';
+                    if (i === 0) img.fetchpriority = 'high';
+                    heroWrap.appendChild(img);
+                });
+            } else if (guide.heroImage) {
                 var img = document.createElement('img');
                 img.src = guide.heroImage;
                 img.alt = guide.title;
@@ -2563,7 +3164,7 @@
                 if (guide.heroImagePosition) {
                     img.style.objectPosition = guide.heroImagePosition;
                 }
-                document.getElementById('guideHeroImgWrap').appendChild(img);
+                heroWrap.appendChild(img);
             }
 
             // About
@@ -2572,6 +3173,101 @@
             // Count note
             document.getElementById('guideCountNote').textContent =
                 guide.locations.length + ' locations';
+
+            // Sort control (reviewer guides only). Apply default sort BEFORE first render
+            // so cards, mini-cards, and JSON-LD all share the same ordering.
+            if (guide.type === 'reviewer') {
+                sortReviewerLocations(guide, 'cortado');
+                var sortWrap = document.getElementById('guideSortWrap');
+                var sortSelect = document.getElementById('guideSortSelect');
+                var sortSelectMobile = document.getElementById('guideSortSelectMobile');
+                var sortBarMobile = document.getElementById('guideMobileSortBar');
+                if (sortWrap) sortWrap.style.display = '';
+                if (sortBarMobile) sortBarMobile.classList.add('is-active');
+
+                var sortSelects = [sortSelect, sortSelectMobile].filter(Boolean);
+
+                function applyAndRerender(crit) {
+                    // Capture old active markers so we can deactivate them after re-render.
+                    var previousCarouselId = activeCarouselId;
+                    var previousDesktopId = desktopSelectedId;
+
+                    sortReviewerLocations(guide, crit);
+                    renderLocationCards(guide);
+                    renderMiniCards(guide);
+                    initGuideSheet(guide);
+
+                    // Reset desktop list scroll to top so the new top picks are visible.
+                    var listEl = document.getElementById('guideLocationsList');
+                    if (listEl) listEl.scrollTop = 0;
+
+                    // Reset mobile carousel scroll to leftmost (the new #1 pick).
+                    var carouselEl = document.getElementById('guideCarousel');
+                    if (carouselEl) carouselEl.scrollLeft = 0;
+
+                    // Clear desktop pin selection so the new sort starts fresh.
+                    if (previousDesktopId && previousDesktopId !== desktopSelectedId) {
+                        highlightMarker(previousDesktopId, false);
+                    }
+                    desktopSelectedId = null;
+
+                    // Deactivate the previously-active marker if it differs from the new first.
+                    var newFirstId = (guide.locations[0] || {}).locationId;
+                    if (previousCarouselId && previousCarouselId !== newFirstId) {
+                        highlightMarker(previousCarouselId, false);
+                    }
+                    // Activate the new first marker on mobile (parity with initGuideSheet's auto-select).
+                    if (newFirstId && window.matchMedia('(max-width: 768px)').matches) {
+                        activeCarouselId = newFirstId;
+                        highlightMarker(newFirstId, true);
+                    }
+                }
+
+                function setBothValues(v) {
+                    sortSelects.forEach(function(s){ s.value = v; });
+                }
+
+                function setBothDisabled(d) {
+                    sortSelects.forEach(function(s){ s.disabled = d; });
+                }
+
+                function handleSortChange(picked) {
+                    if (picked === 'nearest') {
+                        if (userLatLng) { applyAndRerender('nearest'); return; }
+                        if (!('geolocation' in navigator)) {
+                            alert('Your browser does not support location.');
+                            setBothValues('cortado');
+                            applyAndRerender('cortado');
+                            return;
+                        }
+                        setBothDisabled(true);
+                        navigator.geolocation.getCurrentPosition(
+                            function(pos) {
+                                userLatLng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                                setBothDisabled(false);
+                                applyAndRerender('nearest');
+                            },
+                            function() {
+                                setBothDisabled(false);
+                                alert('Could not get your location. Please enable location services.');
+                                setBothValues('cortado');
+                                applyAndRerender('cortado');
+                            },
+                            { timeout: 10000 }
+                        );
+                        return;
+                    }
+                    applyAndRerender(picked);
+                }
+
+                setBothValues('cortado');
+                sortSelects.forEach(function(s) {
+                    s.addEventListener('change', function() {
+                        setBothValues(s.value);  // keep both in sync
+                        handleSortChange(s.value);
+                    });
+                });
+            }
 
             // Location cards + mobile carousel/sheet
             renderLocationCards(guide);

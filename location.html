@@ -30,7 +30,8 @@
     <meta name="twitter:description" content="Explore the best coffee shops and specialty roasters in San Diego — roast profiles, brew methods, hours, and neighborhood guides.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="Explore the best coffee shops and specialty roasters in San Diego — roast profiles, brew methods, hours, and neighborhood guides.">
-    <!-- SEO: synchronous slug→title before deferred JS loads (overridden later with full data) -->
+    <link rel="canonical" id="canonicalTag" href="https://sandiegocoffee.co/location.html">
+    <!-- SEO: synchronous slug→title + canonical before deferred JS loads (overridden later with full data) -->
     <script>
     (function(){
       try {
@@ -47,6 +48,11 @@
           document.title = name + ' — Specialty Coffee in San Diego';
           var d = document.querySelector('meta[name="description"]');
           if (d) d.content = name + ' is a specialty coffee shop or roaster in San Diego. View hours, roast profile, and neighborhood details.';
+          // Only set canonical for slug URLs — loc_XXX IDs need locations.js to resolve, handled by deferred JS
+          if (pm) {
+            var c = document.getElementById('canonicalTag');
+            if (c) c.href = 'https://sandiegocoffee.co/locations/' + slug;
+          }
         }
       } catch(e){}
     })();
@@ -1794,10 +1800,9 @@
                 document.title = pageTitle;
                 const ogTitle = document.querySelector('meta[property="og:title"]');
                 if (ogTitle) ogTitle.content = pageTitle;
-                // Set canonical to clean URL
-                let canonical = document.querySelector('link[rel="canonical"]');
-                if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-                canonical.href = `https://sandiegocoffee.co/locations/${locationSlug(location)}`;
+                // Set canonical to clean URL (tag is pre-rendered in head for Stage 1 indexing)
+                const canonical = document.getElementById('canonicalTag') || document.querySelector('link[rel="canonical"]');
+                if (canonical) canonical.href = `https://sandiegocoffee.co/locations/${locationSlug(location)}`;
                 const ogDesc = document.querySelector('meta[property="og:description"]');
                 if (ogDesc) ogDesc.content = metaDescription;
                 const metaDesc = document.querySelector('meta[name="description"]');

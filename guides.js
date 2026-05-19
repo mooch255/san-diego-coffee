@@ -415,6 +415,65 @@ window.GUIDES = [
         lng: -117.1610298
       }
     ]
+  },
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Reviewer guide: @sdcoffeeguide review index
+  // Lat/lng resolve from locations.js via locationId (no inline coords).
+  // Ratings live in sdcoffeeguide.js (window.SDCG_RATINGS).
+  // ─────────────────────────────────────────────────────────────────────
+  {
+    id: 'sdcoffeeguide',
+    type: 'reviewer',
+    reviewer: {
+      handle: '@sdcoffeeguide',
+      displayName: 'SDCoffeeGuide',
+      instagramUrl: 'https://www.instagram.com/sdcoffeeguide/'
+    },
+
+    title: 'San Diego Coffee Shops Reviewed by @sdcoffeeguide',
+    displayTitle: "Tyler & Margarita's San Diego Picks",
+    subtitle: "Every cafe @sdcoffeeguide has reviewed, scored drink-by-drink",
+    neighborhood: 'By @sdcoffeeguide',
+    publishedDate: '2026-05-18',
+    updatedDate: '2026-05-18',
+    heroImage: '/images/guides/sdcoffeeguide-hero.jpg',  // mobile + fallback
+    heroImages: [
+      '/images/guides/sdcoffeeguide-hero-1.jpg',  // World of Coffee SD 2026
+      '/images/guides/sdcoffeeguide-hero-2.jpg',  // Yipao Coffee (Pacific Beach)
+      '/images/guides/sdcoffeeguide-hero-3.jpg'   // Coffee Klatch
+    ],
+    cardImage: '/images/guides/sdcoffeeguide-hero.jpg',
+    excerpt: "Every San Diego coffee shop the duo has reviewed on Instagram, scored drink-by-drink and gathered in one place.",
+    locationCount: 15,
+
+    metaTitle: 'Coffee Shops Reviewed by @sdcoffeeguide | San Diego',
+    metaDescription: "Every San Diego coffee shop reviewed by @sdcoffeeguide, scored on cortado and signature drink on a 1-10 scale. Sortable, mapped.",
+    metaKeywords: 'sdcoffeeguide, San Diego coffee reviews, cortado ratings, Instagram coffee reviewer, San Diego coffee guide',
+    canonicalUrl: 'https://sandiegocoffee.co/guides/sdcoffeeguide',
+    ogImage: '/images/guides/sdcoffeeguide-og.jpg',
+
+    about: {
+      intro: "@sdcoffeeguide is Tyler and Margarita, a San Diego coffee-reviewing duo who visit one local cafe each week to spotlight the places making truly exceptional coffee. Their weekly reviews have built a following around honest scores, drink-by-drink notes, and clear respect for the people behind every bar. This index gathers every shop they've reviewed in one place, sortable and mapped, so you can plan your next coffee run by score, drink, or distance.",
+      methodology: "The cortado is the anchor rating: a one-bite test of how well a cafe handles espresso and milk in perfect balance. It's where barista skill shows up most clearly, and where small differences in extraction and steaming become obvious. The signature drink rating captures whatever each cafe is known for, the seasonal or signature build the bar takes the most pride in. Both are scored 1-10 with one decimal, and reflect Tyler and Margarita's own reviews posted on Instagram.",
+      howToUse: "Sort by cortado for the cleanest espresso-and-milk craft, or by signature drink to find the most creative builds in the city. Use 'Nearest to me' when you're already out and want the closest pick. Tap any card or pin to open the original Instagram review with photos and full notes, or click through to the location's full details page for hours, address, and everything else that makes the spot worth a trip."
+    },
+
+    quickStats: {
+      totalPicks: 15,
+      neighborhood: 'San Diego County',
+      vibe: 'Reviewer Picks'
+    },
+
+    map: { center: { lat: 32.85, lng: -117.18 }, zoom: 10 },
+
+    locations: [
+      { locationId: 'loc_177' }, { locationId: 'loc_028' }, { locationId: 'loc_212' },
+      { locationId: 'loc_002' }, { locationId: 'loc_006' }, { locationId: 'loc_137' },
+      { locationId: 'loc_090' }, { locationId: 'loc_188' }, { locationId: 'loc_093' },
+      { locationId: 'loc_019' }, { locationId: 'loc_168' }, { locationId: 'loc_055' },
+      { locationId: 'loc_040' }, { locationId: 'loc_118' }, { locationId: 'loc_103' }
+    ]
   }
 ];
 

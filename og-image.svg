@@ -1,0 +1,77 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <rect width="1200" height="630" fill="#F5E6D3"/>
+
+  <!-- Ocean (Pacific) with slight La Jolla bulge -->
+  <path d="M 0 0 L 230 0 Q 220 100 195 220 Q 175 290 210 380 Q 230 470 250 580 L 240 630 L 0 630 Z" fill="#C9D4D8"/>
+  <path d="M 230 0 Q 220 100 195 220 Q 175 290 210 380 Q 230 470 250 580 L 240 630" stroke="#A8B5BA" stroke-width="2" fill="none"/>
+
+  <!-- Subtle freeway / road suggestions -->
+  <path d="M 220 220 Q 700 200 1150 240" stroke="#E5D4BD" stroke-width="2.5" fill="none"/>
+  <path d="M 220 420 Q 700 440 1150 400" stroke="#E5D4BD" stroke-width="2.5" fill="none"/>
+  <path d="M 700 0 Q 685 280 715 500 Q 710 580 705 630" stroke="#E5D4BD" stroke-width="2" fill="none"/>
+
+  <!-- Region labels -->
+  <text x="1140" y="130" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#B89E7D" text-anchor="end" letter-spacing="3">NORTH COUNTY</text>
+  <text x="1140" y="370" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#B89E7D" text-anchor="end" letter-spacing="3">EAST COUNTY</text>
+  <text x="1140" y="570" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#B89E7D" text-anchor="end" letter-spacing="3">SOUTH BAY</text>
+
+  <!-- Reusable pin -->
+  <defs>
+    <g id="pin">
+      <path d="M 0 0 L -16 -28 A 18 18 0 1 1 16 -28 Z" fill="#C4452A"/>
+      <circle cx="0" cy="-28" r="11" fill="#F5E6D3"/>
+      <path d="M -5 -33 L -4.2 -25 Q -4.2 -23 -2 -23 L 2 -23 Q 4.2 -23 4.2 -25 L 5 -33 Z" fill="#6F4E37"/>
+      <path d="M 5 -31 Q 8.5 -30.5 8.5 -28 Q 8.5 -25.5 5 -25.5" stroke="#6F4E37" stroke-width="1.2" fill="none"/>
+    </g>
+  </defs>
+
+  <!-- North County Inland -->
+  <use href="#pin" transform="translate(720 130)"/>
+  <use href="#pin" transform="translate(800 180)"/>
+  <use href="#pin" transform="translate(880 130)"/>
+
+  <!-- Coastal central — La Jolla / PB / Mission Beach -->
+  <use href="#pin" transform="translate(290 310)"/>
+  <use href="#pin" transform="translate(340 350)"/>
+  <use href="#pin" transform="translate(300 400)"/>
+
+  <!-- Central inland — Hillcrest / North Park / Mission Valley -->
+  <use href="#pin" transform="translate(410 310)"/>
+  <use href="#pin" transform="translate(480 340)"/>
+  <use href="#pin" transform="translate(440 390)"/>
+  <use href="#pin" transform="translate(530 380)"/>
+
+  <!-- OB / Point Loma / Downtown -->
+  <use href="#pin" transform="translate(310 460)"/>
+  <use href="#pin" transform="translate(380 440)"/>
+  <use href="#pin" transform="translate(370 490)"/>
+  <use href="#pin" transform="translate(450 460)"/>
+
+  <!-- Mid-inland (Barrio Logan / La Mesa / Lemon Grove) -->
+  <use href="#pin" transform="translate(520 440)"/>
+  <use href="#pin" transform="translate(600 420)"/>
+  <use href="#pin" transform="translate(580 480)"/>
+
+  <!-- South Bay -->
+  <use href="#pin" transform="translate(320 540)"/>
+  <use href="#pin" transform="translate(390 560)"/>
+  <use href="#pin" transform="translate(340 590)"/>
+  <use href="#pin" transform="translate(430 540)"/>
+  <use href="#pin" transform="translate(440 600)"/>
+
+  <!-- Far-east (El Cajon area) -->
+  <use href="#pin" transform="translate(680 380)"/>
+  <use href="#pin" transform="translate(720 470)"/>
+
+  <!-- Headline card -->
+  <rect x="40" y="50" width="610" height="225" fill="#F5E6D3" stroke="#3D2817" stroke-width="3" rx="6"/>
+  <text x="70" y="130" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#3D2817">San Diego's</text>
+  <text x="70" y="195" font-family="Georgia, serif" font-size="58" font-weight="700" fill="#3D2817">Coffee Directory</text>
+  <line x1="70" y1="215" x2="180" y2="215" stroke="#C4452A" stroke-width="3"/>
+  <text x="70" y="250" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#8B6F4F">200+ specialty cafes &amp; roasters · 50+ neighborhoods</text>
+
+  <!-- Footer monogram + URL -->
+  <rect x="40" y="555" width="50" height="50" rx="10" fill="#6F4E37"/>
+  <text x="65" y="591" font-family="Georgia, serif" font-size="28" font-weight="700" fill="#F5E6D3" text-anchor="middle">SD</text>
+  <text x="105" y="588" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#3D2817" font-weight="700" letter-spacing="2">SANDIEGOCOFFEE.CO</text>
+</svg>

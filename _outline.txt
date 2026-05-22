@@ -1,0 +1,31 @@
+0 TEXT (1121) ::: Specialty coffee is grown in California. Not as a novelty or a hobbyist experiment, but as a working
+1 H2: Quick Takeaways
+2 TEXT (873) ::: Pioneer: First commercial coffee trees in California planted at Condor Ridge Ranch in Goleta in 2002
+3 H2: How California Became a Coffee Origin
+4 TEXT (1593) ::: California coffee as we know it today did not exist before 2002. The story begins with Jay Ruskey, a
+5 H2: Why Coffee Grows at Sea Level in California (But Not in the Tropics)
+6 TEXT (1410) ::: The most common question about California-grown coffee is also the most fundamental. How is it actua
+7 IMG: /images/blog/blog_frinj-coffee-california-grown-b.jpg
+8 H2: FRINJ's Network: From San Luis Obispo to San Diego
+9 TEXT (984) ::: FRINJ does not own every farm in its network. The model is closer to a partnership co-op than a trad
+10 H2: San Diego County: The Next Frontier for California Coffee
+11 TEXT (1340) ::: For r/SanDiegoCoffeeBeans readers, the San Diego connection is the most exciting part of the story. 
+12 IMG: /images/blog/blog_frinj-coffee-california-grown-c.jpg
+13 H2: The 2026 Harvest, Underway Now
+14 TEXT (865) ::: The California coffee harvest moves on a different schedule than most origins. Where coffee in Centr
+15 H2: Q&amp;A with Derek Opperman, Head of Quality Control
+16 TEXT (337) ::: I sat down with Derek Opperman, FRINJ's Head of Quality Control and on-staff Q Grader, for a wide-ra
+17 QA: Most people assume coffee cannot really be grown in California. What did FRINJ learn that proved tha
+18 QA: For San Diego readers specifically: what makes North County a viable place to grow coffee? How many 
+19 QA: How are you able to get complex flavors out of coffee that is grown at such a low altitude? Is there
+20 QA: Given how new California coffee is as an origin, are you running any side-by-side trials with the sa
+21 IMG: /images/blog/blog_frinj-coffee-california-grown-d.jpg
+22 QA: What has Mraz Family Farms contributed to the California coffee story, and what makes their Oceansid
+23 QA: What are the biggest farming challenges in San Diego County: water, heat, cold snaps, labor, pests, 
+24 QA: FRINJ coffee is still priced well above what most consumers are used to, often in smaller bag sizes.
+25 H2: What This Means for the San Diego Coffee Scene
+26 TEXT (1255) ::: California-grown coffee is no longer an experiment or a curiosity. It is a real origin, with real fa
+27 H2: FAQ: California-Grown Coffee
+28 QA: Is coffee really grown in California?
+29 QA: Where can I buy FRINJ Coffee in San Diego?
+30 QA: What is yeast-washed coffee processing?

@@ -171,7 +171,9 @@ Hand-maintained drink ratings + review excerpts from the @sdcoffeeguide Instagra
 - Each entry: `cortadoRating` (1.0-10.0), `signatureDrinkName`, `signatureDrinkRating`, `reviewExcerpt` (3-4 sentences)
 - Omit fields that aren't rated; `reviewExcerpt` is optional
 - `location.html` reads this file and renders a ratings card when a match exists for the current location
+- The `/guides/sdcoffeeguide` guide page also auto-derives its `locations[]`, `locationCount`, and `quickStats.totalPicks` from `SDCG_RATINGS` keys at runtime via `window.hydrateReviewerGuides()` in `guides.js`. Adding a key here automatically updates the guide list, hero count, and guides-listing card count — no `guides.js` edit needed. Script load order in `guide.html` and `guides.html` puts `sdcoffeeguide.js` BEFORE `guides.js` so hydration runs at parse time; do not reorder.
 - To add a new spot's rating: append a new key with the `loc_XXX` id and fields. No other files need to change.
+- The map's orange-dot SDCoffeeGuide markers come from `coffeeDetails.instagramReviewUrl` in `locations.js` (set via admin → Google Sheets → sync). The guide list comes from `SDCG_RATINGS` keys. These can briefly diverge if you add the IG URL in admin before adding the rating here — the canonical workflow is to do both in the same session.
 
 ## SEO Critical Rules
 

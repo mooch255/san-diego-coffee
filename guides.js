@@ -467,16 +467,29 @@ window.GUIDES = [
 
     map: { center: { lat: 32.85, lng: -117.18 }, zoom: 10 },
 
-    locations: [
-      { locationId: 'loc_177' }, { locationId: 'loc_028' }, { locationId: 'loc_212' },
-      { locationId: 'loc_002' }, { locationId: 'loc_006' }, { locationId: 'loc_137' },
-      { locationId: 'loc_090' }, { locationId: 'loc_188' }, { locationId: 'loc_093' },
-      { locationId: 'loc_019' }, { locationId: 'loc_168' }, { locationId: 'loc_055' },
-      { locationId: 'loc_040' }, { locationId: 'loc_118' }, { locationId: 'loc_103' }
-    ]
+    // locations[] is auto-derived from sdcoffeeguide.js at runtime (see
+    // hydrateReviewerGuides below). Don't hardcode entries here.
+    locations: []
   }
 ];
 
 // Build quick lookup map for guide.html
 window.GUIDE_MAP = {};
 window.GUIDES.forEach(function(g) { window.GUIDE_MAP[g.id] = g; });
+
+// Auto-derive the @sdcoffeeguide reviewer guide's locations[] from
+// sdcoffeeguide.js (window.SDCG_RATINGS) so adding a new rating there
+// automatically updates the guide list, count, and quickStats. Safe to call
+// more than once; consumer pages that load sdcoffeeguide.js after guides.js
+// should call window.hydrateReviewerGuides() once both are loaded.
+window.hydrateReviewerGuides = function() {
+  if (!window.SDCG_RATINGS || !window.GUIDE_MAP) return;
+  var g = window.GUIDE_MAP['sdcoffeeguide'];
+  if (!g) return;
+  g.locations = Object.keys(window.SDCG_RATINGS).map(function(id) {
+    return { locationId: id };
+  });
+  g.locationCount = g.locations.length;
+  if (g.quickStats) g.quickStats.totalPicks = g.locations.length;
+};
+window.hydrateReviewerGuides();

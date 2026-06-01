@@ -92,5 +92,17 @@ window.SDCG_RATINGS = {
     signatureDrinkName: 'Crumbling Castle',
     signatureDrinkRating: 8.9,
     reviewExcerpt: "Record-shop-meets-cafe in North Park where you can browse vinyl while you sip. The space is artfully curated and welcoming whether you're with friends or flying solo. Their Crumbling Castle is a smoked maple cappuccino, and the baristas are friendly and knowledgeable. Don't be afraid to ask for recommendations."
+  },
+  'loc_186': {
+    cortadoRating: 8.8,
+    signatureDrinkName: 'Iced Salted Caramel Latte',
+    signatureDrinkRating: 8.9,
+    reviewExcerpt: "Women-owned San Diego roaster running a residency inside the Parlor Room at the Granger Hotel on Fifth Avenue downtown. The micro-batch program leans medium roast and fruit-forward, built around clean, approachable balance rather than intensity. The Iced Salted Caramel Latte scores 8.9 and shows off the range, with the cortado holding close behind at 8.8. The Granger lobby setting gives it a quieter, hotel-bar feel that's a refreshing break from the usual cafe energy."
+  },
+  'loc_089': {
+    cortadoRating: 9.0,
+    signatureDrinkName: 'Iced Blackberry Vanilla Latte',
+    signatureDrinkRating: 9.2,
+    reviewExcerpt: "Veteran-owned roaster tucked into the Cedros Avenue design district in Solana Beach since 2017. Micro-batch sourcing with both pour-over and rotating single-origin espresso, so the bar plays equally well for milk-drink and origin-forward drinkers. The Iced Blackberry Vanilla Latte pulls a 9.2, one of the highest signature scores we've given. Dog-friendly patio, food and pastries, and the rest of the Cedros shops are an easy walk away."
   }
 };

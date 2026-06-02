@@ -104,5 +104,11 @@ window.SDCG_RATINGS = {
     signatureDrinkName: 'Iced Blackberry Vanilla Latte',
     signatureDrinkRating: 9.2,
     reviewExcerpt: "Veteran-owned roaster tucked into the Cedros Avenue design district in Solana Beach since 2017. Micro-batch sourcing with both pour-over and rotating single-origin espresso, so the bar plays equally well for milk-drink and origin-forward drinkers. The Iced Blackberry Vanilla Latte pulls a 9.2, one of the highest signature scores we've given. Dog-friendly patio, food and pastries, and the rest of the Cedros shops are an easy walk away."
+  },
+  'loc_130': {
+    cortadoRating: 8.4,
+    signatureDrinkName: 'Iced Peach Cobbler Latte',
+    signatureDrinkRating: 8.5,
+    reviewExcerpt: "Mission-driven roaster a few steps from the Ocean Beach Pier, roasting in-house on a 10kg Mill City since 2015. Founder sourcing trips run direct-trade through Oaxaca, El Salvador, Guatemala, Costa Rica, Tanzania, Uganda, and Ethiopia. Beyond espresso the menu covers pour overs, teas, and local pastries, with proceeds going to local nonprofits. Sister operation to Sur Coffee Cafe & Roastery if you want a second OB stop."
   }
 };

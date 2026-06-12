@@ -110,5 +110,11 @@ window.SDCG_RATINGS = {
     signatureDrinkName: 'Iced Peach Cobbler Latte',
     signatureDrinkRating: 8.5,
     reviewExcerpt: "Mission-driven roaster a few steps from the Ocean Beach Pier, roasting in-house on a 10kg Mill City since 2015. Founder sourcing trips run direct-trade through Oaxaca, El Salvador, Guatemala, Costa Rica, Tanzania, Uganda, and Ethiopia. Beyond espresso the menu covers pour overs, teas, and local pastries, with proceeds going to local nonprofits. Sister operation to Sur Coffee Cafe & Roastery if you want a second OB stop."
+  },
+  'loc_138': {
+    cortadoRating: 9.8,
+    signatureDrinkName: 'Iced Cafe Cream Top',
+    signatureDrinkRating: 9.5,
+    reviewExcerpt: "Built its reputation as San Diego's go-to matcha cafe with a rotating multi-roaster bar pulling from domestic and international roasters most local shops would never touch. As of 2026, they've added their own small-scale light-roasting program, a quiet pivot already changing the conversation in the city's coffee scene. The 13th Street downtown space stays comfortable and unhurried, with sit-and-stay energy that rewards a long visit. The 9.8 cortado is the highest score we've ever given."
   }
 };

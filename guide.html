@@ -49,6 +49,11 @@
         if (!slug) return;
         // Known guides: accurate Stage 1 SEO. Add an entry when adding a new guide to guides.js.
         var TITLES = {
+          'best-coffee-san-diego': {
+            title: 'Best Coffee in San Diego | 20 Essential Specialty Roasters & Cafes',
+            desc: 'The definitive guide to the best specialty coffee in San Diego. 20 must-visit roasters and cafes across the county, with an interactive map, editorial picks, and what to order at each.',
+            image: '/images/guides/best-coffee-san-diego-hero.jpg'
+          },
           'north-park': {
             title: 'Best Coffee in North Park, San Diego | Neighborhood Guide',
             desc: 'The definitive guide to specialty coffee in North Park, San Diego. Must-visit roasters and cafes with an interactive map, editorial picks, and what to order.',
@@ -2304,8 +2309,6 @@
                 var name = loc ? loc.basicInfo.name : '(Location ' + entry.locationId + ')';
                 var type = loc ? (loc.basicInfo.type || '') : '';
                 var hood = loc && loc.coffeeDetails ? (loc.coffeeDetails.neighborhood || '') : '';
-                var rating = loc && loc.googleRating ? loc.googleRating.rating : null;
-                var ratingTxt = rating ? '★ ' + rating.toFixed(1) : '';
                 var todayHrs = loc ? getTodayHours(loc) : '';
                 var localImg = loc && loc.localImage ? loc.localImage : '';
 
@@ -2369,7 +2372,6 @@
                         return '<span class="guide-card-pill">' + escHtml(tag) + '</span>';
                     }).join('');
                     var metaParts = [];
-                    if (ratingTxt) metaParts.push('<span class="guide-location-rating">' + ratingTxt + '</span>');
                     if (type) metaParts.push('<span class="guide-location-type">' + escHtml(type) + '</span>');
                     if (todayHrs) metaParts.push('<span>Open today · ' + escHtml(todayHrs) + '</span>');
                     var metaHtml = metaParts.join('<span class="meta-sep">·</span>');
@@ -2432,8 +2434,6 @@
                 var name = loc ? loc.basicInfo.name : '(Location ' + entry.locationId + ')';
                 var type = loc ? (loc.basicInfo.type || '') : '';
                 var hood = loc && loc.coffeeDetails ? (loc.coffeeDetails.neighborhood || '') : '';
-                var rating = loc && loc.googleRating ? loc.googleRating.rating : null;
-                var ratingTxt = rating ? '★ ' + rating.toFixed(1) : '';
                 var todayHrs = loc ? getTodayHours(loc) : '';
                 var localImg = loc && loc.localImage ? loc.localImage : '';
 
@@ -2947,8 +2947,11 @@
                     });
                 }
             } else {
+                // Specialty (county-wide) guides cover spots across the region, so the
+                // by-region clustering reads as a crawl plan rather than a walking route.
+                var navigateLabel = guide.type === 'specialty' ? 'Planning a Coffee Crawl' : 'How to Navigate';
                 tipData = [
-                    { slug: 'navigate', label: 'How to Navigate', text: guide.about.howToNavigate },
+                    { slug: 'navigate', label: navigateLabel, text: guide.about.howToNavigate },
                     { slug: 'time', label: 'Best Time to Visit', text: guide.about.bestTimeToVisit },
                     { slug: 'parking', label: 'Parking', text: guide.about.parking }
                 ];
@@ -3214,7 +3217,9 @@
             // Hero
             var eyebrow = guide.type === 'reviewer'
                 ? 'San Diego · Reviewer Guide'
-                : guide.neighborhood + ' · Neighborhood Guide';
+                : guide.type === 'specialty'
+                    ? guide.neighborhood + ' · Coffee Guide'
+                    : guide.neighborhood + ' · Neighborhood Guide';
             document.getElementById('guideHeroEyebrow').textContent = eyebrow;
             document.getElementById('guideHeroTitle').textContent = guide.displayTitle || guide.title;
             var heroPicksLabel = guide.type === 'reviewer' ? ' reviewed picks · Updated ' : ' curated picks · Updated ';

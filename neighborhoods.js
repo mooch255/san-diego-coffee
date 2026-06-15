@@ -114,6 +114,41 @@ window.NEIGHBORHOODS = [
     metaTitle: 'Best Coffee in Normal Heights, San Diego | Roasters & Cafes',
     metaDescription: 'Browse specialty coffee in Normal Heights, San Diego - Dark Horse Coffee, Parabola Coffee Roasting, Lestat\'s, and more just north of North Park.',
     about: 'Normal Heights runs quiet, just north of North Park, with a roaster-focused lineup anchored by Dark Horse and Parabola Coffee Roasting Co. Lestat\'s has two locations here, doing double duty as late-night community space and daytime cafe. Worth the slight detour off the main North Park circuit.'
+  },
+  {
+    id: 'bay-park',
+    name: 'Bay Park',
+    metaTitle: 'Best Coffee in Bay Park, San Diego | Roasters & Cafes',
+    metaDescription: 'Find specialty coffee in Bay Park, San Diego - Bird Rock Coffee Roasters\' Morena Blvd production roastery and Bay Park Coffee, just east of Mission Bay.',
+    about: 'Bay Park sits on the hillside east of Mission Bay, and its coffee anchor is significant: Bird Rock Coffee Roasters\' main production roastery on Morena Blvd, where the award-winning operation does much of its roasting. Bay Park Coffee adds a relaxed neighborhood cafe option nearby. A quick stop if you\'re heading to or from the bay.'
+  },
+  {
+    id: 'liberty-station',
+    name: 'Liberty Station',
+    metaTitle: 'Best Coffee in Liberty Station, San Diego | Roasters & Cafes',
+    metaDescription: 'Explore specialty coffee in Liberty Station, San Diego - Talitha Coffee Roasters and more in the former Naval Training Center turned arts and dining district.',
+    about: 'Liberty Station is the former Naval Training Center reborn as a walkable arts, dining, and shopping district in Point Loma. Talitha Coffee Roasters brings its mission-driven, Golden Bean medalist program to the neighborhood, an easy stop while exploring the public market, galleries, and waterfront paths nearby.'
+  },
+  {
+    id: 'university-heights',
+    name: 'University Heights',
+    metaTitle: 'Best Coffee in University Heights, San Diego | Roasters & Cafes',
+    metaDescription: 'Browse specialty coffee in University Heights, San Diego - Yipao Coffee and more just north of North Park along Park Boulevard and Adams Avenue.',
+    about: 'University Heights blends into the North Park coffee universe along its southern edge, with its own quiet identity along Park Boulevard and Adams Avenue. Yipao Coffee, the Colombian-rooted roaster, anchors the neighborhood with origin-driven coffee. A calmer alternative to the busier North Park strip just to the south.'
+  },
+  {
+    id: 'carmel-mountain-ranch',
+    name: 'Carmel Mountain Ranch',
+    metaTitle: 'Best Coffee in Carmel Mountain Ranch, San Diego | Roasters & Cafes',
+    metaDescription: 'Find specialty coffee in Carmel Mountain Ranch, San Diego - Mostra Coffee and James Coffee Co. anchor the inland North County scene.',
+    about: 'Carmel Mountain Ranch holds a surprisingly strong specialty lineup for an inland North County suburb, anchored by two serious names: Mostra Coffee, the nationally recognized Filipino-American roaster, and James Coffee Co. Both make the area a worthwhile detour if you\'re out toward Rancho Bernardo or the 15 corridor.'
+  },
+  {
+    id: 'sorrento-valley',
+    name: 'Sorrento Valley',
+    metaTitle: 'Best Coffee in Sorrento Valley, San Diego | Roasters & Cafes',
+    metaDescription: 'Explore specialty coffee in Sorrento Valley, San Diego - Zumbar Coffee & Tea and Parakeet Cafe serve the tech and biotech corridor.',
+    about: 'Sorrento Valley is San Diego\'s tech and biotech corridor, and its coffee reflects the weekday-commuter rhythm. Zumbar Coffee & Tea is a longtime local roaster favorite, and Parakeet Cafe brings its polished, design-forward all-day cafe format to the area. Both are solid options for a working coffee between meetings.'
   }
 ];
 

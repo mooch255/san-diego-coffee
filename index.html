@@ -529,15 +529,17 @@
             z-index: 2;
         }
 
-        /* Outer: positioned in lower half of hero */
+        /* Outer: positioned in lower half of hero.
+           max-width + padding match .container so the hero text left edge
+           lines up with the intro section below it on desktop. */
         .hero-content-outer {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
-            max-width: 1400px;
-            padding: 0 2.5rem;
+            max-width: 1200px;
+            padding: 0 2rem;
             z-index: 3;
             pointer-events: none;
         }
@@ -879,6 +881,30 @@
         @media (max-width: 600px) { .recent-grid { grid-template-columns: 1fr; } }
 
         /* ── News & Events ───────────────────────────────────────────── */
+        .intro-section {
+            background: var(--cream);
+            padding: 3rem 0 2.75rem;
+            border-bottom: 1px solid var(--light-tan);
+        }
+        .intro-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.6rem, 3vw, 2.1rem);
+            font-weight: 700;
+            color: var(--espresso);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        .intro-text {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            color: var(--coffee-brown);
+            max-width: 780px;
+            margin-bottom: 1.75rem;
+        }
+        .intro-text:last-child { margin-bottom: 0; }
+        .intro-text a { color: var(--accent-red); font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(184,92,56,0.35); }
+        .intro-text a:hover { border-bottom-color: var(--accent-red); }
         .news-section {
             background: var(--white);
             padding: 2rem 0;
@@ -1483,7 +1509,7 @@
 
         <div class="hero-content-outer">
             <div class="hero-content">
-                <h1 class="hero-title">San Diego<br>Specialty Coffee, <em>mapped.</em></h1>
+                <h1 class="hero-title">The Best Coffee in<br>San Diego, <em>mapped.</em></h1>
                 <p class="hero-subtitle">Your inside guide to San Diego's specialty coffee scene, built by coffee fanatics. The roasters, cafes, and details that make each one worth your time.</p>
 
 
@@ -1517,6 +1543,15 @@
             </div>
         </div>
 
+    </section>
+
+    <!-- SEO intro: crawlable copy + internal links to discovery pages -->
+    <section class="intro-section">
+        <div class="container">
+            <h2 class="intro-heading">Find the Best Coffee in San Diego</h2>
+            <p class="intro-text">San Diego's specialty coffee scene has quietly become one of the most exciting in the country: a deep, growing bench of independent roasters and neighborhood cafes that rewards anyone willing to explore it. This is the directory we wished existed, 200+ spots gathered in one place with the details that actually matter. Roast style, coffee details, amenities, bean reviews, and more. Start with our guide to the <a href="/guides/best-coffee-san-diego">best coffee in San Diego</a>, browse every <a href="guides.html#neighborhoods">neighborhood guide</a>, or explore the full <a href="map.html">interactive map</a>.</p>
+            <p class="intro-text">Or jump straight to coffee in <a href="/neighborhoods/north-park">North Park</a>, <a href="/neighborhoods/la-jolla">La Jolla</a>, <a href="/neighborhoods/pacific-beach">Pacific Beach</a>, <a href="/neighborhoods/ocean-beach">Ocean Beach</a>, <a href="/neighborhoods/encinitas">Encinitas</a>, <a href="/neighborhoods/carlsbad">Carlsbad</a>, <a href="/neighborhoods/oceanside">Oceanside</a>, <a href="/neighborhoods/barrio-logan">Barrio Logan</a>, and <a href="guides.html#neighborhoods">every other neighborhood</a>.</p>
+        </div>
     </section>
 
     <div class="page-transition" id="pageTransition"></div>

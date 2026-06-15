@@ -9,6 +9,371 @@
 
 window.GUIDES = [
   {
+    // ─────────────────────────────────────────────────────────────────
+    // Flagship city-wide guide. type 'specialty' renders with the same
+    // editorial layout as neighborhood guides (only 'reviewer' is special).
+    // Picks reference loc IDs only; coordinates resolve from locations.js
+    // via resolveLatLng() in guide.html. Ranks are display order and can
+    // be reordered freely.
+    // ─────────────────────────────────────────────────────────────────
+    id: 'best-coffee-san-diego',
+    type: 'specialty',
+
+    title: 'Best Coffee in San Diego',
+    displayTitle: 'The Best Coffee in San Diego',
+    subtitle: 'Twenty Essential Specialty Roasters & Cafes',
+    neighborhood: 'San Diego County',
+    publishedDate: '2026-06-15',
+    updatedDate: '2026-06-15',
+    heroImage: '/images/guides/best-coffee-san-diego-hero.jpg',
+    heroImagePosition: 'center 58%',
+    cardImage: '/images/guides/best-coffee-san-diego-hero.jpg',
+    excerpt: "The 20 specialty roasters and cafes we'd send anyone to first. From award-winning North County roasteries to Barrio Logan institutions and North Park favorites, mapped across the county.",
+    locationCount: 20,
+
+    // ── SEO fields ───────────────────────────────────────────────────
+    metaTitle: 'Best Coffee in San Diego | 20 Essential Specialty Roasters & Cafes',
+    metaDescription: 'The definitive guide to the best specialty coffee in San Diego. 20 must-visit roasters and cafes across the county, with an interactive map, editorial picks, and what to order at each.',
+    metaKeywords: 'best coffee san diego, coffee shops san diego, best coffee shops in san diego, san diego specialty coffee, san diego roasters, best espresso san diego',
+    canonicalUrl: 'https://sandiegocoffee.co/guides/best-coffee-san-diego',
+    ogImage: '/images/guides/best-coffee-san-diego-hero.jpg',
+
+    // ── About section ─────────────────────────────────────────────────
+    about: {
+      intro: "Ask ten San Diego coffee people for their favorite shop and you'll get ten different answers, but the same names keep surfacing. This is our shortlist: 20 specialty roasters and cafes that consistently make some of the best coffee in the county, from award-winning roasteries to neighborhood cafes worth a detour. Use the map to plan a route, sort by what you care about, and click any pick for the full story.",
+      howToNavigate: "These picks are spread across the county, so pick one area and build a short crawl rather than crossing the map in a day.<br><br>"
+        + "<strong>North County</strong><br>Steady State, Necessity, Seven Seas, Manzanita, Mostra, Jaunt<br><br>"
+        + "<strong>Point Loma, OB &amp; PB</strong><br>Acento, Coffee Cycle, Ultreya, Yipao, Bird Rock<br><br>"
+        + "<strong>Urban core, North Park &amp; Bankers Hill</strong><br>Dark Horse, Genteel, Little While, Mnemonic, Talitha, Provecho, Cafe Moto, Rikka Fika, Torque",
+      bestTimeToVisit: "Weekday mornings before 9 AM for the calmest experience and easiest parking almost everywhere on this list. Many of these roasters close between 2 and 4 PM, so plan afternoon visits carefully and check hours before a long drive to North County.",
+      parking: "Mostly free or easy street parking at the North County and Barrio Logan spots. Expect metered parking in North Park, Bankers Hill, downtown, and the beach neighborhoods (Ocean Beach and Pacific Beach get tight on weekends), so build in a few extra minutes there."
+    },
+
+    // ── Quick Stats ────────────────────────────────────────────────────
+    quickStats: {
+      totalPicks: 20,
+      roasters: 18,
+      cafes: 2,
+      neighborhood: 'County-wide',
+      vibe: 'The essential shortlist'
+    },
+
+    // ── FAQ (renders as accordion + FAQPage JSON-LD) ──────────────────
+    faq: [
+      {
+        q: "What is the best coffee shop in San Diego?",
+        a: "There's no single answer, which is why this is a list of 20 rather than one. That said, a few names come up again and again: Bird Rock Coffee Roasters for its award-winning, long-running program, Mostra and Steady State for consistently excellent roasting, and Provecho, Torque, Acento, Ultreya, and Seven Seas for shops that routinely earn near-perfect ratings from locals. The best pick depends on what you're after: light single origins, a classic espresso, or a great neighborhood cafe to sit in."
+      },
+      {
+        q: "Where can I find the best light-roast and single-origin coffee in San Diego?",
+        a: "Torque in City Heights specializes in light roasting and is a go-to for origin-forward cups. Genteel and Little While in North Park both run light, fruit-forward programs, and Necessity in Encinitas and Steady State in Carlsbad are North County standouts for clean, modern roasting. Rikka Fika downtown rotates guest roasters from out of town alongside its own newer light-roast program, so it's worth a stop if you like variety."
+      },
+      {
+        q: "Which San Diego roasters are best for buying whole beans to take home?",
+        a: "Almost every spot on this list sells whole bean. For the freshest, look for shops that roast on-site: Acento (Point Loma), Cafe Moto and Provecho (Barrio Logan), Genteel and Little While (North Park), and Yipao (Pacific Beach) all roast where they pour. Bird Rock, Mostra, Dark Horse, and Steady State have the widest selection across roast profiles thanks to larger production operations."
+      },
+      {
+        q: "What's the best coffee in North County San Diego?",
+        a: "North County punches well above its weight. On the coast, Steady State (Carlsbad), Necessity (Encinitas), and Seven Seas (Solana Beach) anchor the scene, all three among the highest-rated roasters in the county. Inland, Manzanita in Escondido and Mostra's North County locations are reliable picks. The coastal trio is close enough to string together into a single North County coffee crawl."
+      },
+      {
+        q: "How was this list of the best coffee in San Diego put together?",
+        html: true,
+        a: "It's a curated editorial shortlist drawn from our directory of 200+ San Diego coffee spots, weighing roasting quality, barista craft, consistency, reputation, and how often a shop comes up when locals talk about their favorites. It intentionally spans the whole county and a range of styles rather than ranking a single neighborhood. To go deeper, explore the full <a href=\"/map.html\">interactive map</a> or browse our <a href=\"/guides.html#neighborhoods\">neighborhood guides</a>."
+      }
+    ],
+
+    // ── Map config (county-wide view) ─────────────────────────────────
+    map: {
+      center: { lat: 32.95, lng: -117.13 },
+      zoom: 10
+    },
+
+    // ── Featured locations (rank = display order, editable) ────────────
+    locations: [
+      {
+        rank: 1,
+        locationId: 'loc_032',
+        highlightPhrase: 'San Diego’s award-winning standard-bearer',
+        blurb: "Bird Rock Coffee Roasters has been a national name since winning Roast Magazine's Micro-Roaster of the Year, and the original Bird Rock cafe on La Jolla Blvd is where the direct-trade program started. With locations across the county and a serious sourcing operation, Bird Rock is the closest thing San Diego has to a flagship roaster. Start here if you want to understand what put the city's coffee scene on the map.",
+        mustOrder: 'Single-origin pour-over from the direct-trade lineup',
+        localInsight: "This original location is the one to visit for the full story. The team has been refining the same program here for two decades.",
+        whatWeLove: [
+          'Roast Magazine Micro-Roaster of the Year pedigree',
+          'Long-running direct-trade sourcing program',
+          'The flagship cafe where it all started'
+        ],
+        bestFor: ['Roaster', 'Direct Trade', 'Award Winner']
+      },
+      {
+        rank: 2,
+        locationId: 'loc_019',
+        highlightPhrase: 'Filipino-rooted, award-winning roaster',
+        blurb: "Mostra Coffee built a county-wide reputation on consistently excellent roasting and a Filipino-American identity that runs through everything from sourcing to signature drinks. The Bankers Hill cafe is one of the most central ways to taste a program that has racked up national recognition. Reliable, polished, and a regular on any serious San Diego best-of list.",
+        mustOrder: 'A signature drink or a single-origin espresso',
+        localInsight: "Mostra runs several locations across the county. The Bankers Hill spot is the easiest to reach if you're staying central.",
+        whatWeLove: [
+          'Nationally recognized roasting program',
+          'Filipino-American identity woven through the menu',
+          'Consistent quality across multiple locations'
+        ],
+        bestFor: ['Roaster', 'Award Winner', 'Signature Drinks']
+      },
+      {
+        rank: 3,
+        locationId: 'loc_002',
+        highlightPhrase: 'North County’s modern roasting benchmark',
+        blurb: "Steady State Roasting sources thoughtfully and roasts with a clean, modern touch that's made it one of the most respected names in North County. The Carlsbad Village cafe sits in a walkable cluster of shops, making it an easy anchor for a coastal coffee crawl. If you want to taste where North County coffee is headed, this is the bar.",
+        mustOrder: 'Whatever single origin is on the pour-over bar',
+        localInsight: "Carlsbad Village lets you walk between several cafes. Make Steady State your first stop and explore from there.",
+        whatWeLove: [
+          'Clean, modern, origin-forward roasting',
+          'Walkable Carlsbad Village location',
+          'High-quality sourcing you can taste'
+        ],
+        bestFor: ['Roaster', 'Light Roast', 'North County']
+      },
+      {
+        rank: 4,
+        locationId: 'loc_055',
+        highlightPhrase: 'Mexican-origin focus, Barrio Logan flagship',
+        blurb: "Provecho Coffee Co. anchors Barrio Logan from a sunlit cafe on Julian Avenue, sourcing globally but consistently spotlighting Mexican producers. The baristas are dialed in, the espresso program is precise, and it's one of the warmest rooms in the urban core. A near-perfect local rating backs up the reputation.",
+        mustOrder: 'Espresso on a Mexican single origin, or a piloncillo latte',
+        localInsight: "The Mexican-origin lineup rotates. Ask what's on if you've never had Chiapas or Oaxaca beans pulled by people who care.",
+        whatWeLove: [
+          "Mexican-origin focus you won't find elsewhere in the city",
+          'Barista skill that backs up the bean selection',
+          'Warm, dog-friendly, work-friendly space'
+        ],
+        bestFor: ['Roaster', 'Mexican Origins', 'Barista Standout']
+      },
+      {
+        rank: 5,
+        locationId: 'loc_040',
+        highlightPhrase: 'The light-roast specialist',
+        blurb: "Torque Coffee roasts some of the most origin-forward, lighter coffee in San Diego out of its City Heights shop, led by a founder with deep roots in the specialty world. If you gravitate toward bright, fruit-forward cups, this is one of the city's essential stops. The near-perfect rating reflects how seriously the team takes the craft.",
+        mustOrder: 'A light-roast single origin as pour-over',
+        localInsight: "Light-roast skeptics often get converted here. Ask the bar what's brewing the brightest that day.",
+        whatWeLove: [
+          'Specializes in light, origin-forward roasting',
+          'Founder with serious specialty pedigree',
+          'Consistently top-rated by locals'
+        ],
+        bestFor: ['Roaster', 'Light Roast', 'Single Origin']
+      },
+      {
+        rank: 6,
+        locationId: 'loc_080',
+        highlightPhrase: 'North Park’s production powerhouse',
+        blurb: "Dark Horse Coffee Roasters runs one of San Diego's most recognizable operations, with locations across the county and a production roastery behind them. The North Park shop on 30th Street is a dependable stop for well-crafted espresso and beans to take home, with more range across roast profiles than most.",
+        mustOrder: 'Drip coffee or a well-pulled espresso drink',
+        localInsight: "Dark-roast skeptic? Ask about the lighter single origins. There's more on offer than the menu suggests.",
+        whatWeLove: [
+          'Reliable across every drink on the menu',
+          'Roastery-backed quality control',
+          'Wide bean selection from light to dark'
+        ],
+        bestFor: ['Roaster', 'Espresso', 'North Park']
+      },
+      {
+        rank: 7,
+        locationId: 'loc_046',
+        highlightPhrase: 'A San Diego institution since the ’90s',
+        blurb: "Cafe Moto is one of San Diego's longest-running specialty roasters, officially launched in 1990 with roots going back further. The Barrio Logan roastery runs a 1931 Jabez Burns roaster powered by solar, and every bean is Fair Trade, organic, and kosher certified. The National Avenue cafe is where you taste decades of history.",
+        mustOrder: 'Drip coffee or a classic espresso drink',
+        localInsight: "Worth a stop just to see the solar-powered 1931 roaster, one of the more remarkable pieces of equipment in any roastery in the country.",
+        whatWeLove: [
+          'Solar-powered 1931 roaster, the real deal',
+          'Fair Trade, organic, and kosher across the program',
+          '35+ years of San Diego coffee history'
+        ],
+        bestFor: ['Established Roaster', 'Organic', 'Historic']
+      },
+      {
+        rank: 8,
+        locationId: 'loc_006',
+        highlightPhrase: 'Encinitas’s in-house roasting standout',
+        blurb: "Necessity Coffee roasts in-house in Encinitas and has quickly become one of the most respected names on the north coast. The program is clean and modern, and the local following is devoted, reflected in a rating most shops can only envy. A must-visit if you're working your way up the coast.",
+        mustOrder: 'A single-origin pour-over or a thoughtfully built espresso drink',
+        localInsight: "Pair it with the other north-coast standouts. Encinitas and Carlsbad are close enough for a single morning crawl.",
+        whatWeLove: [
+          'In-house roasting with a modern profile',
+          'Devoted local following',
+          'Strong anchor for a north-coast coffee run'
+        ],
+        bestFor: ['Roaster', 'North County', 'Light Roast']
+      },
+      {
+        rank: 9,
+        locationId: 'loc_043',
+        highlightPhrase: 'Point Loma’s in-house micro-roaster',
+        blurb: "Acento Coffee Roasters roasts in-house at its Point Loma location and pulls one of the highest local ratings in the city. It's a smaller operation focused on doing a tight program exceptionally well, the kind of neighborhood roaster that quietly earns a loyal following without much fanfare.",
+        mustOrder: 'A single-origin espresso or the current featured roast',
+        localInsight: "Easy to fold into a Point Loma or Ocean Beach loop alongside the other coastal-central picks.",
+        whatWeLove: [
+          'Roasts in-house at the Point Loma shop',
+          'Among the highest-rated roasters in the city',
+          'Focused, do-one-thing-well approach'
+        ],
+        bestFor: ['Roaster', 'Point Loma', 'Micro-Batch']
+      },
+      {
+        rank: 10,
+        locationId: 'loc_089',
+        highlightPhrase: 'Solana Beach’s on-site roaster',
+        blurb: "Seven Seas Roasting Co. roasts on-site and has built a near-perfect reputation across its South Park and Solana Beach locations. The Cedros Avenue spot in Solana Beach pairs the roasting program with a relaxed coastal-design district setting. A reliable North County coastal pick with serious roasting credentials.",
+        mustOrder: 'A single-origin filter coffee or an espresso drink',
+        localInsight: "The Cedros Design District is worth a wander. Build your visit around a stroll through the shops nearby.",
+        whatWeLove: [
+          'On-site roasting program',
+          'Near-perfect local rating',
+          'Relaxed Cedros Design District setting'
+        ],
+        bestFor: ['Roaster', 'North County', 'On-Site Roaster']
+      },
+      {
+        rank: 11,
+        locationId: 'loc_064',
+        highlightPhrase: 'Woman-owned Ocean Beach favorite',
+        blurb: "Ultreya Coffee and Tea is a woman-owned roaster that roasts out of its College Area shop and pours at a beloved Ocean Beach location on Sunset Cliffs Blvd. The near-perfect rating and devoted regulars tell the story: this is a neighborhood spot that takes its coffee seriously while staying genuinely welcoming.",
+        mustOrder: 'A house espresso drink or a single-origin pour-over',
+        localInsight: "Combine with Coffee Cycle for a two-stop Ocean Beach coffee morning before hitting the pier.",
+        whatWeLove: [
+          'Woman-owned and community-rooted',
+          'Roasts its own coffee',
+          'One of the highest-rated shops in OB'
+        ],
+        bestFor: ['Roaster', 'Ocean Beach', 'Woman-Owned']
+      },
+      {
+        rank: 12,
+        locationId: 'loc_118',
+        highlightPhrase: 'Colombian-rooted Pacific Beach roaster',
+        blurb: "Yipao Coffee roasts in-house in Pacific Beach, with owners originally from Colombia and a sourcing relationship that traces coffee back to the country's growers. The result is a distinctly origin-driven program with a personal story behind every cup. A second location in University Heights extends the reach.",
+        mustOrder: 'A Colombian single origin, espresso or filter',
+        localInsight: "Ask about the sourcing. The Colombian connection is central to what they do and worth hearing about.",
+        whatWeLove: [
+          'Colombian ownership and origin focus',
+          'Roasts in-house in Pacific Beach',
+          'A genuine story behind the sourcing'
+        ],
+        bestFor: ['Roaster', 'Pacific Beach', 'Single Origin']
+      },
+      {
+        rank: 13,
+        locationId: 'loc_090',
+        highlightPhrase: 'North Park’s light-roast micro-roaster',
+        blurb: "Genteel Coffee Roasters is a micro-roaster and cafe on University Avenue with a light, fruit-forward program: a daily-driver roast on espresso plus a rotating single origin that's often the most interesting cup in the neighborhood. The rustic-industrial space, indoor and out, is a quiet favorite for working.",
+        mustOrder: 'Rotating single-origin espresso or pour-over',
+        localInsight: "Ask what just came off the roaster. The lineup rotates seasonally and changes more than the menu suggests.",
+        whatWeLove: [
+          'Light, fruit-forward roasting program',
+          'Rotating single origins worth returning for',
+          'Indoor and outdoor seating made for laptops'
+        ],
+        bestFor: ['Roaster', 'Light Roast', 'Work-Friendly']
+      },
+      {
+        rank: 14,
+        locationId: 'loc_024',
+        highlightPhrase: 'Miramar’s destination roaster',
+        blurb: "Jaunt Coffee Roasters has built a big, loyal following out of its Mira Mesa/Miramar space, with a rating and review count that put it among the most popular roasters in the county. It's a destination spot rather than a neighborhood drop-in, the kind of place coffee people drive across town for.",
+        mustOrder: 'A featured single origin, pour-over or espresso',
+        localInsight: "It's a bit out of the way in the Miramar business district, so make it a deliberate stop rather than an afterthought.",
+        whatWeLove: [
+          'One of the most popular roasters in the county',
+          'Destination-worthy program',
+          'Large, devoted following'
+        ],
+        bestFor: ['Roaster', 'Destination', 'Single Origin']
+      },
+      {
+        rank: 15,
+        locationId: 'loc_137',
+        highlightPhrase: 'Design-forward Bankers Hill cafe',
+        blurb: "Mnemonic Coffee on Fifth Avenue is the most design-forward cafe on this list: clean lines, a restrained palette, and a menu that treats each drink as a small experiment. It's cafe-first rather than a roastery, pulling from outside roasters, and it has quietly become a favorite for anyone who pays attention to how their coffee is built.",
+        mustOrder: 'Whatever seasonal signature drink is on the menu',
+        localInsight: "Closed Mondays. Pair it with Talitha a block away for a quick Fifth Avenue double-header.",
+        whatWeLove: [
+          'Minimalist design that takes itself seriously',
+          'Experimental, rotating drink menu',
+          'Dog-friendly Bankers Hill staple'
+        ],
+        bestFor: ['Cafe', 'Design-Forward', 'Experimental']
+      },
+      {
+        rank: 16,
+        locationId: 'loc_023',
+        highlightPhrase: 'Escondido’s in-house inland roaster',
+        blurb: "Manzanita Roasting Company roasts in-house and serves the inland North County crowd from locations in Escondido and Rancho Bernardo. The Grand Avenue spot in downtown Escondido is a genuine specialty option in an area that doesn't have many, and a reliable stop if you're exploring inland.",
+        mustOrder: 'A house single origin or an espresso drink',
+        localInsight: "One of the few serious specialty roasters this far inland, so it's the obvious anchor for an Escondido visit.",
+        whatWeLove: [
+          'Roasts its own coffee',
+          'Serves an underserved inland area',
+          'Downtown Escondido location'
+        ],
+        bestFor: ['Roaster', 'North County', 'Inland']
+      },
+      {
+        rank: 17,
+        locationId: 'loc_087',
+        highlightPhrase: 'Detail-obsessed and brand new',
+        blurb: "Little While opened on Adams Ave in 2025, just over the University Heights border but firmly in the North Park coffee universe. The focus is details: single-origin espresso, slow-bar pour-overs, and a small, precise menu, all on beans they roast themselves. Newer than most picks here and worth visiting before everyone catches on.",
+        mustOrder: 'A slow-bar pour-over or single-origin espresso',
+        localInsight: "The slow bar is the move. Order a pour-over and let the barista walk you through the coffee while it brews.",
+        whatWeLove: [
+          'Slow-bar pour-over program done with care',
+          'Single-origin espresso, not just a daily driver',
+          'Quiet, considered space'
+        ],
+        bestFor: ['Roaster', 'Pour Over', 'Newcomer']
+      },
+      {
+        rank: 18,
+        locationId: 'loc_028',
+        highlightPhrase: 'Ocean Beach’s in-house roaster',
+        blurb: "Coffee Cycle Roasting roasts in-house and pours at a welcoming Ocean Beach shop on Voltaire St, with a second location in Pacific Beach. It's a smaller, community-minded operation that earns its loyal following with consistent quality and an easygoing beach-neighborhood feel.",
+        mustOrder: 'A house espresso drink or drip',
+        localInsight: "Pair with Ultreya for a two-stop OB morning. They're both easy walks from the main Newport Ave strip.",
+        whatWeLove: [
+          'Roasts its own coffee',
+          'Easygoing Ocean Beach feel',
+          'Loyal neighborhood following'
+        ],
+        bestFor: ['Roaster', 'Ocean Beach', 'Neighborhood Cafe']
+      },
+      {
+        rank: 19,
+        locationId: 'loc_173',
+        highlightPhrase: 'Mission-driven roaster on Fifth Ave',
+        blurb: "Talitha Coffee Roasters is a Barrio Logan-based, mission-driven roaster with several San Diego cafes, and the Bankers Hill outpost on Fifth Avenue is the most central way to taste the program. A multiple-time medalist at the Golden Bean North America competition, Talitha emphasizes transparency and quality across espresso, pour-over, and cold brew.",
+        mustOrder: 'Cold brew or a single-origin pour-over',
+        localInsight: "Closes earlier than most spots (around 2 PM). If you're pairing it with Mnemonic on Fifth Ave, do Talitha first.",
+        whatWeLove: [
+          'Golden Bean medalist roasting program',
+          'Mission-driven, transparency-focused',
+          'Easy walk from Mnemonic'
+        ],
+        bestFor: ['Roaster', 'Mission-Driven', 'Bankers Hill']
+      },
+      {
+        rank: 20,
+        locationId: 'loc_138',
+        highlightPhrase: 'Matcha, multi-roaster bar, and detail',
+        blurb: "Rikka Fika built its reputation as the city's go-to matcha cafe, with a rotating multi-roaster bar pulling from domestic and international roasters most San Diego shops would never touch. As of 2026, it's added a small-scale light-roasting program of its own. The 13th Street cafe stays comfortable, minimalist, and unhurried.",
+        mustOrder: 'A matcha latte, or a pour-over of the current light roast',
+        localInsight: "Closed Mondays and Tuesdays, so plan ahead. Ask which guest roaster is on the bar that week.",
+        whatWeLove: [
+          'Matcha program that built its reputation',
+          'Curated guest-roaster bar from out of town',
+          'New in-house light-roast program to track'
+        ],
+        bestFor: ['Cafe', 'Matcha', 'Multi-Roaster']
+      }
+    ]
+  },
+  {
     // ── Identifiers ───────────────────────────────────────────────────
     id: 'north-park',
     type: 'neighborhood',

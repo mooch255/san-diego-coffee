@@ -1477,6 +1477,42 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/bay-park</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/liberty-station</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/university-heights</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/carmel-mountain-ranch</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/neighborhoods/sorrento-valley</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sandiegocoffee.co/guides/best-coffee-san-diego</loc>
+    <lastmod>2026-06-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://sandiegocoffee.co/guides/north-park</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>

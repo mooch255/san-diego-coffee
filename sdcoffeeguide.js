@@ -116,5 +116,11 @@ window.SDCG_RATINGS = {
     signatureDrinkName: 'Iced Cafe Cream Top',
     signatureDrinkRating: 9.5,
     reviewExcerpt: "Built its reputation as San Diego's go-to matcha cafe with a rotating multi-roaster bar pulling from domestic and international roasters most local shops would never touch. As of 2026, they've added their own small-scale light-roasting program, a quiet pivot already changing the conversation in the city's coffee scene. The 13th Street downtown space stays comfortable and unhurried, with sit-and-stay energy that rewards a long visit. The 9.8 cortado is the highest score we've ever given."
+  },
+  'loc_043': {
+    cortadoRating: 9.1,
+    signatureDrinkName: 'Iced Cafe de Olla Latte',
+    signatureDrinkRating: 8.8,
+    reviewExcerpt: "Point Loma cafe and roastery with the roasting facility right onsite, led by head roaster Luis, who's well regarded across the San Diego coffee scene. They rotate through multiple single-origin options, so there's always something worth exploring beyond the usual menu. The 9.1 cortado lands near the top of our scores, with the Iced Cafe de Olla Latte close behind at 8.8. A worthwhile stop for origin-curious drinkers."
   }
 };

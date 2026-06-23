@@ -3,6 +3,12 @@
 // reviewExcerpt: short 3-4 sentence summary of the Instagram review caption. Optional.
 // To add a new spot: append a new key with the loc_XXX id and ratings.
 window.SDCG_RATINGS = {
+  'loc_225': {
+    cortadoRating: 8.7,
+    signatureDrinkName: 'Iced Bon Bon Latte',
+    signatureDrinkRating: 8.8,
+    reviewExcerpt: "Tucked on Girard Avenue in the heart of La Jolla Village, Cala pairs a deep prepared-food menu of salads, smoothies, flatbreads, and paninis with a coffee program that quietly outshines the simple menu board. Every brew method pours Torque Coffee, and manager Damon brings serious international coffee experience to the bar. Order a pour-over and you can pick your dripper, or even ask for it iced. A genuine specialty stop hiding inside an all-day cafe."
+  },
   'loc_177': {
     cortadoRating: 8.9,
     signatureDrinkName: 'Iced Pistachio Latte',

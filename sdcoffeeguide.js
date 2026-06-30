@@ -128,5 +128,11 @@ window.SDCG_RATINGS = {
     signatureDrinkName: 'Iced Cafe de Olla Latte',
     signatureDrinkRating: 8.8,
     reviewExcerpt: "Point Loma cafe and roastery with the roasting facility right onsite, led by head roaster Luis, who's well regarded across the San Diego coffee scene. They rotate through multiple single-origin options, so there's always something worth exploring beyond the usual menu. The 9.1 cortado lands near the top of our scores, with the Iced Cafe de Olla Latte close behind at 8.8. A worthwhile stop for origin-curious drinkers."
+  },
+  'loc_113': {
+    cortadoRating: 7.9,
+    signatureDrinkName: 'Iced Morning Maple Latte',
+    signatureDrinkRating: 8.4,
+    reviewExcerpt: "Sustainability-minded cafe and roaster on Lake Murray Blvd in La Mesa, roasting in house since 2017 with fresh single origins from across Central America and East Africa. The Iced Morning Maple Latte leads the visit at 8.4, with the cortado holding at 7.9. Ceramic cups and 100% compostable to-go ware back up the eco-conscious approach, and the space doubles as a neighborhood hub with open mics, trivia nights, and the Brew Community Market. A genuine La Mesa gathering spot with a strong local following."
   }
 };

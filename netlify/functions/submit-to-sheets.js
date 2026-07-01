@@ -82,6 +82,19 @@ exports.handler = async function (event) {
       data.sourceProof || '',
     ];
 
+  } else if (submissionType === 'newsletter') {
+    // Honeypot: if the hidden field is filled, it's a bot — silently accept, write nothing.
+    if (data.website_hp) {
+      return { statusCode: 200, body: 'ok' };
+    }
+    const email = (data.email || '').trim();
+    // Basic server-side validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return { statusCode: 400, body: 'Invalid email' };
+    }
+    sheetName = 'Newsletter';
+    row = [timestamp, email, data.source || ''];  // source = page they signed up from
+
   } else {
     return { statusCode: 400, body: 'Unknown submission type' };
   }

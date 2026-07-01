@@ -873,14 +873,68 @@
         </div>
     </div>
 
+    <style>
+    .footer-subscribe { flex-direction: column; gap: 0.5rem; margin-bottom: 0.85rem; }
+    .nl-form { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; width: 100%; max-width: 420px; margin: 0 auto; }
+    .nl-label { font-size: 0.9rem; color: rgba(196,167,125,0.9); }
+    .nl-input-wrap { display: flex; gap: 0.5rem; width: 100%; }
+    .nl-input-wrap input[type=email] { flex: 1; min-width: 0; padding: 0.55rem 0.7rem; border: 1px solid rgba(196,167,125,0.4); border-radius: 4px; background: rgba(255,255,255,0.06); color: #EDE0CC; font-size: 0.95rem; }
+    .nl-input-wrap input[type=email]::placeholder { color: rgba(196,167,125,0.5); }
+    .nl-input-wrap button { padding: 0.55rem 1rem; background: var(--accent-red, #B85C38); color: #fff; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .nl-input-wrap button:disabled { opacity: 0.6; cursor: default; }
+    .nl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+    .nl-msg { font-size: 0.85rem; min-height: 1em; }
+    .nl-msg.ok { color: #9BD0A0; }
+    .nl-msg.err { color: #E4A08A; }
+    </style>
     <footer>
+        <div class="footer-row footer-subscribe">
+          <form class="nl-form" novalidate>
+            <label for="nlEmail" class="nl-label">Get occasional SD coffee news &amp; events:</label>
+            <div class="nl-input-wrap">
+              <input type="email" id="nlEmail" name="email" placeholder="you@email.com" autocomplete="email" required aria-label="Email address">
+              <input type="text" name="website_hp" tabindex="-1" autocomplete="off" aria-hidden="true" class="nl-hp">
+              <button type="submit">Subscribe</button>
+            </div>
+            <span class="nl-msg" role="status" aria-live="polite"></span>
+          </form>
+        </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          var form = document.querySelector('.nl-form');
+          if (!form) return;
+          form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var btn = form.querySelector('button[type=submit]');
+            var msg = form.querySelector('.nl-msg');
+            var email = form.querySelector('input[name=email]').value.trim();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+              msg.textContent = 'Please enter a valid email.'; msg.className = 'nl-msg err'; return;
+            }
+            btn.disabled = true; btn.textContent = '…'; msg.textContent = '';
+            try {
+              var res = await fetch('/.netlify/functions/submit-to-sheets', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ submissionType: 'newsletter', email: email, website_hp: form.querySelector('input[name=website_hp]').value, source: window.location.pathname })
+              });
+              if (!res.ok) throw new Error('bad response');
+              msg.textContent = "Thanks — you're on the list! ☕"; msg.className = 'nl-msg ok';
+              form.reset();
+            } catch (err) {
+              msg.textContent = 'Something went wrong. Try again.'; msg.className = 'nl-msg err';
+            } finally {
+              btn.disabled = false; btn.textContent = 'Subscribe';
+            }
+          });
+        });
+        </script>
         <div class="footer-row">
             <a href="https://reddit.com/r/SanDiegoCoffeeBeans" target="_blank">r/SanDiegoCoffeeBeans</a>
             <span class="footer-sep">·</span>
             <a href="https://www.instagram.com/sdcoffeebeans/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.3rem;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>@sdcoffeebeans</a>
         </div>
         <div class="footer-row">
-            <span id="footerCount">185</span>&nbsp;locations and counting
+            <span id="footerCount">206</span>&nbsp;locations and counting
             <span class="footer-sep">·</span>
             <a href="privacy.html">Privacy Policy</a>
         </div>
@@ -1294,5 +1348,6 @@
             }
         });
     </script>
+    <script src="/location-count.js" defer></script>
 </body>
 </html>

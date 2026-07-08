@@ -129,6 +129,12 @@ window.SDCG_RATINGS = {
     signatureDrinkRating: 8.8,
     reviewExcerpt: "Point Loma cafe and roastery with the roasting facility right onsite, led by head roaster Luis, who's well regarded across the San Diego coffee scene. They rotate through multiple single-origin options, so there's always something worth exploring beyond the usual menu. The 9.1 cortado lands near the top of our scores, with the Iced Cafe de Olla Latte close behind at 8.8. A worthwhile stop for origin-curious drinkers."
   },
+  'loc_145': {
+    cortadoRating: 8.9,
+    signatureDrinkName: 'Iced Rose Cardamomma',
+    signatureDrinkRating: 8.0,
+    reviewExcerpt: "A funky, psychedelic little coffee shop on Niagara Avenue in Ocean Beach, built around a colorful theme and a menu of creative, unexpected drinks. The Iced Rose Cardamomma leans floral and spiced at 8.0, but it's the 8.9 cortado that shows the bar is dialed in beyond the novelty. The vibe is pure OB, laid-back, artful, and a little trippy, and a fun stop whether you're chasing the specialty coffee or just the aesthetic. Easy to pair with a stroll down to the pier."
+  },
   'loc_113': {
     cortadoRating: 7.9,
     signatureDrinkName: 'Iced Morning Maple Latte',

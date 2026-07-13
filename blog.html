@@ -684,7 +684,7 @@
 
             sorted.forEach(post => {
                 const card = document.createElement('a');
-                card.href = 'blog-post.html?id=' + encodeURIComponent(post.id);
+                card.href = '/blog/' + encodeURIComponent(post.id.replace(/^blog_/, ''));
                 card.className = 'blog-card';
 
                 const imageHtml = post.image

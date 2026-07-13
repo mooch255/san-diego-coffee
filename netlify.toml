@@ -65,6 +65,13 @@
   to   = "/guide.html?id=:id"
   status = 200
 
+# Clean URLs for blog posts — /blog/slug serves blog-post.html?id=slug
+# (blog-post.html resolves the post from the bare slug, adding the blog_ prefix)
+[[redirects]]
+  from = "/blog/:slug"
+  to   = "/blog-post.html?id=:slug"
+  status = 200
+
 # Clean URLs for neighborhood pages — /neighborhoods/slug serves neighborhood.html?id=slug
 [[redirects]]
   from = "/neighborhoods/:id"

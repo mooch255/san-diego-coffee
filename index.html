@@ -1939,7 +1939,7 @@
                         ? `<img class="recent-card-image" src="${p.image}" alt="${p.title}" loading="lazy">`
                         : `<div class="recent-card-initials"><div class="recent-card-initials-text">Blog</div><div class="recent-card-initials-label">San Diego Coffee</div></div>`;
                     return `
-                <a class="recent-card" href="blog-post.html?id=${p.id}">
+                <a class="recent-card" href="/blog/${p.id.replace(/^blog_/, '')}">
                     ${imageHtml}
                     <div class="recent-card-body">
                         <div class="recent-card-type roaster">Blog</div>

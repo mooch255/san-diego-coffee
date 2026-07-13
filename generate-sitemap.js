@@ -8,14 +8,20 @@
 
 const fs   = require('fs');
 const path = require('path');
+const L    = require('./lib/data-loaders');
 
 const BASE_URL      = 'https://sandiegocoffee.co';
 const OUTPUT_FILE   = path.join(__dirname, 'sitemap.xml');
-const LOCATIONS_FILE = path.join(__dirname, 'locations.js');
-const HIGHLIGHTS_FILE = path.join(__dirname, 'highlights.js');
-const BLOG_FILE = path.join(__dirname, 'blog.js');
-const NEIGHBORHOODS_FILE = path.join(__dirname, 'neighborhoods.js');
-const GUIDES_FILE = path.join(__dirname, 'guides.js');
+
+// Loaders + slug logic are shared with validate-data.js via ./lib/data-loaders
+// so the parsing/slug rules never fork. Must stay identical to locationSlug()
+// in location.html and the mirror in netlify/edge-functions/og-meta.js.
+const locationSlug     = L.locationSlug;
+const loadLocations    = L.loadLocations;
+const loadHighlights   = L.loadHighlights;
+const loadBlogPosts    = L.loadBlogPosts;
+const loadNeighborhoods = L.loadNeighborhoods;
+const loadGuides       = L.loadGuides;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -27,68 +33,6 @@ function safeDate(str) {
   if (!str) return today();
   var d = new Date(str);
   return isNaN(d.getTime()) ? today() : d.toISOString().slice(0, 10);
-}
-
-function slugify(name) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
-
-// Must stay identical to locationSlug() in location.html
-function locationSlug(loc, allLocs) {
-  var base = slugify(loc.basicInfo.name);
-  var nameDupes = allLocs.filter(function(l) { return slugify(l.basicInfo.name) === base; });
-  if (nameDupes.length <= 1) return base;
-  var hood = (loc.coffeeDetails && loc.coffeeDetails.neighborhood) || '';
-  if (!hood) return base + '-' + loc.id;
-  var hoodSlug = slugify(hood);
-  var withHood = base + '-' + hoodSlug;
-  var hoodDupes = nameDupes.filter(function(l) {
-    return slugify((l.coffeeDetails && l.coffeeDetails.neighborhood) || '') === hoodSlug;
-  });
-  if (hoodDupes.length <= 1) return withHood;
-  var fullAddr = (loc.basicInfo && loc.basicInfo.address && loc.basicInfo.address.fullAddress) || '';
-  if (fullAddr) {
-    var streetName = fullAddr.split(',')[0].replace(/^\d+\s+/, '').trim();
-    var streetS = slugify(streetName);
-    if (streetS) return withHood + '-' + streetS;
-  }
-  return withHood + '-' + loc.id;
-}
-
-function loadLocations() {
-  var raw = fs.readFileSync(LOCATIONS_FILE, 'utf8');
-  var m = raw.match(/window\.COFFEE_LOCATIONS\s*=\s*(\[[\s\S]*?\]);\s*$/m);
-  if (!m) throw new Error('Could not parse window.COFFEE_LOCATIONS from locations.js');
-  return JSON.parse(m[1]);
-}
-
-function loadHighlights() {
-  var raw = fs.readFileSync(HIGHLIGHTS_FILE, 'utf8');
-  // highlights.js uses unquoted JS object keys — evaluate safely via Function
-  var m = raw.match(/window\.highlights\s*=\s*(\[[\s\S]*\]);?\s*$/m);
-  if (!m) throw new Error('Could not parse window.highlights from highlights.js');
-  return Function('"use strict"; return ' + m[1])();
-}
-
-function loadBlogPosts() {
-  var raw = fs.readFileSync(BLOG_FILE, 'utf8');
-  var m = raw.match(/window\.BLOG_POSTS\s*=\s*(\[[\s\S]*\]);?\s*$/m);
-  if (!m) throw new Error('Could not parse window.BLOG_POSTS from blog.js');
-  return Function('"use strict"; return ' + m[1])();
-}
-
-function loadNeighborhoods() {
-  var raw = fs.readFileSync(NEIGHBORHOODS_FILE, 'utf8');
-  var m = raw.match(/window\.NEIGHBORHOODS\s*=\s*(\[[\s\S]*?\]);\s*\n/m);
-  if (!m) throw new Error('Could not parse window.NEIGHBORHOODS from neighborhoods.js');
-  return Function('"use strict"; return ' + m[1])();
-}
-
-function loadGuides() {
-  var raw = fs.readFileSync(GUIDES_FILE, 'utf8');
-  var m = raw.match(/window\.GUIDES\s*=\s*(\[[\s\S]*?\]);\s*\n/m);
-  if (!m) throw new Error('Could not parse window.GUIDES from guides.js');
-  return Function('"use strict"; return ' + m[1])();
 }
 
 function urlEntry(loc, lastmod, changefreq, priority) {
@@ -155,7 +99,7 @@ highlights.forEach(function(h) {
 // Blog posts
 blogPosts.forEach(function(p) {
   var lastmod = safeDate(p.date);
-  var url = BASE_URL + '/blog-post.html?id=' + p.id;
+  var url = BASE_URL + '/blog/' + p.id.replace(/^blog_/, '');
   entries.push(urlEntry(url, lastmod, 'monthly', '0.8'));
 });
 

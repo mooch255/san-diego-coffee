@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "validate": "node validate-data.js",
+    "sitemap": "node generate-sitemap.js",
+    "test": "node validate-data.js"
   },
   "repository": {
     "type": "git",

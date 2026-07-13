@@ -25,10 +25,12 @@
     <script>
     (function(){
       try {
-        var qm = window.location.search.match(/[?&]id=blog_([^&]+)/);
-        if (qm) {
-          var name = decodeURIComponent(qm[1]).replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
-          document.title = name + ' — San Diego Coffee Blog';
+        var pm = window.location.pathname.match(/^\/blog\/([^/?#]+)/);
+        var qm = window.location.search.match(/[?&]id=(?:blog_)?([^&]+)/);
+        var slug = pm ? decodeURIComponent(pm[1]) : (qm ? decodeURIComponent(qm[1]) : '');
+        if (slug) {
+          var name = slug.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+          document.title = name + ' · San Diego Coffee Blog';
           var d = document.querySelector('meta[name="description"]');
           if (d) d.content = 'San Diego specialty coffee: ' + name + '. Stories from the r/SanDiegoCoffeeBeans community.';
         }
@@ -803,8 +805,16 @@
         }
 
         const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
-        const post = window.BLOG_POSTS && window.BLOG_POSTS.find(p => p.id === id);
+        // Support clean /blog/{slug} path and legacy ?id=blog_XXX / ?id={slug}
+        const pathMatch = window.location.pathname.match(/^\/blog\/([^/?#]+)/);
+        const key = pathMatch ? decodeURIComponent(pathMatch[1]) : params.get('id');
+        const post = window.BLOG_POSTS && window.BLOG_POSTS.find(p =>
+            p.id === key || p.id === 'blog_' + key || p.id.replace(/^blog_/, '') === key
+        );
+        // Rewrite legacy ?id= URLs to the canonical clean /blog/{slug} form
+        if (post && !window.location.pathname.startsWith('/blog/')) {
+            window.history.replaceState(null, '', '/blog/' + post.id.replace(/^blog_/, ''));
+        }
         const container = document.getElementById('pageContent');
 
         if (!post) {
@@ -832,7 +842,7 @@
             if (ogImage && post.image) ogImage.content = 'https://sandiegocoffee.co' + post.image;
 
             const ogUrl = document.querySelector('meta[property="og:url"]');
-            if (ogUrl) ogUrl.content = 'https://sandiegocoffee.co/blog-post.html?id=' + post.id;
+            if (ogUrl) ogUrl.content = 'https://sandiegocoffee.co/blog/' + post.id.replace(/^blog_/, '');
 
             const twTitle = document.querySelector('meta[name="twitter:title"]');
             if (twTitle) twTitle.content = post.title + ' · San Diego Coffee Blog';
@@ -846,7 +856,7 @@
             // Set canonical
             let canonical = document.querySelector('link[rel="canonical"]');
             if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
-            canonical.href = 'https://sandiegocoffee.co/blog-post.html?id=' + post.id;
+            canonical.href = 'https://sandiegocoffee.co/blog/' + post.id.replace(/^blog_/, '');
 
             // ── JSON-LD BlogPosting schema ────────────────────────────────
             (function injectSchema(p) {
@@ -869,7 +879,7 @@
                     },
                     mainEntityOfPage: {
                         '@type': 'WebPage',
-                        '@id': 'https://sandiegocoffee.co/blog-post.html?id=' + p.id
+                        '@id': 'https://sandiegocoffee.co/blog/' + p.id.replace(/^blog_/, '')
                     }
                 };
                 schema = JSON.parse(JSON.stringify(schema));
@@ -885,7 +895,7 @@
                     itemListElement: [
                         { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://sandiegocoffee.co/' },
                         { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://sandiegocoffee.co/blog.html' },
-                        { '@type': 'ListItem', position: 3, name: p.title, item: 'https://sandiegocoffee.co/blog-post.html?id=' + p.id }
+                        { '@type': 'ListItem', position: 3, name: p.title, item: 'https://sandiegocoffee.co/blog/' + p.id.replace(/^blog_/, '') }
                     ]
                 };
                 var tag = document.getElementById('ld-breadcrumb');

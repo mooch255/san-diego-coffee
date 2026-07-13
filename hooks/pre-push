@@ -1,0 +1,22 @@
+#!/bin/sh
+# Pre-push hook — blocks a push when cross-file data integrity checks fail.
+#
+# Version-controlled hook. Activate once per clone with:
+#   git config core.hooksPath hooks
+#
+# validate-data.js is a pure local Node script (no network, no API keys, no
+# writes). WARN-level findings print but do not block; only ERRORs block.
+# To override in an emergency: git push --no-verify
+
+echo "🔎 Running data integrity checks (validate-data.js) before push..."
+node validate-data.js
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo ""
+  echo "⛔ Push blocked: validate-data.js reported errors above."
+  echo "   Fix them, or override with: git push --no-verify"
+  exit 1
+fi
+
+exit 0

@@ -45,7 +45,7 @@
         }
         if (slug) {
           var name = slug.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
-          document.title = name + ' — Specialty Coffee in San Diego';
+          document.title = name + ' | Specialty Coffee in San Diego';
           var d = document.querySelector('meta[name="description"]');
           if (d) d.content = name + ' is a specialty coffee shop or roaster in San Diego. View hours, roast profile, and neighborhood details.';
           // Only set canonical for slug URLs — loc_XXX IDs need locations.js to resolve, handled by deferred JS
@@ -1556,6 +1556,14 @@
             .nearby-grid { grid-template-columns: repeat(2, 1fr); }
             .nearby-section { padding: 0 1rem; }
         }
+        /* ── Explore More (internal links) ─────────────────── */
+        .related-section { max-width: 1100px; margin: 1.5rem auto 0; padding: 0 2rem; }
+        .related-inner { border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; }
+        .related-section h2 { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--espresso); margin-bottom: 0.75rem; }
+        .related-links { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+        .related-links a { color: var(--accent-red); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+        .related-links a:hover { text-decoration: underline; }
+        @media (max-width: 600px) { .related-section { padding: 0 1rem; } }
     </style>
 </head>
 <body>
@@ -1831,8 +1839,8 @@
                 const locType   = location.basicInfo.type;
                 const hood      = location.coffeeDetails?.neighborhood || location.basicInfo.address?.city || '';
                 const typeLabel = locType === 'roaster' ? 'Coffee Roaster' : 'Coffee Shop';
-                const hoodSuffix = hood ? ` in ${hood}, San Diego` : ' in San Diego';
-                const pageTitle = `${location.basicInfo.name} — ${typeLabel}${hoodSuffix}`;
+                const hoodSuffix = (hood && hood !== 'San Diego') ? ` in ${hood}, San Diego` : ' in San Diego';
+                const pageTitle = `${location.basicInfo.name} | ${typeLabel}${hoodSuffix}`;
 
                 function buildMetaDesc(loc) {
                     const cd = loc.coffeeDetails || {};
@@ -2017,7 +2025,7 @@
                 <div class="highlight-callout">
                     <div class="highlight-callout-label">📝 From the Blog</div>
                     <div class="highlight-callout-text">${p.excerpt}</div>
-                    <a href="/blog-post.html?id=${p.id}" class="highlight-callout-link">Read the Post →</a>
+                    <a href="/blog/${p.id.replace(/^blog_/, '')}" class="highlight-callout-link">Read the Post →</a>
                 </div>
             `).join('');
         }
@@ -2132,6 +2140,7 @@
                     </div>
                 </div>
                 ${renderNearby(loc)}
+                ${renderRelatedLinks(loc)}
                 ${renderMapEmbed(placeId)}
             `;
 
@@ -2627,6 +2636,26 @@
             return `<div class="action-strip">${html}</div>`;
         }
 
+        // Internal links to the neighborhood landing page + flagship hub, so link
+        // equity flows toward the discovery pages we want to rank (Tier 4). Mirrors
+        // the server-rendered related links in netlify/edge-functions/og-meta.js.
+        function renderRelatedLinks(loc) {
+            const hood = (loc.coffeeDetails && loc.coffeeDetails.neighborhood) || '';
+            const links = [];
+            const nb = (window.NEIGHBORHOODS || []).find(n => n.name === hood);
+            if (nb) links.push(`<a href="/neighborhoods/${nb.id}">Best coffee in ${hood}</a>`);
+            links.push('<a href="/guides/best-coffee-san-diego">Best Coffee in San Diego guide</a>');
+            links.push('<a href="/map.html">Explore the San Diego coffee map</a>');
+            return `
+                <div class="related-section">
+                    <div class="related-inner">
+                        <h2>Explore more San Diego coffee</h2>
+                        <ul class="related-links">${links.map(l => `<li>${l}</li>`).join('')}</ul>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderMapEmbed(placeId) {
             if (!placeId) return '';
             return `
@@ -2672,7 +2701,7 @@
         function _lbShow() {
             const img = document.getElementById('lightboxImg');
             img.src = _lbImgs[_lbIdx];
-            img.alt = document.title.split(' —')[0];
+            img.alt = document.title.split(' | ')[0];
             document.getElementById('lightboxPrev').hidden = _lbIdx === 0;
             document.getElementById('lightboxNext').hidden = _lbIdx === _lbImgs.length - 1;
             const counter = document.getElementById('lightboxCounter');

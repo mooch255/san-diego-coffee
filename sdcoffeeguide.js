@@ -3,6 +3,12 @@
 // reviewExcerpt: short 3-4 sentence summary of the Instagram review caption. Optional.
 // To add a new spot: append a new key with the loc_XXX id and ratings.
 window.SDCG_RATINGS = {
+  'loc_201': {
+    cortadoRating: 8.6,
+    signatureDrinkName: 'Iced Jack Johnson Latte',
+    signatureDrinkRating: 8.7,
+    reviewExcerpt: "This design-forward North Park cafe opened in 2024 and is quietly stepping into roasting, with small-batch single origins that carry the same clean, dialed-in approach as the drink menu. They're best known for their matcha, but you'll also find rotating single-origin offerings on espresso. The beans aren't online yet, so a visit to the shop is the only way to take a bag home. A polished, thoughtful spot that punches above its low-key vibe."
+  },
   'loc_225': {
     cortadoRating: 8.7,
     signatureDrinkName: 'Iced Bon Bon Latte',

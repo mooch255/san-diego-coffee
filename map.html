@@ -43,23 +43,81 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Lora:wght@400;600&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap"></noscript>
+    <!-- Lora was requested here but never referenced by any rule — dropped 2026-07-15.
+         Only Libre Franklin (UI) and Playfair Display (brand/serif) are used. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,500&display=swap"></noscript>
     
     <style>
         :root {
             --espresso: #3D2817;
             --coffee-brown: #6B4E3D;
             --cream: #F8F5F0;
+            --warm-white: #FDFBF7;
             --white: #FFFFFF;
             --latte: #C4A77D;
             --accent-red: #B85C38;
             --warm-brown: #5C4033;
-            --light-tan: #E8DED2;
-            --text-secondary: #6B5E52;
-            --border-subtle: #E8DED2;
-            --section-pad: 5rem;
+
+            /* Text greys. Both clear WCAG AA (4.5:1) against every background on
+               this page — including the tinted card variants AND their hover
+               states (#fdeaea / #fdf0e0), which is what makes --text-muted this
+               dark. Nothing lighter than --text-muted may carry text. */
+            --text-secondary: #6B5E52;  /* worst 5.34:1 (autocomplete highlight) */
+            --text-muted: #74695e;      /* worst 4.58:1 (featured-card hover) */
+
+            /* Ink variants. The plain --accent-red / --sdcg-orange are for
+               borders, fills, and markers, where contrast rules don't apply.
+               Text must use the -ink variants: the base colours fail on the
+               tinted card backgrounds (4.21:1 and 2.91:1 respectively). */
+            --accent-red-ink: #9E4426;  /* worst 5.41:1 */
+            --sdcg-orange: #E8720C;     /* SDCoffeeGuide brand orange — non-text */
+            --sdcg-ink: #9A4B08;        /* worst 5.29:1 */
+
+            --border-subtle: #E0DBD3;
+            --border-strong: #C4B8AC;
+
+            /* Semantic z-index scale, low to high. Nothing here needs to exceed
+               --z-tooltip; if something seems to, it's a stacking-context bug. */
+            --z-map-overlay: 5;
+            --z-sticky: 10;
+            --z-panel-controls: 60;
+            --z-dropdown: 100;
+            --z-loading: 200;
+            --z-sheet: 300;
+            --z-header: 400;
+            --z-panel-overlay: 400;
+            --z-float: 500;
+            --z-backdrop: 600;
+            --z-drawer: 700;
+            --z-tooltip: 800;
+        }
+
+        /* Focus ring — one rule for every interactive element on the page.
+           Never replace this with `outline: none` + a border-colour change;
+           border colour alone is invisible to many low-vision users. */
+        :focus-visible {
+            outline: 2px solid var(--accent-red);
+            outline-offset: 2px;
+        }
+
+        /* Motion is opt-out. Every transition/animation above has a resting
+           state that is already correct, so collapsing durations is safe. */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .location-card:hover { transform: none; }
+            .nav-social .nav-social-icon:hover { transform: none; }
+            .spinner {
+                animation: none;
+                border-top-color: var(--coffee-brown);
+                opacity: 0.6;
+            }
         }
 
         /* Reset and Base Styles */
@@ -67,6 +125,21 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        /* Available to screen readers and keyboard focus order, not to sighted
+           users. Used for the page h1/h2 — the map IS the visual heading. */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            white-space: nowrap;
+            border: 0;
         }
 
         body {
@@ -87,7 +160,7 @@
             justify-content: space-between;
             padding: 0 1.25rem;
             position: relative;
-            z-index: 10100;
+            z-index: var(--z-header);
             flex-shrink: 0;
         }
 
@@ -122,7 +195,7 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             border-radius: 0;
-            transition: all 0.2s;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
             white-space: nowrap;
         }
 
@@ -139,7 +212,7 @@
             position: fixed;
             inset: 0;
             background: rgba(20, 10, 4, 0.55);
-            z-index: 10498;
+            z-index: var(--z-backdrop);
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.32s ease, visibility 0s linear 0.32s;
@@ -163,7 +236,7 @@
             max-width: 300px;
             background: linear-gradient(160deg, #241308 0%, #1A0D06 100%);
             border-left: 1px solid rgba(196,167,125,0.18);
-            z-index: 10500;
+            z-index: var(--z-drawer);
             transform: translateX(100%);
             visibility: hidden;
             transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
@@ -196,7 +269,7 @@
             font-weight: 700;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: rgba(196,167,125,0.45);
+            color: rgba(196,167,125,0.75);
         }
 
         .nav-drawer-close {
@@ -207,7 +280,9 @@
             font-size: 1rem;
             line-height: 1;
             padding: 0.35rem 0.65rem;
-            transition: all 0.18s;
+            min-width: 44px;
+            min-height: 44px;
+            transition: border-color 0.18s, color 0.18s, background 0.18s;
             font-family: inherit;
         }
 
@@ -241,8 +316,7 @@
 
         .nav-dropdown a.active {
             color: var(--latte);
-            border-left: 3px solid var(--accent-red);
-            padding-left: calc(1.5rem - 3px);
+            background: rgba(184, 92, 56, 0.16);
         }
 
         .nav-dropdown > a:last-of-type { border-bottom: none; }
@@ -286,19 +360,6 @@
             padding-left: 0;
         }
 
-        /* Controls Bar - Compact */
-        .controls-bar {
-            background: var(--white);
-            padding: 1.25rem 2rem;
-            border-bottom: 1px solid #E0DBD3;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
         .search-container {
             flex: 1;
             min-width: 500px;
@@ -312,7 +373,7 @@
             border-radius: 0;
             font-size: 1rem;
             background: var(--white);
-            transition: all 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
             font-family: 'Libre Franklin', sans-serif;
         }
 
@@ -333,7 +394,7 @@
             border-top: none;
             max-height: 350px;
             overflow-y: auto;
-            z-index: 1000;
+            z-index: var(--z-dropdown);
             display: none;
         }
 
@@ -411,11 +472,6 @@
             color: #7B4F9E;
         }
 
-        .autocomplete-new {
-            border-left: 4px solid #2e7d32;
-            background: #f1f8f4;
-        }
-
         #clearBtn {
             padding: 0.6rem 1.2rem;
             background: #6F4E37;
@@ -448,7 +504,7 @@
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
             white-space: nowrap;
             font-family: 'Libre Franklin', sans-serif;
             text-transform: uppercase;
@@ -465,9 +521,8 @@
             color: var(--coffee-brown);
         }
 
-        #openNowBtn {
-            min-width: 6.5rem;
-        }
+        /* Width now comes from the .button-row flex basis; a hard min-width here
+           was what pushed the row past the panel edge at narrow widths. */
 
         .toggle-filters-btn:hover {
             background: var(--cream);
@@ -518,13 +573,14 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: #b0a090;
+            color: var(--text-muted);
             flex-shrink: 0;
             margin: 0;
         }
         .amenity-toggles { display: flex; flex-wrap: wrap; gap: 0.45rem; }
         .amenity-toggle {
             padding: 0.35rem 0.9rem;
+            min-height: 32px;
             font-size: 0.74rem;
             font-weight: 600;
             font-family: 'Libre Franklin', sans-serif;
@@ -541,12 +597,13 @@
             .featured-toggles .amenity-toggle { font-size: 0.65rem; padding: 0.25rem 0.6rem; }
         }
 
+
         .filters-section h3 {
             font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: #b0a090;
+            color: var(--text-muted);
             margin-bottom: 0.55rem;
         }
 
@@ -562,13 +619,14 @@
             justify-content: space-between;
             gap: 0.4rem;
             padding: 0.35rem 0.8rem;
+            min-height: 32px;
             font-size: 0.74rem;
             font-weight: 600;
             font-family: 'Libre Franklin', sans-serif;
             border: 1.5px solid #d4c6ba;
             border-radius: 999px;
             background: #f7f2ed;
-            color: #9a8070;
+            color: var(--text-secondary);
             cursor: pointer;
             transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
             text-align: left;
@@ -584,19 +642,19 @@
             color: #2e7d32;
             border-color: #a5d6a7;
         }
-        .type-pill--roaster.active .filter-count { color: #66bb6a; opacity: 1; }
+        .type-pill--roaster.active .filter-count { color: inherit; opacity: 1; }
         .type-pill--cafe.active {
             background: #e3f2fd;
             color: #1565c0;
             border-color: #90caf9;
         }
-        .type-pill--cafe.active .filter-count { color: #64b5f6; opacity: 1; }
+        .type-pill--cafe.active .filter-count { color: inherit; opacity: 1; }
         .type-pill--online.active {
             background: #f3e8fd;
             color: #7B4F9E;
             border-color: #ce93d8;
         }
-        .type-pill--online.active .filter-count { color: #ba68c8; opacity: 1; }
+        .type-pill--online.active .filter-count { color: inherit; opacity: 1; }
         .type-pill:not(.active):hover {
             background: #fdf3eb;
             border-color: #a07860;
@@ -620,7 +678,7 @@
         }
 
         .filter-count {
-            color: #999;
+            color: var(--text-muted);
             font-size: 0.85rem;
             margin-left: 0.25rem;
             font-weight: 400;
@@ -657,6 +715,15 @@
             padding: 0;
             line-height: 1;
             margin-left: 2px;
+            position: relative;
+        }
+        /* The glyph stays 14px so the chip keeps its shape; the touch target is
+           expanded invisibly to ~34px. Don't replace this with padding — that
+           would reflow the chip row. */
+        .filter-chip-remove::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
         }
         .filter-chip-remove:hover { color: #c0392b; }
 
@@ -719,24 +786,6 @@
             cursor: not-allowed;
         }
 
-        .roaster-badge, .cafe-badge {
-            padding: 4px 10px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .roaster-badge {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .cafe-badge {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-
         /* Split Layout */
         .map-layout {
             display: flex;
@@ -746,8 +795,13 @@
 
         /* Left Panel */
         .list-panel {
-            width: 460px;
-            min-width: 400px;
+            /* Fluid between the 769px breakpoint and desktop. A fixed 460px left
+               the map at 322px on an ~800px tablet — narrower than this list, on
+               a page whose point is the map. Floors at 320px, and still resolves
+               to the full 460px at >=1438px, so desktop is unchanged.
+               The <=768px sheet layout overrides both values below. */
+            width: clamp(320px, 32vw, 460px);
+            min-width: 320px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -789,6 +843,10 @@
         .list-panel-controls .button-row {
             display: flex;
             gap: 0.4rem;
+            /* Wraps rather than clipping. The panel is fluid down to 320px, where
+               three uppercase buttons need ~324px but only get ~293px; Open Now
+               drops to its own full-width row instead of running off the edge. */
+            flex-wrap: wrap;
         }
 
         .list-panel-controls button {
@@ -796,8 +854,11 @@
             font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            flex: 1;
+            /* Non-zero basis is what makes the row wrap — with `flex: 1` (basis 0)
+               the buttons would always "fit" and overflow their own text instead. */
+            flex: 1 1 6.5rem;
             border-radius: 6px;
+            min-height: 32px;
         }
 
         /* Active filter dot indicator */
@@ -830,15 +891,16 @@
         .sort-btn {
             flex: 1;
             padding: 0.28rem 0.4rem;
+            min-height: 32px;
             font-size: 0.68rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             background: var(--white);
-            color: #999;
+            color: var(--text-muted);
             border: none;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: background 0.15s, color 0.15s;
             font-family: 'Libre Franklin', sans-serif;
         }
         .sort-btn + .sort-btn {
@@ -868,7 +930,7 @@
         .list-panel-header {
             padding: 0.5rem 1rem;
             font-size: 0.75rem;
-            color: #888;
+            color: var(--text-secondary);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -894,6 +956,30 @@
             transition: background 0.15s, transform 0.18s ease, box-shadow 0.18s ease;
             text-decoration: none;
             color: inherit;
+            position: relative;
+        }
+
+        /* The card is a real link, via a stretched overlay rather than a wrapping
+           <a>. The card body carries its own links (partner shop), and an <a>
+           inside an <a> is invalid — the parser un-nests it and the layout breaks.
+           This keeps keyboard access, middle-click, and open-in-new-tab. */
+        .location-card-link {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .location-card-link:focus-visible {
+            outline: 2px solid var(--accent-red);
+            outline-offset: -2px;
+        }
+
+        /* Anything interactive inside the card must sit above the stretched link. */
+        .location-card .card-shop-link {
+            position: relative;
+            z-index: 2;
         }
 
         .location-card:hover {
@@ -1045,18 +1131,18 @@
 
         .card-detail-line {
             font-size: 0.72rem;
-            color: #8a7060;
+            color: var(--text-muted);
             margin-bottom: 0.2rem;
             line-height: 1.3;
         }
         .card-description {
-            color: #aaa;
+            color: var(--text-muted);
             font-style: italic;
             margin-top: 0.15rem;
         }
         .location-card-desc {
             font-size: 0.72rem;
-            color: #777;
+            color: var(--text-secondary);
             line-height: 1.4;
             overflow: hidden;
             display: -webkit-box;
@@ -1077,7 +1163,7 @@
             font-family: 'Libre Franklin', sans-serif;
             color: #555;
             box-shadow: 0 1px 6px rgba(0,0,0,0.15);
-            z-index: 5;
+            z-index: var(--z-map-overlay);
             pointer-events: none;
             display: flex;
             flex-direction: column;
@@ -1147,25 +1233,6 @@
             height: 100%;
         }
 
-        /* Mobile toggle */
-        .mobile-toggle {
-            display: none;
-            position: fixed;
-            bottom: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10200;
-            background: var(--espresso);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 50px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            cursor: pointer;
-            white-space: nowrap;
-        }
         /* Filters panel inside left panel */
         #filtersPanel {
             background: var(--white);
@@ -1185,7 +1252,7 @@
         #filtersPanel.overlay-open {
             position: fixed;
             left: auto;
-            z-index: 10100;
+            z-index: var(--z-panel-overlay);
             border-bottom: 2px solid #c4b8ac;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
             max-height: 50vh;
@@ -1196,7 +1263,7 @@
         @media (max-width: 768px) {
             .list-panel-controls {
                 position: relative;
-                z-index: 60;
+                z-index: var(--z-panel-controls);
             }
             #filtersPanel.overlay-open {
                 left: 0;
@@ -1311,7 +1378,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: #b0a090;
+            color: var(--text-muted);
             margin: 0 0 0.5rem;
         }
 
@@ -1327,7 +1394,7 @@
         .filter-label input { cursor: pointer; }
 
         .filter-count {
-            color: #aaa;
+            color: var(--text-muted);
             font-size: 0.75rem;
         }
 
@@ -1342,7 +1409,7 @@
             padding: 2rem 2.5rem;
             border-radius: 8px;
             box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-            z-index: 1000;
+            z-index: var(--z-loading);
         }
 
         #loading.hidden { display: none; }
@@ -1360,6 +1427,31 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Geolocation failures used to fire a native alert(). Inline status
+           instead: same information, no modal, and positioned so the mobile
+           bottom sheet can't hide it. */
+        .location-toast {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+            z-index: var(--z-tooltip);
+            background: var(--espresso);
+            color: var(--cream);
+            font-family: 'Libre Franklin', sans-serif;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            max-width: min(28rem, calc(100vw - 2rem));
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            /* Clear the peeking sheet (98px) and the float buttons above it. */
+            .location-toast { bottom: calc(98px + 3.75rem + env(safe-area-inset-bottom, 0px)); }
         }
 
         /* Floating Near Me button — mobile only, floats above the bottom sheet */
@@ -1381,7 +1473,7 @@
                 /* Sit above the peeking sheet edge (peek = 98px) */
                 bottom: calc(98px + 0.75rem + env(safe-area-inset-bottom, 0px));
                 right: 1rem;
-                z-index: 10200;
+                z-index: var(--z-float);
                 width: 44px;
                 height: 44px;
                 border-radius: 50px;
@@ -1411,7 +1503,7 @@
                 position: fixed;
                 bottom: calc(98px + 0.75rem + env(safe-area-inset-bottom, 0px));
                 left: 1rem;
-                z-index: 10200;
+                z-index: var(--z-float);
                 height: 36px;
                 padding: 0 0.75rem;
                 border-radius: 50px;
@@ -1436,37 +1528,7 @@
                 display: none;
             }
         }
-        footer {
-            background:
-                repeating-linear-gradient(
-                    0deg,
-                    transparent, transparent 39px,
-                    rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px
-                ),
-                linear-gradient(160deg, #2A1508 0%, #4A2C18 45%, #2A1508 100%);
-            padding: 0.7rem 1.5rem;
-            text-align: center;
-            font-size: 0.78rem;
-            color: rgba(196,167,125,0.7);
-            border-top: 3px solid var(--accent-red);
-            position: relative;
-            z-index: 10;
-        }
-
-        footer a {
-            color: var(--latte);
-            text-decoration: none;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(196,167,125,0.2);
-        }
-
-        footer a:hover {
-            color: #EDE0CC;
-            border-bottom-color: var(--latte);
-            text-decoration: none;
-        }
-
-        #visibleCount { font-weight: 600; color: var(--latte); }
+        #visibleCount { font-weight: 600; color: var(--espresso); }
 
         @keyframes countFlash {
             0%   { opacity: 0.5; transform: scale(1.15); }
@@ -1494,7 +1556,7 @@
                 bottom: 0;
                 left: 0;
                 top: auto;
-                z-index: 10000;
+                z-index: var(--z-sheet);
                 /* Peek state: only handle pill + search input visible */
                 transform: translateY(calc(100% - 98px));
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1585,11 +1647,6 @@
             background: #e8f5e9;
             color: #2e7d32;
             border: 1px solid #c8e6c9;
-        }
-        .info-window-badge.no {
-            background: #fafafa;
-            color: #999;
-            border: 1px solid #e0e0e0;
         }
         .info-window-badges-row {
             display: flex;
@@ -1732,9 +1789,28 @@
             }
         }
 
+        /* ── Touch targets ──────────────────────────────────────────────
+           Desktop keeps the compact 32px form (pointer precision, still over
+           the 24px WCAG 2.5.8 floor); touch gets the full 44px. Only the hit
+           area grows — font sizes are deliberately unchanged.
+
+           This block MUST stay last in the stylesheet. Media queries add no
+           specificity, so the base `min-height: 32px` rules (declared further
+           up) would otherwise win on mobile by source order. */
+        @media (max-width: 768px) {
+            .list-panel-controls button,
+            .sort-btn,
+            .amenity-toggle,
+            .type-pill {
+                min-height: 44px;
+            }
+        }
+
     </style>
 </head>
 <body>
+    <!-- The map is the visual heading; screen readers still need a real h1. -->
+    <h1 class="visually-hidden">San Diego Specialty Coffee Map — Roasters &amp; Cafes</h1>
     <!-- Slim Header -->
     <header>
         <a href="index.html" class="header-brand"><em>San Diego</em> <strong>Specialty Coffee</strong></a>
@@ -1749,7 +1825,7 @@
             <button class="nav-drawer-close" id="navDrawerClose" aria-label="Close navigation">✕</button>
         </div>
         <a href="index.html">Home</a>
-        <a href="map.html" class="active">Explore Map</a>
+        <a href="map.html" class="active" aria-current="page">Explore Map</a>
         <a href="submit.html">Add a Spot</a>
         <a href="roaster-highlights.html">Roaster Stories</a>
         <a href="blog.html">Blog</a>
@@ -1777,18 +1853,23 @@
             <!-- Search + Controls -->
             <div class="list-panel-controls">
                 <div class="search-container">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
+                    <label for="searchInput" class="visually-hidden">Search coffee locations by name or zip code</label>
+                    <input
+                        type="text"
+                        id="searchInput"
                         placeholder="Search by name or zip code..."
                         autocomplete="off"
+                        role="combobox"
+                        aria-expanded="false"
+                        aria-controls="autocompleteDropdown"
+                        aria-autocomplete="list"
                     >
-                    <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
+                    <div id="autocompleteDropdown" class="autocomplete-dropdown" role="listbox" aria-label="Search suggestions"></div>
                 </div>
                 <div class="button-row">
-                    <button id="toggleFilters" class="toggle-filters-btn" id="toggleFiltersBtn">⚙️ Filters<span class="filter-dot"></span></button>
+                    <button id="toggleFilters" class="toggle-filters-btn" aria-expanded="false" aria-controls="filtersPanel">⚙️ Filters<span class="filter-dot"></span></button>
                     <button id="clearBtn" style="background: var(--white); color: var(--coffee-brown); border-color: var(--coffee-brown);">✕ Clear</button>
-                    <button id="openNowBtn" class="toggle-filters-btn">🕐 Open Now</button>
+                    <button id="openNowBtn" class="toggle-filters-btn" aria-pressed="false">🕐 Open Now</button>
                 </div>
                 <!-- Hidden anchor for geolocation — triggered by sort toggle and float button -->
                 <button id="showMyLocation" style="display:none;" aria-hidden="true"></button>
@@ -1804,9 +1885,9 @@
                         <input type="checkbox" id="filterCafes" checked style="display:none">
                         <input type="checkbox" id="filterOnlineOnly" checked style="display:none">
                         <div class="type-toggle-pills">
-                            <button class="type-pill type-pill--roaster active" data-filter="filterRoasters">📍 Roasters<span class="filter-count" id="count-roasters"></span></button>
-                            <button class="type-pill type-pill--cafe active" data-filter="filterCafes">☕ Cafes<span class="filter-count" id="count-cafes"></span></button>
-                            <button class="type-pill type-pill--online active" data-filter="filterOnlineOnly">🌐 Online Only<span class="filter-count" id="count-online"></span></button>
+                            <button class="type-pill type-pill--roaster active" data-filter="filterRoasters" aria-pressed="true">📍 Roasters<span class="filter-count" id="count-roasters"></span></button>
+                            <button class="type-pill type-pill--cafe active" data-filter="filterCafes" aria-pressed="true">☕ Cafes<span class="filter-count" id="count-cafes"></span></button>
+                            <button class="type-pill type-pill--online active" data-filter="filterOnlineOnly" aria-pressed="true">🌐 Online Only<span class="filter-count" id="count-online"></span></button>
                         </div>
                     </div>
                     <div class="filters-right">
@@ -1839,18 +1920,18 @@
                 <div class="filters-amenity-row">
                     <h3>Amenities</h3>
                     <div class="amenity-toggles">
-                        <button class="amenity-toggle" data-amenity="wifi">💻 WiFi</button>
-                        <button class="amenity-toggle" data-amenity="dog">🐾 Dog Friendly</button>
-                        <button class="amenity-toggle" data-amenity="pourover">🫖 Pour Over</button>
-                        <button class="amenity-toggle" data-amenity="espresso">☕ Espresso Options</button>
-                        <button class="amenity-toggle" data-amenity="food">🥐 Food / Pastries</button>
+                        <button class="amenity-toggle" data-amenity="wifi" aria-pressed="false">💻 WiFi</button>
+                        <button class="amenity-toggle" data-amenity="dog" aria-pressed="false">🐾 Dog Friendly</button>
+                        <button class="amenity-toggle" data-amenity="pourover" aria-pressed="false">🫖 Pour Over</button>
+                        <button class="amenity-toggle" data-amenity="espresso" aria-pressed="false">☕ Espresso Options</button>
+                        <button class="amenity-toggle" data-amenity="food" aria-pressed="false">🥐 Food / Pastries</button>
                     </div>
                 </div>
                 <div class="filters-amenity-row" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-bottom: 1.1rem;">
                     <h3>Featured</h3>
                     <div class="amenity-toggles featured-toggles">
-                        <button class="amenity-toggle" data-amenity="highlight">⭐ Roaster Highlight</button>
-                        <button class="amenity-toggle" data-amenity="sdguide">📸 SDCoffeeGuide Review</button>
+                        <button class="amenity-toggle" data-amenity="highlight" aria-pressed="false">⭐ Roaster Highlight</button>
+                        <button class="amenity-toggle" data-amenity="sdguide" aria-pressed="false">📸 SDCoffeeGuide Review</button>
                     </div>
                 </div>
                 <div class="filters-see-results-row">
@@ -1862,14 +1943,15 @@
             <div id="activeFilterChips" class="active-filter-chips"></div>
 
             <!-- Count header -->
+            <h2 class="visually-hidden">Coffee locations in view</h2>
             <div class="list-panel-header">
-                <span><span id="visibleCount">—</span><span id="visibleCountLabel">&thinsp;locations in view</span>
+                <span role="status" aria-live="polite"><span id="visibleCount">—</span><span id="visibleCountLabel">&thinsp;locations in view</span>
                 <span id="zoomNudge" style="display:none; font-size:0.68rem; color:var(--latte); font-style:italic; font-weight:400; text-transform:none; letter-spacing:0;">zoom out for more</span></span>
                 <div class="sort-toggle" style="margin-top:0; flex-shrink:0;">
                     <button class="sort-btn active" id="sortAZ" onclick="setSort('az')">A–Z</button>
                     <button class="sort-btn" id="sortNearest" onclick="setSort('nearest')">📍 Nearest</button>
                 </div>
-                <div id="locationHint" style="font-size:0.7rem; color:#aaa; margin-top:0.25rem; display:none; position:absolute; right:1rem; top:100%; background:var(--cream); padding:0.2rem 0.5rem; border:1px solid #e0dbd3; border-radius:3px; white-space:nowrap; z-index:10;">Tap Nearest to enable location</div>
+                <div id="locationHint" style="font-size:0.7rem; color:var(--text-secondary); margin-top:0.25rem; display:none; position:absolute; right:1rem; top:100%; background:var(--cream); padding:0.2rem 0.5rem; border:1px solid #e0dbd3; border-radius:3px; white-space:nowrap; z-index:var(--z-sticky);">Tap Nearest to enable location</div>
             </div>
 
             <!-- Scrollable Cards -->
@@ -1965,6 +2047,35 @@ function loadSheetData() {
 }
 let autocompleteIndex = -1;
 
+// Autocomplete open/close. aria-expanded + aria-activedescendant must track the
+// visual state or screen readers announce nothing as the user arrows through
+// results, so route every open/close through here instead of toggling .show.
+function setAutocompleteOpen(open) {
+    const dropdown = document.getElementById('autocompleteDropdown');
+    const input = document.getElementById('searchInput');
+    if (!dropdown || !input) return;
+    dropdown.classList.toggle('show', open);
+    input.setAttribute('aria-expanded', String(open));
+    if (!open) {
+        input.removeAttribute('aria-activedescendant');
+        autocompleteIndex = -1;
+    }
+}
+
+// Reflect arrow-key selection to assistive tech as well as to the eye.
+function setAutocompleteActive(items, idx) {
+    const input = document.getElementById('searchInput');
+    items.forEach((item, i) => {
+        const on = i === idx;
+        item.classList.toggle('selected', on);
+        item.setAttribute('aria-selected', String(on));
+    });
+    if (input) {
+        if (idx >= 0 && items[idx]) input.setAttribute('aria-activedescendant', items[idx].id);
+        else input.removeAttribute('aria-activedescendant');
+    }
+}
+
 // ── Map load watchdog ───────────────────────────────────────────────────────
 // initMap only ever runs as the Google Maps API callback. If that script never
 // loads, or initMap throws partway through, nothing hides #loading and the user
@@ -1978,7 +2089,7 @@ function showMapLoadError(message) {
     el.classList.remove('hidden');
     el.innerHTML = `
         <h3 style="margin: 0 0 0.5rem; font-family: 'Playfair Display', Georgia, serif;">Map didn't load</h3>
-        <p style="margin: 0 0 1.25rem; color: var(--warm-gray, #6B5D52); max-width: 22rem;">${message}</p>
+        <p style="margin: 0 0 1.25rem; color: var(--text-secondary); max-width: 22rem;">${message}</p>
         <button onclick="location.reload()" style="background: var(--coffee-brown, #6F4E37); color: var(--white, #fff); border: 0; padding: 0.6rem 1.4rem; border-radius: 4px; font: inherit; cursor: pointer;">Reload the map</button>
         <p style="margin: 1.25rem 0 0; font-size: 0.85rem;"><a href="index.html" style="color: var(--coffee-brown, #6F4E37);">Back to the homepage</a></p>
     `;
@@ -2322,7 +2433,23 @@ function slugify(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+// Memoised: computeLocationSlug() filters all ~200 locations on every call, and
+// renderCard now needs a slug per card on every re-render.
+// Lazily initialised behind a hoisted `var` on purpose — the highlightByLocation
+// lookup at the top of this script calls locationSlug() while the file is still
+// parsing, which is before a `const` declared here would leave its temporal dead
+// zone. A const/let cache here throws ReferenceError and kills the whole script.
+var _slugCache;
 function locationSlug(loc) {
+    if (!_slugCache) _slugCache = new Map();
+    if (_slugCache.has(loc.id)) return _slugCache.get(loc.id);
+    const slug = computeLocationSlug(loc);
+    _slugCache.set(loc.id, slug);
+    return slug;
+}
+
+// Keep in sync with locationSlug() in location.html and og-meta.js — see CLAUDE.md.
+function computeLocationSlug(loc) {
     const base = slugify(loc.basicInfo.name);
     const allLocs = window.COFFEE_LOCATIONS || [];
     const dupes = allLocs.filter(l => slugify(l.basicInfo.name) === base);
@@ -2372,7 +2499,7 @@ function createInfoWindowContent(location, custom) {
     if (todayHours) line2Parts.push(`<span>🕐 ${todayHours}</span>`);
     if (contact.website) line2Parts.push(`<a href="${contact.website}" target="_blank" style="color:#5a8fc2; text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">🌐 Website</a>`);
     if (line2Parts.length) {
-        html += `<div class="info-window-section" style="font-size:0.72rem; color:#777; margin-bottom:0.25rem;">${line2Parts.join(' <span style="color:#ddd; margin:0 0.3rem;">·</span> ')}</div>`;
+        html += `<div class="info-window-section" style="font-size:0.72rem; color:var(--text-secondary); margin-bottom:0.25rem;">${line2Parts.join(' <span style="color:#ddd; margin:0 0.3rem;">·</span> ')}</div>`;
     }
 
     // Line 3: like button + community counts
@@ -2447,7 +2574,7 @@ function createInfoWindowContent(location, custom) {
     // ── Highlight badge ────────────────────────────────────────────────
     if (highlightByLocation[location.id]) {
         const hl = highlightByLocation[location.id];
-        html += `<div style="margin-top:0.5rem;padding:0.5rem 0.6rem;background:#fff8f0;border:1px solid #e8d5c0;border-left:3px solid #8B1A1A;border-radius:4px;font-size:0.72rem;">`;
+        html += `<div style="margin-top:0.5rem;padding:0.5rem 0.6rem;background:#fff8f0;border:1px solid #d9b9a0;border-radius:4px;font-size:0.72rem;">`;
         html += `<span style="font-weight:700;color:#8B1A1A;text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">🎙️ Roaster Deep Dive &nbsp;·&nbsp;</span><a href="/highlight.html?id=${hl.id}&from=map" style="color:#8B1A1A;font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Read the Interview →</a>`;
         html += `</div>`;
     }
@@ -2455,8 +2582,8 @@ function createInfoWindowContent(location, custom) {
     // ── SDCoffeeGuide Review badge ─────────────────────────────────────
     if (location.coffeeDetails?.instagramReviewUrl) {
         const locSlugIg = slugify(location.basicInfo.name);
-        html += `<div style="margin-top:0.5rem;padding:0.4rem 0.6rem;background:#fff3e8;border:1px solid #f0d0a0;border-left:3px solid #E8720C;border-radius:4px;font-size:0.72rem;">`;
-        html += `<span style="font-weight:700;color:#E8720C;text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">📸 SDCoffeeGuide Review &nbsp;·&nbsp;</span><a href="/locations/${locationSlug(location)}#sdcoffeeguide" style="color:#E8720C;font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See Details</a>`;
+        html += `<div style="margin-top:0.5rem;padding:0.4rem 0.6rem;background:#fff3e8;border:1px solid #e6b478;border-radius:4px;font-size:0.72rem;">`;
+        html += `<span style="font-weight:700;color:var(--sdcg-ink);text-transform:uppercase;letter-spacing:0.06em;font-size:0.65rem;">📸 SDCoffeeGuide Review &nbsp;·&nbsp;</span><a href="/locations/${locationSlug(location)}#sdcoffeeguide" style="color:var(--sdcg-ink);font-weight:600;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">See Details</a>`;
         html += `</div>`;
     }
 
@@ -2496,7 +2623,7 @@ function setupAutocomplete() {
         clearTimeout(searchTimeout);
 
         if (query.length < 2) {
-            dropdown.classList.remove('show');
+            setAutocompleteOpen(false);
             if (!query && window.renderActiveFilterChips) renderActiveFilterChips();
             return;
         }
@@ -2527,13 +2654,13 @@ function setupAutocomplete() {
         const matches = [...nameMatches, ...addressMatches].slice(0, 8);
         
         if (matches.length === 0) {
-            dropdown.classList.remove('show');
+            setAutocompleteOpen(false);
             return;
         }
         
         let html = '';
         
-        matches.forEach((loc) => {
+        matches.forEach((loc, i) => {
             const isOnlineLoc = loc.basicInfo?.onlineOnly || false;
             const typeClass = isOnlineLoc ? 'online' : loc.basicInfo.type === 'roaster' ? 'roaster' : 'cafe';
             const typeBase = isOnlineLoc ? '🌐 Online Roaster' : (loc.basicInfo.type === 'roaster' ? '📍 Roaster' : '☕ Cafe');
@@ -2544,9 +2671,9 @@ function setupAutocomplete() {
             const hasIgReview = !!loc.coffeeDetails?.instagramReviewUrl;
             const neighborhoodSpan = neighborhood ? (hasHighlight ? `<span class="ac-neighborhood"> · ${neighborhood}</span>` : ` · ${neighborhood}`) : '';
             const hlBadge = hasHighlight ? `<span style="display:inline-block;font-size:0.68rem;padding:0.15rem 0.4rem;border-radius:4px;background:#fde8e8;color:#8B1A1A;font-weight:700;white-space:nowrap;flex-shrink:0;">🎙️ <span class="ac-featured">Featured </span>Interview</span>` : '';
-            const igBadge = hasIgReview ? `<span style="display:inline-block;font-size:0.68rem;padding:0.15rem 0.4rem;border-radius:4px;background:#fff3e8;color:#E8720C;font-weight:700;white-space:nowrap;flex-shrink:0;margin-left:0.25rem;">📸 SDCoffeeGuide</span>` : '';
+            const igBadge = hasIgReview ? `<span style="display:inline-block;font-size:0.68rem;padding:0.15rem 0.4rem;border-radius:4px;background:#fff3e8;color:var(--sdcg-ink);font-weight:700;white-space:nowrap;flex-shrink:0;margin-left:0.25rem;">📸 SDCoffeeGuide</span>` : '';
             html += `
-                <div class="autocomplete-item" data-type="existing" data-id="${loc.id}" style="cursor: pointer;">
+                <div class="autocomplete-item" data-type="existing" data-id="${loc.id}" style="cursor: pointer;" role="option" id="ac-opt-${i}" aria-selected="false">
                     <span class="autocomplete-name">${loc.basicInfo.name}</span>
                     <span class="autocomplete-type ${typeClass}">${typeBase2}${neighborhoodSpan}</span>${hlBadge}${igBadge}
                 </div>`;
@@ -2555,13 +2682,13 @@ function setupAutocomplete() {
         // For zip code searches, append a "show all" prompt at the bottom
         if (isZip && matches.length > 0) {
             html += `
-                <div class="autocomplete-item autocomplete-zip-all" style="cursor:pointer; border-top: 1px solid #eee; font-style: italic; color: #666;">
+                <div class="autocomplete-item autocomplete-zip-all" style="cursor:pointer; border-top: 1px solid #eee; font-style: italic; color: var(--text-secondary);" role="option" id="ac-opt-${matches.length}" aria-selected="false">
                     <span class="autocomplete-name" style="font-size:0.85em;">Press Enter to show all locations in ${query}</span>
                 </div>`;
         }
 
         dropdown.innerHTML = html;
-        dropdown.classList.add('show');
+        setAutocompleteOpen(true);
         
         // Add click handlers
         dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
@@ -2579,11 +2706,11 @@ function setupAutocomplete() {
         if (e.key === 'ArrowDown') {
             e.preventDefault();
             autocompleteIndex = Math.min(autocompleteIndex + 1, items.length - 1);
-            items.forEach((item, i) => item.classList.toggle('selected', i === autocompleteIndex));
+            setAutocompleteActive(items, autocompleteIndex);
         } else if (e.key === 'ArrowUp') {
             e.preventDefault();
             autocompleteIndex = Math.max(autocompleteIndex - 1, 0);
-            items.forEach((item, i) => item.classList.toggle('selected', i === autocompleteIndex));
+            setAutocompleteActive(items, autocompleteIndex);
         } else if (e.key === 'Enter') {
             e.preventDefault();
             clearTimeout(searchTimeout);
@@ -2593,13 +2720,13 @@ function setupAutocomplete() {
                 if (selectedItem) selectLocation(selectedItem.getAttribute('data-id'));
             } else {
                 // No item highlighted — run full filter search (works for zip codes & names)
-                dropdown.classList.remove('show');
+                setAutocompleteOpen(false);
                 autocompleteIndex = -1;
                 performSearch();
                 if (window.renderActiveFilterChips) renderActiveFilterChips();
             }
         } else if (e.key === 'Escape') {
-            dropdown.classList.remove('show');
+            setAutocompleteOpen(false);
             autocompleteIndex = -1;
         }
     });
@@ -2607,7 +2734,7 @@ function setupAutocomplete() {
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.remove('show');
+            setAutocompleteOpen(false);
         }
     });
 }
@@ -2616,7 +2743,7 @@ function selectLocation(locationId) {
     const location = allLocations.find(loc => loc.id === locationId);
     if (!location) return;
     
-    document.getElementById('autocompleteDropdown').classList.remove('show');
+    setAutocompleteOpen(false);
     // Clear input so applyFilters doesn't keep calling performSearch on every idle event
     document.getElementById('searchInput').value = '';
 
@@ -2703,7 +2830,7 @@ function setupEventListeners() {
     // Enter key handled by keydown listener above (supports zip codes + name search)
     document.getElementById('clearBtn').addEventListener('click', () => {
         document.getElementById('searchInput').value = '';
-        document.getElementById('autocompleteDropdown').classList.remove('show');
+        setAutocompleteOpen(false);
         // Reset Open Now if active
         if (openNowActive) {
             openNowActive = false;
@@ -2712,6 +2839,7 @@ function setupEventListeners() {
                 onBtn.style.background = '';
                 onBtn.style.color = '';
                 onBtn.style.borderColor = '';
+                onBtn.setAttribute('aria-pressed', 'false');
                 onBtn.textContent = '🕐 Open Now';
             }
         }
@@ -2727,7 +2855,10 @@ function setupEventListeners() {
         const visitorFilter = document.getElementById('filterVisitorExp');
         if (visitorFilter) visitorFilter.value = '';
         activeAmenities.clear();
-        document.querySelectorAll('.amenity-toggle').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.amenity-toggle').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-pressed', 'false');
+        });
 
         // Reset nearest sort back to A-Z
         currentSort = 'az';
@@ -2744,6 +2875,11 @@ function setupEventListeners() {
         if (infoWindow) infoWindow.close();
         document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
         holdPanelForCardClick = false;
+        // Drop the pinned card. Removing .active above is not enough on its own:
+        // the applyFilters() below re-renders, and renderLocationCards re-floats
+        // the pinned card to the top, re-adds .active, and scrolls to it — which
+        // also cancels the pendingScrollTop reset. Clear means clear.
+        pinnedLocationId = null;
 
         // Show ALL markers then fit bounds.
         // suppressIdleFilter blocks idle events during the animation so the
@@ -2988,6 +3124,7 @@ function setupEventListeners() {
 
         panel.classList.toggle('expanded');
         panel.classList.toggle('overlay-open', isExpanding);
+        document.getElementById('toggleFilters').setAttribute('aria-expanded', String(isExpanding));
 
         if (isExpanding && controls) {
             const rect = controls.getBoundingClientRect();
@@ -3023,6 +3160,7 @@ function setupEventListeners() {
             panel.style.top = '';
             panel.style.left = '';
             panel.style.width = '';
+            document.getElementById('toggleFilters')?.setAttribute('aria-expanded', 'false');
         }
     });
 
@@ -3036,17 +3174,38 @@ function setupEventListeners() {
                 panel.style.top = '';
                 panel.style.left = '';
                 panel.style.width = '';
+                toggleBtn.setAttribute('aria-expanded', 'false');
             }
         }
     });
 }
 
+function showLocationError(message) {
+    document.getElementById('locationErrorToast')?.remove();
+    const toast = document.createElement('div');
+    toast.id = 'locationErrorToast';
+    toast.className = 'location-toast';
+    toast.setAttribute('role', 'status');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
+
 function showUserLocation() {
     const floatBtn = document.getElementById('mapFloatNearMe');
+    const resetBtn = () => { if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; } };
     if (floatBtn) { floatBtn.disabled = true; floatBtn.textContent = '⏳'; }
-    
-    if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(
+
+    // No else branch here previously: on a browser without geolocation the button
+    // stayed disabled showing the spinner forever, with no explanation.
+    if (!('geolocation' in navigator)) {
+        resetBtn();
+        document.getElementById('locationHint')?.style.setProperty('display', 'none');
+        showLocationError("This browser can't share your location, so Nearest isn't available.");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
             (position) => {
                 const userPos = { lat: position.coords.latitude, lng: position.coords.longitude };
                 userLatLng = userPos; // store globally for distance sorting
@@ -3073,7 +3232,7 @@ function showUserLocation() {
                 map.setCenter(userPos);
                 map.setZoom(12);
                 setTimeout(() => { suppressNearestInteraction = false; }, 800);
-                if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
+                resetBtn();
                 // Hide the location hint now that we have a position
                 const hint = document.getElementById('locationHint');
                 if (hint) hint.style.display = 'none';
@@ -3089,17 +3248,17 @@ function showUserLocation() {
                 applyFilters(); // respects active search query + all other filters
             },
             () => {
-                alert('Could not get your location. Please enable location services.');
-                if (floatBtn) { floatBtn.disabled = false; floatBtn.textContent = '📍'; }
+                resetBtn();
+                document.getElementById('locationHint')?.style.setProperty('display', 'none');
+                showLocationError('Could not get your location. Check that location services are enabled for this site, then try again.');
             }
-        );
-    }
+    );
 }
 
 function performSearch() {
     const query = document.getElementById('searchInput').value.toLowerCase().trim();
     const dropdown = document.getElementById('autocompleteDropdown');
-    dropdown.classList.remove('show');
+    setAutocompleteOpen(false);
 
     // Clear any stale Google Places marker
     if (googlePlacesMarker) {
@@ -3247,7 +3406,7 @@ function performSearch() {
 
             if (visibleMarkers.length === 0 && matchingOnline.length === 0) {
                 dropdown.innerHTML = `<div class="search-no-result">Not yet in our guide.<a href="submit.html">Add this location →</a></div>`;
-                dropdown.classList.add('show');
+                setAutocompleteOpen(true);
             } else {
                 markerCluster.clearMarkers();
                 markerCluster.addMarkers(visibleMarkers);
@@ -3348,7 +3507,7 @@ function showGooglePlaceInfo(place, marker) {
     
     const content = `
         <div class="info-window" style="max-width: 350px;">
-            <div style="background: #FFF4E0; padding: 0.75rem; margin: -0.5rem -0.5rem 1rem -0.5rem; border-radius: 4px 4px 0 0; border-left: 4px solid #F4A300;">
+            <div style="background: #FFF4E0; padding: 0.75rem; margin: -0.5rem -0.5rem 1rem -0.5rem; border-radius: 4px; border: 1px solid #E8C070;">
                 <strong style="color: #6B4E3D;">⚠️ Not Yet in Our Guide</strong>
                 <div style="font-size: 0.85rem; color: #5C4033; margin-top: 0.25rem;">This location was found on Google Maps</div>
             </div>
@@ -3404,7 +3563,12 @@ function showNoResults(query) {
 function syncTypePills() {
     document.querySelectorAll('.type-pill').forEach(pill => {
         const cb = document.getElementById(pill.dataset.filter);
-        if (cb) pill.classList.toggle('active', cb.checked);
+        if (cb) {
+            pill.classList.toggle('active', cb.checked);
+            // The backing checkbox is display:none, so aria-pressed is the only
+            // state assistive tech can see. Keep it in sync with the class.
+            pill.setAttribute('aria-pressed', String(cb.checked));
+        }
     });
 }
 
@@ -3747,7 +3911,7 @@ function renderLocationCards(visibleMarkers, suppressOnline = false, forcedOnlin
     }
 
     if (combined.length === 0) {
-        container.innerHTML = '<div style="padding:2rem 1rem; text-align:center; color:#999; font-size:0.85rem;">No locations match your search.</div>';
+        container.innerHTML = '<div style="padding:2rem 1rem; text-align:center; color:var(--text-secondary); font-size:0.85rem;">No locations match your search.</div>';
         return;
     }
 
@@ -3853,7 +4017,7 @@ function renderCard(loc) {
             const coords = info.address.coordinates;
             const km = getDistanceKm(userLatLng.lat, userLatLng.lng, coords.lat, coords.lng);
             const miles = (km * 0.621371).toFixed(1);
-            distHtml = `<div style="font-size:0.68rem; color:#aaa; margin-bottom:0.2rem;">📍 ${miles} mi away</div>`;
+            distHtml = `<div style="font-size:0.68rem; color:var(--text-muted); margin-bottom:0.2rem;">📍 ${miles} mi away</div>`;
         }
 
         // Coffee details lines
@@ -3891,7 +4055,7 @@ function renderCard(loc) {
                 if (a.some(x => x.includes('Decaf'))             || br.some(x => x.includes('Decaf')))      amenityBits.push('🌙 Decaf Espresso');
                 if (a.some(x => x.includes('Seating')))                                                      amenityBits.push('🪑 Seating');
                 if (a.some(x => x.includes('Pour Over'))         || br.some(x => x.includes('Pour Over')))  amenityBits.push('🫖 Pour Over');
-                if (amenityBits.length) lines.push(`<div class="card-detail-line" style="color:#888;">${amenityBits.join(' · ')}</div>`);
+                if (amenityBits.length) lines.push(`<div class="card-detail-line" style="color:var(--text-muted);">${amenityBits.join(' · ')}</div>`);
             }
 
             // Full description
@@ -3909,7 +4073,7 @@ function renderCard(loc) {
             if (custom.shopUrl) {
                 const shopUrl = /^https?:\/\//i.test(custom.shopUrl) ? custom.shopUrl : 'https://' + custom.shopUrl;
                 const shopLabel = custom.promoOffer || 'Order beans online';
-                lines.push(`<div class="card-detail-line" style="margin-top:0.2rem;"><a href="${shopUrl}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()" style="color:var(--accent-red,#8B1A1A);font-size:0.75rem;text-decoration:none;">🛒 ${shopLabel} ↗</a></div>`);
+                lines.push(`<div class="card-detail-line" style="margin-top:0.2rem;"><a class="card-shop-link" href="${shopUrl}" target="_blank" rel="noopener sponsored" onclick="event.stopPropagation()" style="color:var(--accent-red-ink);font-size:0.75rem;text-decoration:none;">🛒 ${shopLabel} ↗</a></div>`);
             }
 
             detailLines = lines.join('');
@@ -3920,14 +4084,14 @@ function renderCard(loc) {
         // Community likes + review count for this card
         const locLikes   = communityData.likes[loc.id] || 0;
         const locReviews = (communityData.reviews[loc.id] || []).length;
-        const likesInline = locLikes > 0 ? `<span style="font-size:0.78rem;color:#B85C38;white-space:nowrap;font-weight:600;flex-shrink:0;">♥ ${locLikes}</span>` : '';
+        const likesInline = locLikes > 0 ? `<span style="font-size:0.78rem;color:var(--accent-red-ink);white-space:nowrap;font-weight:600;flex-shrink:0;">♥ ${locLikes}</span>` : '';
         const reviewsHtml = locReviews > 0 ? `<div class="card-detail-line" style="color:#C4A77D;">💬 ${locReviews} review${locReviews > 1 ? 's' : ''}</div>` : '';
 
         return `
         <div class="location-card${highlightByLocation[loc.id] ? ' featured-interview' : ''}${loc.coffeeDetails?.instagramReviewUrl ? ' has-ig-review' : ''}" data-id="${loc.id}"
-             onclick="selectLocationCard('${loc.id}')"
              onmouseenter="highlightMarker('${loc.id}', true)"
              onmouseleave="highlightMarker('${loc.id}', false)">
+            <a class="location-card-link" href="locations/${locationSlug(loc)}" onclick="return onCardClick(event, '${loc.id}')"><span class="visually-hidden">${info.name}</span></a>
             ${imgHtml}
             <div class="location-card-body">
                 <div class="location-card-name">${info.name}</div>
@@ -3937,8 +4101,8 @@ function renderCard(loc) {
                 </div>
                 ${distHtml}
                 ${reviewsHtml}
-                ${highlightByLocation[loc.id] ? `<div style="font-size:0.7rem; font-weight:700; color:var(--accent-red,#8B1A1A); margin-bottom:0.25rem;">🎙️ Featured Interview</div>` : ''}
-                ${loc.coffeeDetails?.instagramReviewUrl ? `<div style="font-size:0.7rem; font-weight:700; color:#E8720C; margin-bottom:0.25rem;">📸 SDCoffeeGuide Review</div>` : ''}
+                ${highlightByLocation[loc.id] ? `<div style="font-size:0.7rem; font-weight:700; color:var(--accent-red-ink); margin-bottom:0.25rem;">🎙️ Featured Interview</div>` : ''}
+                ${loc.coffeeDetails?.instagramReviewUrl ? `<div style="font-size:0.7rem; font-weight:700; color:var(--sdcg-ink); margin-bottom:0.25rem;">📸 SDCoffeeGuide Review</div>` : ''}
                 ${detailLines}
 
             </div>
@@ -4044,6 +4208,16 @@ function highlightMarker(locationId, on) {
         if (marker._origIcon) marker.setIcon(marker._origIcon);
         marker.setZIndex(undefined);
     }
+}
+
+// Cards are links. A plain left-click drives the map instead of navigating;
+// modified clicks (cmd/ctrl/shift/middle) fall through so open-in-new-tab works.
+// Enter on a focused card fires a plain click, so keyboard hits the map path too.
+function onCardClick(event, locationId) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return true;
+    event.preventDefault();
+    selectLocationCard(locationId);
+    return false;
 }
 
 function selectLocationCard(locationId) {
@@ -4360,7 +4534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchVal)
             chips.push({ label: searchVal, reset: () => {
                 document.getElementById('searchInput').value = '';
-                document.getElementById('autocompleteDropdown').classList.remove('show');
+                setAutocompleteOpen(false);
                 applyFilters();
             }});
         if (!document.getElementById('filterRoasters').checked)
@@ -4386,14 +4560,17 @@ document.addEventListener('DOMContentLoaded', () => {
             chips.push({ label: amenityLabels[key], reset: () => {
                 activeAmenities.delete(key);
                 const btn = document.querySelector(`.amenity-toggle[data-amenity="${key}"]`);
-                if (btn) btn.classList.remove('active');
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                }
             }});
         });
         if (openNowActive)
             chips.push({ label: 'Open Now', reset: () => {
                 openNowActive = false;
                 const onBtn = document.getElementById('openNowBtn');
-                if (onBtn) { onBtn.style.background = ''; onBtn.style.color = ''; onBtn.style.borderColor = ''; onBtn.textContent = '🕐 Open Now'; }
+                if (onBtn) { onBtn.style.background = ''; onBtn.style.color = ''; onBtn.style.borderColor = ''; onBtn.setAttribute('aria-pressed', 'false'); onBtn.textContent = '🕐 Open Now'; }
             }});
         chips.forEach(({ label, reset }) => {
             const chip = document.createElement('span');
@@ -4458,6 +4635,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeAmenities.add(key);
                 btn.classList.add('active');
             }
+            btn.setAttribute('aria-pressed', String(activeAmenities.has(key)));
             applyFilters();
             updateFilterDot();
             renderActiveFilterChips();
@@ -4568,6 +4746,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.style.background = openNowActive ? '#2e7d32' : '';
         btn.style.color = openNowActive ? 'white' : '';
         btn.style.borderColor = openNowActive ? '#2e7d32' : '';
+        btn.setAttribute('aria-pressed', String(openNowActive));
         btn.textContent = '🕐 Open Now';
 
         // Show coverage hint tooltip briefly when activating
@@ -4600,7 +4779,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     padding: 0.35rem 0.7rem;
                     border-radius: 4px;
                     white-space: nowrap;
-                    z-index: 99999;
+                    z-index: var(--z-tooltip);
                     pointer-events: none;
                     font-family: 'Libre Franklin', sans-serif;
                     font-weight: 500;

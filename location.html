@@ -172,7 +172,7 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             border-radius: 0;
-            transition: all 0.2s;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
             white-space: nowrap;
         }
 
@@ -246,7 +246,7 @@
             font-weight: 700;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: rgba(196,167,125,0.45);
+            color: rgba(196,167,125,0.75);
         }
 
         .nav-drawer-close {
@@ -257,7 +257,7 @@
             font-size: 1rem;
             line-height: 1;
             padding: 0.35rem 0.65rem;
-            transition: all 0.18s;
+            transition: border-color 0.18s, color 0.18s, background 0.18s;
             font-family: inherit;
         }
 
@@ -291,8 +291,7 @@
 
         .nav-dropdown a.active {
             color: var(--latte);
-            border-left: 3px solid var(--accent-red);
-            padding-left: calc(1.5rem - 3px);
+            background: rgba(184, 92, 56, 0.16);
         }
 
         .nav-dropdown > a:last-of-type { border-bottom: none; }
@@ -777,7 +776,6 @@
 
         .hours-row.today {
             background: var(--cream);
-            border-left: 3px solid var(--accent-red);
             font-weight: 600;
         }
 
@@ -865,7 +863,6 @@
         .shop-link-section {
             background: #fff8f0;
             border: 1px solid #e8d5c0;
-            border-left: 3px solid var(--accent-red);
             border-radius: 6px;
             padding: 1rem 1.25rem;
             margin-bottom: 1.25rem;
@@ -939,14 +936,13 @@
             font-style: italic;
             padding: 1.25rem 1.5rem;
             background: var(--white);
-            border-left: 3px solid var(--accent-red);
+            border: 1px solid var(--light-tan);
         }
 
         /* ── Highlight Callout ───────────────────────────────────────────── */
         .highlight-callout {
             background: #fff8f0;
             border: 1px solid #e8d5c0;
-            border-left: 3px solid var(--accent-red);
             border-radius: 6px;
             padding: 1rem 1.25rem;
             margin-bottom: 1.25rem;
@@ -977,7 +973,6 @@
         .review-callout {
             background: #f6f0ff;
             border: 1px solid #d5c8f0;
-            border-left: 3px solid #ff4500;
             border-radius: 6px;
             padding: 1rem 1.25rem;
             margin-bottom: 1.25rem;
@@ -1075,7 +1070,7 @@
             font-size: 0.82rem;
             font-weight: 600;
             letter-spacing: 0.04em;
-            transition: all 0.2s;
+            transition: background 0.2s, border-color 0.2s;
         }
         .suggest-edit-btn:hover {
             border-color: var(--coffee-brown);
@@ -1243,7 +1238,7 @@
             font-weight: 600;
             font-size: 0.9rem;
             border-radius: 3px;
-            transition: all 0.2s;
+            transition: background 0.2s, transform 0.2s;
             letter-spacing: 0.02em;
         }
 
@@ -1342,7 +1337,7 @@
             font-size: 0.88rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
             border-radius: 0;
             line-height: 1;
         }
@@ -1372,7 +1367,6 @@
             padding: 1rem 1.25rem;
             background: var(--white);
             border: 1px solid var(--light-tan);
-            border-left: 3px solid var(--latte);
             margin-bottom: 0.75rem;
         }
 
@@ -1401,7 +1395,6 @@
             color: var(--espresso);
             resize: vertical;
             min-height: 90px;
-            outline: none;
             transition: border-color 0.2s;
             display: block;
             box-sizing: border-box;
@@ -1421,7 +1414,7 @@
             letter-spacing: 0.04em;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s, border-color 0.2s;
         }
 
         .review-submit-btn:hover { background: var(--accent-red); border-color: var(--accent-red); }
@@ -1564,6 +1557,27 @@
         .related-links a { color: var(--accent-red); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
         .related-links a:hover { text-decoration: underline; }
         @media (max-width: 600px) { .related-section { padding: 0 1rem; } }
+    
+        /* ── Accessibility baseline ─────────────────────────────────────────
+           Added site-wide 2026-07-15. Keep LAST in this stylesheet: media
+           queries add no specificity, so these rely on source order to win.
+           ──────────────────────────────────────────────────────────────── */
+        :focus-visible {
+            outline: 2px solid var(--accent-red, #B85C38);
+            outline-offset: 2px;
+        }
+
+        /* Motion is opt-out. Every resting state on this page is already
+           correct, so collapsing durations is safe. */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
     </style>
 </head>
 <body>

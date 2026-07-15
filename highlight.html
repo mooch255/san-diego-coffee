@@ -143,7 +143,7 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             border-radius: 0;
-            transition: all 0.2s;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
             white-space: nowrap;
         }
 
@@ -217,7 +217,7 @@
             font-weight: 700;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: rgba(196,167,125,0.45);
+            color: rgba(196,167,125,0.75);
         }
 
         .nav-drawer-close {
@@ -228,7 +228,7 @@
             font-size: 1rem;
             line-height: 1;
             padding: 0.35rem 0.65rem;
-            transition: all 0.18s;
+            transition: border-color 0.18s, color 0.18s, background 0.18s;
             font-family: inherit;
         }
 
@@ -262,8 +262,7 @@
 
         .nav-dropdown a.active {
             color: var(--latte);
-            border-left: 3px solid var(--accent-red);
-            padding-left: calc(1.5rem - 3px);
+            background: rgba(184, 92, 56, 0.16);
         }
 
         .nav-dropdown > a:last-of-type { border-bottom: none; }
@@ -541,6 +540,27 @@
             .post-header h1 { font-size: 1.5rem; }
             .qa-question { font-size: 1rem; }
         }
+    
+        /* ── Accessibility baseline ─────────────────────────────────────────
+           Added site-wide 2026-07-15. Keep LAST in this stylesheet: media
+           queries add no specificity, so these rely on source order to win.
+           ──────────────────────────────────────────────────────────────── */
+        :focus-visible {
+            outline: 2px solid var(--accent-red, #B85C38);
+            outline-offset: 2px;
+        }
+
+        /* Motion is opt-out. Every resting state on this page is already
+           correct, so collapsing durations is safe. */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
     </style>
 </head>
 <body>

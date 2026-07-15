@@ -224,7 +224,7 @@ function buildPage(hood, locs, allLocs, guide) {
         .header-subtitle { font-size: 0.6rem; color: rgba(196,167,125,0.55); margin-top: 0.4rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
 
         /* Nav toggle */
-        .nav-toggle { display: flex; align-items: center; gap: 0.5rem; background: rgba(196,167,125,0.08); border: 1px solid rgba(196,167,125,0.4); color: rgba(196,167,125,0.9); padding: 0.7rem 1.3rem; cursor: pointer; font-family: 'Libre Franklin', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 0; transition: all 0.2s; white-space: nowrap; }
+        .nav-toggle { display: flex; align-items: center; gap: 0.5rem; background: rgba(196,167,125,0.08); border: 1px solid rgba(196,167,125,0.4); color: rgba(196,167,125,0.9); padding: 0.7rem 1.3rem; cursor: pointer; font-family: 'Libre Franklin', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 0; transition: border-color 0.2s, color 0.2s, background 0.2s; white-space: nowrap; }
         .nav-toggle-icon { font-size: 1.35rem; line-height: 1; }
         .nav-toggle:hover, .nav-toggle.open { border-color: var(--latte); color: var(--latte); background: rgba(196,167,125,0.13); }
         .nav-backdrop { position: fixed; inset: 0; background: rgba(20,10,4,0.55); z-index: 9998; opacity: 0; visibility: hidden; transition: opacity 0.32s ease, visibility 0s linear 0.32s; backdrop-filter: blur(2px); }
@@ -232,19 +232,19 @@ function buildPage(hood, locs, allLocs, guide) {
         .nav-dropdown { position: fixed; top: 0; right: 0; bottom: 0; width: 82%; max-width: 300px; background: linear-gradient(160deg, #241308 0%, #1A0D06 100%); border-left: 1px solid rgba(196,167,125,0.18); z-index: 9999; transform: translateX(100%); visibility: hidden; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0.32s; display: flex; flex-direction: column; overflow-y: auto; box-shadow: -8px 0 40px rgba(0,0,0,0.5); }
         .nav-dropdown.open { transform: translateX(0); visibility: visible; transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), visibility 0s linear 0s; }
         .nav-drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem 1rem; border-bottom: 1px solid rgba(196,167,125,0.12); border-top: 3px solid var(--accent-red); flex-shrink: 0; }
-        .nav-drawer-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(196,167,125,0.45); }
-        .nav-drawer-close { background: none; border: 1px solid rgba(196,167,125,0.28); color: rgba(196,167,125,0.75); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0.35rem 0.65rem; transition: all 0.18s; font-family: inherit; }
+        .nav-drawer-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(196,167,125,0.75); }
+        .nav-drawer-close { background: none; border: 1px solid rgba(196,167,125,0.28); color: rgba(196,167,125,0.75); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0.35rem 0.65rem; transition: border-color 0.18s, color 0.18s, background 0.18s; font-family: inherit; }
         .nav-drawer-close:hover { border-color: var(--latte); color: var(--latte); background: rgba(196,167,125,0.08); }
         .nav-dropdown a { display: block; padding: 1.05rem 1.5rem; color: rgba(196,167,125,0.72); text-decoration: none; font-family: 'Libre Franklin', sans-serif; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; border-bottom: 1px solid rgba(196,167,125,0.08); transition: background 0.15s, color 0.15s, padding-left 0.15s; }
         .nav-dropdown a:hover { background: rgba(196,167,125,0.07); color: var(--latte); padding-left: 1.85rem; }
-        .nav-dropdown a.active { color: var(--latte); border-left: 3px solid var(--accent-red); padding-left: calc(1.5rem - 3px); }
+        .nav-dropdown a.active { color: var(--latte); background: rgba(184, 92, 56, 0.16); }
         .nav-social { margin-top: auto; padding: 1.2rem 1.5rem 1.5rem; border-top: 1px solid rgba(196,167,125,0.2); display: flex; flex-direction: column; gap: 0.85rem; flex-shrink: 0; background: rgba(0,0,0,0.15); }
         .nav-social-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(196,167,125,0.75); }
         .nav-social-icons { display: flex; gap: 0.65rem; }
         .nav-social .nav-social-icon { display: flex; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border: 1px solid rgba(196,167,125,0.2); transition: transform 0.18s, border-color 0.18s, background 0.18s; text-decoration: none; }
         .nav-social .nav-social-icon.reddit { color: #FF4500; }
         .nav-social .nav-social-icon.instagram { color: #E1306C; }
-        .nav-social .nav-social-icon:hover { transform: scale(1.08); border-color: rgba(196,167,125,0.45); background: rgba(196,167,125,0.08); }
+        .nav-social .nav-social-icon:hover { transform: scale(1.08); border-color: rgba(196,167,125,0.75); background: rgba(196,167,125,0.08); }
 
         /* Hero */
         .hood-hero { background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%); border-bottom: 1px solid #E0DBD3; padding: 3rem 0 2.5rem; }
@@ -307,6 +307,26 @@ function buildPage(hood, locs, allLocs, guide) {
         @media (max-width: 900px) { .locations-grid, .static-location-list { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .header-content { padding: 0.6rem 1rem; } .header-brand-eyebrow { display: none; } .header-logo { font-size: 1.2rem; } }
         @media (max-width: 600px) { .locations-grid, .static-location-list { grid-template-columns: 1fr; } .container { padding: 0 1.25rem; } .hood-hero { padding: 2rem 0 1.75rem; } }
+
+        /* ── Accessibility baseline ─────────────────────────────────────────
+           Added site-wide 2026-07-15. Keep LAST in this stylesheet: media
+           queries add no specificity, so these rely on source order to win.
+           Edit HERE, not in the generated /neighborhoods/*/index.html files —
+           those are overwritten every time this script runs.
+           ──────────────────────────────────────────────────────────────── */
+        :focus-visible {
+            outline: 2px solid var(--accent-red, #B85C38);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>

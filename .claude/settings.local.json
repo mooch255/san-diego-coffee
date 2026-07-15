@@ -7,7 +7,8 @@
       "Read",
       "Skill(update-config)",
       "PowerShell(Get-NetTCPConnection *)",
-      "PowerShell($paths = @\\(\"$env:ProgramFiles\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"${env:ProgramFiles\\(x86\\)}\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"$env:LOCALAPPDATA\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"$env:ProgramFiles\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\",\"${env:ProgramFiles\\(x86\\)}\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"\\); $paths | Where-Object { Test-Path $_ })"
+      "PowerShell($paths = @\\(\"$env:ProgramFiles\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"${env:ProgramFiles\\(x86\\)}\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"$env:LOCALAPPDATA\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"$env:ProgramFiles\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\",\"${env:ProgramFiles\\(x86\\)}\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"\\); $paths | Where-Object { Test-Path $_ })",
+      "Skill(impeccable:impeccable)"
     ]
   }
 }

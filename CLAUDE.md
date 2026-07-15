@@ -38,7 +38,8 @@ A specialty coffee directory and interactive map for the [r/SanDiegoCoffeeBeans]
 - Location photos are **self-hosted** in `/images/locations/{id}.jpg` — no live Places API calls on page load
 - Each location has a primary hero photo stored as `loc.localImage` in `locations.js`; some locations also have `loc.localImage2` and `loc.localImage3` for additional photos (`{id}b.jpg`, `{id}c.jpg`)
 - `migrate-photos.js` handles downloading photos — safe to re-run, skips already-migrated locations
-- For new locations added via admin, `migrate-photos.js` auto-fetches the photo reference from Places API using `placeId` if `googlePhotos` is empty
+- Places photo references live in **`locations-photos.json`** (a build-time sidecar, `loc_XXX` → `[{name, widthPx, heightPx}]`), NOT in `locations.js`. Only `migrate-photos.js` reads or writes it; no page loads it at runtime. Commit it alongside `locations.js` — without it, `migrate-photos.js` re-fetches every reference from the Places API.
+- For new locations added via admin, `migrate-photos.js` auto-fetches the photo reference from Places API using `placeId` if the sidecar has no entry for that id
 - Location pages show the hero image + a "More photos on Google Maps ↗" link using the stored `placeId`
 
 **To manually add a photo for a location:**
@@ -59,6 +60,20 @@ Whenever a **new data field/column** is added to Google Sheets, ALL FOUR of thes
 4. `location.html` — add display logic for the new field
 
 Never update just one or two — all four must stay in sync.
+
+## Critical: locations.js payload discipline
+`locations.js` is loaded synchronously (render-blocking) by every map/location page, so its size is a direct page-load cost.
+
+**Never add bulk, build-time-only data to `locations.js`.** Google Places photo tokens used to live there as `googlePhotos` and were ~80% of the gzipped payload every visitor downloaded — they're high-entropy opaque strings that don't compress, and no page ever read them. They now live in `locations-photos.json` (see Photos above). Removing that one field took the file from 352 KB to 69 KB gzipped (2026-07-15).
+
+If a new field is build-time-only (used by node scripts, not by pages), put it in a sidecar JSON, not in `locations.js`. Fields that ARE read at runtime and must stay: `basicInfo`, `coffeeDetails`, `hours`, `localImage`/`localImage2`/`localImage3`, `googleData.placeId`, `googleRating`, `legacyData.originalDescription` (used for descriptions on map + location + wiki), `metadata.importDate` / `metadata.status`.
+
+## Critical: map.html script load order
+`markerclusterer.min.js` MUST be a plain synchronous `<script>` immediately before the Google Maps API tag at the end of `<body>`. **Do not give it `defer`, and do not move it back to `<head>`.**
+
+The Maps API is `async` with `callback=initMap`, so it fires `initMap` as soon as it downloads — which can happen *before* deferred scripts execute. Because `createMarker()` builds markers with `map: null` and only the clusterer ever attaches them, a missing `markerClusterer` throws and yields the exact symptom of a permanent "Loading coffee locations..." spinner with zero pins. This was a real intermittent bug fixed 2026-07-15.
+
+`initMap` now wraps its work in try/catch and a 10s watchdog (`showMapLoadError`) so any future failure shows an error card instead of an infinite spinner — keep both if you refactor it.
 
 ## Site Features
 - Split-panel map interface (map + location cards)

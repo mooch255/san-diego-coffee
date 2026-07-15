@@ -25,6 +25,9 @@ try {
 
 const API_KEY        = process.env.GOOGLE_PLACES_API_KEY;
 const LOCATIONS_FILE = path.join(__dirname, 'locations.js');
+// Places photo references live here, not in locations.js — they are build-time only
+// and their opaque tokens made up ~80% of the gzipped payload every visitor downloads.
+const PHOTOS_FILE    = path.join(__dirname, 'locations-photos.json');
 const IMAGES_DIR     = path.join(__dirname, 'images', 'locations');
 const DELAY_MS       = 250; // pause between requests to avoid rate limiting
 
@@ -86,6 +89,14 @@ async function main() {
   if (!match) throw new Error('Could not parse window.COFFEE_LOCATIONS from locations.js');
   const locations = JSON.parse(match[1]);
 
+  // Read the photo-reference sidecar (id -> [{name, widthPx, heightPx}])
+  let photoRefs = {};
+  try {
+    photoRefs = JSON.parse(fs.readFileSync(PHOTOS_FILE, 'utf8'));
+  } catch {
+    console.log('  No locations-photos.json yet — refs will be fetched as needed.');
+  }
+
   console.log(`\n📸 Migrating photos for ${locations.length} locations\n`);
 
   let downloaded = 0;
@@ -116,12 +127,12 @@ async function main() {
         console.log(`  ✓  ${name} (used existing file)`);
       } else {
         // If no photo references stored, try fetching them from Places API using placeId
-        let photos = loc.googlePhotos;
+        let photos = photoRefs[loc.id];
         if ((!photos || !photos.length || !photos[0]?.name) && loc.googleData?.placeId) {
           try {
             process.stdout.write(`  ⟳  ${name} (fetching photo ref) ... `);
             photos = await fetchPhotoRef(loc.googleData.placeId);
-            loc.googlePhotos = photos;
+            photoRefs[loc.id] = photos;
             console.log(photos.length ? `got ${photos.length}` : 'none found');
             await sleep(DELAY_MS);
           } catch (err) {
@@ -160,7 +171,7 @@ async function main() {
       try {
         process.stdout.write(`  ⟳  ${name} (refreshing photo refs) ... `);
         const freshPhotos = await fetchPhotoRef(loc.googleData.placeId);
-        loc.googlePhotos = freshPhotos;
+        photoRefs[loc.id] = freshPhotos;
         console.log(`got ${freshPhotos.length}`);
         await sleep(DELAY_MS);
       } catch (err) {
@@ -169,7 +180,7 @@ async function main() {
     }
 
     // ── Secondary photo 2 ──
-    const photos = loc.googlePhotos;
+    const photos = photoRefs[loc.id];
     const existing2 = findExistingImage(loc.id, 'b');
     if (!loc.localImage2 && existing2) {
       // File manually dropped in — register it without API call
@@ -224,6 +235,7 @@ async function main() {
 
   fs.writeFileSync(LOCATIONS_FILE + '.backup', raw, 'utf8');
   fs.writeFileSync(LOCATIONS_FILE, output, 'utf8');
+  fs.writeFileSync(PHOTOS_FILE, JSON.stringify(photoRefs, null, 2) + '\n', 'utf8');
 
   // Summary
   console.log('\n─────────────────────────────');
@@ -243,7 +255,7 @@ async function main() {
   }
 
   console.log('\nNext steps:');
-  console.log('  git add images/locations/ locations.js');
+  console.log('  git add images/locations/ locations.js locations-photos.json');
   console.log('  git commit -m "Migrate location photos to self-hosted"');
   console.log('  git push\n');
 }

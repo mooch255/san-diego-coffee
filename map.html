@@ -35,8 +35,10 @@
     <link rel="apple-touch-icon" href="/favicon.svg">
     <link rel="canonical" href="https://sandiegocoffee.co/map.html">
 
-    <!-- Marker Clusterer -->
-    <script src="/js/markerclusterer.min.js" defer></script>
+    <!-- Marker Clusterer is loaded at the end of <body>, immediately before the Maps
+         API. It must NOT be deferred: the Maps loader is async and fires initMap as
+         soon as the parser reaches its tag, which is before deferred scripts run. -->
+    <link rel="preload" as="script" href="/js/markerclusterer.min.js">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1963,6 +1965,32 @@ function loadSheetData() {
 }
 let autocompleteIndex = -1;
 
+// ── Map load watchdog ───────────────────────────────────────────────────────
+// initMap only ever runs as the Google Maps API callback. If that script never
+// loads, or initMap throws partway through, nothing hides #loading and the user
+// stares at a spinner forever. Fail visibly instead.
+let mapLoadResolved = false;
+
+function showMapLoadError(message) {
+    mapLoadResolved = true;
+    const el = document.getElementById('loading');
+    if (!el) return;
+    el.classList.remove('hidden');
+    el.innerHTML = `
+        <h3 style="margin: 0 0 0.5rem; font-family: 'Playfair Display', Georgia, serif;">Map didn't load</h3>
+        <p style="margin: 0 0 1.25rem; color: var(--warm-gray, #6B5D52); max-width: 22rem;">${message}</p>
+        <button onclick="location.reload()" style="background: var(--coffee-brown, #6F4E37); color: var(--white, #fff); border: 0; padding: 0.6rem 1.4rem; border-radius: 4px; font: inherit; cursor: pointer;">Reload the map</button>
+        <p style="margin: 1.25rem 0 0; font-size: 0.85rem;"><a href="index.html" style="color: var(--coffee-brown, #6F4E37);">Back to the homepage</a></p>
+    `;
+}
+
+setTimeout(() => {
+    if (!mapLoadResolved) {
+        console.error('[map] initMap never completed within 10s — Maps API likely failed to load.');
+        showMapLoadError('It took too long to reach Google Maps. This is usually a network hiccup — a reload normally fixes it.');
+    }
+}, 10000);
+
 function initMap() {
     // Custom map styling - warm, minimal, coffee-themed
     const mapStyles = [
@@ -2047,13 +2075,22 @@ function initMap() {
     }
 
     infoWindow = new google.maps.InfoWindow();
-    loadLocations();
-    setupEventListeners();
-    loadSheetData();
-    loadCommunityDataForMap();
+
+    try {
+        loadLocations();
+        setupEventListeners();
+        loadSheetData();
+        loadCommunityDataForMap();
+    } catch (err) {
+        console.error('[map] init failed:', err);
+        showMapLoadError('Something went wrong while placing the coffee locations on the map.');
+        return;
+    }
+
+    mapLoadResolved = true;
     document.getElementById('loading').classList.add('hidden');
     updateAllFilterCounts();
-    
+
     // Handle URL parameters for filtering and searching
     const urlParams = new URLSearchParams(window.location.search);
     const searchQuery = urlParams.get('search');
@@ -2174,6 +2211,15 @@ function initMap() {
 }
 
 function loadLocations() {
+    // Markers are created with map:null and only ever attached by the clusterer,
+    // so a missing markerClusterer means zero pins — surface it rather than
+    // failing 40 lines later with a confusing error.
+    if (typeof markerClusterer === 'undefined') {
+        throw new Error('markerclusterer.min.js did not load');
+    }
+    if (!Array.isArray(window.COFFEE_LOCATIONS)) {
+        throw new Error('locations.js did not load');
+    }
     allLocations = COFFEE_LOCATIONS;
     allLocations.forEach(location => {
         if (!location.basicInfo?.onlineOnly) {
@@ -4438,7 +4484,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.gm_authFailure = function() {
-    document.getElementById('loading').innerHTML = '<div style="color: red; padding: 2rem;"><h3>⚠️ Map Loading Error</h3></div>';
+    console.error('[map] Google Maps authentication failed — check the API key / billing.');
+    showMapLoadError('Google Maps rejected our request. We\'re on it — please try again shortly.');
 };
 
 // ── Open Now Filter ─────────────────────────────────────────────────────────
@@ -4645,6 +4692,9 @@ document.addEventListener('DOMContentLoaded', function() {
         fullscreenControl: true,
         zoomControl: true,
     -->
+
+    <!-- Marker Clusterer — must execute before the Maps API can fire initMap -->
+    <script src="/js/markerclusterer.min.js"></script>
 
     <!-- Google Maps API with Places library -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFVEZE3Q0NBXY15rL6muwB8nNATPftOmI&libraries=places&callback=initMap" async defer></script>

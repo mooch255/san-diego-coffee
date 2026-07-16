@@ -1710,7 +1710,7 @@
         <div class="footer-row">
             <span id="footerCount">150+</span>&nbsp;locations and counting
             <span class="footer-sep">·</span>
-            <a href="privacy.html">Privacy Policy</a>
+            <a href="/privacy.html">Privacy Policy</a>
         </div>
     </footer>
 
@@ -1813,7 +1813,7 @@
             backLabel = '← Back to Roaster Highlight';
         } else if (fromParam === 'location' && fromLocationId) {
             const fromLoc = (window.COFFEE_LOCATIONS || []).find(l => l.id === fromLocationId);
-            backHref  = `location.html?id=${fromLocationId}`;
+            backHref  = `/location.html?id=${fromLocationId}`;
             backLabel = `← Back to ${fromLoc ? fromLoc.basicInfo.name : 'Location'}`;
         } else if (fromParam === 'guide' && guideId) {
             const guideMap = window.GUIDE_MAP || {};
@@ -2575,7 +2575,7 @@
                 const hood = s.coffeeDetails?.neighborhood
                           || s.basicInfo.address?.fullAddress?.split(',')[0]
                           || s.id;
-                return `<a href="location.html?id=${s.id}&from=location&locationId=${loc.id}" class="sibling-link">${hood}&nbsp;↗</a>`;
+                return `<a href="/location.html?id=${s.id}&from=location&locationId=${loc.id}" class="sibling-link">${hood}&nbsp;↗</a>`;
             }).join('');
             return detailRow('Other Locations', `<div class="tag-list sibling-links">${links}</div>`);
         }

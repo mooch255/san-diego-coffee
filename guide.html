@@ -1852,6 +1852,11 @@
         </div>
     </div>
 
+    <!-- SEO: server-rendered intro/FAQ text injected by og-meta.js edge function
+         for the Stage-1 crawl (raw HTML ships this empty). The render JS removes
+         it once the client renders the full interactive guide. -->
+    <div id="guideSSR"></div>
+
     <!-- Main content -->
     <main class="guide-main" id="guideMain" style="display:none">
         <div class="container">
@@ -3439,6 +3444,11 @@
 
             // Show main content
             document.getElementById('guideMain').style.display = '';
+
+            // Remove the server-rendered SEO placeholder now that the full
+            // interactive guide has rendered (edge function fills it for crawlers).
+            var _ssr = document.getElementById('guideSSR');
+            if (_ssr) _ssr.remove();
         }
 
         // ── Init ───────────────────────────────────────────────────────

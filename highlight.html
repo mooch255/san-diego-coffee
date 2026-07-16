@@ -30,6 +30,7 @@
     <meta name="twitter:description" content="In-depth features on the roasters shaping San Diego's specialty coffee scene — from the r/SanDiegoCoffeeBeans community.">
     <meta name="twitter:image" content="https://sandiegocoffee.co/og-image.png">
     <meta name="description" content="In-depth features on the roasters shaping San Diego's specialty coffee scene — from the r/SanDiegoCoffeeBeans community.">
+    <link rel="canonical" id="canonicalTag" href="https://sandiegocoffee.co/highlight.html">
     <!-- SEO: synchronous slug→title before deferred JS loads -->
     <script>
     (function(){
@@ -40,6 +41,10 @@
           document.title = name + ' — Roaster Highlight · San Diego Specialty Coffee';
           var d = document.querySelector('meta[name="description"]');
           if (d) d.content = 'Roaster feature: ' + name + ' — specialty coffee in San Diego, from the r/SanDiegoCoffeeBeans community.';
+          // Set canonical synchronously so the Stage-1 crawl sees it before deferred JS runs.
+          var c = document.querySelector('link[rel="canonical"]');
+          if (!c) { c = document.createElement('link'); c.rel = 'canonical'; document.head.appendChild(c); }
+          c.href = 'https://sandiegocoffee.co/highlight.html?id=highlight_' + qm[1];
         }
       } catch(e){}
     })();

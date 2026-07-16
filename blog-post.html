@@ -21,6 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Diego Coffee Blog · San Diego Specialty Coffee</title>
     <meta name="description" content="Stories from the San Diego specialty coffee scene.">
+    <link rel="canonical" id="canonicalTag" href="https://sandiegocoffee.co/blog-post.html">
     <!-- SEO: synchronous slug→title before deferred JS loads -->
     <script>
     (function(){
@@ -33,6 +34,10 @@
           document.title = name + ' · San Diego Coffee Blog';
           var d = document.querySelector('meta[name="description"]');
           if (d) d.content = 'San Diego specialty coffee: ' + name + '. Stories from the r/SanDiegoCoffeeBeans community.';
+          // Set canonical synchronously (clean /blog/{slug} form) for the Stage-1 crawl.
+          var c = document.querySelector('link[rel="canonical"]');
+          if (!c) { c = document.createElement('link'); c.rel = 'canonical'; document.head.appendChild(c); }
+          c.href = 'https://sandiegocoffee.co/blog/' + slug;
         }
       } catch(e){}
     })();

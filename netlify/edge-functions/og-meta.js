@@ -33,6 +33,8 @@ async function getHighlights(origin) {
         title: h.title,
         image: h.image,
         description: h.excerpt,
+        excerpt: h.excerpt,
+        body: h.body,
       }]));
     }
   } catch (_) {
@@ -53,12 +55,43 @@ async function getBlogPosts(origin) {
         title: p.title,
         image: p.image,
         description: p.metaDescription || p.excerpt,
+        excerpt: p.excerpt,
+        body: p.body,
       }]));
     }
   } catch (_) {
     // fail open
   }
   return BLOG_POSTS || {};
+}
+
+let GUIDES_BY_ID = null;
+async function getGuides(origin) {
+  if (GUIDES_BY_ID) return GUIDES_BY_ID;
+  try {
+    const res = await fetch(`${origin}/guides.js`);
+    const text = await res.text();
+    // guides.js has trailing helper functions after the array, so match
+    // non-greedily up to the first `];` (the GUIDES array close).
+    const m = text.match(/window\.GUIDES\s*=\s*(\[[\s\S]*?\])\s*;/);
+    if (m) {
+      const arr = (new Function('return ' + m[1]))();
+      GUIDES_BY_ID = Object.fromEntries(arr.map(g => [g.id, {
+        id: g.id,
+        title: g.displayTitle || g.title,
+        metaTitle: g.metaTitle || g.title,
+        metaDescription: g.metaDescription || g.excerpt || '',
+        subtitle: g.subtitle || '',
+        excerpt: g.excerpt || '',
+        about: g.about || {},
+        faq: g.faq || [],
+        image: g.ogImage || g.heroImage || '/og-image.png',
+      }]));
+    }
+  } catch (_) {
+    // fail open — no guide SSR
+  }
+  return GUIDES_BY_ID || {};
 }
 
 let NEIGHBORHOODS_BY_NAME = null;
@@ -110,6 +143,17 @@ function escapeHtml(s) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// neighborhood name → editorial guide covering it. Mirror of the HOOD_GUIDE
+// map in location.html (renderRelatedLinks). Update both when a new
+// neighborhood guide is added to guides.js. Labels contain &amp; already.
+const HOOD_GUIDE = {
+  'North Park': { slug: 'north-park', label: 'The North Park coffee guide' },
+  'Downtown': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+  'Bankers Hill': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+  'Barrio Logan': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+  'Little Italy': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+};
+
 // Server-rendered per-location content for the Stage-1 crawl. The raw template
 // only ships "<h2>Loading...</h2>" inside #pageContent, which reads as thin
 // content (the likely cause of soft-404 / crawled-not-indexed). This injects
@@ -134,9 +178,75 @@ function locationContentHtml(e, nbSlug) {
   // Tier 4: internal links to discovery/hub pages (link equity toward pages we want to rank).
   const related = [];
   if (nbSlug) related.push(`<a href="/neighborhoods/${escapeHtml(nbSlug)}">Best coffee in ${escapeHtml(e.neighborhood)}</a>`);
+  // Editorial neighborhood guide covering this hood. Keep HOOD_GUIDE in sync
+  // with the same map in location.html (renderRelatedLinks).
+  const hoodGuide = HOOD_GUIDE[e.neighborhood];
+  if (hoodGuide) related.push(`<a href="/guides/${hoodGuide.slug}">${hoodGuide.label}</a>`);
   related.push('<a href="/guides/best-coffee-san-diego">Best Coffee in San Diego guide</a>');
   related.push('<a href="/map.html">Explore the San Diego coffee map</a>');
   parts.push('<h2>Explore more San Diego coffee</h2><ul>' + related.map(l => `<li>${l}</li>`).join('') + '</ul>');
+  return `<div class="ssr-content">${parts.join('')}</div>`;
+}
+
+// Render a blog/highlight body[] array into crawlable HTML for the Stage-1 crawl.
+// Mirrors the block types the client renderer handles: text (already HTML),
+// heading, and qa. Images/embeds are skipped — they carry no ranking text.
+// content/question/answer are our own authored data, injected as-is like the
+// client does. The client JS overwrites #pageContent on render (progressive
+// enhancement), so real users still get the full interactive article.
+function renderArticleBody(body) {
+  if (!Array.isArray(body)) return '';
+  const out = [];
+  for (const b of body) {
+    if (!b) continue;
+    if (b.type === 'text' && b.content) {
+      out.push(b.content);
+    } else if (b.type === 'heading' && b.content) {
+      const tag = b.level === 3 ? 'h3' : 'h2';
+      out.push(`<${tag}>${escapeHtml(b.content)}</${tag}>`);
+    } else if (b.type === 'qa') {
+      if (b.question) out.push(`<h3>${escapeHtml(b.question)}</h3>`);
+      if (b.answer) out.push(`<div>${b.answer}</div>`);
+    }
+    // image and any other type: skip (no ranking text)
+  }
+  return out.join('');
+}
+
+// Server-rendered body for a highlight or blog-post page. h1 + full article
+// text + a couple of internal links to the relevant hub pages.
+function articleContentHtml(title, body, excerpt, hubHref, hubLabel) {
+  const parts = [`<h1>${escapeHtml(title || '')}</h1>`];
+  const rendered = renderArticleBody(body);
+  parts.push(rendered || `<p>${escapeHtml(excerpt || '')}</p>`);
+  const related = [
+    `<a href="${hubHref}">${escapeHtml(hubLabel)}</a>`,
+    '<a href="/guides/best-coffee-san-diego">Best Coffee in San Diego guide</a>',
+    '<a href="/map.html">Explore the San Diego coffee map</a>',
+  ];
+  parts.push('<h2>Explore more San Diego coffee</h2><ul>' + related.map(l => `<li>${l}</li>`).join('') + '</ul>');
+  return `<div class="ssr-content">${parts.join('')}</div>`;
+}
+
+// Server-rendered body for a guide page, injected into #guideSSR. No <h1>
+// (the hero <h1> is set separately). Intro + about tips + FAQ questions and
+// answers give the crawler real, unique text instead of the "Loading…" hero.
+function guideContentHtml(g) {
+  const parts = [];
+  if (g.subtitle) parts.push(`<p>${escapeHtml(g.subtitle)}</p>`);
+  if (g.about && g.about.intro) parts.push(`<p>${g.about.intro}</p>`);
+  if (g.about && g.about.bestTimeToVisit) parts.push(`<h2>Best time to visit</h2><p>${g.about.bestTimeToVisit}</p>`);
+  if (g.about && g.about.parking) parts.push(`<h2>Parking</h2><p>${g.about.parking}</p>`);
+  if (Array.isArray(g.faq) && g.faq.length) {
+    parts.push('<h2>Frequently asked questions</h2>');
+    for (const f of g.faq) {
+      if (f && f.q) parts.push(`<h3>${escapeHtml(f.q)}</h3>`);
+      if (f && f.a) parts.push(`<div>${f.a}</div>`);
+    }
+  }
+  parts.push('<h2>Explore more San Diego coffee</h2><ul>'
+    + '<li><a href="/guides">All San Diego coffee guides</a></li>'
+    + '<li><a href="/map.html">Explore the San Diego coffee map</a></li></ul>');
   return `<div class="ssr-content">${parts.join('')}</div>`;
 }
 
@@ -238,6 +348,11 @@ export default async (request, context) => {
   const bm = pathname.match(/^\/blog\/([^\/]+)\/?$/);
   if (bm) blogPathSlug = decodeURIComponent(bm[1]);
 
+  // Extract slug from the /guides/{slug} path if present
+  let guidePathSlug = null;
+  const gm = pathname.match(/^\/guides\/([^\/]+)\/?$/);
+  if (gm) guidePathSlug = decodeURIComponent(gm[1]);
+
   const id = queryId || pathId;
 
   // ── 301 redirect legacy loc_XXX URLs to canonical /locations/{slug} ─────────
@@ -269,14 +384,28 @@ export default async (request, context) => {
 
   if (pathname === '/highlight.html' && queryId) {
     const highlights = await getHighlights(origin);
-    data = highlights[queryId] || null;
+    const h = highlights[queryId];
+    if (h) data = { ...h, contentHtml: articleContentHtml(h.title, h.body, h.excerpt, '/roaster-highlights.html', 'All roaster highlights') };
   } else if (blogPathSlug) {
     // /blog/{slug} — reconstruct the id (slug + blog_ prefix) and look up.
     const posts = await getBlogPosts(origin);
-    data = posts[`blog_${blogPathSlug}`] || posts[blogPathSlug] || null;
+    const p = posts[`blog_${blogPathSlug}`] || posts[blogPathSlug];
+    if (p) data = { ...p, contentHtml: articleContentHtml(p.title, p.body, p.excerpt, '/blog.html', 'All blog posts') };
   } else if (pathname === '/blog-post.html' && queryId) {
     const posts = await getBlogPosts(origin);
-    data = posts[queryId] || null;
+    const p = posts[queryId];
+    if (p) data = { ...p, contentHtml: articleContentHtml(p.title, p.body, p.excerpt, '/blog.html', 'All blog posts') };
+  } else if (guidePathSlug) {
+    // /guides/{slug} — inject server-rendered hero title + body for the crawl.
+    const guides = await getGuides(origin);
+    const g = guides[guidePathSlug];
+    if (g) data = {
+      image: g.image,
+      title: g.metaTitle,
+      description: g.metaDescription,
+      heroTitle: g.title,
+      guideHtml: guideContentHtml(g),
+    };
   } else if (pathname === '/location.html' && id && id.startsWith('loc_')) {
     // loc_XXX query form (rare — normally 301'd to /locations/{slug} above).
     const { byId } = await getLocations(origin);
@@ -340,14 +469,30 @@ export default async (request, context) => {
     );
   }
 
+  // Guide pages (Tier 2): set the real hero <h1> (raw HTML ships "Loading…")
+  // and fill the empty #guideSSR placeholder with intro + FAQ text. The client
+  // JS removes #guideSSR and re-renders the hero on load (progressive enhancement).
+  if (data.heroTitle) {
+    html = html.replace(
+      /(<h1 class="guide-hero-title" id="guideHeroTitle">)[^<]*(<\/h1>)/,
+      `$1${escapeHtml(data.heroTitle)}$2`
+    );
+  }
+  if (data.guideHtml) {
+    html = html.replace(
+      /(<div id="guideSSR"[^>]*>)[\s\S]*?(<\/div>)/,
+      `$1${data.guideHtml}$2`
+    );
+  }
+
   return new Response(html, {
     headers: response.headers,
     status: response.status,
   });
 };
 
-// Intercept location/highlight/blog-post pages plus the clean /locations/* and
-// /blog/* URLs
+// Intercept location/highlight/blog-post pages plus the clean /locations/*,
+// /blog/*, and /guides/* URLs
 export const config = {
-  path: ['/highlight.html', '/blog-post.html', '/location.html', '/locations/*', '/blog/*'],
+  path: ['/highlight.html', '/blog-post.html', '/location.html', '/locations/*', '/blog/*', '/guides/*'],
 };

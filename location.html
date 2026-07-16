@@ -2033,7 +2033,11 @@
 
         // ── Blog callout ───────────────────────────────────────────────
         function renderBlogCallout(locationId) {
-            const posts = (window.BLOG_POSTS || []).filter(p => p.relatedLocationId === locationId);
+            // A post links to a location via relatedLocationId (single) or
+            // relatedLocationIds (array — e.g. the SDCTI post on all Talitha branches).
+            const posts = (window.BLOG_POSTS || []).filter(p =>
+                p.relatedLocationId === locationId ||
+                (Array.isArray(p.relatedLocationIds) && p.relatedLocationIds.includes(locationId)));
             if (!posts.length) return '';
             return posts.map(p => `
                 <div class="highlight-callout">
@@ -2653,11 +2657,25 @@
         // Internal links to the neighborhood landing page + flagship hub, so link
         // equity flows toward the discovery pages we want to rank (Tier 4). Mirrors
         // the server-rendered related links in netlify/edge-functions/og-meta.js.
+        // neighborhood name → editorial guide covering it. Update when a new
+        // neighborhood guide is added to guides.js (mirror in og-meta.js).
+        const HOOD_GUIDE = {
+            'North Park': { slug: 'north-park', label: 'The North Park coffee guide' },
+            'Downtown': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+            'Bankers Hill': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+            'Barrio Logan': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+            'Little Italy': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+        };
+
         function renderRelatedLinks(loc) {
             const hood = (loc.coffeeDetails && loc.coffeeDetails.neighborhood) || '';
             const links = [];
             const nb = (window.NEIGHBORHOODS || []).find(n => n.name === hood);
             if (nb) links.push(`<a href="/neighborhoods/${nb.id}">Best coffee in ${hood}</a>`);
+            // Link to the editorial neighborhood guide when one covers this hood.
+            // Keep in sync with the same map in netlify/edge-functions/og-meta.js.
+            const guide = HOOD_GUIDE[hood];
+            if (guide) links.push(`<a href="/guides/${guide.slug}">${guide.label}</a>`);
             links.push('<a href="/guides/best-coffee-san-diego">Best Coffee in San Diego guide</a>');
             links.push('<a href="/map.html">Explore the San Diego coffee map</a>');
             return `

@@ -1720,6 +1720,20 @@
     <script src="/neighborhoods.js"></script>
     <script src="/blog.js"></script>
     <script>
+        // neighborhood name → editorial guide covering it. Update when a new
+        // neighborhood guide is added to guides.js (mirror in og-meta.js).
+        // Declared at the top of the script: renderRelatedLinks() reads it during
+        // the initial render (~line 2160), which runs before this block's tail —
+        // a const declared later would be in the temporal dead zone and throw,
+        // aborting the whole render and leaving only the SSR fallback.
+        const HOOD_GUIDE = {
+            'North Park': { slug: 'north-park', label: 'The North Park coffee guide' },
+            'Downtown': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+            'Bankers Hill': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+            'Barrio Logan': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+            'Little Italy': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
+        };
+
         // Footer count
         (function() {
             const fc = document.getElementById('footerCount');
@@ -2657,16 +2671,6 @@
         // Internal links to the neighborhood landing page + flagship hub, so link
         // equity flows toward the discovery pages we want to rank (Tier 4). Mirrors
         // the server-rendered related links in netlify/edge-functions/og-meta.js.
-        // neighborhood name → editorial guide covering it. Update when a new
-        // neighborhood guide is added to guides.js (mirror in og-meta.js).
-        const HOOD_GUIDE = {
-            'North Park': { slug: 'north-park', label: 'The North Park coffee guide' },
-            'Downtown': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
-            'Bankers Hill': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
-            'Barrio Logan': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
-            'Little Italy': { slug: 'downtown-barrio-logan-bankers-hill', label: 'The Downtown &amp; Barrio Logan coffee guide' },
-        };
-
         function renderRelatedLinks(loc) {
             const hood = (loc.coffeeDetails && loc.coffeeDetails.neighborhood) || '';
             const links = [];

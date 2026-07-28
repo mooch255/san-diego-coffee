@@ -147,6 +147,12 @@ window.SDCG_RATINGS = {
     signatureDrinkRating: 8.4,
     reviewExcerpt: "Sustainability-minded cafe and roaster on Lake Murray Blvd in La Mesa, roasting in house since 2017 with fresh single origins from across Central America and East Africa. The Iced Morning Maple Latte leads the visit at 8.4, with the cortado holding at 7.9. Ceramic cups and 100% compostable to-go ware back up the eco-conscious approach, and the space doubles as a neighborhood hub with open mics, trivia nights, and the Brew Community Market. A genuine La Mesa gathering spot with a strong local following."
   },
+  'loc_232': {
+    cortadoRating: 7.9,
+    signatureDrinkName: 'Iced Honey Sea Salt Latte',
+    signatureDrinkRating: 8.1,
+    reviewExcerpt: "A Portuguese-inspired neighborhood cafe on Adams Avenue in Normal Heights, pouring beans from local roaster Fuzz Coffee across espresso, pour overs, and batch-brew single origins. The Iced Honey Sea Salt Latte leads the visit at 8.1, with the cortado close behind at 7.9. House-made pastries and seasonal food make it easy to settle in, and the dog-friendly, WiFi-equipped space is built for lingering. Open daily from 6:30am, an easy everyday stop in the heart of Normal Heights."
+  },
   'loc_064': {
     cortadoRating: 9.1,
     reviewExcerpt: "Woman-owned San Diego roaster that roasts out of its College Area shop and pours at this beloved Ocean Beach spot on Sunset Cliffs Blvd. The cortado landed a 9.1, near the top of our scores, showing off the clean, clarity-driven light roasting Ultreya has built its name on. Margarita was out of town this week, so no latte was reviewed. Still an easy must-visit for a serious cup a short walk from the OB pier and Newport Ave."

@@ -153,6 +153,12 @@ window.SDCG_RATINGS = {
     signatureDrinkRating: 8.1,
     reviewExcerpt: "A Portuguese-inspired neighborhood cafe on Adams Avenue in Normal Heights, pouring beans from local roaster Fuzz Coffee across espresso, pour overs, and batch-brew single origins. The Iced Honey Sea Salt Latte leads the visit at 8.1, with the cortado close behind at 7.9. House-made pastries and seasonal food make it easy to settle in, and the dog-friendly, WiFi-equipped space is built for lingering. Open daily from 6:30am, an easy everyday stop in the heart of Normal Heights."
   },
+  'loc_086': {
+    cortadoRating: 9.3,
+    signatureDrinkName: 'Iced Black Salted Caramel Latte',
+    signatureDrinkRating: 8.7,
+    reviewExcerpt: "One of San Diego's specialty pioneers, roasting on-site in North Park since 2010 with a craft-first focus on clean, quality single origins. The 9.3 cortado lands near the very top of our scores and shows off the clarity that built their reputation, with the Iced Black Salted Caramel Latte close behind at 8.7. Pour over and multiple espresso options round out a bar built for coffee nerds who want to taste origin. A foundational stop on the El Cajon Blvd corridor and an easy must-visit for serious drinkers."
+  },
   'loc_064': {
     cortadoRating: 9.1,
     reviewExcerpt: "Woman-owned San Diego roaster that roasts out of its College Area shop and pours at this beloved Ocean Beach spot on Sunset Cliffs Blvd. The cortado landed a 9.1, near the top of our scores, showing off the clean, clarity-driven light roasting Ultreya has built its name on. Margarita was out of town this week, so no latte was reviewed. Still an easy must-visit for a serious cup a short walk from the OB pier and Newport Ave."

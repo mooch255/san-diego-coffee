@@ -162,5 +162,11 @@ window.SDCG_RATINGS = {
   'loc_064': {
     cortadoRating: 9.1,
     reviewExcerpt: "Woman-owned San Diego roaster that roasts out of its College Area shop and pours at this beloved Ocean Beach spot on Sunset Cliffs Blvd. The cortado landed a 9.1, near the top of our scores, showing off the clean, clarity-driven light roasting Ultreya has built its name on. Margarita was out of town this week, so no latte was reviewed. Still an easy must-visit for a serious cup a short walk from the OB pier and Newport Ave."
+  },
+  'loc_153': {
+    cortadoRating: 8.5,
+    signatureDrinkName: 'Iced Brown Sugar Latte',
+    signatureDrinkRating: 8.2,
+    reviewExcerpt: "A North Park cafe specializing in Kurdish-style coffee and tea, founded in 2024 by two former UCSD students. The bar backs up the concept with a solid 8.5 cortado, and the Iced Brown Sugar Latte lands close behind at 8.2. The University Avenue space is open daily with seating built for working, and it's dog-friendly with food and pastries on hand. A genuinely distinctive stop that blends specialty coffee with a cultural point of view you won't find elsewhere in the city."
   }
 };

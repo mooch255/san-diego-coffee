@@ -168,5 +168,11 @@ window.SDCG_RATINGS = {
     signatureDrinkName: 'Iced Brown Sugar Latte',
     signatureDrinkRating: 8.2,
     reviewExcerpt: "A North Park cafe specializing in Kurdish-style coffee and tea, founded in 2024 by two former UCSD students. The bar backs up the concept with a solid 8.5 cortado, and the Iced Brown Sugar Latte lands close behind at 8.2. The University Avenue space is open daily with seating built for working, and it's dog-friendly with food and pastries on hand. A genuinely distinctive stop that blends specialty coffee with a cultural point of view you won't find elsewhere in the city."
+  },
+  'loc_161': {
+    cortadoRating: 9.2,
+    signatureDrinkName: 'Iced Piloncillo Latte',
+    signatureDrinkRating: 9.0,
+    reviewExcerpt: "A multi-purpose National City space that folds coffee, food, music, and drinks into one room, roasting its own micro-batch beans onsite since 2024. The bar is dialed in, with a 9.2 cortado near the very top of our scores and the Iced Piloncillo Latte right behind at 9.0. They pour a single-origin option on espresso and even serve Oxo Rapid Brew soup cups, a genuinely fun twist. A creative, community-minded stop that's well worth the trip south."
   }
 };

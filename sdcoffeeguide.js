@@ -174,5 +174,17 @@ window.SDCG_RATINGS = {
     signatureDrinkName: 'Iced Piloncillo Latte',
     signatureDrinkRating: 9.0,
     reviewExcerpt: "A multi-purpose National City space that folds coffee, food, music, and drinks into one room, roasting its own micro-batch beans onsite since 2024. The bar is dialed in, with a 9.2 cortado near the very top of our scores and the Iced Piloncillo Latte right behind at 9.0. They pour a single-origin option on espresso and even serve Oxo Rapid Brew soup cups, a genuinely fun twist. A creative, community-minded stop that's well worth the trip south."
+  },
+  'loc_007': {
+    cortadoRating: 8.9,
+    signatureDrinkName: 'Iced Caramel Latte',
+    signatureDrinkRating: 7.9,
+    reviewExcerpt: "Lofty has been roasting on the coast highway in Encinitas since 2011, built around organic sourcing and traceability. Their stated roast philosophy is to find the sweet spot, profiling each coffee individually rather than forcing a single house style onto every origin. The Encinitas flagship is a full cafe, with organic pastries and a seasonal brunch and lunch menu alongside the espresso bar. The cortado is the stronger of the two pours at 8.9, with the Iced Caramel Latte trailing at 7.9."
+  },
+  'loc_222': {
+    cortadoRating: 8.5,
+    signatureDrinkName: 'Iced Butterscotch Latte',
+    signatureDrinkRating: 8.1,
+    reviewExcerpt: "One of North County's longer-running specialty roasters, open since 2009 in South Oceanside with this second shop on Roosevelt Street in Carlsbad. They roast across the full spectrum, from lighter single origins to fuller-bodied espresso blends, and sell beans both at the bar and online. The cortado lands at 8.5 with the Iced Butterscotch Latte just behind at 8.1, a tight pair that points to a consistent bar. A dog-friendly full cafe with a food menu and wifi, and a reliable coastal morning stop."
   }
 };
